@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--source https://www.casper.tw/javascript/2017/12/28/javascript-fetch/ -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const base = "https://randomuser.me/api/";
+
+      function get() {
+        fetch(base, {})
+          .then((response) => {
+            // 這裡會得到一個 ReadableStream 的物件
+            console.log(response);
+            // 可以透過 blob(), json(), text() 轉成可用的資訊
+            return response.json();
+          })
+          .then((jsonData) => {
+            alert(JSON.stringify(jsonData));
+          })
+          .catch((err) => {
+            console.log("錯誤:", err);
+          });
+      }
+      get()
+    </script>
+  </body>
+</html>

@@ -24,6 +24,7 @@ cdn-bootstrap5 | 5.0
 
 - cdn-react-basic | 18 
 - cdn-react-function-component | 18
+<!-- - react-react-i18next -->
 <!-- - react-router -->
 <!-- - react-bootstrap -->
 
