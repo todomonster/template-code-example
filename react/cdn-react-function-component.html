@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <!-- 參考 https://ithelp.ithome.com.tw/articles/10228940 -->
+  <head>
+    <meta charset="UTF-8" />
+    <title>用Functional Component 合併</title>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- 引用開始 -->
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- 引用結束 -->
+
+    <script type="text/babel">
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+
+      function Element(props) {
+        console.log(props);
+        return (
+          <h1>Hello, {Number(props.myPrice) > 100 ? "有錢人" : "普通人"}!</h1>
+        );
+      }
+
+      function ElementArray() {
+        return [
+          <li key="1"> apple</li>,
+          <li key="2"> pen</li>,
+          <li key="3"> pineapple</li>,
+        ];
+      }
+
+      function StringArray() {
+        return (
+          <div>
+            {["buy a apple", "buy a pen", "buy a egg"].map((text, index) => (
+              <li key={index}>{text}</li>
+            ))}
+          </div>
+        );
+      }
+
+      // 合併~
+      const mixAll = (
+        <div>
+          <Element myPrice="1000" />
+          <br />
+          <ElementArray />
+          <br />
+          <StringArray />
+        </div>
+      );
+
+      root.render(mixAll);
+      /**筆記
+       * Functional Component
+       *  https://zh-hant.reactjs.org/docs/components-and-props.html
+       *  - 首字大寫(function 和 tag 都是)
+       *  - return JSX 習慣用(小括號包起來)
+       *  - 參數傳遞 porps
+       */
+    </script>
+  </body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <!-- 參考 https://ithelp.ithome.com.tw/articles/10228940 -->
+  <head>
+    <meta charset="UTF-8" />
+    <title>使用JSX (帶入參數)</title>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- 引用開始 -->
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- 引用結束 -->
+
+    <script type="text/babel">
+      function formatName(user) {
+        return user.firstName + " " + user.lastName;
+      }
+
+      const user = {
+        firstName: "Harper",
+        lastName: "Perez",
+      };
+      // JSX 用一個變數存 HTML，可以在裡面帶入參數
+      const element = <h1>Hello, {formatName(user)}!</h1>;
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(element);
+
+      /**筆記
+       * babel
+       *  白話來說是一個人家寫好的語法轉換工具，常常使用在把最新的JS語法轉成IE看得懂的版本
+       *
+       * JSX
+       *  會發現React在script裡面寫html是很方便的事情，很多重複的標籤可以用迴圈or方跑去重複使用!
+       * 
+       * React語法
+       *  const root = ReactDOM.createRoot(單一節點);
+       *  root.render(元素節點(只能一層));
+       *
+       * Self-Closing
+       *  tag標籤需要閉合!! 試試看 br hr
+       * 
+       * SPA = 單頁式應用 = Single Page Application
+       *  要在網頁實現像是App那樣順暢的感覺的話，只能在網頁上有一個根元素(節點)
+       *  之後都在他底下操作小孩...孫孫孫子
+       */
+    </script>
+  </body>
+</html>
