@@ -44,6 +44,8 @@ req.query; //Query參數 http://localhost:3000?name=cat&id=1
 req.url;
 req.body;
 req.file;
+
+__dirname //資料夾所在位置
 ```
 
 ## http header 知識

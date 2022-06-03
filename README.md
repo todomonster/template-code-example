@@ -15,12 +15,14 @@ cdn-bootstrap5 | 5.0
 
 ## express
 
-- express4
+- express4 建議依順序閱讀
   - basic | 基本啟用 server 方式
   - router-basic | 路由基本 get post 範例
   - router-module | 路由模組化拆分範例
-  <!-- - body-parser | 後端編碼轉換範例，各版本比較 -->
-  <!-- - multer | 後端上傳圖片/檔案範例，用 multer 套件 -->
+  - param+query | 2 個最常見的參數(變數)
+  - body-parser | 後端編碼轉換範例，各版本比較
+  - cors | 跨域請求
+  - multer | 後端上傳圖片/檔案範例，用 multer 套件
 
 ## pixijs
 
@@ -47,6 +49,8 @@ right-click-menu | 自定義滑鼠右鍵選單
 
 ## 講解遠端協作的公司是如何合併程式碼
 
+### 推上去
+
 1. 拉群組成員，ex:我們創一個叫做`todomonster`的群組
 2. 組長用公司帳號創建一個`repo`
 3. 組員使用`fork`將該專案拉回到私人專案
@@ -56,3 +60,7 @@ right-click-menu | 自定義滑鼠右鍵選單
 其實正式上線的專案會分成不同分支`branch`，有開發新功能和穩定版...等
 
 `fork`和`clone`剛開始會以為都是複製，但其實差很大!
+
+### 同步(拉取下來)
+
+https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork?fbclid=IwAR26m6sX2oyMJhv9OV5nlVLDIzZFhFX4G7XqhK2yHGN4Ix5_JWVaClpVNVE
