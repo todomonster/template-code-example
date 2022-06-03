@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!-- https://flaviocopes.com/how-to-upload-files-fetch/ -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MY APP</title>
+  </head>
+  <body>
+    <!--  SINGLE FILE -->
+    <h1>SINGLE FILE Form版本</h1>
+    <!-- action 和 enctype都要注意 -->
+    <form
+      action="http://localhost:3011/file"
+      enctype="multipart/form-data"
+      method="POST"
+    >
+      <!-- name 是key，要和後端對應 -->
+      <input type="file" name="myFile" />
+      <input type="submit" value="Upload a file" />
+    </form>
+
+    <!-- <script>
+      document
+        .querySelector("#myFirstUpload")
+        .addEventListener("change", (event) => {
+          handleImageUpload(event);
+        });
+
+      function handleImageUpload(event) {
+        const files = event.target.files;
+        const formData = new FormData();
+        formData.append("myFile", files[0]);
+        // headers: {
+        //     "Content-Type": "multipart/form-data",
+        //   },
+        fetch("http://localhost:3011/file", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    </script> -->
+  </body>
+</html>

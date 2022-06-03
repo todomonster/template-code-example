@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!-- https://flaviocopes.com/how-to-upload-files-fetch/ -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MY APP</title>
+  </head>
+  <body>
+    <!--  SINGLE FILE -->
+    <h1>FILE js版本</h1>
+    <input type="file" name="myFile" id="myFirstUpload" />
+    <input type="submit" value="Upload a file" onclick="postFile()" />
+
+    <script>
+      const formData = new FormData();
+      document
+        .querySelector("#myFirstUpload")
+        .addEventListener("change", (event) => {
+          handleImageUpload(event);
+        });
+
+      function handleImageUpload(event) {
+        const files = event.target.files;
+        formData.append("myFile", files[0]);
+        console.log(formData);
+      }
+
+      function postFile() {
+        // 這邊有坑  千萬不要加header
+        // https://stackoverflow.com/questions/35795529/fetch-api-and-multer-error-while-uploading-file
+        //https://blog.csdn.net/yun_hou/article/details/97004557
+        fetch("http://localhost:3011/file", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            alert(data);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    </script>
+  </body>
+</html>
