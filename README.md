@@ -17,6 +17,10 @@ cdn-bootstrap5 | 5.0
 
 - express4
   - basic | 基本啟用 server 方式
+  - router-basic | 路由基本 get post 範例
+  - router-module | 路由模組化拆分範例
+  <!-- - body-parser | 後端編碼轉換範例，各版本比較 -->
+  <!-- - multer | 後端上傳圖片/檔案範例，用 multer 套件 -->
 
 ## pixijs
 
@@ -24,9 +28,11 @@ cdn-bootstrap5 | 5.0
 
 - cdn-react-basic | 18
 - cdn-react-function-component | 18
-  <!-- - react-react-i18next -->
-  <!-- - react-router -->
-  <!-- - react-bootstrap -->
+- npm
+  - react-basic
+  - react-react-i18next
+  - react-router
+  - react-bootstrap
 
 ## vue
 
