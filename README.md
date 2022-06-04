@@ -26,13 +26,15 @@ cdn-bootstrap5 | 5.0
 
 ## pixijs
 
+cdn-pixijs-basic | 5.3.12
+
 ## react
 
 - cdn-react-basic | 18
 - cdn-react-function-component | 18
 - npm
   - react-basic
-  - react-react-i18next
+  - react-react-i18 | i18next
   - react-router
   - react-bootstrap
 
@@ -43,7 +45,17 @@ cdn-bootstrap5 | 5.0
 
 ## web-function
 
+api-fetch | 用 ES6 的 fetch 拿資料
 right-click-menu | 自定義滑鼠右鍵選單
+mailto | 呼叫 mail 軟體
+phone-call | 呼叫電話軟體
+
+## html5-element
+
+- tag-abbr | 文字縮寫
+- tag-fieldset |  表單分組 框框
+- tag-input-range | slide bar
+- tag-meter |儀表 數值,比例
 
 ---
 
