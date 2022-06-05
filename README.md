@@ -49,6 +49,7 @@ api-fetch | 用 ES6 的 fetch 拿資料
 right-click-menu | 自定義滑鼠右鍵選單
 mailto | 呼叫 mail 軟體
 phone-call | 呼叫電話軟體
+map-leaflet | 免費開源地圖(圖資)叫做Leaflet，可以製作ex口罩地圖
 
 ## html5-element
 
