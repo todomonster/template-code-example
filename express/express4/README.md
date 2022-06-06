@@ -38,6 +38,7 @@ res.render(); //渲染 需要 html或是ejs等靜態檔案
 res.send(); //發送訊息
 res.end();
 res.write();
+res.redirect('/') //轉址
 
 req.params; //路徑 http://localhost:3000/user/ken /user:who
 req.query; //Query參數 http://localhost:3000?name=cat&id=1
