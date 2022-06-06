@@ -23,6 +23,7 @@ cdn-bootstrap5 | 5.0
   - body-parser | 後端編碼轉換範例，各版本比較
   - cors | 跨域請求
   - multer | 後端上傳圖片/檔案範例，用 multer 套件
+  - express-session | 和前端溝通需要操作cookie和session的套件
 
 ## pixijs
 
