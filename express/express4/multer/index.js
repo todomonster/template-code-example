@@ -1,4 +1,5 @@
 // 這個範例比較複雜，包含2個html前端範例
+// 進階讀取檔案可以參考這篇文章 https://dpes8693.github.io/blog-vuepress/backend/express/file-type.html
 
 const express = require("express");
 const app = express();
