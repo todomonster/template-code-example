@@ -18,33 +18,5 @@
       <input type="file" name="myFile" />
       <input type="submit" value="Upload a file" />
     </form>
-
-    <!-- <script>
-      document
-        .querySelector("#myFirstUpload")
-        .addEventListener("change", (event) => {
-          handleImageUpload(event);
-        });
-
-      function handleImageUpload(event) {
-        const files = event.target.files;
-        const formData = new FormData();
-        formData.append("myFile", files[0]);
-        // headers: {
-        //     "Content-Type": "multipart/form-data",
-        //   },
-        fetch("http://localhost:3011/file", {
-          method: "POST",
-          body: formData,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log(data);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      }
-    </script> -->
   </body>
 </html>

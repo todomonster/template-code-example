@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<!-- source https://leafletjs.com/examples/quick-start/ -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Quick Start - Leaflet</title>
+
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="docs/images/favicon.ico"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+      integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+      integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+      crossorigin=""
+    ></script>
+
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      .leaflet-container {
+        height: 600px;
+        width: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <button onclick="toTaiwan(10)">panTo Taiwan</button>
+    <div id="map" class="leaflet-container"></div>
+
+    <script>
+      // Leaflet 物件
+      console.log(L);
+      //   地圖物件
+      var map = L.map("map").setView([51.505, -0.09], 13);
+      //   圖層建立 openstreetmap
+      var tiles = L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+          maxZoom: 19,
+          // attribution:
+          //   '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        }
+      ).addTo(map);
+      // 建立藍色圖標
+      var marker = L.marker([51.5, -0.09])
+        .addTo(map)
+        .bindPopup("<b>Hello world!</b><br />I am a popup.")
+        .openPopup();
+
+      // 在地圖上畫圓
+      //   var circle = L.circle([51.508, -0.11], {
+      //     color: "red",
+      //     fillColor: "#f03",
+      //     fillOpacity: 0.5,
+      //     radius: 500,
+      //   })
+      //     .addTo(map)
+      //     .bindPopup("I am a circle.");
+
+      // 在地圖上畫多邊形
+      //   var polygon = L.polygon([
+      //     [51.509, -0.08],
+      //     [51.503, -0.06],
+      //     [51.51, -0.047],
+      // 	[51.511445, -0.06403],
+      //   ])
+      //     .addTo(map)
+      //     .bindPopup("I am a polygon.");
+
+      //   在地圖上生成對話框
+      var popup = L.popup()
+        .setLatLng([51.513, -0.09])
+        .setContent("I am a standalone popup.")
+        .openOn(map);
+      // 在地圖上監聽點擊事件ㄠ
+      function onMapClick(e) {
+        //   點擊事件物件
+        console.log(e, popup);
+        popup
+          .setLatLng(e.latlng)
+          .setContent("You clicked the map at " + e.latlng.toString())
+          .openOn(map);
+      }
+      map.on("click", onMapClick);
+
+      function toTaiwan(zoomNumber) {
+        const lat = 25.066492;
+        const lng = 121.557541;
+        map.panTo([lat, lng]);
+        map.setZoom(zoomNumber);
+      }
+      /**
+       * 筆記區
+       * 經度=latitude=lat 緯度=longitude=lon
+       *setLatLng({lat: 51.53, lng: -0.13}) 設定經緯度
+       *setView([51.505, -0.09], 13) 設定經緯度，zoom等級 越大越詳細
+       *tileLayer 是以圖磚的方式存取圖層 http://leaflet-extras.github.io/leaflet-providers/preview/index.html
+       *map.panTo(經度,緯度) 移動畫面到指定地
+       *map.setZoom(10) 指定縮放大小
+       */
+
+      // 加入綠色圖標
+      var greenIcon = new L.Icon({
+        iconUrl:
+          "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+        shadowUrl:
+          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41],
+      });
+
+      L.marker([51.515, -0.12], { icon: greenIcon }).addTo(map);
+    </script>
+  </body>
+</html>

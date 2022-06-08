@@ -16,6 +16,9 @@ cd react-basic-app
 # 啟動
 npm start
 
+# 完成開發
+npm run build
+
 ```
 
 ## 看看初始化後安裝了甚麼

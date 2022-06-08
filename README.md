@@ -23,6 +23,7 @@ cdn-bootstrap5 | 5.0
   - body-parser | 後端編碼轉換範例，各版本比較
   - cors | 跨域請求
   - multer | 後端上傳圖片/檔案範例，用 multer 套件
+  - express-session | 和前端溝通需要操作cookie和session的套件
 
 ## pixijs
 
@@ -49,6 +50,7 @@ api-fetch | 用 ES6 的 fetch 拿資料
 right-click-menu | 自定義滑鼠右鍵選單
 mailto | 呼叫 mail 軟體
 phone-call | 呼叫電話軟體
+map-leaflet | 免費開源地圖(圖資)叫做Leaflet，可以製作ex口罩地圖
 
 ## html5-element
 
