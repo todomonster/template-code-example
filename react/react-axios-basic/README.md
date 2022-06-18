@@ -3,9 +3,9 @@
 ```bash
 
 # 初始化 | npx是下載後自動砍掉不要的安裝包
-npx create-react-app react-basic-app
+npx create-react-app react-basic-axios
 # 去安裝好的資料夾
-cd react-basic-app
+cd react-basic-axios
 # 啟動
 npm start
 
