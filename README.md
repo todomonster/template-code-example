@@ -1,5 +1,7 @@
 # template-code-example
 
+`建議用ctrl+F搜尋`
+
 這邊主要放跟網頁相關的範例程式碼，省去跑官網查文件的時間，未來工作可能會用上!
 
 - 若是使用 cdn 記得加上 cdn-xxx.html
