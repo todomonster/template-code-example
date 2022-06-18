@@ -1,5 +1,7 @@
 # template-code-example
 
+`建議用ctrl+F搜尋`
+
 這邊主要放跟網頁相關的範例程式碼，省去跑官網查文件的時間，未來工作可能會用上!
 
 - 若是使用 cdn 記得加上 cdn-xxx.html
@@ -23,7 +25,7 @@ cdn-bootstrap5 | 5.0
   - body-parser | 後端編碼轉換範例，各版本比較
   - cors | 跨域請求
   - multer | 後端上傳圖片/檔案範例，用 multer 套件
-  - express-session | 和前端溝通需要操作cookie和session的套件
+  - express-session | 和前端溝通需要操作 cookie 和 session 的套件
 
 ## pixijs
 
@@ -38,6 +40,7 @@ cdn-pixijs-basic | 5.3.12
   - react-react-i18 | i18next
   - react-router
   - react-bootstrap
+  - react-axios-basic | axios 打 API 套件封裝範例
 
 ## vue
 
@@ -47,15 +50,17 @@ cdn-pixijs-basic | 5.3.12
 ## web-function
 
 api-fetch | 用 ES6 的 fetch 拿資料
-right-click-menu | 自定義滑鼠右鍵選單
+right-click-custom-menu | 自定義滑鼠右鍵選單
 mailto | 呼叫 mail 軟體
 phone-call | 呼叫電話軟體
-map-leaflet | 免費開源地圖(圖資)叫做Leaflet，可以製作ex口罩地圖
+map-leaflet | 免費開源地圖(圖資)叫做 Leaflet，可以製作 ex 口罩地圖
+before-close-alert | 關閉網頁時阻擋預設動作，可以在還沒有存檔做提示
+disable-copy | 禁用複製
 
 ## html5-element
 
 - tag-abbr | 文字縮寫
-- tag-fieldset |  表單分組 框框
+- tag-fieldset | 表單分組 框框
 - tag-input-range | slide bar
 - tag-meter |儀表 數值,比例
 
