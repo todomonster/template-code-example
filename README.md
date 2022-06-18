@@ -40,6 +40,7 @@ cdn-pixijs-basic | 5.3.12
   - react-react-i18 | i18next
   - react-router
   - react-bootstrap
+  - react-axios-basic | axios 打 API 套件封裝範例
 
 ## vue
 
