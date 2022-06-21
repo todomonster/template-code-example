@@ -17,8 +17,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.27.2",
-    "cheerio": "^1.0.0-rc.11",
     "cors": "^2.8.5",
     "ejs": "^3.1.8",
     "express": "^4.17.1",
