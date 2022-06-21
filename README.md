@@ -18,14 +18,23 @@ cdn-bootstrap5 | 5.0
 ## express
 
 - express4 建議依順序閱讀
-  - basic | 基本啟用 server 方式
+  - basic
+    - basic | 基本啟用 server 方式
+    - setter & getter | express 有 set 和 get 可以設值/取值
+    - static | 可以渲染靜態檔案 能搭配 ejs 等套件
+    - setter & getter
   - router-basic | 路由基本 get post 範例
   - router-module | 路由模組化拆分範例
   - param+query | 2 個最常見的參數(變數)
   - body-parser | 後端編碼轉換範例，各版本比較
+  - ejs | 渲染引擎可以當成是php動態改html變數
   - cors | 跨域請求
   - multer | 後端上傳圖片/檔案範例，用 multer 套件
   - express-session | 和前端溝通需要操作 cookie 和 session 的套件
+
+補充
+
+- file-type | 套件可以幫忙判斷上傳檔案的格式是否串改(png,jpg...)
 
 ## pixijs
 
