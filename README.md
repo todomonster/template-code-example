@@ -58,6 +58,11 @@ cdn-pixijs-basic | 5.3.12
 - cdn-vue2-basic | 2.6 | vue 框架 cdn
 - cdn-vuetify-table | 2.6 | vue+CSS 框架
 
+vue3
+
+- cdn-vue3-basic | vue3 新語法範例 composition API
+- loader | 模擬網站loading動畫
+
 ## web-function
 
 api-fetch | 用 ES6 的 fetch 拿資料
