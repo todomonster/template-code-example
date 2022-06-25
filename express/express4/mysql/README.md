@@ -1,3 +1,10 @@
+## 注意
+npm 有兩個 mysql 套件
+
+[mysql vs mysql2](https://stackoverflow.com/questions/25344661/what-is-the-difference-between-mysql-mysql2-considering-nodejs)
+
+## 步驟
+
 1-1
 
 請先安裝 MySQL [參考連結](https://hackmd.io/@dpes5407/HkPyqOpu9)
