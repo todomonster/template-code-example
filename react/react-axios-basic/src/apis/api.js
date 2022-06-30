@@ -6,7 +6,28 @@
 // DELETE
 import apiInstance from "./instance";
 // ex: https://pokeapi.co/api/v2/pokemon/25/
+// 管理路徑
 export const apiPokemon = (id) => apiInstance.GET(`/pokemon/${id}/`);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // ========================更多範例

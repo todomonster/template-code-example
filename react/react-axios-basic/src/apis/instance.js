@@ -8,7 +8,7 @@ const apiInstance = axios.create({
   timeout: 20000,
 });
 
-// Request Interceptors 請求發起時可以先做某些事情
+// Request Interceptors 請求攔截
 apiInstance.interceptors.request.use(
   function (config) {
     // Do something before request is sent
@@ -20,7 +20,7 @@ apiInstance.interceptors.request.use(
   }
 );
 
-// Response Interceptors 回應時可以先做某些事情
+// Response Interceptors 回應攔截
 apiInstance.interceptors.response.use(
   function (response) {
     // Do something with response data
@@ -45,7 +45,9 @@ apiInstance.interceptors.response.use(
       alert("'apis/instance.js'網路出了點問題，請重新連線後重整網頁");
       return;
     }
-    return Promise.reject(error);
+    console.log(`${error.code},${error.message}`)
+    // Promise.reject()
+    return error;
   }
 );
 
@@ -81,13 +83,13 @@ export default {
     try {
       // 修改baseUrl的方式
       // apiInstance({ url: url, baseURL: 'http://new-url.com' })
-      console.log("apis/instance.js");
+      // console.log("apis/instance.js");
       const res = await apiInstance.get(url, {
         params,
       });
       return res.data;
     } catch (res) {
-      return Promise.reject(res.data);
+      return Promise.reject(res);
     }
   },
   async POST(...arge) {
@@ -95,7 +97,7 @@ export default {
       const res = await apiInstance.post(...arge);
       return res.data;
     } catch (res) {
-      return Promise.reject(res.data);
+      return Promise.reject(res);
     }
   },
   async PUT(...arge) {
@@ -103,7 +105,7 @@ export default {
       const res = await apiInstance.put(...arge);
       return res.data;
     } catch (res) {
-      return Promise.reject(res.data);
+      return Promise.reject(res);
     }
   },
   async DELETE(url, params) {
@@ -113,7 +115,7 @@ export default {
       });
       return res.data;
     } catch (res) {
-      return Promise.reject(res.data);
+      return Promise.reject(res);
     }
   },
 };
