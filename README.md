@@ -44,6 +44,8 @@ cdn-pixijs-basic | 5.3.12
 
 ## react
 
+[https://github.com/dpes8693/react-teach](https://github.com/dpes8693/react-teach)
+
 - cdn-react-basic | 18
 - cdn-react-function-component | 18
 - npm
