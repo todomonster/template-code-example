@@ -1,0 +1,135 @@
+Skip to content
+Search or jump to…
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@mawarutuco 
+todomonster
+/
+template-code-example
+Public
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+template-code-example/vue/loader/cdn-vue3-loader.html
+@dpes8693
+dpes8693 Update vue3 example
+Latest commit 1733f4f 27 days ago
+ History
+ 1 contributor
+92 lines (86 sloc)  2.72 KB
+
+<!-- source: https://github.com/webnoobcodes/vuejs-page-preloader -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./loader.css" />
+  </head>
+  <body>
+    <!-- 全域模組 type="importmap" 目的是底下能用ES6 import語法 -->
+    <script type="importmap">
+      {
+        "imports": {
+          "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        }
+      }
+    </script>
+<!-- youtube -->
+    <iframe
+      width="560"
+      height="315"
+      src="https://www.youtube.com/embed/iCk22ADjQPU"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+
+    <div id="app">
+      <!-- loader start -->
+      <div class="page-loader" v-if="!isloaded">
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+      </div>
+      <!-- loader end -->
+      <h1>DEMO loading</h1>
+      {{value}}<br />
+      <!--原生dom-->
+      <input type="button" value="測試" @click="click" /><br />
+    </div>
+
+    <script type="module">
+      import { createApp } from "vue";
+      import { ref, onMounted } from "vue";
+
+      // vue3的 Composition API 的奧義
+      // 不要傻傻的把程式碼都寫到setup裡面了，分出來寫便於複用，可以寫到單獨的js檔案裡面
+      const testManage = () => {
+        const value = ref("你好，世界"); // 相當於data
+        const isloaded = ref(0); // 相當於data
+
+        const click = () => {
+          // 相當於 methods 裡面的事件
+          value.value = "好的，收到！" + new Date();
+        };
+
+        return {
+          value,
+          isloaded,
+          click,
+        };
+      };
+
+      // 定義 vue3 的物件
+      const vue3Composition = {
+        // 傳說中的setup
+        setup() {
+          // 使用上面的定義的“類”，分散setup內部的程式碼
+          const { value, isloaded, click } = testManage();
+          onMounted(() => {
+            document.onreadystatechange = () => {
+              if (document.readyState == "complete") {
+                setTimeout(()=>{isloaded.value = 1},3000)
+              }
+            };
+          });
+          return {
+            //超級重要 ========== 返回給模板，否則模板訪問不到。這裡返回的是物件。
+            value,
+            isloaded,
+            click,
+          };
+        },
+      };
+      // 掛載Vue
+      const vm = createApp(vue3Composition).mount("#app");
+    </script>
+  </body>
+</html>
+Footer
+© 2022 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+You have no unread notifications
