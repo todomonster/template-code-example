@@ -3,7 +3,7 @@ const parseExcel = require("../xlsx/index");
 
 async function createTableSQL(fileName, dbName, tableName) {
   let sql =
-    "CREATE TABLE `$dbName`.`$tableName` (`id` INT NOT NULL AUTO_INCREMENT, `店別` VARCHAR(32)  , `銷售單號` VARCHAR(32)  , `機號` VARCHAR(32)  , `顧客編號` VARCHAR(32)  , `顧客姓名` VARCHAR(32)  , `持卡人` VARCHAR(32)  , `付款方式` VARCHAR(32)  , `款項金額` FLOAT  , `結帳時間` DATETIME  , `註記` VARCHAR(32)  , `結帳員工` VARCHAR(32) , PRIMARY KEY (`id`)) ENGINE = InnoDB;";
+    "CREATE TABLE `$dbName`.`$tableName` (`id` INT NOT NULL AUTO_INCREMENT, `店別` VARCHAR(16)  , `銷售單號` VARCHAR(16)  , `機號` VARCHAR(16)  , `顧客編號` VARCHAR(16)  , `顧客姓名` VARCHAR(16)  , `持卡人` VARCHAR(16)  , `付款方式` VARCHAR(16)  , `款項金額` FLOAT  , `結帳時間` DATETIME  , `註記` VARCHAR(16)  , `結帳員工` VARCHAR(16) , PRIMARY KEY (`id`)) ENGINE = InnoDB CHARSET=utf8mb4;";
   sql = sql.replace("$dbName", dbName);
   sql = sql.replace("$tableName", tableName);
   await saveFile(fileName, sql);

@@ -1,0 +1,20 @@
+#app {
+  background-color: rgba(195, 224, 237, 0.858);
+}
+.custom-addBtn {
+  z-index: 20001;
+  position: fixed;
+  right: 15px;
+  bottom: 15px;
+}
+.custom-redColor {
+  color: red;
+}
+
+.custom-blueColor {
+  color: rgb(0, 32, 113);
+}
+
+.custom-p-5{
+    padding: 25px;
+}
