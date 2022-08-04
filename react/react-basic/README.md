@@ -1,4 +1,4 @@
-hihihihihihihi
+
 # 筆記
 
 記得安裝 nodejs~
