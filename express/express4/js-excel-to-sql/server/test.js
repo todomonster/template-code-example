@@ -185,4 +185,57 @@ app.get("/mobile/:year/:month", express.json(), function (req, res) {
   }
 });
 
+app.post("/random", express.json(), function (req, res) {
+  try {
+    const params = req.body;
+    const { year, month, index, monthPrice, mobilePercent } = params;
+    const cashPercent = 100 - mobilePercent;
+    let prices = (monthPrice * mobilePercent) / 100;
+    if (isNaN(Number(year)) || isNaN(Number(month))) {
+      return res.send("請注意格式 ex: /data/2022/03");
+    }
+    let ans = { index };
+
+    const min = addMonth(`${year}-${month}-01`, 0);
+    const max = addMonth(min, 1);
+    let tableName = "cash";
+    let SQL = `
+    SELECT NULL AS id, NULL AS 款項金額, NULL AS total
+    FROM dual
+    WHERE (@total := 0)
+    UNION
+    
+    SELECT id, 款項金額, @total := @total + 款項金額 AS total
+    FROM ${tableName}
+    WHERE @total < ${prices} AND 結帳時間 BETWEEN '${min}' AND '${max}' AND id%2=1 ;
+    `;
+
+    conn.query(SQL, [], (err, data) => {
+      console.log(SQL);
+      if (err) {
+        console.log(err);
+        return res.send([]);
+      } else {
+        ans.cash = data;
+        ans.cashTotal = data[data.length-1].total
+        tableName = "mobile";
+        prices = (monthPrice * cashPercent) / 100;
+        conn.query(SQL, [], (err, data) => {
+          console.log(SQL);
+          if (err) {
+            console.log(err);
+            return res.send([]);
+          } else {
+            ans.mobile = data;
+            ans.mobileTotal = data[data.length-1].total
+            return res.send(ans);
+          }
+        });
+      }
+    });
+  } catch (error) {
+    return res.send(error);
+  }
+});
+
 app.listen(3011, () => console.log("http://localhost:3011/"));

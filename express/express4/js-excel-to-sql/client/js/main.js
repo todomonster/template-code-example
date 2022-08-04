@@ -35,7 +35,8 @@ new Vue({
     // card
     cards: [],
     headers: [
-      { text: "id", value: "id", sortable: false },
+      { text: "Num", value: "index", sortable: false },
+      // { text: "id", value: "id", sortable: false },
       { text: "店別", value: "店別", sortable: false },
       { text: "銷售單號", value: "銷售單號", sortable: false },
       { text: "機號", value: "機號", sortable: false },
@@ -59,13 +60,9 @@ new Vue({
       },
     },
   }),
-  computed: {},
   watch: {},
   mounted() {
     console.clear();
-    // this.getStatus();
-    // this.getMobile();
-    // this.getCash();
   },
   methods: {
     toNTD(prices) {
@@ -75,36 +72,62 @@ new Vue({
         currency: "TWD",
       });
     },
-
+    itemsWithIndex(index) {
+      return this.cards[index].items.map((items, index) => ({
+        ...items,
+        index: index + 1,
+      }));
+    },
     async addCard() {
       this.btnState = true;
       const selected = this.select.split("/");
-      const data = await fetch(
-        `http://localhost:3011/status/${selected[0]}/${selected[1]}`
-      )
+      // ===============================
+
+      await fetch(`http://localhost:3011/status/${selected[0]}/${selected[1]}`)
         .then((response) => response.json())
         .then((data) => {
           if (data.length === 0) return;
           const { cash, mobile } = data;
           const total = cash.sum + mobile.sum;
+          const { cashPages, mobilePages, pageCount } = this.countPage(
+            cash.rows,
+            mobile.rows
+          );
           const card = {
             year: selected[0],
             month: selected[1],
             title: `${selected[0]}/${selected[1]}`,
             cash,
             mobile,
-            monthPrice: total * 0.02,
+            monthPrice: total * 0.2,
             mobilePercent: 75,
             // cashPercent: 25,
             total: total,
             show: false,
             headers: this.headers,
             items: [],
-            now: 1,
+            page: 1,
+            pageCount,
+            cashPages,
+            mobilePages,
+            ids: [],
+            newTotal: 0,
+            newRows: 0,
+            index: this.cards.length,
           };
-          this.cards.push(card);
 
-          return data;
+          return card;
+        })
+        .then(async (card) => {
+          const data = await this.getRandom(card);
+          card.newTotal = data.mobileTotal + data.cashTotal;
+          card.newRows = data.cash.length + data.mobile.length;
+          card.ids = [
+            ...data.cash.map((x) => x.id),
+            ...data.mobile.map((x) => x.id),
+          ];
+          // console.log(data)
+          this.cards.push(card);
         })
         .catch((err) => {
           if (err.message === "Failed to fetch") {
@@ -115,16 +138,29 @@ new Vue({
       this.dialog = false;
       this.btnState = false;
     },
+    countPage(cashRows, mobileRows) {
+      const cashPages = Math.floor(cashRows / 5);
+      const mobilePages = Math.floor(mobileRows / 5);
+      const pageCount = cashPages + mobilePages;
+      return { cashPages, mobilePages, pageCount };
+    },
     async genTable(obj, index) {
-      const { year, month, now } = obj;
+      const { year, month, page, cashPages, mobilePages, ids } = obj;
       if (this.validation(obj)) {
         try {
-          const mobileData = await this.getMobile({ year, month }, now);
+          const mobileData = await this.getMobile(
+            { year, month },
+            cashPages,
+            ids
+          );
           this.cards[index].items.push(...mobileData.data);
-          const cashData = await this.getCash({ year, month }, now);
+          const cashData = await this.getCash(
+            { year, month },
+            mobilePages,
+            ids
+          );
           this.cards[index].items.push(...cashData.data);
           this.cards[index].show = true;
-          this.cards[index].now++;
         } catch (error) {
           console.log(error);
         }
@@ -154,27 +190,47 @@ new Vue({
       return true;
     },
     saveId(card) {
-      const saveItems = card.items.map((x) => x.id);
-      localStorage.setItem(card.title, JSON.stringify(saveItems));
+      // const saveItems = card.items.map((x) => x.id);
+      localStorage.setItem(card.title, JSON.stringify(card.ids));
       alert("ok");
     },
-    getMobile(selected = { year: "2022", month: "03" }, now = 1) {
+    getMobile(selected = { year: "2022", month: "03" }, page = 1, ids) {
       const { year, month } = selected;
       const limit = 5;
       return fetch(
-        `http://localhost:3011/mobile/${year}/${month}?limit=${limit}&now=${now}`
+        `http://localhost:3011/mobile/${year}/${month}?limit=${limit}&page=${page}`
       )
         .then((response) => response.json())
         .then((data) => data);
     },
-    getCash(selected = { year: "2022", month: "03" }, now = 1) {
+    getCash(selected = { year: "2022", month: "03" }, page = 1, ids) {
       const { year, month } = selected;
       const limit = 5;
       return fetch(
-        `http://localhost:3011/cash/${year}/${month}?limit=${limit}&now=${now}`
+        `http://localhost:3011/cash/${year}/${month}?limit=${limit}&page=${page}`
       )
         .then((response) => response.json())
         .then((data) => data);
+    },
+    // 明天繼續寫
+    getRandom(item) {
+      const { year, month, index, monthPrice, mobilePercent } = item;
+      let headers = {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      };
+
+      //以下是API文件中提及必寫的主體参數。而以下這個產品資料是六角學院提供的。
+      let body = { year, month, index, monthPrice, mobilePercent };
+      return fetch(`http://localhost:3011/random`, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(body),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          return data;
+        });
     },
   },
 });

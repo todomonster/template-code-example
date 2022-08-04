@@ -52,7 +52,12 @@
                     <v-spacer></v-spacer>
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on, attrs }">
-                        <v-btn icon v-bind="attrs" v-on="on" @click="saveId(cards[index])">
+                        <v-btn
+                          icon
+                          v-bind="attrs"
+                          v-on="on"
+                          @click="saveId(cards[index])"
+                        >
                           <v-icon>mdi-content-save</v-icon>
                         </v-btn>
                       </template>
@@ -174,10 +179,25 @@
                       <template>
                         <v-data-table
                           :headers="cards[index].headers"
-                          :items="cards[index].items"
+                          :items="itemsWithIndex(index)"
                           :items-per-page="10"
                           class="elevation-1"
+                          no-data-text="沒資料請上傳"
+                          hide-default-footer
+                          :page.sync="cards[index].page"
+                          @page-count="cards[index].pageCount = $event"
                         ></v-data-table>
+                        <div class="text-center pt-2">總金額: {{cards[index].newTotal}} | 總筆數: {{cards[index].newRows}} | ids: {{cards[index].ids}}</div>
+                        <div class="text-center pt-2">
+                          <v-pagination
+                            v-model="cards[index].page"
+                            :length="cards[index].pageCount"
+                            circle
+                            :total-visible="8"
+                            @next=""
+                            @input=""
+                          ></v-pagination>
+                        </div>
                       </template>
                       <!-- table end -->
                     </div>
