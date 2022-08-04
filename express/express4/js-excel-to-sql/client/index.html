@@ -79,19 +79,19 @@
                             <v-spacer></v-spacer>
                             <v-col
                               ><span class="custom-redColor">
-                                {{ i18n.limit + toNTD(cards[index].total)}}
+                                {{ i18n.limit + toNTD(cards[index]?.total)}}
                               </span>
                             </v-col>
                             <v-col
                               ><span>
                                 {{ i18n.mobileLimit +
-                                toNTD(cards[index].mobile.sum)}}
+                                toNTD(cards[index]?.mobile?.sum)}}
                               </span>
                             </v-col>
                             <v-col
                               ><span>
                                 {{ i18n.cashLimit +
-                                toNTD(cards[index].cash.sum)}}
+                                toNTD(cards[index]?.cash?.sum)}}
                               </span>
                             </v-col>
                           </v-row>

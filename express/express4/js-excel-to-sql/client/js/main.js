@@ -69,6 +69,7 @@ new Vue({
   },
   methods: {
     toNTD(prices) {
+      if (!prices) return "";
       return prices.toLocaleString("zh-TW", {
         style: "currency",
         currency: "TWD",
@@ -83,6 +84,7 @@ new Vue({
       )
         .then((response) => response.json())
         .then((data) => {
+          if (data.length === 0) return;
           const { cash, mobile } = data;
           const total = cash.sum + mobile.sum;
           const card = {
@@ -115,16 +117,17 @@ new Vue({
     },
     async genTable(obj, index) {
       const { year, month, now } = obj;
-      this.validation(obj);
-      try {
-        const mobileData = await this.getMobile({ year, month }, now);
-        this.cards[index].items.push(...mobileData.data);
-        const cashData = await this.getCash({ year, month }, now);
-        this.cards[index].items.push(...cashData.data);
-        this.cards[index].show = true;
-        this.cards[index].now++;
-      } catch (error) {
-        console.log(error);
+      if (this.validation(obj)) {
+        try {
+          const mobileData = await this.getMobile({ year, month }, now);
+          this.cards[index].items.push(...mobileData.data);
+          const cashData = await this.getCash({ year, month }, now);
+          this.cards[index].items.push(...cashData.data);
+          this.cards[index].show = true;
+          this.cards[index].now++;
+        } catch (error) {
+          console.log(error);
+        }
       }
     },
     validation(obj) {
@@ -132,22 +135,23 @@ new Vue({
       //1. percent
       if (mobilePercent < 0 || mobilePercent > 100) {
         alert("不符合 %數規則");
-        return;
+        return false;
       }
       //2. 超過金額
       if (monthPrice < 0 || monthPrice > total) {
         alert("不符合 總金額規則");
-        return;
+        return false;
       }
       //3.
       if ((mobilePercent * monthPrice) / 100 > mobile.sum) {
         alert("超過 mobile 最大上限");
-        return;
+        return false;
       }
       if (((100 - mobilePercent) * monthPrice) / 100 > cash.sum) {
         alert("超過 cash 最大上限");
-        return;
+        return false;
       }
+      return true;
     },
     saveId(card) {
       const saveItems = card.items.map((x) => x.id);
