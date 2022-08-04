@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>sidebar-right</title>
+    <style>
+      .pointer {
+        cursor: pointer;
+      }
+      .grey {
+        color: #818181;
+      }
+
+      .absolute {
+        position: absolute;
+      }
+
+      .top-2 {
+        top: 2px;
+      }
+
+      .font-20 {
+        font-size: 20px;
+      }
+
+      .mr-20 {
+        margin-right: 20px;
+      }
+
+      .sidenav {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        top: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 1);
+        overflow-x: hidden;
+        transition: 0.3s;
+        padding-top: 70px;
+        z-index: 999;
+      }
+
+      .sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .sidenav a:hover,
+      .tag span:hover {
+        color: #f1f1f1;
+      }
+
+      .tag {
+        border-radius: 10px;
+        background-color: black;
+        padding: 7px;
+        right: -23px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="mySidenav" class="sidenav">
+      <a href="#" class="absolute font-20 top-2 grey" onclick="closeNav()"
+        >&times;</a
+      >
+      <a href="#" class="grey">About</a>
+      <a href="#" class="grey">Services</a>
+    </div>
+
+    <div class="tag absolute" onclick="openNav()">
+      <span class="font-20 mr-20 grey pointer">&#9776;</span>
+    </div>
+
+    <script>
+      function openNav() {
+        document.getElementById("mySidenav").style.width = "300px";
+      }
+
+      function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+      }
+    </script>
+  </body>
+</html>

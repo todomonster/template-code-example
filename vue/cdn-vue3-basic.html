@@ -1,0 +1,62 @@
+<!-- https://iter01.com/583747.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <!-- 全域模組 type="importmap" 目的是底下能用ES6 import語法 -->
+    <script type="importmap">
+      {
+        "imports": {
+          "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        }
+      }
+    </script>
+
+    <div id="app">
+      資料繫結和UI庫的演示<br />
+      {{value}}<br />
+      <!--原生dom-->
+      <input type="button" value="測試" @click="click" /><br />
+    </div>
+
+    <script type="module">
+      import { createApp } from "vue";
+      import { ref, onMounted } from "vue";
+
+      // vue3的 Composition API 的奧義，
+      // 不要傻傻的把程式碼都寫到setup裡面了，分出來寫才是王道。
+      // 便於複用，可以寫到單獨的js檔案裡面
+      const testManage = () => {
+        const value = ref("你好，世界"); // 相當於data
+        const click = () => {
+          // 相當於 methods 裡面的事件
+          value.value = "好的，收到！" + new Date();
+        };
+
+        return {
+          value,
+          click,
+        };
+      };
+
+      // 定義 vue3 的物件
+      const vue3Composition = {
+        setup() {
+          const { value, click } = testManage();
+
+          return {
+            // 返回給模板，否則模板訪問不到。這裡返回的是物件。
+            value,
+            click,
+          };
+        },
+      };
+      // 掛載vue
+      const vm = createApp(vue3Composition).mount("#app");
+    </script>
+  </body>
+</html>

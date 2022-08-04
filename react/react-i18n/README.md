@@ -1,3 +1,4 @@
+```md
 ├─public
 │  └─locales //字典檔
 │      ├─en
@@ -14,6 +15,7 @@
    └─i18nTest 
         ├─i18n.js   //i18n設定檔
         └─testTranslation.js  //主要內容
+```
 
 # 問題
 i18nKey 功能是什麼?

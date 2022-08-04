@@ -8,6 +8,7 @@ app.get("/:who", (req, res) => {
   //query是網址?後面的參數
   const query = JSON.stringify(req.query);
   const url = JSON.stringify(req.url);
+  //const body = JSON.stringify(req.body); 需要body parser解析
   res.send(`params:${params},   query:${query},   url:${url}`);
 });
 

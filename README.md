@@ -18,20 +18,33 @@ cdn-bootstrap5 | 5.0
 ## express
 
 - express4 建議依順序閱讀
-  - basic | 基本啟用 server 方式
+  - basic
+    - basic | 基本啟用 server 方式
+    - setter & getter | express 有 set 和 get 可以設值/取值
+    - static | 可以渲染靜態檔案 能搭配 ejs 等套件
+    - setter & getter
   - router-basic | 路由基本 get post 範例
   - router-module | 路由模組化拆分範例
   - param+query | 2 個最常見的參數(變數)
   - body-parser | 後端編碼轉換範例，各版本比較
+  - session | 傳遞資料請參考範例的圖片
+  - ejs | 渲染引擎可以當成是 php 動態改 html 變數
   - cors | 跨域請求
   - multer | 後端上傳圖片/檔案範例，用 multer 套件
   - express-session | 和前端溝通需要操作 cookie 和 session 的套件
+  - mysql |和 MySQL 串接
+
+補充
+
+- file-type | 套件可以幫忙判斷上傳檔案的格式是否串改(png,jpg...)
 
 ## pixijs
 
 cdn-pixijs-basic | 5.3.12
 
 ## react
+
+[https://github.com/dpes8693/react-teach](https://github.com/dpes8693/react-teach)
 
 - cdn-react-basic | 18
 - cdn-react-function-component | 18
@@ -46,6 +59,11 @@ cdn-pixijs-basic | 5.3.12
 
 - cdn-vue2-basic | 2.6 | vue 框架 cdn
 - cdn-vuetify-table | 2.6 | vue+CSS 框架
+
+vue3
+
+- cdn-vue3-basic | vue3 新語法範例 composition API
+- loader | 模擬網站loading動畫
 
 ## web-function
 
