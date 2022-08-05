@@ -71,6 +71,7 @@
                     <template>
                       <v-form>
                         <v-container>
+                          <!-- monthPrice -->
                           <v-row class="d-flex justify-center align-center">
                             <v-col cols="12" sm="3">
                               <v-text-field
@@ -101,8 +102,8 @@
                             </v-col>
                           </v-row>
                           <!-- mobile -->
-                          <v-row>
-                            <v-col cols="12" sm="6">
+                          <v-row class="d-flex justify-center align-center">
+                            <v-col cols="12" sm="4">
                               <v-text-field
                                 v-model="cards[index].mobilePercent"
                                 :label="textLabel.mobile"
@@ -114,18 +115,26 @@
                               ></v-text-field>
                             </v-col>
 
-                            <v-col cols="12" sm="6">
+                            <v-col cols="12" sm="4">
                               <v-text-field
-                                v-model="cards[index].monthPrice * cards[index].mobilePercent /100"
+                                v-model="calculatePrice(cards[index],'mobile')"
                                 :label="textLabel.calculate"
-                                :rules="[rules.percentMax(cards[index].monthPrice * cards[index].mobilePercent /100, cards[index].mobile.sum  )]"
+                                :rules="[rules.percentMax(calculatePrice(cards[index],'mobile'), cards[index].mobile.sum  )]"
                                 readonly
                               ></v-text-field>
                             </v-col>
+                            <v-spacer></v-spacer>
+                            <v-col cols="12" sm="4">
+                              <span
+                                >{{i18n.mobileRatio +
+                                calculatePercent(cards[index],'mobile') + '%'
+                                }}</span
+                              >
+                            </v-col>
                           </v-row>
                           <!-- cash -->
-                          <v-row>
-                            <v-col cols="12" sm="6">
+                          <v-row class="d-flex justify-center align-center">
+                            <v-col cols="12" sm="4">
                               <v-text-field
                                 v-model="100-cards[index].mobilePercent"
                                 :label="textLabel.cash"
@@ -136,13 +145,21 @@
                               ></v-text-field>
                             </v-col>
 
-                            <v-col cols="12" sm="6">
+                            <v-col cols="12" sm="4">
                               <v-text-field
-                                v-model="cards[index].monthPrice - cards[index].monthPrice * cards[index].mobilePercent /100"
+                                v-model="calculatePrice(cards[index],'cash')"
                                 :label="textLabel.calculate"
-                                :rules="[rules.percentMax(cards[index].monthPrice - cards[index].monthPrice * cards[index].mobilePercent /100, cards[index].cash.sum  )]"
+                                :rules="[rules.percentMax(calculatePrice(cards[index],'cash'), cards[index].cash.sum  )]"
                                 readonly
                               ></v-text-field>
+                            </v-col>
+                            <v-spacer></v-spacer>
+                            <v-col cols="12" sm="4">
+                              <span
+                                >{{i18n.cashRatio +
+                                calculatePercent(cards[index],'cash') + '%'
+                                }}</span
+                              >
                             </v-col>
                           </v-row>
                           <v-row>
@@ -150,7 +167,7 @@
                               ><v-btn
                                 color="primary lighten-2"
                                 large
-                                @click="genTable(cards[index],index)"
+                                @click="redo(index)"
                               >
                                 {{i18n.random}}
                               </v-btn></v-col
@@ -179,25 +196,32 @@
                       <template>
                         <v-data-table
                           :headers="cards[index].headers"
-                          :items="itemsWithIndex(index)"
+                          :items="cards[index].items"
                           :items-per-page="10"
                           class="elevation-1"
-                          no-data-text="沒資料請上傳"
+                          no-data-text="No data"
                           hide-default-footer
                           :page.sync="cards[index].page"
                           @page-count="cards[index].pageCount = $event"
                         ></v-data-table>
-                        <div class="text-center pt-2">總金額: {{cards[index].newTotal}} | 總筆數: {{cards[index].newRows}} 
-                          <!-- | ids: {{cards[index].ids}} -->
+                        <div class="text-center pt-2">
+                          總金額: {{cards[index].newTotal}} | 總筆數:
+                          {{cards[index].newRows}} 
+                        </div>
+                        <div class="text-center pt-2">
+                          行動支付:{{cards[index].newMobileTotal}} | 現金支付:
+                          {{cards[index].newCashTotal}} | 行動筆數:
+                          {{cards[index].newMobileRows}} |現金筆數:
+                          {{cards[index].newCashRows}}
                         </div>
                         <div class="text-center pt-2">
                           <v-pagination
                             v-model="cards[index].page"
-                            :length="cards[index].pageCount"
+                            :length="cards[index].len-2"
                             circle
-                            :total-visible="8"
-                            @next=""
-                            @input=""
+                            :total-visible="10"
+                            @next="next(cards[index],index)"
+                            @input="next(cards[index],index)"
                           ></v-pagination>
                         </div>
                       </template>

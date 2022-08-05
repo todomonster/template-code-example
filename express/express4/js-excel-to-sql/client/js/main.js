@@ -3,7 +3,7 @@ new Vue({
   vuetify: new Vuetify(),
   data: () => ({
     i18n: {
-      random: "亂數獲取資料",
+      random: "再執行亂數獲取資料",
       save: "儲存該月紀錄",
       teach: `
   已知問題:
@@ -19,6 +19,8 @@ new Vue({
       limit: "總金額上限:   ",
       mobileLimit: "行動支付上限:   ",
       cashLimit: "現金支付上限:   ",
+      cashRatio: "行動上限 占比:\n",
+      mobileRatio: "現金上限 占比:\n",
     },
     textLabel: {
       calculate: "預估金額",
@@ -35,7 +37,7 @@ new Vue({
     // card
     cards: [],
     headers: [
-      { text: "Num", value: "index", sortable: false },
+      // { text: "Num", value: "index", sortable: false },
       // { text: "id", value: "id", sortable: false },
       { text: "店別", value: "店別", sortable: false },
       { text: "銷售單號", value: "銷售單號", sortable: false },
@@ -72,16 +74,46 @@ new Vue({
         currency: "TWD",
       });
     },
-    itemsWithIndex(index) {
-      return this.cards[index].items.map((items, index) => ({
-        ...items,
-        index: index + 1,
-      }));
+    calculatePrice(card, mode = "mobile") {
+      const { monthPrice, mobilePercent } = card;
+      let ans = 0;
+      switch (mode) {
+        case "mobile":
+          ans = (monthPrice * mobilePercent) / 100;
+          break;
+        case "cash":
+          ans = monthPrice - (monthPrice * mobilePercent) / 100;
+          break;
+      }
+      return ans;
     },
+    calculatePercent(card, mode = "mobile") {
+      const { cash, mobile } = card;
+      const maxCash = cash.sum;
+      const maxMobile = mobile.sum;
+      let value = 0;
+      let ans = 0;
+      switch (mode) {
+        case "mobile":
+          value = this.calculatePrice(card, mode);
+          ans = value / maxMobile;
+          break;
+        case "cash":
+          value = this.calculatePrice(card, mode);
+          ans = value / maxCash;
+          break;
+      }
+      return ans * 100;
+    },
+    // itemsWithIndex(index) {
+    //   return this.cards[index].items.map((items, index) => ({
+    //     ...items,
+    //     index: index + 1,
+    //   }));
+    // },
     async addCard() {
       this.btnState = true;
       const selected = this.select.split("/");
-      // ===============================
 
       await fetch(`http://localhost:3011/status/${selected[0]}/${selected[1]}`)
         .then((response) => response.json())
@@ -89,7 +121,8 @@ new Vue({
           if (data.length === 0) return;
           const { cash, mobile } = data;
           const total = cash.sum + mobile.sum;
-          const { cashPages, mobilePages, pageCount } = this.countPage(
+          // 計算 ids rows
+          const { cashPagination, mobilePagination } = this.countAllRows(
             cash.rows,
             mobile.rows
           );
@@ -100,22 +133,27 @@ new Vue({
             cash,
             mobile,
             monthPrice: total * 0.1,
-            mobilePercent: 1,
-            // cashPercent: 25,
-            total: total,
+            mobilePercent: 2,
+            total: total, // 預估該月金額 monthPrice
             show: false,
             headers: this.headers,
             items: [],
+            //table pagination
             page: 1,
-            pageCount,
-            cashPages,
-            mobilePages,
+            len: 999, //頁數有多少
+            cashPagination, //cash 頁數有多少 每頁5筆
+            mobilePagination, //mobile 頁數有多少 每頁5筆
+            //
             ids: {
               cash: [],
               mobile: [],
             },
-            newTotal: 0,
-            newRows: 0,
+            newTotal: 0, //總金額
+            newMobileTotal: 0,
+            newCashTotal: 0,
+            newRows: 0, //總筆數
+            newMobileRows: 0,
+            newCashRows: 0,
             index: this.cards.length,
           };
 
@@ -123,12 +161,13 @@ new Vue({
         })
         .then(async (card) => {
           const data = await this.getRandom(card);
-          card.newTotal = data.mobileTotal + data.cashTotal;
-          card.newRows = data.cash.length + data.mobile.length;
-          card.ids.cash = [...data.cash.map((x) => x.id)];
-          card.ids.mobile = [...data.mobile.map((x) => x.id)];
-          // console.log(data)
-          this.cards.push(card);
+          const newCard = this.setRefresh(card, data);
+          this.cards.push(newCard);
+          return newCard;
+        })
+        .then(async (card) => {
+          this.generate(card, card.index, 1);
+          console.log("myCard:", card);
         })
         .catch((err) => {
           if (err.message === "Failed to fetch") {
@@ -139,33 +178,76 @@ new Vue({
       this.dialog = false;
       this.btnState = false;
     },
-    countPage(cashRows, mobileRows) {
-      const cashPages = Math.floor(cashRows / 5);
-      const mobilePages = Math.floor(mobileRows / 5);
-      const pageCount = cashPages + mobilePages;
-      return { cashPages, mobilePages, pageCount };
+    countAllRows(cRows, mRows) {
+      const cashPagination = Math.floor(cRows / 5);
+      const mobilePagination = Math.floor(mRows / 5);
+      return { cashPagination, mobilePagination };
     },
-    async genTable(obj, index) {
-      const { year, month, page, cashPages, mobilePages, ids } = obj;
-      if (this.validation(obj)) {
-        try {
-          const mobileData = await this.getMobile(
-            { year, month },
-            cashPages,
-            ids
-          );
-          this.cards[index].items.push(...mobileData.data);
-          const cashData = await this.getCash(
-            { year, month },
-            mobilePages,
-            ids
-          );
-          this.cards[index].items.push(...cashData.data);
+    setRefresh(card, data) {
+      const { mobileTotal, cashTotal } = data;
+      const cashLen = data.cash.length;
+      const mobileLen = data.mobile.length;
+      card.newTotal = mobileTotal + cashTotal;
+      const length = cashLen + mobileLen;
+      card.newRows = length;
+      card.ids.cash = [...data.cash.map((x) => x.id)];
+      card.ids.mobile = [...data.mobile.map((x) => x.id)];
+      card.len = Math.floor(length / 10);
+      //
+      card.newMobileTotal = mobileTotal;
+      card.newCashTotal = cashTotal;
+      card.newMobileRows = mobileLen;
+      card.newCashRows = cashLen;
+      return card;
+    },
+    redo(INDEX) {
+      const card = this.cards[INDEX];
+      new Promise(async (resolve, reject) => {
+        return resolve(await this.getRandom(card));
+      })
+        .then((data) => {
+          return this.setRefresh(card, data);
+        })
+        .then(async (card) => {
+          await this.generate(card, card.index, 1);
+          console.log("myCard:", card);
+        })
+        .catch((err) => {
+          if (err.message === "Failed to fetch") {
+            alert("後端server沒開");
+          }
+          console.log(err);
+        });
+    },
+    async generate(cardItem, index, page = 1) {
+      const copy = JSON.parse(JSON.stringify(cardItem));
+      try {
+        const { ids } = copy;
+        const start = (page - 1) * 5;
+        const end = start + 5;
+        let a = ids.cash.slice(start, end);
+        let b = ids.mobile.slice(start, end);
+
+        if (this.validation(copy)) {
+          // 分業系統
+          let ids = {
+            cash: a,
+            mobile: b,
+          };
+          const data = await this.getData(ids);
+          let ans = [...data.cash, ...data.mobile];
+          //
+          this.cards[index].items = [...ans];
+
           this.cards[index].show = true;
-        } catch (error) {
-          console.log(error);
         }
+      } catch (error) {
+        console.log(error);
       }
+    },
+    next(card, index) {
+      // console.log(a,b);
+      this.generate(card, index, card.page);
     },
     validation(obj) {
       const { monthPrice, cash, mobile, total, mobilePercent } = obj;
@@ -179,7 +261,7 @@ new Vue({
         alert("不符合 總金額規則");
         return false;
       }
-      //3.
+      //3. maxValue
       if ((mobilePercent * monthPrice) / 100 > mobile.sum) {
         alert("超過 mobile 最大上限");
         return false;
@@ -191,7 +273,6 @@ new Vue({
       return true;
     },
     saveId(card) {
-      // const saveItems = card.items.map((x) => x.id);
       localStorage.setItem(
         card.title + "mobile",
         JSON.stringify(card.ids.mobile)
@@ -199,35 +280,35 @@ new Vue({
       localStorage.setItem(card.title + "cash", JSON.stringify(card.ids.cash));
       alert("ok");
     },
-    getMobile(selected = { year: "2022", month: "03" }, page = 1, ids) {
-      const { year, month } = selected;
-      const limit = 5;
-      return fetch(
-        `http://localhost:3011/mobile/${year}/${month}?limit=${limit}&page=${page}`
-      )
-        .then((response) => response.json())
-        .then((data) => data);
-    },
-    getCash(selected = { year: "2022", month: "03" }, page = 1, ids) {
-      const { year, month } = selected;
-      const limit = 5;
-      return fetch(
-        `http://localhost:3011/cash/${year}/${month}?limit=${limit}&page=${page}`
-      )
-        .then((response) => response.json())
-        .then((data) => data);
-    },
-    // 明天繼續寫
+
     getRandom(item) {
       const { year, month, index, monthPrice, mobilePercent } = item;
       let headers = {
         "Content-Type": "application/json",
         Accept: "application/json",
       };
-
-      //以下是API文件中提及必寫的主體参數。而以下這個產品資料是六角學院提供的。
-      let body = { year, month, index, monthPrice, mobilePercent };
+      const ratio = {
+        cash: this.calculatePercent(item, "cash"),
+        mobile: this.calculatePercent(item, "mobile"),
+      };
+      let body = { year, month, index, monthPrice, mobilePercent, ratio };
       return fetch(`http://localhost:3011/random`, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(body),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          return data;
+        });
+    },
+    getData(ids) {
+      let headers = {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      };
+      let body = ids;
+      return fetch(`http://localhost:3011/orders`, {
         method: "POST",
         headers: headers,
         body: JSON.stringify(body),
