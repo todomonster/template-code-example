@@ -187,7 +187,9 @@
                           :page.sync="cards[index].page"
                           @page-count="cards[index].pageCount = $event"
                         ></v-data-table>
-                        <div class="text-center pt-2">總金額: {{cards[index].newTotal}} | 總筆數: {{cards[index].newRows}} | ids: {{cards[index].ids}}</div>
+                        <div class="text-center pt-2">總金額: {{cards[index].newTotal}} | 總筆數: {{cards[index].newRows}} 
+                          <!-- | ids: {{cards[index].ids}} -->
+                        </div>
                         <div class="text-center pt-2">
                           <v-pagination
                             v-model="cards[index].page"

@@ -99,8 +99,8 @@ new Vue({
             title: `${selected[0]}/${selected[1]}`,
             cash,
             mobile,
-            monthPrice: total * 0.2,
-            mobilePercent: 75,
+            monthPrice: total * 0.1,
+            mobilePercent: 1,
             // cashPercent: 25,
             total: total,
             show: false,
@@ -110,7 +110,10 @@ new Vue({
             pageCount,
             cashPages,
             mobilePages,
-            ids: [],
+            ids: {
+              cash: [],
+              mobile: [],
+            },
             newTotal: 0,
             newRows: 0,
             index: this.cards.length,
@@ -122,10 +125,8 @@ new Vue({
           const data = await this.getRandom(card);
           card.newTotal = data.mobileTotal + data.cashTotal;
           card.newRows = data.cash.length + data.mobile.length;
-          card.ids = [
-            ...data.cash.map((x) => x.id),
-            ...data.mobile.map((x) => x.id),
-          ];
+          card.ids.cash = [...data.cash.map((x) => x.id)];
+          card.ids.mobile = [...data.mobile.map((x) => x.id)];
           // console.log(data)
           this.cards.push(card);
         })
@@ -191,7 +192,11 @@ new Vue({
     },
     saveId(card) {
       // const saveItems = card.items.map((x) => x.id);
-      localStorage.setItem(card.title, JSON.stringify(card.ids));
+      localStorage.setItem(
+        card.title + "mobile",
+        JSON.stringify(card.ids.mobile)
+      );
+      localStorage.setItem(card.title + "cash", JSON.stringify(card.ids.cash));
       alert("ok");
     },
     getMobile(selected = { year: "2022", month: "03" }, page = 1, ids) {
