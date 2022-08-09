@@ -206,14 +206,22 @@
                         ></v-data-table>
                         <div class="text-center pt-2">
                           總金額: {{cards[index].newTotal}} | 總筆數:
-                          {{cards[index].newRows}} 
+                          {{cards[index].newRows}}
+                          <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-btn icon v-bind="attrs" v-on="on">
+                                <v-icon>mdi-information</v-icon>
+                              </v-btn>
+                            </template>
+                            <span>
+                              行動支付:{{cards[index].newMobileTotal}} |
+                              現金支付: {{cards[index].newCashTotal}} |
+                              行動筆數: {{cards[index].newMobileRows}} |
+                              現金筆數: {{cards[index].newCashRows}}</span
+                            >
+                          </v-tooltip>
                         </div>
-                        <div class="text-center pt-2">
-                          行動支付:{{cards[index].newMobileTotal}} | 現金支付:
-                          {{cards[index].newCashTotal}} | 行動筆數:
-                          {{cards[index].newMobileRows}} |現金筆數:
-                          {{cards[index].newCashRows}}
-                        </div>
+
                         <div class="text-center pt-2">
                           <v-pagination
                             v-model="cards[index].page"

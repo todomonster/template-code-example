@@ -115,4 +115,89 @@ app.get("/mobile/:year/:month", express.json(), function (req, res) {
   }
 });
 
+// city_id get city
+function getCityById(id = 0) {
+  const sql = `SELECT * FROM citys WHERE id = ${id};`;
+  return new Promise((resolve, reject) => {
+    conn.query(sql, [], (err, data) => {
+      console.log(sql);
+      if (err) {
+        console.log(err);
+        return reject({});
+      } else {
+        return resolve(data[0]);
+      }
+    });
+  });
+}
+
+app.get("/city/:id", express.json(), async function (req, res) {
+  try {
+    const params = req.params;
+    let { id = 0 } = params;
+    return res.send(await getCityById(id));
+  } catch (error) {
+    return res.send(error);
+  }
+});
+// 給area地區 去拿city縣市
+app.get("/area/:name", express.json(), function (req, res) {
+  try {
+    const params = req.params;
+    let { name = "" } = params;
+    if (name === "all") name = "";
+    let sql = `SELECT name, city_id  FROM areas WHERE name LIKE '${name}%';`;
+    conn.query(sql, [], async (err, data) => {
+      console.log(sql);
+      if (err) {
+        console.log(err);
+        return res.send([]);
+      } else {
+        const city_id = data[0].city_id;
+        res.send(await getCityById(city_id));
+      }
+    });
+  } catch (error) {
+    return res.send(error);
+  }
+});
+
+// city+area
+app.get("/locate", express.json(), function (req, res) {
+  try {
+    let sql = `SELECT name,city_id,city FROM areas
+    INNER JOIN citys
+    ON areas.city_id = citys.id;`;
+    conn.query(sql, [], async (err, data) => {
+      console.log(sql);
+      if (err) {
+        console.log(err);
+        return res.send([]);
+      } else {
+        res.send(data);
+      }
+    });
+  } catch (error) {
+    return res.send(error);
+  }
+});
+
+// lineUsers
+app.get("/users", express.json(), function (req, res) {
+  try {
+    let sql = `SELECT DISTINCT lineUserid ,id FROM lineuser ORDER BY id;`;
+    conn.query(sql, [], async (err, data) => {
+      console.log(sql);
+      if (err) {
+        console.log(err);
+        return res.send([]);
+      } else {
+        res.send(data.map((x) => x.id));
+      }
+    });
+  } catch (error) {
+    return res.send(error);
+  }
+});
+
 app.listen(3011, () => console.log("http://localhost:3011/"));

@@ -2,6 +2,7 @@ new Vue({
   el: "#app",
   vuetify: new Vuetify(),
   data: () => ({
+    baseUrl: "http://10.1.1.111:3011" || "http://localhost:3011",
     i18n: {
       random: "再執行亂數獲取資料",
       save: "儲存該月紀錄",
@@ -13,14 +14,14 @@ new Vue({
       功能1 生成新卡片 | 點右下角新增按鈕，選擇資料日期
       功能2 即時估算金額  | 行動支付和現金支付合計為100%
       功能3 亂數產生 | input: 輸入預估該月金額 行動支付% 現金支付% | output: table
-      功能4 存檔 | 儲存亂數產生資料(id陣列) 放在 localStorage
+      功能4 存檔 | 儲存亂數產生資料的id陣列和預估該月金額等數值放在 localStorage
       `,
       ok: "確認",
       limit: "總金額上限:   ",
       mobileLimit: "行動支付上限:   ",
       cashLimit: "現金支付上限:   ",
-      cashRatio: "行動上限 占比:\n",
-      mobileRatio: "現金上限 占比:\n",
+      cashRatio: "現金上限 占比:\n",
+      mobileRatio: "行動上限 占比:\n",
     },
     textLabel: {
       calculate: "預估金額",
@@ -105,17 +106,12 @@ new Vue({
       }
       return ans * 100;
     },
-    // itemsWithIndex(index) {
-    //   return this.cards[index].items.map((items, index) => ({
-    //     ...items,
-    //     index: index + 1,
-    //   }));
-    // },
+
     async addCard() {
       this.btnState = true;
       const selected = this.select.split("/");
 
-      await fetch(`http://localhost:3011/status/${selected[0]}/${selected[1]}`)
+      await fetch(`${this.baseUrl}/status/${selected[0]}/${selected[1]}`)
         .then((response) => response.json())
         .then((data) => {
           if (data.length === 0) return;
@@ -135,7 +131,7 @@ new Vue({
             monthPrice: total * 0.1,
             mobilePercent: 2,
             total: total, // 預估該月金額 monthPrice
-            show: false,
+            show: false,//展開 table
             headers: this.headers,
             items: [],
             //table pagination
@@ -202,43 +198,48 @@ new Vue({
     },
     redo(INDEX) {
       const card = this.cards[INDEX];
-      new Promise(async (resolve, reject) => {
-        return resolve(await this.getRandom(card));
-      })
-        .then((data) => {
-          return this.setRefresh(card, data);
+      let flag = this.validation(card);
+      if (flag) {
+        new Promise(async (resolve, reject) => {
+          return resolve(await this.getRandom(card));
         })
-        .then(async (card) => {
-          await this.generate(card, card.index, 1);
-          console.log("myCard:", card);
-        })
-        .catch((err) => {
-          if (err.message === "Failed to fetch") {
-            alert("後端server沒開");
-          }
-          console.log(err);
-        });
+          .then((data) => {
+            return this.setRefresh(card, data);
+          })
+          .then(async (card) => {
+            await this.generate(card, card.index, 1);
+            console.log("myCard:", card);
+          })
+          .catch((err) => {
+            if (err.message === "Failed to fetch") {
+              alert("後端server沒開");
+            }
+            console.log(err);
+          });
+      }
     },
-    async generate(cardItem, index, page = 1) {
+    async generate(cardItem, index, page = 1, checkSign) {
       const copy = JSON.parse(JSON.stringify(cardItem));
       try {
         const { ids } = copy;
         const start = (page - 1) * 5;
         const end = start + 5;
-        let a = ids.cash.slice(start, end);
-        let b = ids.mobile.slice(start, end);
+        let cashPageData = ids.cash.slice(start, end);
+        let mobilePageData = ids.mobile.slice(start, end);
 
-        if (this.validation(copy)) {
-          // 分業系統
+        let flag = true;
+        if (checkSign === true) flag = this.validation(copy);
+
+        if (flag) {
+          // 分頁系統
           let ids = {
-            cash: a,
-            mobile: b,
+            cash: cashPageData,
+            mobile: mobilePageData,
           };
           const data = await this.getData(ids);
           let ans = [...data.cash, ...data.mobile];
           //
           this.cards[index].items = [...ans];
-
           this.cards[index].show = true;
         }
       } catch (error) {
@@ -246,7 +247,6 @@ new Vue({
       }
     },
     next(card, index) {
-      // console.log(a,b);
       this.generate(card, index, card.page);
     },
     validation(obj) {
@@ -278,9 +278,15 @@ new Vue({
         JSON.stringify(card.ids.mobile)
       );
       localStorage.setItem(card.title + "cash", JSON.stringify(card.ids.cash));
+      const { monthPrice, mobilePercent } = card;
+      const cashPercent = 100 - mobilePercent;
+      localStorage.setItem(
+        card.title + "-status",
+        JSON.stringify({ monthPrice, mobilePercent, cashPercent })
+      );
       alert("ok");
     },
-
+    // API
     getRandom(item) {
       const { year, month, index, monthPrice, mobilePercent } = item;
       let headers = {
@@ -292,7 +298,7 @@ new Vue({
         mobile: this.calculatePercent(item, "mobile"),
       };
       let body = { year, month, index, monthPrice, mobilePercent, ratio };
-      return fetch(`http://localhost:3011/random`, {
+      return fetch(`${this.baseUrl}/random`, {
         method: "POST",
         headers: headers,
         body: JSON.stringify(body),
@@ -308,7 +314,7 @@ new Vue({
         Accept: "application/json",
       };
       let body = ids;
-      return fetch(`http://localhost:3011/orders`, {
+      return fetch(`${this.baseUrl}/orders`, {
         method: "POST",
         headers: headers,
         body: JSON.stringify(body),

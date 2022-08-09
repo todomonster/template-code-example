@@ -15,6 +15,12 @@ const temp = {
       }
     }
   },
+  itemsWithIndex(index) {
+    return this.cards[index].items.map((items, index) => ({
+      ...items,
+      index: index + 1,
+    }));
+  },
   getMobile(selected = { year: "2022", month: "03" }, page = 1) {
     const { year, month } = selected;
     const limit = 5;

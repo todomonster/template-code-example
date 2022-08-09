@@ -8,9 +8,10 @@ const config = {
   mobile: `mobile`,
   cash: `cash`,
   fileExtension: ".sql",
-  months: ["3月", "4月", "5月", "6月"],
+  // months: ["3月", "4月", "5月", "6月"],
+  months: ["6月"],
   mobilePath: [
-    "../excel/優遊付(卡)/2022.xlsx",
+    "../excel/悠遊付(卡)/2022.xlsx",
     "../excel/APPLEPAY/2022.xlsx",
     "../excel/LINEPAY/2022.xlsx",
   ],
@@ -32,14 +33,14 @@ async function main(config) {
     } = config;
 
     //  Create Table SQL
-    await createTable("mobile.sql", dbName, mobileTable);
-    await createTable("cash.sql", dbName, cashTable);
+    // await createTable("mobile.sql", dbName, mobileTable);
+    // await createTable("cash.sql", dbName, cashTable);
     months.forEach(async (item) => {
       //生成  Add行動支付SQL
-      await genInsertSQL(mobilePath, item, fileExtension, {
-        tableName: mobileTable,
-        dbName,
-      });
+      // await genInsertSQL(mobilePath, item, fileExtension, {
+      //   tableName: mobileTable,
+      //   dbName,
+      // });
 
       //生成  Add現金支付SQL
       await genInsertSQL(cashPath, item, fileExtension, {
@@ -47,7 +48,7 @@ async function main(config) {
         dbName,
       });
     });
-    console.log("已完成全部任務");
+    console.log("任務結束");
   } catch (error) {
     console.log(error);
   }
