@@ -33,6 +33,7 @@ cdn-bootstrap5 | 5.0
   - multer | 後端上傳圖片/檔案範例，用 multer 套件
   - express-session | 和前端溝通需要操作 cookie 和 session 的套件
   - mysql |和 MySQL 串接
+  - js-excel-to-sql | 解析excel套件
 
 補充
 
@@ -57,8 +58,10 @@ cdn-pixijs-basic | 5.3.12
 
 ## vue
 
+- loader | loading 動畫
 - cdn-vue2-basic | 2.6 | vue 框架 cdn
 - cdn-vuetify-table | 2.6 | vue+CSS 框架
+- cdn-vue3-basic | vue@3
 
 vue3
 
@@ -67,13 +70,14 @@ vue3
 
 ## web-function
 
-api-fetch | 用 ES6 的 fetch 拿資料
-right-click-custom-menu | 自定義滑鼠右鍵選單
-mailto | 呼叫 mail 軟體
-phone-call | 呼叫電話軟體
-map-leaflet | 免費開源地圖(圖資)叫做 Leaflet，可以製作 ex 口罩地圖
-before-close-alert | 關閉網頁時阻擋預設動作，可以在還沒有存檔做提示
-disable-copy | 禁用複製
+- normalize | CSS 歸零預設值(每個瀏覽器不同)
+- api-fetch | 用 ES6 的 fetch 拿資料
+- disable-copy | 禁用複製
+- mailto | 呼叫 mail 軟體
+- map-leaflet | 免費開源地圖(圖資)叫做 Leaflet，可以製作 ex 口罩地圖
+- phone-call | 呼叫電話軟體
+- right-click-custom-menu | 自定義滑鼠右鍵選單
+- sidebar-right | 手刻側邊欄
 
 ## html5-element
 
@@ -81,6 +85,11 @@ disable-copy | 禁用複製
 - tag-fieldset | 表單分組 框框
 - tag-input-range | slide bar
 - tag-meter |儀表 數值,比例
+
+## php
+### laravel
+- basic | 初始專案
+
 
 ---
 
