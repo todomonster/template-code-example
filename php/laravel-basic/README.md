@@ -9,6 +9,8 @@
 
 ## 安裝教學
 
+### 從零開始
+
 1. XAMPP(跑 php 和 MySQL)
 2. php composer(類似 node.js 的 npm)
 3. 安裝 laravel 安裝器 (類似 VueCLI)
@@ -17,6 +19,16 @@
     - `laravel new haha-project`
 5. 跑起來的指令
     - `php artisan ser`
+
+---
+
+### 拉別人的專案步驟
+
+如果有DB要記得先建立
+
+- `composer install`
+- `composer update`
+- `php artisan ser`
 
 ## About Laravel
 
