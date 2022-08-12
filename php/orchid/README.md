@@ -1,5 +1,5 @@
 
-## 指令
+## Screen指令
 
 ```php
 php artisan orchid:screen TransactionRecordScreen
@@ -188,5 +188,21 @@ class TransactionRecordScreen extends Screen
         Toast::warning('Hello, world! This is a toast message.');
     }
 }
+
+```
+## Resource指令
+```php
+要先安裝
+composer require orchid/crud
+
+建立Resource
+php artisan orchid:resource TransactionRecord
+
+自動對應
+```
+
+## Layout建立客製化Table教學
+```php
+php artisan orchid:table PatientListLayout
 
 ```
