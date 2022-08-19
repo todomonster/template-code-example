@@ -38,7 +38,7 @@ async function saveExcelToSQL(excelPath, sheetsName, fileName, dbConfig) {
 
 // 負責將excel轉換後的JSON 轉成SQL需要的String
 const { cityObj } = require("./city");
-const { getRandomUser } = require("./user");
+// const { getRandomUser } = require("./user");
 function JsonToSqlParser(obj, dbName, tableName) {
   let result = [];
   let result2 = [];
@@ -63,7 +63,7 @@ function JsonToSqlParser(obj, dbName, tableName) {
         if (!intersection) console.log(店別, 結帳員工);
         result2[i] = intersection || "台北市";
         //隨機分配使用者 id
-        const uid = getRandomUser();
+        const uid = null ;//getRandomUser();
 
         result[
           i
@@ -112,8 +112,8 @@ function intersectionString(店別, 結帳員工) {
   }
   return ans;
 
-  const v = intersect;
-  return `${v}`;
+  // const v = intersect;
+  // return `${v}`;
 }
 
 function findCityByArea(target, intersect) {

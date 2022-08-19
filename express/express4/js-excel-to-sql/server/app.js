@@ -36,8 +36,6 @@ app.get("/excel/mobile", express.json(), async function (req, res) {
   }
 });
 
-
-
 app.get("/status/:year/:month", express.json(), function (req, res) {
   try {
     const params = req.params;
@@ -56,22 +54,28 @@ app.get("/status/:year/:month", express.json(), function (req, res) {
       console.log(cashSql);
       if (err) {
         console.log(err);
-        return res.send([]);
+        return res.send({});
       } else {
         const { rows, sum } = data[0];
-        ans.cash = { rows, sum };
+        if (rows) {
+          ans.cash = { rows, sum };
 
-        conn.query(mobileSql, [], (err, data) => {
-          console.log(mobileSql);
-          if (err) {
-            console.log(err);
-            return res.send([]);
-          } else {
-            const { rows, sum } = data[0];
-            ans.mobile = { rows, sum };
-            return res.send(ans);
-          }
-        });
+          conn.query(mobileSql, [], (err, data) => {
+            console.log(mobileSql);
+            if (err) {
+              console.log(err);
+              return res.send([]);
+            } else {
+              const { rows, sum } = data[0];
+              if (rows) {
+                ans.mobile = { rows, sum };
+                return res.send(ans);
+              }
+            }
+          });
+        } else {
+          return res.send({});
+        }
       }
     });
   } catch (error) {
@@ -108,7 +112,7 @@ app.post("/orders", express.json(), async function (req, res) {
 
 function getData(sql, tableName) {
   return new Promise((resolve, reject) => {
-    let SQL = `SELECT 店別, 銷售單號, 機號, 顧客編號, 顧客姓名, 持卡人, 付款方式, 款項金額, 結帳時間, 註記, 結帳員工 FROM ${tableName} WHERE ${sql};`;
+    let SQL = `SELECT * FROM ${tableName} WHERE ${sql};`;
     const limit = 5;
     console.log(SQL);
     conn.query(SQL, [limit], (err, data) => {
@@ -129,7 +133,7 @@ app.post("/random", express.json(), function (req, res) {
     const cashPercent = 100 - mobilePercent;
     // 先用 cash
     let prices = (monthPrice * cashPercent) / 100;
-    let mode = randomGetRowAlgorithm(ratio.cash);
+    let mode = randomGetRowAlgorithm("cash");
 
     let ans = { index };
 
@@ -147,7 +151,10 @@ app.post("/random", express.json(), function (req, res) {
     
     SELECT id, 款項金額, @total := @total + 款項金額 AS total
     FROM ${tableName}
-    WHERE @total < ${prices} AND  DATE_FORMAT(結帳時間,'%Y-%m') = '${y_m}'  ${mode} ;
+    WHERE @total < ${
+      prices * 1
+    } AND 款項金額<160 AND 款項金額>24 AND  DATE_FORMAT(結帳時間,'%Y-%m') = '${y_m}'  ${mode} 
+    LIMIT 1000000 OFFSET ${Math.floor(Math.random() * 1000)};
     `;
 
     conn.query(SQL, [], (err, data) => {
@@ -156,36 +163,121 @@ app.post("/random", express.json(), function (req, res) {
         console.log(err);
         return res.send([]);
       } else {
-        ans.cash = data;
-        ans.cashTotal = data[data.length - 2].total;
-        // 再用 mobile
-        tableName = "mobile";
-        mode = randomGetRowAlgorithm(ratio.mobile);
-        prices = (monthPrice * mobilePercent) / 100;
-        let SQL = `
-        SELECT NULL AS id, NULL AS 款項金額, NULL AS total
-        FROM dual
-        WHERE (@total := 0)
-        UNION
-        
-        SELECT id, 款項金額, @total := @total + 款項金額 AS total
-        FROM ${tableName}
-        WHERE @total < ${prices} AND DATE_FORMAT(結帳時間,'%Y-%m') = '${y_m}' ${mode} ;
-        `;
-        conn.query(SQL, [], (err, data) => {
-          console.log(SQL);
-          if (err) {
-            console.log(err);
-            return res.send([]);
-          } else {
-            ans.mobile = data;
-            ans.mobileTotal = data[data.length - 2].total;
-            return res.send(ans);
-          }
-        });
+        if (data.length > 0) {
+          ans.cash = data;
+          ans.cashTotal = data[data.length - 2].total;
+          // 再用 mobile
+          tableName = "mobile";
+          mode = randomGetRowAlgorithm("mobile");
+          prices = (monthPrice * mobilePercent) / 100;
+          let SQL = `
+          SELECT NULL AS id, NULL AS 款項金額, NULL AS total
+          FROM dual
+          WHERE (@total := 0)
+          UNION
+          
+          SELECT id, 款項金額, @total := @total + 款項金額 AS total
+          FROM ${tableName}
+          WHERE @total < ${
+            prices * 1
+          } AND 款項金額<150 AND 款項金額>24  AND DATE_FORMAT(結帳時間,'%Y-%m') = '${y_m}' ${mode}
+          LIMIT 1000000 OFFSET ${Math.floor(Math.random() * 1000)};
+          `;
+          conn.query(SQL, [], (err, data) => {
+            console.log(SQL);
+            if (err) {
+              console.log(err);
+              return res.send([]);
+            } else {
+              ans.mobile = data;
+              ans.mobileTotal = data[data.length - 2].total;
+              return res.send(ans);
+            }
+          });
+        } else {
+          return res.send([]);
+        }
       }
     });
   } catch (error) {
+    return res.send(error);
+  }
+});
+
+/** 搬移交易紀錄API */
+// INSERT INTO cash_official SELECT * FROM cash WHERE id = 1; // 複製過去新表格但是沒有刪除
+// DELETE FROM cash WHERE id=3;  //刪除
+// mobile mobile_official
+// cash cash_official
+// API 搬移
+/**
+ * 找不到id 不做 記錄起來
+ * {
+ *  message: 'ok',
+ *  table: 'mobile',
+ *  mode: '倉庫=>正式區',
+ *  success:[1,2,3],
+ *  fails: []
+ * }
+ *
+ * {
+ *  message: 'wrong id',
+ *  table: 'cash',
+ *  mode: '正式區=>倉庫',
+ *  success:[],
+ *  fails: [1,2,3]
+ * }
+ */
+
+function handleDB(sql) {
+  return new Promise((resolve, reject) => {
+    console.log(sql);
+    conn.query(sql, [], (err, data) => {
+      if (err) {
+        return reject({ err });
+      }
+
+      return resolve(data);
+    });
+  });
+}
+app.post("/moveData/:a/:b", express.json(), async function (req, res) {
+  try {
+    const params = req.params;
+    const body = req.body;
+    const ids = body.id; //arr
+    let condition = "";
+    if (ids?.length > 0) {
+      condition = "WHERE id = " + ids.join(" OR id = ");
+    }
+    let ans = {
+      mode: `${params.a}=>${params.b}`,
+      copyCounter: 0,
+      deleteCounter: 0,
+      id: ids,
+      condition,
+    };
+    if (condition === "") {
+      return res.send(ans);
+    }
+    let copySQL = `INSERT INTO ${params.b}  SELECT * FROM ${params.a}  ${condition};`;
+    const copy = await handleDB(copySQL);
+    if (copy) {
+      ans.copyCounter++;
+    } else {
+      ans.copyCounter--;
+    }
+
+    let deleteSQL = `DELETE FROM ${params.a}  ${condition};`;
+    const del = await handleDB(deleteSQL);
+    if (del) {
+      ans.deleteCounter++;
+    } else {
+      ans.deleteCounter--;
+    }
+    return res.send(ans);
+  } catch (error) {
+    console.log(error);
     return res.send(error);
   }
 });

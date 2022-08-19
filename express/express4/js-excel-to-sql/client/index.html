@@ -43,6 +43,22 @@
 
             <v-container>
               <v-col class="custom-blueColor"><pre>{{i18n.teach}}</pre></v-col>
+              <!-- dowload start -->
+              <v-row>
+                <v-col cols="4">
+                  <v-select
+                    v-model="executeMode"
+                    :items="executeModes"
+                    item-text="state"
+                    item-value="value"
+                    label="選擇localStorage檔案"
+                    return-object
+                    single-line
+                  ></v-select>
+                </v-col>
+                <v-col class="d-flex justify-center" cols="1"><a href="#" id="download" class="custom-a">download</a></v-col>
+              </v-row>
+              <!-- end download -->
               <template v-for="(cardItem,index) in cards">
                 <!-- card start -->
                 <v-card class="mx-auto my-5 custom-p-5" max-width="900">
@@ -282,6 +298,7 @@
         </v-app></template
       >
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <script src="./js/main.js"></script>

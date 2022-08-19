@@ -5,6 +5,7 @@
 1.  [js 工具] index.js
 
 - 將 excel 檔案 .xlsx 轉成 SQL 語法(MySQL)
+- 亂數配對uid 建議拔掉(太吃記憶體)
 
 2.  [nodjs 後端] app.js
 3.  [vuetify 前端] client index.html

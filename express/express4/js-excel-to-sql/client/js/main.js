@@ -2,13 +2,34 @@ new Vue({
   el: "#app",
   vuetify: new Vuetify(),
   data: () => ({
-    baseUrl: "http://10.1.1.111:3011" || "http://localhost:3011",
+    baseUrl: "http://10.1.1.165:3011" || "http://localhost:3011",
+    // select
+    executeMode: {},
+    executeModes: [
+      { state: "2022/04-status", value: "2022/04-status" },
+      { state: "2022/04cash", value: "2022/04cash" },
+      { state: "2022/04mobile", value: "2022/04mobile" },
+      { state: "2022/05-status", value: "2022/05-status" },
+      { state: "2022/05cash", value: "2022/05cash" },
+      { state: "2022/05mobile", value: "2022/05mobile" },
+      { state: "2022/06-status", value: "2022/06-status" },
+      { state: "2022/06cash", value: "2022/06cash" },
+      { state: "2022/06mobile", value: "2022/06mobile" },
+      { state: "2022/07-status", value: "2022/07-status" },
+      { state: "2022/07cash", value: "2022/07cash" },
+      { state: "2022/07mobile", value: "2022/07mobile" },
+      { state: "2022/08-status", value: "2022/08-status" },
+      { state: "2022/08cash", value: "2022/08cash" },
+      { state: "2022/08mobile", value: "2022/08mobile" },
+    ],
+    //
     i18n: {
       random: "再執行亂數獲取資料",
       save: "儲存該月紀錄",
       teach: `
   已知問題:
-      現金和行動支付數值差異太大，故需要將該月金額大幅降低
+      現金和行動支付數值差異太大，故需要將該月金額大幅降低。
+      8月份DB只有1號~15號的資料，故總金額需要*0.5
 
   操作說明:
       功能1 生成新卡片 | 點右下角新增按鈕，選擇資料日期
@@ -32,17 +53,19 @@ new Vue({
     },
     // dialog
     dialog: false,
-    items: ["2022/03", "2022/04", "2022/05", "2022/06"],
-    select: "2022/03",
+    items: ["2022/04", "2022/05", "2022/06", "2022/07", "2022/08"],
+    select: "2022/04",
     btnState: false,
     // card
     cards: [],
     headers: [
       // { text: "Num", value: "index", sortable: false },
       // { text: "id", value: "id", sortable: false },
+      { text: "付款者id", value: "uid", sortable: false },
+      { text: "區域", value: "區域", sortable: false },
       { text: "店別", value: "店別", sortable: false },
-      { text: "銷售單號", value: "銷售單號", sortable: false },
-      { text: "機號", value: "機號", sortable: false },
+      // { text: "銷售單號", value: "銷售單號", sortable: false },
+      // { text: "機號", value: "機號", sortable: false },
       // { text: "顧客編號", value: "顧客編號" ,sortable: false,},
       // { text: "顧客姓名", value: "顧客姓名", sortable: false },
       // { text: "持卡人", value: "持卡人" ,sortable: false,},
@@ -63,7 +86,19 @@ new Vue({
       },
     },
   }),
-  watch: {},
+  watch: {
+    executeMode(v) {
+      // watch 變更 觸發
+      if (v.value) {
+        const ans = localStorage[v.value];
+        if (!ans) {
+          alert("無該月份資料 請先存檔!");
+        } else {
+          this.updateDownload(ans, `${v.value}.txt`, "text/plain");
+        }
+      }
+    },
+  },
   mounted() {
     console.clear();
   },
@@ -109,12 +144,15 @@ new Vue({
 
     async addCard() {
       this.btnState = true;
+      // 依照[]取得選擇的文字
       const selected = this.select.split("/");
 
       await fetch(`${this.baseUrl}/status/${selected[0]}/${selected[1]}`)
         .then((response) => response.json())
         .then((data) => {
-          if (data.length === 0) return;
+          console.log(data);
+          if (data?.cash === undefined || data?.cash?.rows === 0)
+            return Promise.reject("no data");
           const { cash, mobile } = data;
           const total = cash.sum + mobile.sum;
           // 計算 ids rows
@@ -128,10 +166,10 @@ new Vue({
             title: `${selected[0]}/${selected[1]}`,
             cash,
             mobile,
-            monthPrice: total * 0.1,
-            mobilePercent: 2,
+            monthPrice: total * 0.015,
+            mobilePercent: 10, // %
             total: total, // 預估該月金額 monthPrice
-            show: false,//展開 table
+            show: false, //展開 table
             headers: this.headers,
             items: [],
             //table pagination
@@ -168,6 +206,8 @@ new Vue({
         .catch((err) => {
           if (err.message === "Failed to fetch") {
             alert("後端server沒開");
+          } else if (err === "no data") {
+            alert("DB 資料為空");
           }
           console.log(err);
         });
@@ -184,11 +224,13 @@ new Vue({
       const cashLen = data.cash.length;
       const mobileLen = data.mobile.length;
       card.newTotal = mobileTotal + cashTotal;
-      const length = cashLen + mobileLen;
-      card.newRows = length;
+      card.newRows = cashLen + mobileLen;
       card.ids.cash = [...data.cash.map((x) => x.id)];
       card.ids.mobile = [...data.mobile.map((x) => x.id)];
-      card.len = Math.floor(length / 10);
+      card.len =
+        cashLen > mobileLen
+          ? Math.floor(cashLen / 5)
+          : Math.floor(mobileLen / 5);
       //
       card.newMobileTotal = mobileTotal;
       card.newCashTotal = cashTotal;
@@ -237,7 +279,14 @@ new Vue({
             mobile: mobilePageData,
           };
           const data = await this.getData(ids);
-          let ans = [...data.cash, ...data.mobile];
+          // 行動支付顯示的table id +100000000 去避免重複問題
+          let ans = [
+            ...data.cash,
+            ...data.mobile.map((item) => {
+              return { ...item, id: item.id + 100000000 };
+            }),
+          ];
+          console.log(ans);
           //
           this.cards[index].items = [...ans];
           this.cards[index].show = true;
@@ -284,6 +333,7 @@ new Vue({
         card.title + "-status",
         JSON.stringify({ monthPrice, mobilePercent, cashPercent })
       );
+      this.executeMode = {};
       alert("ok");
     },
     // API
@@ -323,6 +373,13 @@ new Vue({
         .then((data) => {
           return data;
         });
+    },
+    // download
+    updateDownload(text, name, type) {
+      const aTag = document.getElementById("download");
+      const file = new Blob([text], { type: type });
+      aTag.href = URL.createObjectURL(file);
+      aTag.download = name;
     },
   },
 });
