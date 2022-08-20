@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
+      rel="stylesheet"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+    <link rel="stylesheet" href="./css/main.css" />
+    <style>
+      [v-cloak] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" data-app>
+      <template>
+        <v-container>
+          <!-- cash -->
+          <v-row>
+            <v-col cols="">
+              <h4>填入id陣列操作 [table] data</h4>
+            </v-col>
+            <v-col cols="4">
+              <v-select
+                v-model="executeMode"
+                :items="executeModes"
+                item-text="state"
+                item-value="value"
+                label="選擇操作模式"
+                return-object
+                single-line
+              ></v-select>
+            </v-col>
+            <v-spacer></v-spacer>
+            <v-col>
+              <v-btn
+                @click="main(textarea,executeMode.value)"
+                dark
+                :loading="loading"
+              >
+                執行
+              </v-btn>
+            </v-col>
+            <v-col>
+              <v-btn
+                @click="main(textarea,executeMode.value,'low')"
+                dark
+                :loading="loading"
+              >
+                小筆數執行
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-textarea
+                label="填入陣列文字[ ]"
+                v-model="textarea"
+              ></v-textarea>
+            </v-col>
+          </v-row>
+          超過20000筆會強制中斷!!
+          小於5筆請用小筆數執行功能
+        </v-container>
+      </template>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="./js/order_record.js"></script>
+  </body>
+</html>

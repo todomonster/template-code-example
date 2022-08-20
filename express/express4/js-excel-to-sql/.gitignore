@@ -1,2 +1,5 @@
 node_modules
 todo.md
+.env
+*.7z
+*.xlsx

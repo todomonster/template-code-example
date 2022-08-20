@@ -12,9 +12,13 @@
 }
 
 .custom-blueColor {
-  color: rgb(0, 32, 113);
+  color: rgb(0, 32, 113) !important;
 }
 
 .custom-p-5{
     padding: 25px;
+}
+
+.custom-a{
+  padding-top: 25px;
 }

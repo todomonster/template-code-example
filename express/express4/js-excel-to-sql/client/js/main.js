@@ -2,23 +2,47 @@ new Vue({
   el: "#app",
   vuetify: new Vuetify(),
   data: () => ({
+    baseUrl: "http://10.1.1.165:3011" || "http://localhost:3011",
+    // select
+    executeMode: {},
+    executeModes: [
+      { state: "2022/04-status", value: "2022/04-status" },
+      { state: "2022/04cash", value: "2022/04cash" },
+      { state: "2022/04mobile", value: "2022/04mobile" },
+      { state: "2022/05-status", value: "2022/05-status" },
+      { state: "2022/05cash", value: "2022/05cash" },
+      { state: "2022/05mobile", value: "2022/05mobile" },
+      { state: "2022/06-status", value: "2022/06-status" },
+      { state: "2022/06cash", value: "2022/06cash" },
+      { state: "2022/06mobile", value: "2022/06mobile" },
+      { state: "2022/07-status", value: "2022/07-status" },
+      { state: "2022/07cash", value: "2022/07cash" },
+      { state: "2022/07mobile", value: "2022/07mobile" },
+      { state: "2022/08-status", value: "2022/08-status" },
+      { state: "2022/08cash", value: "2022/08cash" },
+      { state: "2022/08mobile", value: "2022/08mobile" },
+    ],
+    //
     i18n: {
-      random: "亂數獲取資料",
+      random: "再執行亂數獲取資料",
       save: "儲存該月紀錄",
       teach: `
   已知問題:
-      現金和行動支付數值差異太大，故需要將該月金額大幅降低
+      現金和行動支付數值差異太大，故需要將該月金額大幅降低。
+      8月份DB只有1號~15號的資料，故總金額需要*0.5
 
   操作說明:
       功能1 生成新卡片 | 點右下角新增按鈕，選擇資料日期
       功能2 即時估算金額  | 行動支付和現金支付合計為100%
       功能3 亂數產生 | input: 輸入預估該月金額 行動支付% 現金支付% | output: table
-      功能4 存檔 | 儲存亂數產生資料(id陣列) 放在 localStorage
+      功能4 存檔 | 儲存亂數產生資料的id陣列和預估該月金額等數值放在 localStorage
       `,
       ok: "確認",
       limit: "總金額上限:   ",
       mobileLimit: "行動支付上限:   ",
       cashLimit: "現金支付上限:   ",
+      cashRatio: "現金上限 占比:\n",
+      mobileRatio: "行動上限 占比:\n",
     },
     textLabel: {
       calculate: "預估金額",
@@ -29,16 +53,19 @@ new Vue({
     },
     // dialog
     dialog: false,
-    items: ["2022/03", "2022/04", "2022/05", "2022/06"],
-    select: "2022/03",
+    items: ["2022/04", "2022/05", "2022/06", "2022/07", "2022/08"],
+    select: "2022/04",
     btnState: false,
     // card
     cards: [],
     headers: [
-      { text: "id", value: "id", sortable: false },
+      // { text: "Num", value: "index", sortable: false },
+      // { text: "id", value: "id", sortable: false },
+      { text: "付款者id", value: "uid", sortable: false },
+      { text: "區域", value: "區域", sortable: false },
       { text: "店別", value: "店別", sortable: false },
-      { text: "銷售單號", value: "銷售單號", sortable: false },
-      { text: "機號", value: "機號", sortable: false },
+      // { text: "銷售單號", value: "銷售單號", sortable: false },
+      // { text: "機號", value: "機號", sortable: false },
       // { text: "顧客編號", value: "顧客編號" ,sortable: false,},
       // { text: "顧客姓名", value: "顧客姓名", sortable: false },
       // { text: "持卡人", value: "持卡人" ,sortable: false,},
@@ -59,13 +86,21 @@ new Vue({
       },
     },
   }),
-  computed: {},
-  watch: {},
+  watch: {
+    executeMode(v) {
+      // watch 變更 觸發
+      if (v.value) {
+        const ans = localStorage[v.value];
+        if (!ans) {
+          alert("無該月份資料 請先存檔!");
+        } else {
+          this.updateDownload(ans, `${v.value}.txt`, "text/plain");
+        }
+      }
+    },
+  },
   mounted() {
     console.clear();
-    // this.getStatus();
-    // this.getMobile();
-    // this.getCash();
   },
   methods: {
     toNTD(prices) {
@@ -75,60 +110,193 @@ new Vue({
         currency: "TWD",
       });
     },
+    calculatePrice(card, mode = "mobile") {
+      const { monthPrice, mobilePercent } = card;
+      let ans = 0;
+      switch (mode) {
+        case "mobile":
+          ans = (monthPrice * mobilePercent) / 100;
+          break;
+        case "cash":
+          ans = monthPrice - (monthPrice * mobilePercent) / 100;
+          break;
+      }
+      return ans;
+    },
+    calculatePercent(card, mode = "mobile") {
+      const { cash, mobile } = card;
+      const maxCash = cash.sum;
+      const maxMobile = mobile.sum;
+      let value = 0;
+      let ans = 0;
+      switch (mode) {
+        case "mobile":
+          value = this.calculatePrice(card, mode);
+          ans = value / maxMobile;
+          break;
+        case "cash":
+          value = this.calculatePrice(card, mode);
+          ans = value / maxCash;
+          break;
+      }
+      return ans * 100;
+    },
 
     async addCard() {
       this.btnState = true;
+      // 依照[]取得選擇的文字
       const selected = this.select.split("/");
-      const data = await fetch(
-        `http://localhost:3011/status/${selected[0]}/${selected[1]}`
-      )
+
+      await fetch(`${this.baseUrl}/status/${selected[0]}/${selected[1]}`)
         .then((response) => response.json())
         .then((data) => {
-          if (data.length === 0) return;
+          console.log(data);
+          if (data?.cash === undefined || data?.cash?.rows === 0)
+            return Promise.reject("no data");
           const { cash, mobile } = data;
           const total = cash.sum + mobile.sum;
+          // 計算 ids rows
+          const { cashPagination, mobilePagination } = this.countAllRows(
+            cash.rows,
+            mobile.rows
+          );
           const card = {
             year: selected[0],
             month: selected[1],
             title: `${selected[0]}/${selected[1]}`,
             cash,
             mobile,
-            monthPrice: total * 0.02,
-            mobilePercent: 75,
-            // cashPercent: 25,
-            total: total,
-            show: false,
+            monthPrice: total * 0.015,
+            mobilePercent: 10, // %
+            total: total, // 預估該月金額 monthPrice
+            show: false, //展開 table
             headers: this.headers,
             items: [],
-            now: 1,
+            //table pagination
+            page: 1,
+            len: 999, //頁數有多少
+            cashPagination, //cash 頁數有多少 每頁5筆
+            mobilePagination, //mobile 頁數有多少 每頁5筆
+            //
+            ids: {
+              cash: [],
+              mobile: [],
+            },
+            newTotal: 0, //總金額
+            newMobileTotal: 0,
+            newCashTotal: 0,
+            newRows: 0, //總筆數
+            newMobileRows: 0,
+            newCashRows: 0,
+            index: this.cards.length,
           };
-          this.cards.push(card);
 
-          return data;
+          return card;
+        })
+        .then(async (card) => {
+          const data = await this.getRandom(card);
+          const newCard = this.setRefresh(card, data);
+          this.cards.push(newCard);
+          return newCard;
+        })
+        .then(async (card) => {
+          this.generate(card, card.index, 1);
+          console.log("myCard:", card);
         })
         .catch((err) => {
           if (err.message === "Failed to fetch") {
             alert("後端server沒開");
+          } else if (err === "no data") {
+            alert("DB 資料為空");
           }
           console.log(err);
         });
       this.dialog = false;
       this.btnState = false;
     },
-    async genTable(obj, index) {
-      const { year, month, now } = obj;
-      if (this.validation(obj)) {
-        try {
-          const mobileData = await this.getMobile({ year, month }, now);
-          this.cards[index].items.push(...mobileData.data);
-          const cashData = await this.getCash({ year, month }, now);
-          this.cards[index].items.push(...cashData.data);
-          this.cards[index].show = true;
-          this.cards[index].now++;
-        } catch (error) {
-          console.log(error);
-        }
+    countAllRows(cRows, mRows) {
+      const cashPagination = Math.floor(cRows / 5);
+      const mobilePagination = Math.floor(mRows / 5);
+      return { cashPagination, mobilePagination };
+    },
+    setRefresh(card, data) {
+      const { mobileTotal, cashTotal } = data;
+      const cashLen = data.cash.length;
+      const mobileLen = data.mobile.length;
+      card.newTotal = mobileTotal + cashTotal;
+      card.newRows = cashLen + mobileLen;
+      card.ids.cash = [...data.cash.map((x) => x.id)];
+      card.ids.mobile = [...data.mobile.map((x) => x.id)];
+      card.len =
+        cashLen > mobileLen
+          ? Math.floor(cashLen / 5)
+          : Math.floor(mobileLen / 5);
+      //
+      card.newMobileTotal = mobileTotal;
+      card.newCashTotal = cashTotal;
+      card.newMobileRows = mobileLen;
+      card.newCashRows = cashLen;
+      return card;
+    },
+    redo(INDEX) {
+      const card = this.cards[INDEX];
+      let flag = this.validation(card);
+      if (flag) {
+        new Promise(async (resolve, reject) => {
+          return resolve(await this.getRandom(card));
+        })
+          .then((data) => {
+            return this.setRefresh(card, data);
+          })
+          .then(async (card) => {
+            await this.generate(card, card.index, 1);
+            console.log("myCard:", card);
+          })
+          .catch((err) => {
+            if (err.message === "Failed to fetch") {
+              alert("後端server沒開");
+            }
+            console.log(err);
+          });
       }
+    },
+    async generate(cardItem, index, page = 1, checkSign) {
+      const copy = JSON.parse(JSON.stringify(cardItem));
+      try {
+        const { ids } = copy;
+        const start = (page - 1) * 5;
+        const end = start + 5;
+        let cashPageData = ids.cash.slice(start, end);
+        let mobilePageData = ids.mobile.slice(start, end);
+
+        let flag = true;
+        if (checkSign === true) flag = this.validation(copy);
+
+        if (flag) {
+          // 分頁系統
+          let ids = {
+            cash: cashPageData,
+            mobile: mobilePageData,
+          };
+          const data = await this.getData(ids);
+          // 行動支付顯示的table id +100000000 去避免重複問題
+          let ans = [
+            ...data.cash,
+            ...data.mobile.map((item) => {
+              return { ...item, id: item.id + 100000000 };
+            }),
+          ];
+          console.log(ans);
+          //
+          this.cards[index].items = [...ans];
+          this.cards[index].show = true;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    next(card, index) {
+      this.generate(card, index, card.page);
     },
     validation(obj) {
       const { monthPrice, cash, mobile, total, mobilePercent } = obj;
@@ -142,7 +310,7 @@ new Vue({
         alert("不符合 總金額規則");
         return false;
       }
-      //3.
+      //3. maxValue
       if ((mobilePercent * monthPrice) / 100 > mobile.sum) {
         alert("超過 mobile 最大上限");
         return false;
@@ -154,27 +322,64 @@ new Vue({
       return true;
     },
     saveId(card) {
-      const saveItems = card.items.map((x) => x.id);
-      localStorage.setItem(card.title, JSON.stringify(saveItems));
+      localStorage.setItem(
+        card.title + "mobile",
+        JSON.stringify(card.ids.mobile)
+      );
+      localStorage.setItem(card.title + "cash", JSON.stringify(card.ids.cash));
+      const { monthPrice, mobilePercent } = card;
+      const cashPercent = 100 - mobilePercent;
+      localStorage.setItem(
+        card.title + "-status",
+        JSON.stringify({ monthPrice, mobilePercent, cashPercent })
+      );
+      this.executeMode = {};
       alert("ok");
     },
-    getMobile(selected = { year: "2022", month: "03" }, now = 1) {
-      const { year, month } = selected;
-      const limit = 5;
-      return fetch(
-        `http://localhost:3011/mobile/${year}/${month}?limit=${limit}&now=${now}`
-      )
+    // API
+    getRandom(item) {
+      const { year, month, index, monthPrice, mobilePercent } = item;
+      let headers = {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      };
+      const ratio = {
+        cash: this.calculatePercent(item, "cash"),
+        mobile: this.calculatePercent(item, "mobile"),
+      };
+      let body = { year, month, index, monthPrice, mobilePercent, ratio };
+      return fetch(`${this.baseUrl}/random`, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(body),
+      })
         .then((response) => response.json())
-        .then((data) => data);
+        .then((data) => {
+          return data;
+        });
     },
-    getCash(selected = { year: "2022", month: "03" }, now = 1) {
-      const { year, month } = selected;
-      const limit = 5;
-      return fetch(
-        `http://localhost:3011/cash/${year}/${month}?limit=${limit}&now=${now}`
-      )
+    getData(ids) {
+      let headers = {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      };
+      let body = ids;
+      return fetch(`${this.baseUrl}/orders`, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(body),
+      })
         .then((response) => response.json())
-        .then((data) => data);
+        .then((data) => {
+          return data;
+        });
+    },
+    // download
+    updateDownload(text, name, type) {
+      const aTag = document.getElementById("download");
+      const file = new Blob([text], { type: type });
+      aTag.href = URL.createObjectURL(file);
+      aTag.download = name;
     },
   },
 });

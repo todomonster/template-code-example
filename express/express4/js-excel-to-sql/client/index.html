@@ -43,6 +43,22 @@
 
             <v-container>
               <v-col class="custom-blueColor"><pre>{{i18n.teach}}</pre></v-col>
+              <!-- dowload start -->
+              <v-row>
+                <v-col cols="4">
+                  <v-select
+                    v-model="executeMode"
+                    :items="executeModes"
+                    item-text="state"
+                    item-value="value"
+                    label="選擇localStorage檔案"
+                    return-object
+                    single-line
+                  ></v-select>
+                </v-col>
+                <v-col class="d-flex justify-center" cols="1"><a href="#" id="download" class="custom-a">download</a></v-col>
+              </v-row>
+              <!-- end download -->
               <template v-for="(cardItem,index) in cards">
                 <!-- card start -->
                 <v-card class="mx-auto my-5 custom-p-5" max-width="900">
@@ -52,7 +68,12 @@
                     <v-spacer></v-spacer>
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on, attrs }">
-                        <v-btn icon v-bind="attrs" v-on="on" @click="saveId(cards[index])">
+                        <v-btn
+                          icon
+                          v-bind="attrs"
+                          v-on="on"
+                          @click="saveId(cards[index])"
+                        >
                           <v-icon>mdi-content-save</v-icon>
                         </v-btn>
                       </template>
@@ -66,6 +87,7 @@
                     <template>
                       <v-form>
                         <v-container>
+                          <!-- monthPrice -->
                           <v-row class="d-flex justify-center align-center">
                             <v-col cols="12" sm="3">
                               <v-text-field
@@ -96,8 +118,8 @@
                             </v-col>
                           </v-row>
                           <!-- mobile -->
-                          <v-row>
-                            <v-col cols="12" sm="6">
+                          <v-row class="d-flex justify-center align-center">
+                            <v-col cols="12" sm="4">
                               <v-text-field
                                 v-model="cards[index].mobilePercent"
                                 :label="textLabel.mobile"
@@ -109,18 +131,26 @@
                               ></v-text-field>
                             </v-col>
 
-                            <v-col cols="12" sm="6">
+                            <v-col cols="12" sm="4">
                               <v-text-field
-                                v-model="cards[index].monthPrice * cards[index].mobilePercent /100"
+                                v-model="calculatePrice(cards[index],'mobile')"
                                 :label="textLabel.calculate"
-                                :rules="[rules.percentMax(cards[index].monthPrice * cards[index].mobilePercent /100, cards[index].mobile.sum  )]"
+                                :rules="[rules.percentMax(calculatePrice(cards[index],'mobile'), cards[index].mobile.sum  )]"
                                 readonly
                               ></v-text-field>
                             </v-col>
+                            <v-spacer></v-spacer>
+                            <v-col cols="12" sm="4">
+                              <span
+                                >{{i18n.mobileRatio +
+                                calculatePercent(cards[index],'mobile') + '%'
+                                }}</span
+                              >
+                            </v-col>
                           </v-row>
                           <!-- cash -->
-                          <v-row>
-                            <v-col cols="12" sm="6">
+                          <v-row class="d-flex justify-center align-center">
+                            <v-col cols="12" sm="4">
                               <v-text-field
                                 v-model="100-cards[index].mobilePercent"
                                 :label="textLabel.cash"
@@ -131,13 +161,21 @@
                               ></v-text-field>
                             </v-col>
 
-                            <v-col cols="12" sm="6">
+                            <v-col cols="12" sm="4">
                               <v-text-field
-                                v-model="cards[index].monthPrice - cards[index].monthPrice * cards[index].mobilePercent /100"
+                                v-model="calculatePrice(cards[index],'cash')"
                                 :label="textLabel.calculate"
-                                :rules="[rules.percentMax(cards[index].monthPrice - cards[index].monthPrice * cards[index].mobilePercent /100, cards[index].cash.sum  )]"
+                                :rules="[rules.percentMax(calculatePrice(cards[index],'cash'), cards[index].cash.sum  )]"
                                 readonly
                               ></v-text-field>
+                            </v-col>
+                            <v-spacer></v-spacer>
+                            <v-col cols="12" sm="4">
+                              <span
+                                >{{i18n.cashRatio +
+                                calculatePercent(cards[index],'cash') + '%'
+                                }}</span
+                              >
                             </v-col>
                           </v-row>
                           <v-row>
@@ -145,7 +183,7 @@
                               ><v-btn
                                 color="primary lighten-2"
                                 large
-                                @click="genTable(cards[index],index)"
+                                @click="redo(index)"
                               >
                                 {{i18n.random}}
                               </v-btn></v-col
@@ -177,7 +215,39 @@
                           :items="cards[index].items"
                           :items-per-page="10"
                           class="elevation-1"
+                          no-data-text="No data"
+                          hide-default-footer
+                          :page.sync="cards[index].page"
+                          @page-count="cards[index].pageCount = $event"
                         ></v-data-table>
+                        <div class="text-center pt-2">
+                          總金額: {{cards[index].newTotal}} | 總筆數:
+                          {{cards[index].newRows}}
+                          <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-btn icon v-bind="attrs" v-on="on">
+                                <v-icon>mdi-information</v-icon>
+                              </v-btn>
+                            </template>
+                            <span>
+                              行動支付:{{cards[index].newMobileTotal}} |
+                              現金支付: {{cards[index].newCashTotal}} |
+                              行動筆數: {{cards[index].newMobileRows}} |
+                              現金筆數: {{cards[index].newCashRows}}</span
+                            >
+                          </v-tooltip>
+                        </div>
+
+                        <div class="text-center pt-2">
+                          <v-pagination
+                            v-model="cards[index].page"
+                            :length="cards[index].len-2"
+                            circle
+                            :total-visible="10"
+                            @next="next(cards[index],index)"
+                            @input="next(cards[index],index)"
+                          ></v-pagination>
+                        </div>
                       </template>
                       <!-- table end -->
                     </div>
@@ -228,6 +298,7 @@
         </v-app></template
       >
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <script src="./js/main.js"></script>
