@@ -12,3 +12,5 @@ WHERE 結帳時間 < date('2022-05-1 00:00:00')
     AND 結帳時間 > date('2022-04-01 00:00:00')
     AND 店別 = '台北衡陽店';
 ;
+-- GET 每月份的 資料筆數
+SELECT COUNT(id) FROM `mobile_official` WHERE 結帳時間 > date('2022-04-01') AND 結帳時間 < date('2022-05-01');
