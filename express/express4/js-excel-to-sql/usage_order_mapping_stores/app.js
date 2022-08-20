@@ -4,10 +4,45 @@ const testData = async (targetTable, limitDate, distributeConfig) => {
   const data = await executeSQL(`SELECT * FROM ${targetTable}
   WHERE 結帳時間 > date('${limitDate[0]} 00:00:00') AND 結帳時間 < date('${limitDate[1]} 00:00:00');`);
 
+  const createRandom = (min, max) => {
+    return min + Math.round(Math.random() * (max - min));
+  };
+
+  const 依機率產生時間 = () => {
+    let minAndSec = ":" + createRandom(0, 59) + ":" + createRandom(0, 59);
+    let randomNum = createRandom(1, 10);
+    if (randomNum <= 5) return createRandom(18, 24) + minAndSec;
+    if (randomNum <= 8) return createRandom(12, 17) + minAndSec;
+    return createRandom(8, 11) + minAndSec;
+  };
+
+  const 依月份隨機產生日期 = (month) => {
+    switch (month) {
+      case 1:
+      case 3:
+      case 5:
+      case 7:
+      case 8:
+      case 10:
+      case 12:
+        return createRandom(1, 31);
+      case 4:
+      case 6:
+      case 9:
+      case 11:
+        return createRandom(1, 30);
+      default:
+        return createRandom(1, 28);
+    }
+  };
+
   const 更新資料庫結帳時間 = async (欲修改月份, 參考資料) => {
-    const { itemYear, itemDate, itemTime, itemID } = 參考資料;
+    const { itemYear, itemID } = 參考資料;
+    let 欲修改日期 = 依月份隨機產生日期(欲修改月份);
+    let 欲修改時間 = 依機率產生時間();
+    console.log(欲修改日期 + 欲修改時間);
     await executeSQL(`UPDATE ${targetTable}
-      SET 結帳時間 = '${itemYear}-${欲修改月份}-${itemDate} ${itemTime}'
+      SET 結帳時間 = '${itemYear}-${欲修改月份}-${欲修改日期} ${欲修改時間}'
       WHERE id=${itemID};`);
   };
 
@@ -27,10 +62,11 @@ const testData = async (targetTable, limitDate, distributeConfig) => {
 
     let itemTimeData = new Date(item.結帳時間);
     let itemYear = itemTimeData.getFullYear();
-    let itemDate = ("0" + itemTimeData.getDate()).slice(-2);
-    let itemTime = `${itemTimeData.getHours()}:${itemTimeData.getMinutes()}:00`;
+    // let itemDate = ("0" + itemTimeData.getDate()).slice(-2);
+    // let itemTime = `${itemTimeData.getHours()}:${itemTimeData.getMinutes()}:00`;
+    // let 參考資料 = { itemYear, itemDate, itemTime, itemID: item.id };
+    let 參考資料 = { itemYear, itemID: item.id };
 
-    let 參考資料 = { itemYear, itemDate, itemTime, itemID: item.id };
     // 更新資料庫結帳時間(欲改成此月, 參考資料);
 
     let itemDistribute = distributeTarget[nowIndex];
@@ -40,10 +76,9 @@ const testData = async (targetTable, limitDate, distributeConfig) => {
     if (itemDistribute.nowQuantity >= itemDistribute.target) {
       distributeTarget.splice(nowIndex, 1);
     }
-    console.log(distributeTarget);
   });
 
-  console.log("整份修改好了 done");
+  console.log("done");
 };
 testData(
   "mobile",
