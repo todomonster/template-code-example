@@ -11,10 +11,11 @@ main(
   "mobile",
   ["2022-04-01", "2022-04-30"],
   [
-    ["2022-05-01", "2022-05-02", 100],
+    // ["2022-05-01", "2022-05-02", 100],
     // ["2022-09-01", "2022-09-10", 200],
     // ["2022-10-01", "2022-10-10", 2000],
     // ["2022-11-01", "2022-11-10", 2000],
+    ["2022-12-01", "2022-12-31", 20],
   ]
 );
 
@@ -41,7 +42,7 @@ const 依機率產生時間 = () => {
   return hour + minAndSec;
 };
 
-const main = async (targetTable, limitDate, distributeConfig) => {
+async function main(targetTable, limitDate, distributeConfig){
   try {
     const data = await executeSQL(`SELECT * FROM ${targetTable}
     WHERE 結帳時間 > date('${limitDate[0]} 00:00:00') AND 結帳時間 < date('${limitDate[1]} 00:00:00');`);
