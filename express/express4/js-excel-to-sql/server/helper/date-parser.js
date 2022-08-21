@@ -45,4 +45,4 @@ function addDay(dateString, num = 1) {
 // console.log(addDay("2022-03-13", NaN));
 // console.log(addDay("2022-03-13", 1));
 
-module.exports = { addDay, addMonth };
+module.exports = { addDay, addMonth, isValidDate };

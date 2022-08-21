@@ -1,23 +1,20 @@
 const { executeSQL } = require("./db");
+const { isValidDate } = require("../server/helper/date-parser");
 
-//第一個參數 資料表名稱(字串)
-//第二個參數 抓資料(陣列)          [起日期, 迄日期]  ps:日期格式(YYYY-MM-DD)
-//第三個參數 放資料(雙層陣列)
-//                                [
-//                                   [起日期start, 迄日期end, 最多塞幾筆target],  要塞的第一個月份
-//                                   [起日期, 迄日期, 最多塞幾筆]                 要塞的第二個月份
-//                                ]
-main(
-  "mobile",
-  ["2022-04-01", "2022-04-30"],
-  [
-    // ["2022-05-01", "2022-05-02", 100],
-    // ["2022-09-01", "2022-09-10", 200],
-    // ["2022-10-01", "2022-10-10", 2000],
-    // ["2022-11-01", "2022-11-10", 2000],
-    ["2022-12-01", "2022-12-31", 20],
-  ]
-);
+const validateDates = (dates) => {
+  let log = "ok";
+  dates = dates.filter((x) => typeof x === "string");
+  for (let i = 0, len = dates.length; i < len; i++) {
+    const date = dates[i];
+    const flag = isValidDate(date);
+    // 不合法日期中斷迴圈
+    if (!flag) {
+      log = date;
+      break;
+    }
+  }
+  return log;
+};
 
 const createRandom = (min, max) => {
   return min + Math.round(Math.random() * (max - min));
@@ -42,8 +39,34 @@ const 依機率產生時間 = () => {
   return hour + minAndSec;
 };
 
-async function main(targetTable, limitDate, distributeConfig){
+//第一個參數 資料表名稱(字串)
+//第二個參數 抓資料(陣列)          [起日期, 迄日期]  ps:日期格式(YYYY-MM-DD)
+//第三個參數 放資料(雙層陣列)
+//                                [
+//                                   [起日期start, 迄日期end, 最多塞幾筆target],  要塞的第一個月份
+//                                   [起日期, 迄日期, 最多塞幾筆]                 要塞的第二個月份
+//                                ]
+main(
+  "mobile",
+  ["2022-04-01", "2022-04-30"],
+  [
+    // ["2022-05-01", "2022-05-02", 100],
+    // ["2022-09-01", "2022-09-10", 200],
+    // ["2022-10-01", "2022-10-10", 2000],
+    // ["2022-11-01", "2022-11-10", 2000],
+    ["2022-12-01", "2022-12-31", 20],
+  ]
+);
+
+async function main(targetTable, limitDate, distributeConfig) {
   try {
+    const dateArr = [...limitDate, ...distributeConfig.flat(1)];
+    const flag = validateDates(dateArr);
+    if (flag !== "ok") {
+      console.log(flag, "出現不合法日期，終止任務!");
+      return;
+    }
+
     const data = await executeSQL(`SELECT * FROM ${targetTable}
     WHERE 結帳時間 > date('${limitDate[0]} 00:00:00') AND 結帳時間 < date('${limitDate[1]} 00:00:00');`);
     if (data.length === 0) {
@@ -114,4 +137,4 @@ async function main(targetTable, limitDate, distributeConfig){
   } catch (error) {
     console.log(error);
   }
-};
+}
