@@ -13,11 +13,11 @@ const testData = async (targetTable, limitDate, distributeConfig) => {
     let randomNum = createRandom(1, 10);
 
     //萬波營業時間11-21
-    //機率50%，晚上18-21
+    //(1-5)機率50%，晚上18-21
     if (randomNum <= 5) return createRandom(18, 21) + minAndSec;
-    //機率40%，下午13-17
+    //(6-9)機率40%，下午13-17
     if (randomNum <= 9) return createRandom(13, 17) + minAndSec;
-    //機率10%，上午11-12
+    //(10) 機率10%，上午11-12
     return createRandom(11, 12) + minAndSec;
   };
 
@@ -72,7 +72,7 @@ const testData = async (targetTable, limitDate, distributeConfig) => {
 
     itemDistribute.nowQuantity++;
 
-    //假如5月塞的數量>5月目標數量，把5月移除，就不會再塞進5月份
+    //假如 當月已塞的數量>當月目標數量，移除之，即不會再塞進此月份
     if (itemDistribute.nowQuantity >= itemDistribute.target) {
       distributeTarget.splice(nowIndex, 1);
     }
@@ -92,4 +92,8 @@ testData(
 );
 //第一個參數 資料表名稱(字串)
 //第二個參數 抓資料(陣列)          [起日期, 迄日期]  ps:日期格式(YYYY-MM-DD)
-//第三個參數 放資料(雙層陣列)      [ [起日期start, 迄日期end, 最多塞幾筆target], [起日期, 迄日期, 最多塞幾筆] ]
+//第三個參數 放資料(雙層陣列)
+//                                [
+//                                   [起日期start, 迄日期end, 最多塞幾筆target],  要塞的第一個月份
+//                                   [起日期, 迄日期, 最多塞幾筆]                 要塞的第二個月份
+//                                ]
