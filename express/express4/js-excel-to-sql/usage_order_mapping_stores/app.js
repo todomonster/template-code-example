@@ -30,7 +30,6 @@ const testData = async (targetTable, limitDate, distributeConfig) => {
     const { month, start, end } = 欲修改資料;
     let 欲修改日期 = 隨機產生日期(start, end);
     let 欲修改時間 = 依機率產生時間();
-    console.log(欲修改日期 + " " + 欲修改時間);
     await executeSQL(`UPDATE ${targetTable}
       SET 結帳時間 = '${itemYear}-${month}-${欲修改日期} ${欲修改時間}'
       WHERE id=${itemID};`);
