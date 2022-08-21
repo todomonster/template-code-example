@@ -19,10 +19,29 @@ const areaMapStoreId = {
 };
 function getAreaMapStoreIdSqlCondition(area) {
   if (areaMapStoreId[area]) {
-    return "WHERE store_id=" + areaMapStoreId[area].join(" OR store_id=") + ";";
+    return "AND (store_id=" + areaMapStoreId[area].join(" OR store_id=") + ');';
   }
   return false;
 }
+const uniqueCity = [
+  "基隆",
+  "台北",
+  "新北",
+  "桃園",
+  "新竹",
+  "苗栗",
+  "台中",
+  "臺中",
+  "彰化",
+  "雲林",
+  "嘉義",
+  "台南",
+  "高雄",
+  "屏東",
+  "台東",
+  "宜蘭",
+  "澎湖",
+];
 const coupon_stores_mapping = {
   2: {
     id: 2,
@@ -1767,7 +1786,7 @@ const coupon_stores_mapping = {
 };
 //比例 62:32:06
 // const client = ["店員", "加盟主", "經理"];
-function getRandClient() {
+function getRandCheckout() {
   const random = Math.floor(Math.random() * 100);
   let client = "";
   // 0-62
@@ -1780,30 +1799,17 @@ function getRandClient() {
   // getRandClient();
 }
 module.exports = {
+  // 給store_id 回傳店家資料
   coupon_stores_mapping,
+  // 所有萬波店家的city名稱
+  uniqueCity,
+  // 給地區 取得合併後的stor_id SQL條件 
   getAreaMapStoreIdSqlCondition,
-  getRandClient,
+  // 取得隨機結帳者
+  getRandCheckout,
 };
 function mapAreaMapStoreId() {
-  const unique = [
-    "基隆",
-    "台北",
-    "新北",
-    "桃園",
-    "新竹",
-    "苗栗",
-    "台中",
-    "臺中",
-    "彰化",
-    "雲林",
-    "嘉義",
-    "台南",
-    "高雄",
-    "屏東",
-    "台東",
-    "宜蘭",
-    "澎湖",
-  ];
+
   const areaMapIdObj = {};
   const addressArr = [
     "基隆",
