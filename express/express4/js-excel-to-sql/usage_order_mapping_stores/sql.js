@@ -1,5 +1,4 @@
 // 產生 sql
-const coupon_stores_mapping = require("./coupon_stores");
 const config = {
   tableName: ["coupon_coupon_usages", "mobile_official", "cash_official"],
   payMethods: ["現金", "行動"],
@@ -12,7 +11,6 @@ const config = {
     61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79,
     80, 81, 82, 83, 84, 85, 86, 178, 179,
   ],
-  coupon_stores_mapping,
 };
 // 產生 的程式SQL 2x2x87 = 348 個SQL
 const sqls = {

@@ -2216,8 +2216,6 @@ const othersArea = {
   重慶區: ["台北市"], //重慶酒泉
   木柵區: ["台北市"], //木柵保儀
   忠勇區: ["台中市"], //文山忠勇店
-  測試區: ["南投縣"],
-  竹科區: ["新竹市"],
-  光復區: ["新竹市"],
+  測試區: ["南投縣"],//測試店
 };
 module.exports = { areaType, areaObj, locateMapping, othersArea };

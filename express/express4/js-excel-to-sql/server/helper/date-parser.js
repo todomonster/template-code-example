@@ -1,8 +1,17 @@
+/**
+ * @param {Object} d 日期
+ * @return {boolean}
+ */
 function isValidDate(d) {
   return d instanceof Date && !isNaN(d);
 }
 
-// input '2022-03-22',1 ;
+/**
+ * @param {string} dateString
+ * @param {number} num
+ * @param {string} mode has_date or no_date
+ * @return {string} 日期
+ */
 function addMonth(dateString, num = 1, mode = "has_date") {
   let date = new Date(dateString);
   if (typeof num !== "number" || isNaN(num)) {
@@ -25,7 +34,11 @@ function addMonth(dateString, num = 1, mode = "has_date") {
 // console.log(addMonth("2022-03-13", NaN));
 // console.log(addMonth("2022-03-13", 1));
 
-// input '2022-03-22',1 ;
+/**
+ * @param {string} dateString
+ * @param {number} num
+ * @return {string} 日期
+ */
 function addDay(dateString, num = 1) {
   let date = new Date(dateString);
   if (typeof num !== "number" || isNaN(num)) {
@@ -45,4 +58,4 @@ function addDay(dateString, num = 1) {
 // console.log(addDay("2022-03-13", NaN));
 // console.log(addDay("2022-03-13", 1));
 
-module.exports = { addDay, addMonth, isValidDate };
+module.exports = { addDay, addMonth,isValidDate };
