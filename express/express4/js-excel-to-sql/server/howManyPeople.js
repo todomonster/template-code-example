@@ -1,4 +1,4 @@
-const howManyPeople = (location) => {
+const howManyPeople = (location, toFixed = 2) => {
   const allPeople = 23190064;
   let ans = 0;
   switch (location) {
@@ -54,7 +54,7 @@ const howManyPeople = (location) => {
     default:
       ans = false;
   }
-  if (ans) console.log((ans / allPeople).toFixed(2));
+  if (ans) console.log((ans / allPeople).toFixed(toFixed));
   else console.log("不存在資料內");
 };
-howManyPeople("臺中");
+howManyPeople("臺中",5);
