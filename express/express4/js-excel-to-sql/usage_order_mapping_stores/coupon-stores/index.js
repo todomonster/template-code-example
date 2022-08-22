@@ -14,6 +14,20 @@ function getRandCheckout() {
   // getRandClient();
 }
 
+const { areaMapId } = require("./data");
+// 給地區 取得合併後的stor_id SQL條件
+function getAreaMapStoreIdSqlCondition(area) {
+  if (areaMapId[area]) {
+    return "AND (store_id=" + areaMapId[area].join(" OR store_id=") + ");";
+  }
+  return false;
+}
+
+module.exports = {
+  getAreaMapStoreIdSqlCondition,
+  getRandCheckout,
+};
+
 // Array 抽取特定的 key 變成 Object
 function genArr2ObjMapKey(stores, keyName = "address") {
   const areaMapIdObj = {};
@@ -28,18 +42,3 @@ function genArr2ObjMapKey(stores, keyName = "address") {
   });
   console.log(areaMapIdObj);
 }
-
-// 給地區 取得合併後的stor_id SQL條件
-function getAreaMapStoreIdSqlCondition(area) {
-  if (genArr2ObjMapKey[area]) {
-    return (
-      "AND (store_id=" + genArr2ObjMapKey[area].join(" OR store_id=") + ");"
-    );
-  }
-  return false;
-}
-
-module.exports = {
-  getAreaMapStoreIdSqlCondition,
-  getRandCheckout,
-};
