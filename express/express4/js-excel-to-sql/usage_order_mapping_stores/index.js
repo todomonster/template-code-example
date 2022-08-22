@@ -4,60 +4,46 @@
 // 加入order_id
 // 備份
 
+// 1.自己產生新的表
 
-//由上到下做對應
-// 引用 JSON data
-let coupon_coupon_usages = ""; // as u
-let _official = ""; //as order
+const { executeSQL } = require("./db");
+const { isValidDate } = require("../server/helper/date-parser");
+// (['2022-04-01','2022-05-01'],0.61)
 
-const { 操作訂單資料, 操作優惠券資料 } = require("./insertData");
-const { 取得訂單資料, 取得優惠券資料 } = require("./selectData");
+const dbConfig = {
+  userTable: "vcarduser",
+  mappingTable: "store_map_vcarduser",
+  createTime: "createTime",
+  storeName: "店別",
+  orderTimeColumn: "結帳時間",
+};
 
-async function main() {
-  let [sqlA, sqlB] = ["", ""];
-  // 取資料
-  coupon_coupon_usages = await 取得訂單資料(sqlA);
-  _official = await 取得優惠券資料(sqlB);
-  配對訂單();
-  // 其實不適合存檔 因為迴圈跑太多次了
-  // 直接跑迴圈修改DB?
-  // 不行 要直接操作否則永遠配對第一筆
+function yyyy_mm_dd(dateObj) {
+  return date.toISOString().slice(0, 10);
 }
 
+async function 依照設定檔的條件以中鼎訂單生成Coupon券(
+  tableName,
+  [start, end],
+  useCouponRate
+) {
+  // 步驟一 依照時間 GET 訂單，訂單已經分成 行動支付和現金 並且確定比例了
+  const getOrdersSQL = `SELECT * FROM ${tableName} WHERE ${dbConfig.orderTimeColumn} > date('${start} 00:00:00') AND ${dbConfig.orderTimeColumn} < date('${end} 00:00:00')`;
+  const data = await executeSQL(getOrdersSQL);
+  const dataLength = data.length;
+  data.forEach(async (element) => {
+    // 內埔廣濟店
+    const storeName = element[dbConfig.storeName];
+    const orderTime = yyyy_mm_dd(element[dbConfig.orderTimeColumn]);
 
-async function 配對訂單() {
-  const order = _official;
-  for (let i = 0; i < order.length; i++) {
-    //沒有配對到uid才做下去
-    if (!order[i]["uid"]) {
-      // 回傳第一筆配對到的id
-      const uid = 配對優惠券使用(order[i]);
-      order[i] = 修改訂單({ uid }, order[i]);
-      await 操作訂單資料();
-    }
-  }
+    const oneRandomSQL = `SELECT * FROM ${dbConfig.mappingTable} 
+    WHERE ${dbConfig.createTime} < date('${orderTime} 00:00:00') AND ${dbConfig.storeName}=${storeName} 
+    ORDER BY RAND() LIMIT 1`;
+
+    const lineUser = await executeSQL(oneRandomSQL);
+    const {lineId,storId} = lineUser
+    genCoupon(lineId);
+  });
 }
 
-function 修改訂單(config, item) {
-  const { uid } = config;
-  // 加入配對 id
-  item["uid"] = uid;
-  return item;
-}
-
-async function 配對優惠券使用(order_item) {
-  const { 結帳時間, id } = order_item;
-  const u = coupon_coupon_usages;
-  for (let j = 0; j < u.length; j++) {
-    //沒有配對到order_id才做下去
-    if (!u[j]["order_id"]) {
-
-      await 操作優惠券資料();
-      return u[j]["id"];
-    }
-  }
-}
-
-module.exports = { main };
-
-
+function genCoupon() {}
