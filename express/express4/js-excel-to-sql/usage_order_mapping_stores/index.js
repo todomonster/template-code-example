@@ -60,6 +60,4 @@ async function 配對優惠券使用(order_item) {
 
 module.exports = { main };
 
-//log模組 改order_id uid
-// 時間模組 亂數秒數後配對 taken_at used_at expired_at
-// 改stored_id 模組
+
