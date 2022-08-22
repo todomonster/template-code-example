@@ -24,8 +24,6 @@ const howManyPeople = (location) => {
     case "臺中":
       ans = 2800981;
       break;
-      ans = 2800981;
-      break;
     case "彰化":
       ans = 1246924;
       break;
@@ -59,4 +57,4 @@ const howManyPeople = (location) => {
   if (ans) console.log((ans / allPeople).toFixed(2));
   else console.log("不存在資料內");
 };
-howManyPeople("澎湖");
+howManyPeople("臺中");
