@@ -1,0 +1,1 @@
+CREATE TABLE `test1`.`user_combine_store` (`id` INT(32) NOT NULL AUTO_INCREMENT , `uid` INT(32) NOT NULL , `create_time` DATETIME NOT NULL , `line_id` VARCHAR(64) NOT NULL , `area` VARCHAR(16) NOT NULL , `store_id` INT(32) NOT NULL , `store_name` VARCHAR(16) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB CHARSET=utf8mb4;

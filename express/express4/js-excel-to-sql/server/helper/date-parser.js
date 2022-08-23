@@ -58,4 +58,35 @@ function addDay(dateString, num = 1) {
 // console.log(addDay("2022-03-13", NaN));
 // console.log(addDay("2022-03-13", 1));
 
-module.exports = { addDay, addMonth,isValidDate };
+function dateToString(dateObj) {
+  return dateObj
+    .toLocaleString("zh-TW", { timeZone: "UTC" })
+    .replace("上午", "")
+    .replace("下午", "");
+}
+
+function addHours(numOfHours, date = new Date()) {
+  date.setTime(date.getTime() + numOfHours * 60 * 60 * 1000);
+  return date;
+}
+
+function getTomorrowMidnight(dateObj) {
+  const dateString = dateToString(dateObj).slice(0, 9);
+  let date = new Date(dateObj);
+  date.setDate(date.getDate() + 1);
+  const dateArr = [
+    date.getFullYear(),
+    ("0" + (date.getMonth() + 1)).slice(-2),
+    ("0" + date.getDate()).slice(-2),
+  ];
+  return dateArr.join("-") + " 00:00:00";
+}
+
+module.exports = {
+  addDay,
+  addMonth,
+  isValidDate,
+  dateToString,
+  addHours,
+  getTomorrowMidnight,
+};

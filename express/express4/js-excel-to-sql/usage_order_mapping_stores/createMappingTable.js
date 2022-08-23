@@ -182,13 +182,6 @@ createNewMappingTable();
 
 async function createNewMappingTable() {
   const dataArr = await getHowManyAreaUser();
-  // let keys = [];
-  // if (dataArr[0]) {
-  //   keys = Object.keys(dataArr[0]);
-  //   let sql = "( `" + keys.join("`, `") + "` );";
-  //   console.log(sql);
-  // }
-
   // create table sql
   await createTableSQL(
     "create_user_combine_store.sql",
