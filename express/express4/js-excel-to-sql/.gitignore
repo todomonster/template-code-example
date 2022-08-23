@@ -3,3 +3,4 @@ todo.md
 .env
 *.7z
 *.xlsx
+db.js
