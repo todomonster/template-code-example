@@ -24,22 +24,19 @@ const dbConfig = {
  */
 main();
 function main() {
-  const table = [
-    "mobile_official",
-    // "cash_official"
-  ];
+  const table = ["mobile_official"];
+  // const table = ["cash_official"];
   const date = [
-    { period: ["2022-04-01", "2022-05-01"], rate: 84 },
+    // { period: ["2022-04-01", "2022-05-01"], rate: 84 },
     // { period: ["2022-05-01", "2022-06-01"], rate: 83 },
     // { period: ["2022-06-01", "2022-07-01"], rate: 82 },
     // { period: ["2022-07-01", "2022-08-01"], rate: 84 },
-    // { period: ["2022-08-01", "2022-09-01"], rate: 85 },
+    { period: ["2022-08-01", "2022-09-01"], rate: 85 },
   ];
   table.forEach((table) => {
-    date.forEach(({ period, rate }) => {
-      依照設定檔的條件以中鼎訂單生成Coupon券(table, period, {
+    date.forEach(async ({ period, rate }) => {
+      await 依照設定檔的條件以中鼎訂單生成Coupon券(table, period, {
         usedCouponRate: rate,
-        limit: 10,
       });
     });
   });
@@ -90,7 +87,7 @@ async function 依照設定檔的條件以中鼎訂單生成Coupon券(
 
     let saveSQL = [];
     for (let i = 0; i < usedAmount; i++) {
-      if (i % 10000 === 0) console.log("已執行", i);
+      if (i % 1000 === 0) console.log("已執行", i);
       if (i > limit - 1 || usedCouponRate === 0) {
         break;
       }
@@ -117,7 +114,7 @@ async function 依照設定檔的條件以中鼎訂單生成Coupon券(
     }
     console.log("完成 已使用 coupon 建立");
     for (let i = 0; i < notUseAmount; i++) {
-      if (i % 10000 === 0) console.log("已執行", i);
+      if (i % 1000 === 0) console.log("已執行", i);
       if (i > notUsedLimit - 1) {
         break;
       }
@@ -141,9 +138,17 @@ async function 依照設定檔的條件以中鼎訂單生成Coupon券(
     console.log("完成 未使用 coupon 建立");
     saveSQL = saveSQL.sort(() => (Math.random() > 0.5 ? -1 : 1));
 
-    await saveFile(`new_coupon_usage_${start}_${end}.sql`, saveSQL.join("\n"));
-    console.log("完成建立");
-    console.log("執行設定: \n", couponConfig, "未抓到資料 SQL: \n", failLog);
+    await saveFile(
+      `${tableName}_coupon_usage_${start}_${end}.sql`,
+      saveSQL.join("\n")
+    );
+    await saveFile(
+      `${tableName}_not_find_user_${start}_${end}.sql`,
+      failLog.join("\n")
+    );
+    console.log(`完成${tableName}建立`);
+    console.log("執行設定: \n", couponConfig,'完成時間',new Date());
+
   } catch (error) {
     console.log(error);
   }

@@ -63,7 +63,7 @@ function JsonToSqlParser(obj, dbName, tableName) {
         if (!intersection) console.log(店別, 結帳員工);
         result2[i] = intersection || "台北市";
         //隨機分配使用者 id
-        const uid = null ;//getRandomUser();
+        const uid = 0 ;//getRandomUser();
 
         result[
           i

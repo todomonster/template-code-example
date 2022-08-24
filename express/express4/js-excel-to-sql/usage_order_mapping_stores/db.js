@@ -2,6 +2,7 @@
 const mysql = require("mysql");
 
 //正式
+
 const conn = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -16,7 +17,7 @@ conn.connect(function (err) {
 
 function executeSQL(sql) {
   return new Promise((resolve, reject) => {
-    console.log(sql);
+    // console.log(sql);
     conn.query(sql, [], (err, data) => {
       if (err) {
         return reject({ err });

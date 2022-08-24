@@ -11,9 +11,11 @@ const config = {
   // months: ["3月", "4月", "5月", "6月","7月","8月"],
   months: ["8月"],
   mobilePath: [
-    "../excel/悠遊付(卡)/2022.xlsx",
-    "../excel/APPLEPAY/2022.xlsx",
-    "../excel/LINEPAY/2022.xlsx",
+    // "../excel/悠遊付(卡)/2022.xlsx",
+    // "../excel/APPLEPAY/2022.xlsx",
+    // "../excel/LINEPAY/2022.xlsx",
+    "../excel/台灣PAY/2022.xlsx",
+    "../excel/街口/2022.xlsx",
   ],
   cashPath: ["../excel/現金/2022.xlsx"],
 };
@@ -43,10 +45,10 @@ async function main(config) {
       });
 
       //生成  Add現金支付SQL
-      await genInsertSQL(cashPath, item, fileExtension, {
-        tableName: cashTable,
-        dbName,
-      });
+      // await genInsertSQL(cashPath, item, fileExtension, {
+      //   tableName: cashTable,
+      //   dbName,
+      // });
     });
     console.log("任務結束");
   } catch (error) {
