@@ -233,7 +233,10 @@ function JsonToSqlParser(data, dbName, tableName) {
     } = el;
 
     //2022/12/20 3:00:00
-    const time = create_time.toLocaleString("zh-TW", { timeZone: "UTC" });
+    const time = create_time.toLocaleString("zh-TW", {
+      timeZone: "UTC",
+      hour12: false,
+    });
     const timeZone = time.replace("上午", "").replace("下午", "");
     if (line_id === "system") {
       line_id = getRandLineId(users);

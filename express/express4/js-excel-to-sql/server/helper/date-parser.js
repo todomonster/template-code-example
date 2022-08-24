@@ -59,10 +59,18 @@ function addDay(dateString, num = 1) {
 // console.log(addDay("2022-03-13", 1));
 
 function dateToString(dateObj) {
-  return dateObj
-    .toLocaleString("zh-TW", { timeZone: "UTC" })
-    .replace("上午", "")
-    .replace("下午", "");
+  const dateString = dateObj.toLocaleString("zh-TW", {
+    timeZone: "UTC",
+    hour12: false,
+  });
+  
+  if (dateString.includes("上午")) {
+    return dateString.replace("上午", "");
+  }
+  if (dateString.includes("下午")) {
+    return dateString.replace("下午", "");
+  }
+  return dateString;
 }
 
 function addHours(numOfHours, date = new Date()) {
