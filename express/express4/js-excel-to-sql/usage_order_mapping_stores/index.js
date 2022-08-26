@@ -22,10 +22,10 @@ const dbConfig = {
  * 限制券產生的數量
  * 使用券的百分比%
  */
-main();
+
 function main() {
-  const table = ["mobile_official"];
-  // const table = ["cash_official"];
+  // const table = ["mobile_official"];
+  const table = ["cash_official"];
   const date = [
     // { period: ["2022-04-01", "2022-05-01"], rate: 84 },
     // { period: ["2022-05-01", "2022-06-01"], rate: 83 },
@@ -147,8 +147,7 @@ async function 依照設定檔的條件以中鼎訂單生成Coupon券(
       failLog.join("\n")
     );
     console.log(`完成${tableName}建立`);
-    console.log("執行設定: \n", couponConfig,'完成時間',new Date());
-
+    console.log("執行設定: \n", couponConfig, "完成時間", new Date());
   } catch (error) {
     console.log(error);
   }
@@ -228,3 +227,113 @@ function genTakenId(arr) {
   });
   return ans.join("-");
 }
+// ================================
+async function genRandomUsed(
+  tableName,
+  [start, end],
+  {
+    //產生使用券的機率百分比
+    usedCouponRate = 100,
+    //產生多少張 以使用的 coupon
+    limit = 56000,
+  }
+) {
+  // 步驟一 依照時間 GET 訂單，訂單已經分成 行動支付和現金 並且確定比例了
+  const failLog = [];
+  try {
+    const getOrdersSQL = `SELECT * FROM ${tableName} WHERE ${dbConfig.orderTimeColumn} > date('${start} 00:00:00') AND ${dbConfig.orderTimeColumn} < date('${end} 00:00:00')`;
+    console.log(getOrdersSQL);
+    let paytype = 2;
+    if (tableName.indexOf("cash") > -1) {
+      paytype = 1;
+    }
+    // 取得訂單s
+    const data = await executeSQL(getOrdersSQL);
+    let saveSQL = [];
+    for (let i = 0; i < limit; i++) {
+      if (i % 1000 === 0) console.log("已執行", i);
+      const createRandom = (min, max) => {
+        return min + Math.round(Math.random() * (max - min));
+      };
+
+      let random = createRandom(12000, 22000);
+      const order = data[random];
+      if (!order) {
+        continue;
+      }
+      const storeName = order[dbConfig.storeName];
+      const orderTimeObj = order[dbConfig.orderTimeColumn];
+      const orderTime = dateToString(addHours(8, orderTimeObj));
+      // 步驟二  根據訂單時間 和 店別 隨機取得一個 LineUser
+      const getOneRandomSQL = `SELECT * FROM ${dbConfig.mappingTable} 
+        WHERE create_time < date('${orderTime}') AND store_name='${storeName}'
+        ORDER BY RAND() LIMIT 1`;
+
+      let lineUser = await executeSQL(getOneRandomSQL);
+      if (lineUser.length === 0) {
+        failLog.push(getOneRandomSQL);
+        continue;
+      }
+      const timeConfig = genTimeConfig2(orderTimeObj);
+      function genTimeConfig2(dateObj) {
+        //亂數減少 小時
+        const genRandNum = (num) => Math.floor(Math.random() * num);
+        const randomMin = genRandNum(40);
+        const randomSec = genRandNum(60);
+        // 設定取得時間 為 亂數時間
+        const date = new Date(dateObj);
+        date.setTime(date.getTime() - randomMin * 60 * 1000 - randomSec * 1000);
+        const date2 = new Date(date);
+        date2.setTime(
+          date2.getTime() - randomMin * 60 * 1000 - randomSec * 1000
+        );
+        return {
+          taken_at: dateToString(date2),
+          used_at: dateToString(date),
+          expired_at: getTomorrowMidnight(date), //日期+一天後 取前面就好 +00:00:00
+        };
+      }
+      // 步驟三 產生 coupon券
+      const sql = await genCoupon(paytype, ...lineUser, timeConfig);
+      saveSQL.push(sql);
+    }
+
+    await saveFile(
+      `${tableName}_coupon_usage_${start}_${end}.sql`,
+      saveSQL.join("\n")
+    );
+    await saveFile(
+      `_${start}_${end}_${saveSQL.length}_${tableName}.txt`,
+      `${saveSQL.length}`
+    );
+    console.log(`完成${tableName}建立`);
+    console.log("完成時間", new Date());
+  } catch (error) {
+    console.log(error);
+  }
+}
+function main2() {
+  const table = [
+    "mobile_official",
+    // "cash_official"
+  ];
+  const date = [
+    // { period: ["2022-04-01", "2022-05-01"], rate: 100, limit: 227*1.1 },
+    // { period: ["2022-05-01", "2022-06-01"], rate: 100, limit: 412*1.1 },
+    // { period: ["2022-06-01", "2022-07-01"], rate: 100, limit: 407*1.1 },
+    // { period: ["2022-07-01", "2022-08-01"], rate: 100, limit: 10},
+    // { period: ["2022-08-01", "2022-09-01"], rate: 100, limit: 120 },
+    { period: ["2022-06-01", "2022-07-01"], rate: 100, limit: 10 },
+
+  ];
+
+  table.forEach((table) => {
+    date.forEach(async ({ period, rate, limit }) => {
+      await genRandomUsed(table, period, {
+        usedCouponRate: rate,
+        limit,
+      });
+    });
+  });
+}
+main2();

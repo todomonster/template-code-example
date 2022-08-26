@@ -4,3 +4,4 @@ todo.md
 *.7z
 *.xlsx
 db.js
+*.sql
