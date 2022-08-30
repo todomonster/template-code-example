@@ -59,16 +59,19 @@ function addDay(dateString, num = 1) {
 // console.log(addDay("2022-03-13", 1));
 
 function dateToString(dateObj) {
-  const dateString = dateObj.toLocaleString("zh-TW", {
+  let dateString = dateObj.toLocaleString("zh-TW", {
     timeZone: "UTC",
     hour12: false,
   });
   
   if (dateString.includes("上午")) {
-    return dateString.replace("上午", "");
+    dateString= dateString.replace("上午", "");
   }
   if (dateString.includes("下午")) {
-    return dateString.replace("下午", "");
+    dateString= dateString.replace("下午", "");
+  }
+  if(dateString.includes(" 24:")){
+    dateString= dateString.replace(" 24:", " 00:");
   }
   return dateString;
 }
