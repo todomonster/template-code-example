@@ -63,15 +63,15 @@ function dateToString(dateObj) {
     timeZone: "UTC",
     hour12: false,
   });
-  
+
   if (dateString.includes("上午")) {
-    dateString= dateString.replace("上午", "");
+    dateString = dateString.replace("上午", "");
   }
   if (dateString.includes("下午")) {
-    dateString= dateString.replace("下午", "");
+    dateString = dateString.replace("下午", "");
   }
-  if(dateString.includes(" 24:")){
-    dateString= dateString.replace(" 24:", " 00:");
+  if (dateString.includes(" 24:")) {
+    dateString = dateString.replace(" 24:", " 00:");
   }
   return dateString;
 }
@@ -93,6 +93,38 @@ function getTomorrowMidnight(dateObj) {
   return dateArr.join("-") + " 00:00:00";
 }
 
+function genRandomDate(
+  start = "2022-06-01",
+  end = "2022-06-30",
+  hourStart = "00",
+  hourEnd = "23"
+) {
+  if (!isValidDate(start)) return false;
+  if (!isValidDate(end)) return false;
+  const hStart = Number(hourStart);
+  const hEnd = Number(hourEnd);
+  if (typeof hStart !== "number" || isNaN(hStart)) {
+    return false;
+  }
+  if (typeof hEnd !== "number" || isNaN(hEnd)) {
+    return false;
+  }
+  const randomDate = (dateStart, dateEnd, hourStart, hourEnd) => {
+    const date = new Date(dateStart + Math.random() * (dateEnd - dateStart));
+    const hour = 0 + Math.round(Math.random() * (hourEnd - hourStart) + hourStart) || 0;
+    const minute = 0 + Math.floor(Math.random() * (59 - 0)) || 0;
+    const second = 0 + Math.floor(Math.random() * (59 - 0)) || 0;
+    date.setHours(hour);
+    date.setMinutes(minute);
+    date.setSeconds(second);
+    return date;
+  };
+
+  const newStart = new Date(start).getTime();
+  const newEnd = new Date(end).getTime();
+  return randomDate(newStart, newEnd, hStart, hEnd);
+}
+
 module.exports = {
   addDay,
   addMonth,
@@ -100,4 +132,5 @@ module.exports = {
   dateToString,
   addHours,
   getTomorrowMidnight,
+  genRandomDate,
 };
