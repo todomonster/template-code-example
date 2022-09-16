@@ -92,6 +92,7 @@ const genNumberWithCondition = (length = 10, header = "09") => {
 const monthDay = 30;
 const start = new Date("2022-09-01");
 const end = new Date("2022-09-30");
+const genHowManyPeople = 2796;
 const minHour = "8";
 const maxHour = "23";
 const fileName = "vcardUser_1663314715016.json";
@@ -99,7 +100,7 @@ const 使用者產生到甚麼時候 = "2022-09-19 13:00:59";
 //
 
 async function genVcardUser() {
-  const arr = 產生隨機分配數值之陣列(1, null, monthDay, 2796, 1);
+  const arr = 產生隨機分配數值之陣列(1, null, monthDay, genHowManyPeople, 1);
   const ans = [];
 
   for (let i = 0; i < arr.length; i++) {
@@ -155,14 +156,13 @@ async function main() {
     for (let i = 0, len = vcarduser.length; i < len; i++) {
       // 設置時間break
       const creatTime = new Date(vcarduser[i].createTime);
-      const limitTime = new Date(使用者產生到甚麼時候)
+      const limitTime = new Date(使用者產生到甚麼時候);
       if (creatTime > limitTime) {
         console.log("完成到第", i, "筆");
         console.log(vcarduser[i].line_id);
         return;
       }
       await update(vcarduser[i]);
-      
     }
   } else {
     console.log("no data find");
@@ -170,6 +170,8 @@ async function main() {
 }
 
 // 用產生的資料 塞入DB
-main();
+// main();
 
 // uid=198320 start=198321 end=200039
+
+
