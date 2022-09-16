@@ -85,16 +85,19 @@ data backup:
 https://drive.google.com/drive/folders/1YX6PZR5DExGu567mEaIiLARIVrN7q4rH?usp=sharing
 
 ## 資料夾作用
-server
-client
-excel
-中鼎訂單 excel 轉SQL進DB
+- server
+- client
+- excel
+  - 中鼎訂單 excel 轉SQL進DB
 
 後來發現其實不用訂單做比較快,因為訂單要撈DB很慢
 資料夾建立順序:
+
 ```md
-abstract_db_id 共用抽取方法
-usage_order_mapping_stores 可以不理他
-online_order 線上點餐
-second_stage 第二階段
+- abstract_db_id 共用抽取方法
+- usage_order_mapping_stores 這是第0階段可以不理他
+- first_stage(coupon+online_order) 第一階段產生coupon+ 線上點餐
+- second_stage 第二階段
+- third_stage 第三階段
+
 ```

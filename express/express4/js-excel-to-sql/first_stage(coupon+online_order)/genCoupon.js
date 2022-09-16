@@ -71,7 +71,8 @@ function main() {
   });
 }
 
-async function genCoupon(paytype, lineUser, timeConfig, notUsed) {
+// ref_by_user=online
+async function genOnlineUserCoupon(paytype, lineUser, timeConfig, notUsed) {
   const coupon_id = 2;
   const { line_id, store_id } = lineUser;
   const { taken_at, used_at, expired_at } = timeConfig;

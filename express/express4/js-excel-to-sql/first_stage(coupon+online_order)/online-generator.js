@@ -1,3 +1,5 @@
+// 根據訂單時間 和 店別 隨機取得一個 LineUser
+
 const { executeSQL } = require("./db");
 const { generateRandomBinary } = require("../server/helper/digit-helper");
 const {
