@@ -169,6 +169,12 @@ const { saveFile } = require("../server/helper/save-file");
 async function main() {
   const data = await getHowManyAreaUser();
   saveFile("newUsers.txt", JSON.stringify(data));
+  // 產生檔案範例
+  /**
+   * [{"uid":1,"create_time":"2021-10-26T04:10:15.000Z",
+   * "line_id":"Uafa2aa54e4f010629f3808ae82d4a948",
+   * "area":"基隆","store_id":2,"store_name":"基隆廟口店"}]
+   */
 }
 
 // 隨機取得LinId
@@ -199,6 +205,7 @@ async function createNewMappingTable() {
   }
 }
 
+// 建立Table SQL
 async function createTableSQL(fileName, dbName, tableName) {
   let sql =
     "CREATE TABLE `$dbName`.`$tableName` (`id` INT(32) NOT NULL AUTO_INCREMENT , `uid` INT(32) NOT NULL , `create_time` DATETIME NOT NULL , `line_id` VARCHAR(64) NOT NULL , `area` VARCHAR(16) NOT NULL , `store_id` INT(32) NOT NULL , `store_name` VARCHAR(16) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB CHARSET=utf8mb4;";
@@ -220,6 +227,7 @@ async function createTableSQL(fileName, dbName, tableName) {
  */
 
 const { users } = require("./usersData");
+// 將JSON轉成SQL
 function JsonToSqlParser(data, dbName, tableName) {
   let result = [];
   data.forEach((el, i) => {

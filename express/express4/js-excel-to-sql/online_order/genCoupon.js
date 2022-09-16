@@ -151,7 +151,7 @@ async function genRandomUsed(
   tableName,
   [start, end],
   {
-    //產生多少張 以使用的 coupon
+    //產生多少張 已使用的 coupon
     limit = 56000,
     randLimit,
   }
