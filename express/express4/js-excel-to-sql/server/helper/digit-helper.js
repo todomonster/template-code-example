@@ -5,7 +5,8 @@ function randomDigit() {
 function generateRandomBinary(binaryLength) {
   let binary = "";
   for (let i = 0; i < binaryLength; ++i) {
-    binary += randomDigit();
+    let digits = String(randomDigit());
+    binary += digits;
   }
   return binary;
 }

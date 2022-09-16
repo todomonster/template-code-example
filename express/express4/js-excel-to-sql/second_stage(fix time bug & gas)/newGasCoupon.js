@@ -133,7 +133,7 @@ async function loop(data, name) {
     const id = data[i];
     const result = await update(id);
     if (!result) {
-      console.log('失敗',id);
+      console.log("失敗", id);
       break;
     }
   }
@@ -151,22 +151,3 @@ async function update(id) {
     return false;
   }
 }
-
-// ====================================================
-// const { a } = require("./gasData/a");
-// const { b } = require("./gasData/b");
-// async function insertGasDegree(data) {
-//   for (let i = 0, len = data.length; i < len; i++) {
-//     if (i % 500 === 0) console.log(i);
-//     const item = data[i];
-//     let { userLineId, userName, year, month, degree } = item;
-//     userName = userName[0] + "*" + userName[2];
-//     const sql = `INSERT INTO gas_degree_log_v2 (userLineId, userName, year, month, degree)
-//      VALUES ('${userLineId}', '${userName}', ${year}, ${month}, ${degree})`;
-
-//     await executeSQL(sql);
-//   }
-//   console.log("ok", new Date());
-// }
-// insertGasDegree(b);
-// insertGasDegree(a);

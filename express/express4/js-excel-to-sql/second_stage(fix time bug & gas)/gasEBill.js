@@ -1907,7 +1907,8 @@ const LineId = [
   "Uccc5ea6fab489842748018bd4b0ac13b",
   "U040c0bb3c896bfcf162ec406937feaea",
 ];
-
+// 這份是電子帳單 報名表 
+// 報名的戶數不同
 const start = new Date("2022-07-05");
 const end = new Date("2022-08-15");
 const limit = 619;
@@ -1957,6 +1958,7 @@ async function genElectricGas(config) {
     // price
     const price = random(130, 2200);
     //  lineId
+    // 從已知[]挑選
     const randomLineId = LineId[random(0, LineId.length)];
     if (record.randomLineId[randomLineId]) {
       i--;
@@ -1964,7 +1966,7 @@ async function genElectricGas(config) {
     } else {
       record.randomLineId[randomLineId] = 1;
     }
-    //  date
+    //  date 10點到19點
     const createDateTime = genRandomDate(start, end, "10", "19");
     const month = createDateTime.getMonth() + 1;
     const year = createDateTime.getFullYear() - 1911;

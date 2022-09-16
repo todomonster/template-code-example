@@ -138,8 +138,11 @@ function genTakenId(arr) {
   // 產生16進位數字
   const ans = [];
   arr.forEach((binaryLength) => {
-    const hex = parseInt(generateRandomBinary(binaryLength * 4), 2);
-    ans.push(hex.toString(16));
+    let hex = parseInt(generateRandomBinary(binaryLength * 4), 2);
+    // ans.push(hex.toString(16));
+    hex = hex.toString(16);
+    // 不足位數要補0
+    ans.push(hex.padStart(binaryLength, '0'));
   });
   return ans.join("-");
 }
