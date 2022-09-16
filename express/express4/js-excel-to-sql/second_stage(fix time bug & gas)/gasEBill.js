@@ -4,6 +4,7 @@ const {
   dateToString,
   addHours,
 } = require("../server/helper/date-parser");
+const { phones, scgas_accounts } = require("./existData.js/gasBill");
 const LineId = [
   "U119bd7de275881d3e23ff11f4471e1de",
   "Ub4fbb6f56086f349767a071dc9ddfa79",
@@ -1907,18 +1908,21 @@ const LineId = [
   "Uccc5ea6fab489842748018bd4b0ac13b",
   "U040c0bb3c896bfcf162ec406937feaea",
 ];
-// 這份是電子帳單 報名表 
+// 這份是電子帳單 報名表
 // 報名的戶數不同
-const start = new Date("2022-07-05");
-const end = new Date("2022-08-15");
-const limit = 619;
+// config========
+const start = new Date("2022-08-16");
+const end = new Date("2022-08-30");
+const limit = 201;
 const config = {
   LineId,
   start,
   end,
   limit,
 };
-genElectricGas(config);
+// =============
+// 產生電子帳單資料
+// genElectricGas(config);
 
 async function genElectricGas(config) {
   const { LineId, start, end, limit } = config;
@@ -1935,26 +1939,29 @@ async function genElectricGas(config) {
   const record = {
     randomLineId: {},
     scgas_account: {},
-    phone:{}
+    phone: {},
   };
   for (let i = 0; i < limit; i++) {
     const scHeader = String(random(1, 4));
     const scgas_account = genPhone(6, scHeader);
-    // 重複
-    if (record.scgas_account[scgas_account]) {
+    // 重複 戶號
+    if (
+      record.scgas_account[scgas_account] ||
+      scgas_accounts.includes(scgas_account)
+    ) {
       i--;
       continue;
     } else {
       record.scgas_account[scgas_account] = 1;
     }
-    // phone
+    // 重複 phone
     const phone = genPhone(10, "09");
-    if (record.phone[phone]) {
-        i--;
-        continue;
-      } else {
-        record.phone[phone] = 1;
-      }
+    if (record.phone[phone] || phones.includes(phone)) {
+      i--;
+      continue;
+    } else {
+      record.phone[phone] = 1;
+    }
     // price
     const price = random(130, 2200);
     //  lineId
@@ -1985,8 +1992,809 @@ async function genElectricGas(config) {
       break;
     }
   }
-  await saveFile(`scgas_electric.json`, JSON.stringify(ans));
+  const date = new Date();
+  await saveFile(`scgas_electric_${date.getTime()}.json`, JSON.stringify(ans));
   return ans;
 }
+// ============================= 排序
+// const fs = require("fs");
+// let gas_ebill_data = JSON.parse(fs.readFileSync("scgas_electric_1663321939082.json"));
+// let gas_ebill_data2 = JSON.parse(fs.readFileSync("scgas_electric_1663321939186.json"));
 
-function genIds() {}
+// // 排序
+// async function saveSortArrayByObjTime(data, key,fileName) {
+//   const newData = data.sort((a, b) => {
+//     a = new Date(a[key]);
+//     b = new Date(b[key]);
+//     // 日期時間由小到大
+//     return a > b ? 1 : -1;
+//   });
+//   await saveFile(`${fileName}.json`, JSON.stringify(newData));
+// }
+// saveSortArrayByObjTime(gas_ebill_data, "create_at",'8月16~30');
+// saveSortArrayByObjTime(gas_ebill_data2, "create_at",'9月01~30');
+
+
+// ============ 進階版 跨月
+const timeRange = [
+  { start: new Date("2022-08-16"), end: new Date("2022-08-31"), limit: 201 },
+  { start: new Date("2022-09-01"), end: new Date("2022-09-30"), limit: 321 },
+];
+// multiGen(timeRange);
+async function multiGen(multiConfig) {
+  for (let i = 0; i < timeRange.length; i++) {
+    const {start,end,limit} = multiConfig[i]
+    const config = {
+      LineId,
+      start,
+      end,
+      limit,
+    };
+    await genElectricGas(config);
+  }
+}
+
+
+// 安順提供的減去使用掉的789月lineId
+// const 剩下的LineId = `
+// Uc3036d76a9abd496acb7e4195b241e39																									
+// Ufd29e9b7d8b645f54849f9270d0111cb																									
+// Ude4951136ea17bbdee8614da7f72ffe7																									
+// U0c8a9383f5a7e0d53796c1803476d47f																									
+// U05e766ec1f1b708aeb8dad9f1c243ab6																									
+// U006f095df717b2ffd610642ee119043b																									
+// U6a79f1a7dd4795c8fe992b78c510cec6																									
+// U688cf6ff7f0fe2a5b955f179024be068																									
+// U64a28985daf7a6fdd6e3a08b59c1d411																									
+// Uf1ed47e4e7fc3a43f7702b277f987685																									
+// U716b1221dd7852efac8a408ebcd1406a																									
+// U6dcfac1dbfece42c31c31cf3037512f5																									
+// U4e77f5dbcb653c9cae69ec2f7567ede8																									
+// U19728d2f9bc8a03615d3f8f9c0a71513																									
+// Uc21218f3e5e56d3bc270e5753323bd70																									
+// U6fb4868bce2cae1e54b01cfa22706c02																									
+// U5108126d5a8dada00b463ee72611fefa																									
+// U854afd45c3fba0755c9dc5eaaf5629b6																									
+// U36be5bb5b3ac1bbc6cb48d0b0274c07f																									
+// U11bc5038654232cc68e4086e07c6b469																									
+// U537d4570a151a339e98569c0328ddb17																									
+// U39b8955872246d4bdd8df09732f0fca3																									
+// U9f68a2e4ae4ec39701a42712d6e111f3																									
+// U3b8cbe27d3cf1d07c644634be3517d53																									
+// Ucf3443352139ade4044f3f3b07e66b40																									
+// U6bf943c32cb97acaf91afa1d39c85f29																									
+// U5311cbb637ed7e4de3ef1608265ab245																									
+// Uc6169d05798885315d8a770521a9b5ac																									
+// U4a0c19dc9248e35f3a8bc16f582c7076																									
+// U38db4137a5ca190a8aad54c137dbba42																									
+// Ue6659af501278cc362b9e0e5f6e6519e																									
+// U9d684036246907b7f10d2dd58417386f																									
+// U7e6429ffcf967a27e5262197ae76ef27																									
+// U441dd639d995b57f2c80ebfaac41896e																									
+// U204f6b91bc651581f37e0094c4892e9c																									
+// U3d934ad9fb2ecd2cd9b8554c035c0796																									
+// U1f38e11807cab23a17c335e3541243d6																									
+// Uca0162a302f124dad7c0621bbe77517b																									
+// Uc4087e78a8789b0e9ae65eda1334c584																									
+// U029ebc35b5af58cde05fb33063d1659f																									
+// U307adae4af89dfb8c14bb57c14e729c6																									
+// U0dced4d66de0591f40d1098a525af7b3																									
+// Ub9b8f4e5e797456a30e8067e3a3abc0d																									
+// Ud7dff9a74260a4586ff054f2cafab3f2																									
+// U4327a760627a483c0a1da9ac3749328e																									
+// Ua3599935bec1de16dd335dd03b258bc5																									
+// Ud4affa11388c1d8a674c519f37b04dfe																									
+// U311c903d127a1df3230e9ab56b151454																									
+// Ueeed46dde997d43f536e79f1c4b10c8e																									
+// U27ab9470cf8a4cdd6b71bc2a802c39fa																									
+// U1a5ae4450fe492ff718b17d7105cb5af																									
+// U427815f57daf121f31155a1159cda38e																									
+// Ub2e6226401c0d1d061cdb21d36ba04ff																									
+// U74821c3e3a6800938a6e8fcf703ce83a																									
+// U4d7b991d4f3efc2820527518316a3491																									
+// U323eff81c34201f6fba409711237fd04																									
+// U8fb9737fb1cdc7d02955fac607c5a0b5																									
+// U917d834ed8a95e44d8daf4747b003102																									
+// U246af9c75bd2737ceb0ba685a0a315d0																									
+// U90fd33eca3762d1a0869b66cf3182ac2																									
+// Ucffd5c5ae37bae98da49be7a4d4ec295																									
+// U9bdabf8b59dc694c0d7c21ef61512d38																									
+// Udd7116c4e87268bd6a32a0e3f504574a																									
+// Ua1641122ea35aedd41a239e8529b3dce																									
+// Uc38d21d59033231bcbc2c54351ae0ea2																									
+// U7803626dbb8a693067cab880d26e4098																									
+// Ude8ff99133bd17f56baa39ed721ec4bd																									
+// Ucad884093ef41001b336980daec9ea67																									
+// U0982f842d0aebe08223945ad8062170f																									
+// U1dca78c5418ff54f8d4bf548799668cf																									
+// Uda27a684c064a5510bbf6552c802038b																									
+// U83b663b73f0607d3f0df842b265a994c																									
+// U830dab80a7e2993b97ff7c4c8ca39ee6																									
+// Uf4b206bc19300925a5c3e15d83328749																									
+// U065c62beda5ac5a4ee5dfaade6054844																									
+// U23d185dec3f381f7f9dc6c0049068b7d																									
+// U844c1381fc6a59dc4b2c85a8511a951e																									
+// U280c9683ad3bfef8843981787c6264b6																									
+// U830bed6ecfc4be9c7bd3bea23a56df6e																									
+// U2d9a6eb69559506a38c41c171fa08a3e																									
+// Ubee139296d9f653c545c6855ec7c3c45																									
+// U14bb318d3cef0cf47f1983234ada87fa																									
+// U961fc8138465bdffb4e132f8b1de7be5																									
+// U27ccec36ba9ab76118d50c7bbe1937b6																									
+// U2e539dbc3ebaa9551166468008b05f1b																									
+// U364c1667100c1741dbca48e2b4bcfb13																									
+// U1be328d1d2321c494edb30e430788d7b																									
+// Ud5b1fa902fb08203fa8c1ee034b664cf																									
+// Udf015a7f0f952f7798117bf59cfa2383																									
+// U926da539d33b4ab688188087a10c6bb0																									
+// U12531c6fe664dd73a071ca815baab2e0																									
+// U7700d3422cc13f8635a6a08d5a95ba90																									
+// U8b3c0a59a13c6eed8f2f3fa583360bf9																									
+// Ucd4ef8f5938c0e0ffed793122053714e																									
+// Uf9d7bb0d4ee24f27e7c2cb8a84a71019																									
+// U6ba750bff382a38ca0c2a959ff8f03ed																									
+// U51ab5fef39eeba8d95eb56eb214be64b																									
+// Uc12b8fab5c250c6fa9029ae1a5089840																									
+// U36b38e7d0e66138ea8a755f5d404e47d																									
+// Ud952bc9966e53e78e5a24778785f3b85																									
+// U8e22bb69a091b42cf48105dce1ffbb7d																									
+// U5e7feb4576f325e99afeade2caca431f																									
+// U5789cbe88c2d59a088aa4a4b23b5cad8																									
+// U6116dc2c450eb357f56fa8f518be6893																									
+// Uebc413cdc9eb02a474a5fb149ecc9eaf																									
+// U423e474107def3a03ae0b80feff50e22																									
+// Ucb269019c96fb89441bf52b83b6156cb																									
+// U244bd65c94c827c285a7c4a4d0604d78																									
+// U62f9f177e31d5b112da2ee2af1cde607																									
+// U08789dba7ead06e15708e241ebd69bb0																									
+// U3a7ec231aed1215e0535f329be9faec5																									
+// Ue02c36c0cd579d9b51ec8e34b923faf1																									
+// Ub15e94cd392fb7d13b4f87894db6e3b7																									
+// Ud61cebebc328d68c0348d9902d7c2dae																									
+// U1970175c754830c6dfc2feb8f49864c3																									
+// U5f5c0e6f0a520bf886a7853a698cc285																									
+// U71109053ed3696c91e0083e4e503af2c																									
+// Ub819cefe16d9508c558c680655e13e74																									
+// U2add5423dd1ebb5e51b7f558a0088cbf																									
+// U7376103f718abee08fbde80b30bbfff5																									
+// Ub7c65472457370c4abb5d91f2fdcdc20																									
+// Udcde7b648b142829c8c1d0c41236b96a																									
+// Uc411d1a980e1ef6b964ad3cd7e3d128d																									
+// U2e493019a516f243adf0c2a603ee7f52																									
+// Ub29cba8b1eb5c6cd0d7a5cb8d254cbd9																									
+// U71f3dc5f15bc2cb70a9e925592288106																									
+// Ubfe2a87fe00856c5b3ceeb7aa0916479																									
+// U8b8b47e3fa05fe44de0d1cde13f93d16																									
+// Ua5961caea2613cf0b1e213c70b93db04																									
+// U89b9c747438fdf1abdea4f377f110e07																									
+// U955f5733b97fa3d626e6524de55b91bd																									
+// U5180247724ce1539b6bbd1084e0cd887																									
+// Uab8b37ccc44d41b76c3aa236b333a236																									
+// Uc6fb5b56a4975a48e275c06b97888446																									
+// U90fee56c9b61a41db7e6df85de669c4c																									
+// Uaab86dbc2b9822d9d8dd46acba0f8394																									
+// Ue414dd06fb86891cd7731e8060cfa744																									
+// U41dfe45cc65315819999b2a7a1e3441d																									
+// U3ba03827c791cb05b147e4a292ffe74e																									
+// U6a840af881b0b4918ce3c6472ceba23b																									
+// Ue08fa00f8b6e054f680a780f0e34a8f1																									
+// U295dbaa549c1b1a808e7ad6e02d0697d																									
+// Uc0bcfb0fb19411be46f266178179260a																									
+// Ub863a7ab57d72eb0d48e6331ee02d2c6																									
+// U2962fd209bf450f4cd9a1d55c9287350																									
+// U4fa1c8a516a626a38506bb084da301c0																									
+// Uc5acaa3ea4e5919bbcf0ea5adb9872ac																									
+// U966e2bcceb56e42ed92ca76a73f37fe7																									
+// Ucadd5f2b56439cb8a0f5e6388a3b7901																									
+// Uf973d3733ed906dadd6318b198ec3668																									
+// U4fa536e8dc54fdd7d911b7bddef7e90e																									
+// Ub03d26b972f9462833ec45dffd016c9e																									
+// Uda5bd1ece396cade86d9b0a091bdcda0																									
+// U908e7edf3114c0493902051464aa8ba6																									
+// U44434572e709a2b7576faffaaeb06b14																									
+// Ue81196d9c1bcbead2727ca21deb9abe5																									
+// Ue580695eebcf242f2a2a9b18731e0d5d																									
+// U0fc1cfadbfbb541356cb788b74a10678																									
+// U5adc669d98eeb3b445e7b571339e4866																									
+// Ufe2d8a64a9731d5e5d6dfbcb903fb24b																									
+// U8d154b6ff9daf716acb14cb192a22dcd																									
+// U26c4d6926de60c88a5f34e6bf12d26d2																									
+// U2eed4d1d594f2385636d792f07424006																									
+// U07ac85e55f8bfcb34abd06cefe481392																									
+// U2d9a2a3fe9ea901ca8731b0f1841bd81																									
+// U0d48d23a0d7ea2664677609dd3b0da1c																									
+// U49d3208f947fd8546cd042e9436acc0a																									
+// Uc6bf61e3ae3269ccc5a35199e9ddd198																									
+// Ufdcf7be853d600eff543ffb4dc90e584																									
+// Ue241b3d6547d863cae0c3c790a09efd9																									
+// Ufc248e3736e1642693f46e51aa7d20b2																									
+// U07c5ec2acf87f3109037ad72c4050d7c																									
+// Ud7538f027c159dedaf4e5cec36710683																									
+// U10b07e70e296f56e2f8ba574802f429f																									
+// Ub7ef0d3d05ea886393469066a89b4e0c																									
+// Uf4d45557676f9d5113051823e9e26cb7																									
+// U887447b5ae56dddd6bab92cb7541b018																									
+// Ua5f9a72cc49da1dbee931b833450391c																									
+// U1324ad362ab695e29b0b115ab0195995																									
+// Ue0073649ca16cbe37c3a5f6554c89cfe																									
+// U669dc64303cf8a3b3995961ff2328f8c																									
+// Uca015582427126f81b4ec1ba8864adfa																									
+// U578094d7a4164d72f6fbfa16dfc3aa19																									
+// U8498d1a8720dc897d26c314aee7ef15b																									
+// U2b986b089a2bd08c67fc458f7065486b																									
+// Uf5d3f3ad9487a2553ac5dea3c13c760a																									
+// Uc9c17802609ba0cc4851b9194f5fc748																									
+// U30ba4f35a43d165e49c9b8f55e626d8f																									
+// Ub603e3a06f48328838142a2c63f4ab38																									
+// U8251e58a822e479c9c9759fa70e7ed17																									
+// Uc4e84e3f8e6416957d3a25d475b7788a																									
+// U0320eeb9a66ab3ef1dfac8ded75d3a72																									
+// Uc410fc013951f69954e58a72fef00861																									
+// Uada57ad7735a81589b7411098783261d																									
+// U74917902be98027aa1fd7e6bd86598c4																									
+// U9f809d29ff867d6ad45fedffa9c9d8f4																									
+// Ud86946b92db0a225236d2e452ead5842																									
+// Uf0c9adfaf885c2cddcb231f3cae32f8c																									
+// U9fb01db66880f0cb4f04fcc55133caa6																									
+// Uea07b719a8d9ba752a81813cd3087bd6																									
+// Ucb522bf3ad3cac2afb7265db97f59f0d																									
+// U03d3f25b6cc7dba4c8f82ee713762272																									
+// U079166bcc5fa0a14dc07c72aeb5fed26																									
+// U2a7a6b9ce7223cdbe2f39cf8d6846279																									
+// U887f7d445041b47432cea7518204bf41																									
+// U8bb3ab2657890ebbb97fc0fd54f7ab47																									
+// Uc4508723a35a9f9491b81daa851e1ddf																									
+// U3ba8cd693eddbfca720dc378ca188878																									
+// U3e143935c8bd9b25f7599fc50191a318																									
+// U85f267f5f1af57f2e71b025ec6bf1ec5																									
+// Ud23f1e193e83d1bd883d76df4dfbec51																									
+// Uc38e157d1bf1b3167e3e304341fe4456																									
+// U2cd0dbf13f70ac82beb0cfcda73c9bb5																									
+// U726bd94516c3503c872952648644fd34																									
+// U86718973d9100a02019aabc2a571d7de																									
+// U14f2799c5853af60ecbb848bdd80bfce																									
+// Ucd52c9862bbbf38ceb56b9982543f888																									
+// Udc82f12f67fed047ab737556c1e8be7c																									
+// U9fef028e523060d939a85455fd5c8318																									
+// U9d1e0ec278664ba2abb5ae03d8c7b5e0																									
+// Ufb8ed2872708b98eee53bfbf870be1ac																									
+// Udad24bc811f0600c90ecc0e112f3cbfd																									
+// U2e2a0927d93f6b14fb02a09e33fb44b8																									
+// U7e6bd7488544ad41ed131a019413e65a																									
+// U36d44f18e3c0588fe9787cd0bcf8debc																									
+// U43c380d7387d175988d32b7d4728f807																									
+// U6278da32a2e127e9a8348bffffbfe6af																									
+// Ue9e285b144d843c7cf45974b9ddd344b																									
+// Ubc5d603a0bd01cbf5ac4aa4c39bbe4a8																									
+// Ud51aebc68e678784701e14f894eada6d																									
+// U564e18e13b9e7c3d06f6807c2eaecfec																									
+// Ucdf067e5e38e01e6fb8fa722ad178dc4																									
+// U1709a9aa37a6e48b0266b4fad781e7af																									
+// Ua3bbc7cf7551d342c9f31dd3543b783b																									
+// U51d2b800b82a5f25c95fc76f5023b00e																									
+// U22d4c5bf2e02fc3cadcdbf21f5bc37bd																									
+// U96816d05262d46d8f537fb4d7b1a42fa																									
+// Ua936811c4442099bacb8f3f1bc503fce																									
+// U7caf9cea88f8a3f6f212cdcc1168c684																									
+// Ufface61f398726ab426938624a4fda84																									
+// Uc0ea09be6f2af3944fb84ea21eabd449																									
+// U62356f6966551a6f8c08f47618fe9ceb																									
+// U15fe7fc4616343791115386f592b24db																									
+// Ufdba1b9e7d89d22cc12c6b66e2751ec5																									
+// U14d2de40f0916db7a719c054c20ceff6																									
+// U01b3b97b9369fd905c5e95e16d09cac0																									
+// Uc8dd79a7fc57ae31b33b987578ee21cd																									
+// U257e4d452b7ba0c974f72afe9ce1f74a																									
+// Uce37f6d3d406c23d39e7735ceabf4d4f																									
+// U0034782b6439879a32d49485339823b5																									
+// U6d0de93910e110c687b77b18aefc586a																									
+// U7478245f825b9d5227e1ef6872b7ad7e																									
+// U49d31a51f8ff6df1200a85c54316f035																									
+// U7379f24e33e4bffa04035f900e6ff0ef																									
+// U890f269d664b7f7618dac45a23b805aa																									
+// U0857bb7229c07856cab391fb78d768dd																									
+// U4533d0ce832ce01c908caa791b25a285																									
+// U21c78ddaf930605d7974512782221460																									
+// U2c704209a86930f04b6b78f6a7ced2a0																									
+// U28ff0fdb6f3d5bcbc1743edb8c8a2ce1																									
+// U4763cd5c2d006640f17f53f3dc16369e																									
+// Uaf620096c83e17280e3f7d2cbb84b2cc																									
+// U42ca135bd76951d43d8f4aa8e24917de																									
+// U412c40a4b42c632ddbc5bb22f2f2b6e1																									
+// U7b12b16f26fcd487f2c76f4da33e1e75																									
+// U58f0acb32d1a6cef4a7e38bf62e17112																									
+// Uabcb7b0e82b58b1905fa756cd582d6e5																									
+// Uf8f1a457505b1969f6a039adab1b1d9c																									
+// U3f14223802ec25951b38f52d31df5b4c																									
+// Ufb0bb15be0505c4047e6cf7dd13182dd																									
+// Ua30f0cc1283c7aecf28c3957a3ed8735																									
+// U7212ae9a80e3c63b4a68b02c2c2fe7c9																									
+// Ucecafc8a2038f55cab6b67cac18aea7d																									
+// Uce9b8c296b773382d17d3aff9b0d0d57																									
+// U94748e0c9052579c511ee46aaccb3842																									
+// U4d71e72b836caa0128bb79d61c82bbf7																									
+// Ub99a5be2e2cdcd882db9ac48e87d3be5																									
+// U7606e9a7ea22bdb54314e90470aba6aa																									
+// Ua4f3be118c5e6d9c21c3c56c2d1ef424																									
+// U4f7fae30b8dd3865436e3fc008e35eb0																									
+// Uadde904885b62c8b2732080ea64dadf8																									
+// U15905ccd08bc0919940672f43ba2cdb7																									
+// U70a15b640ed0977acec97ffe9b64b3a0																									
+// U3dddf3dfbef5854f9d813871154df675																									
+// U4bbeff234db5d48c11b142b90f78c01e																									
+// U9380b666c680957c9d3879d54d59b9d2																									
+// Uba2e9cbc6b95c2c1a8da35a2f9c67439																									
+// Ub9667a912da0efce8e4ecdfe45ffea40																									
+// U5d77111fde78edb04f9b77dc5931491d																									
+// Ue102634b3289bd62afc5d4acbc765c3e																									
+// U6739e439391a9629c65c9910e13db586																									
+// U62e4a5ba8448aa790d46f5ddf743af44																									
+// Ue4cad88177530432cb2ebf7247862d35																									
+// Uf837c1917876244c598cbded3bc5c2cf																									
+// U38e87615d3b04a21fd3b184624d7b1d6																									
+// U7fdb5ed704d44fe7deca172596ad5c17																									
+// Ua54b647e2dbe6e873454d2a6fda01d4d																									
+// U56e62cb0945fc23a0601a2019d21a5d8																									
+// U0c51af3f6a6403949bc8311aa06923ce																									
+// Ud487dfc7024492ba7187b5315408bf3b																									
+// Ueeb241f538c64b774634d3dd8eda4534																									
+// Ued038cc752ee61e06d9414595c3ad197																									
+// U1e750aaaa7a951c232a23e9bbfe36f67																									
+// Uce8b51c8615a8ba4afb5781bf342dca2																									
+// Ua647dc7ac9419be3a7dfb8046e761752																									
+// Udf638003bb9089af794c80066225e591																									
+// Ua4702510da180099124e09b49e4da78b																									
+// U1280dacebb73a05234fea0ec60420ccb																									
+// U08f33ebc85e60b78e5a7195eda45e472																									
+// Ue507f96dfbf5a8c4cafea06006f2c42c																									
+// U886a7c385047a5b64db2ee7c58b9a1f3																									
+// Udeb1d94b5ccfdd76d63f9ca6a120550e																									
+// Uf083b9f17290d2e6f04f4c2d9b1640fb																									
+// Ubb42f7ae4b67beb57bb8e113ef902b97																									
+// U3448272266f248a58c613dd3783bb8b1																									
+// U580f3abc215cccb427fae090c6bcd0ed																									
+// U3891efc06a54e153692a92135ea0c40d																									
+// U881221388e33719f3551467fe6bc2ee3																									
+// U4c2c15f0f1a8494c1bcedde7f19f3f79																									
+// U99ba5344474761638958f768203ed063																									
+// U66427877b337b5777d27eefab5df9882																									
+// Ud7df7ab7302161b2a96a9c7e4eb6a3be																									
+// Ud41a59e9a602e160c28346e0a088dc08																									
+// Ue80a4cd426cf1de5b41d5dbcde85b8e2																									
+// U0b6bb1a8c5824d899ab0ec1c8289558e																									
+// U4147604beb6edacabae80c5ca3796283																									
+// U6d12f0263b30aae4d51a4be3afa1d45d																									
+// U6d0360df5aac3038bfa8d15b6ea53c31																									
+// U58b53d013e4b5082bd77ff98e947df0b																									
+// Ue7fe8beb0eec350d3ed5bc1269ac08d9																									
+// U3e4543b0cb321441a6a6438990bac0ad																									
+// U1f1b8ff24bb016ac0e9e1e6a33259a1e																									
+// U698ffde85625ca297eeb1e6ddbc27e75																									
+// Uc488d62207b73e1660d5b211861bcb79																									
+// U85ef80a329ea6386ab1908ee30e45d3a																									
+// U85849bc8e09bb69a013c0f1bdeecba2d																									
+// U62835822f1fa89ca013882adcbb641b8																									
+// U769b0efe6049b8c294569daaad9b02d3																									
+// Uf0bd8ef73368878fbc44cfd8cd10cc22																									
+// Udbffaafee62c9897c7237cb3044fb68c																									
+// U71efbe921f676b1794061793e1c833c7																									
+// Uec9d3489f12111bff0b0e70818ec7217																									
+// U5e3164e68cb243273e93468c87b51432																									
+// Ud75fe75cf3802070a6a7555f6ddfd163																									
+// U4d8f6d8e879cf2a609062d284bc52a08																									
+// Ub20c0c4fca0369e2d3a668ff3dc067dd																									
+// Ueade70145c3ef494ef5991258454175c																									
+// Ub1759d1e4b8a1bc9a2fc46c7439e51bb																									
+// U2080d618221c718211118cd5ba469dbe																									
+// U0e1a56123e4df5c94436b9d4984d013e																									
+// U007fd0498cf1d11d3b86f85a1c41087a																									
+// Ucd9b4db37e5409d344456e34bdb49652																									
+// U6f58d426d166c576cab92b3ba6d6e1b0																									
+// U952b5631559bec9d18e95fabe1547195																									
+// U8d8e16aca5dc066ba152fcec7e33cd3c																									
+// U44bc4b0bd8fdfd9bbc08b516ded66d06																									
+// Ue8aa4a3cae9ea7c40a3aba2abbc58805																									
+// U3472e61663617af6a6a27e068a004089																									
+// Ub38a19255afe7a989f1bf346718412bd																									
+// U1151b6735ddd5fd0943b9ba05913696e																									
+// Ud5184f4534fdfa4147f2422ca5ba811c																									
+// U69bca152134c642c6bb3a2d3bb2d1aa6																									
+// Uf2727f35747194dd0e3b5efe49d38588																									
+// U1185ba7525ab1eb51fb7da947d10e21f																									
+// U85c0eb09c37b727741c10313d8737f06																									
+// Ubd2c7839e247d04e200852e460d77825																									
+// U5b0cdedbfd329ce75d5d3fd4f1cb4d8d																									
+// U7b62d7f4f3939090a348c756586721dc																									
+// Ufc97b203509b8aba85e7eb1500f12180																									
+// Ufb42ea33716ce7a4b948fcdcccaeb5ae																									
+// U22896e3e4a9c7d159223968b21e184a6																									
+// U6b9fd7f075c42adccb5568c3e29a5233																									
+// Ue01894c238ec844d6a549aee1f1ed74c																									
+// U39b834e39658a32ec217cd1e8fc4e54d																									
+// U237e1edf27ce36de134b6d17993e3e41																									
+// U8afacff2110cc6bfff5c90d167f69fda																									
+// U4d68b5ba910c1fd09609f4b3f9f53f0e																									
+// U69dbff1bc13ea889649bcb32c1923e02																									
+// Uda5b30dd23b022ae00da33fd411750e5																									
+// Udf02601199fee5b2f1a3cf2236a4402d																									
+// U8e7f3a8b795b0d77a2a4b58d0f4f780b																									
+// U3e0088c32c1520a806f9821ab47b7a54																									
+// U0fad6c8a6db86417f0c46be22a06798c																									
+// U06428810bf822518371725b5bb9a5aef																									
+// Ua433bfe71c8e95bd4cff58bc4edf824b																									
+// Ucc18bd9c44fdfb14275b395035f72ad3																									
+// Udaaec5811d937a3f5f38704b084883be																									
+// U783babb986dd98aec44d49dab41dba99																									
+// U8f434b52803576b3ce880066dfd53925																									
+// U5bf75b4ed98c42f2b99b1ff697d3aebf																									
+// U5b8bd3f4fafc6f53d3950b5579bb6fa4																									
+// U9ba461cc0f7b07629f2e9320f453a0c7																									
+// U09efb9767a4b2d47572ad7eb6c6ec66c																									
+// U719974e9c0bea773111c2b779f04943e																									
+// Uec4a23648c0f2880c031049c4287fd54																									
+// Ud70981d2846f53ae0e3fb86f4b35fb20																									
+// U64ab65a77c5646cdd57c6232bd5f455a																									
+// Uff1f87ca6c51bb76fffe363f9898e1b8																									
+// Uf603be69d04390da02e66f6d06c9f90f																									
+// U68487bfd27fb50c3675202d14459195c																									
+// U5c25eb1d5517f7c1f936d9e7f4290e80																									
+// U6642af2842275d8049b3a429204b2994																									
+// Ud9da0ba47e3daf97168e676aa1be8cb5																									
+// U87b4a668b738d19e851c410b049eee44																									
+// Ud0c01b2fb234564a57e0f49d98d24c67																									
+// U79aec748a32924cb98705fdf42692458																									
+// Uba32539500539f41223292c1974c31d4																									
+// U47516deab78fdfdab1943a17d14b6890																									
+// U4477a74422dcc7f4c657d2bda3f4392b																									
+// U3c4c1e814c09306a82d6a85b2385c6e0																									
+// U6b868d5695ddd168011959db58fc94c2																									
+// U4f1773b7fa60576d1df147e652490296																									
+// U962b6d6a97149f11af96e4c224141609																									
+// Ue1376d9c22f1c7a5edf41c8ecfa97d35																									
+// U522f1418ad1468c5f03996945309e2c9																									
+// U7e24d3cc1ea0b964d079ad4361e68a2c																									
+// Ud658add597861c096b57427d4e1b2ad4																									
+// Udfdcb4087ec6543e74b3b62d5069619d																									
+// U2e1cba358d3c47b65203819abe914448																									
+// U2fc96dc2756603aa68dcb8faad43eafb																									
+// Ub98df8042d2dc8a9ffcc89f03780bd64																									
+// Ud2d717b34fbf84c6d951e68243dc0ee4																									
+// Ue680cf615b5d0c793d40afe0102ceac5																									
+// U9f5155bfa6cc071238c3809af14150d4																									
+// U5bfd90b6a0e01c9c834ab556eecb8ead																									
+// Uf86e8e33ffdd0f38bad360c6014e71c0																									
+// U5151e25dc22f8f1d944608d92342cf00																									
+// U8d75bd72da74a010f59bc57e6dc2b7f4																									
+// U574c588810ad87a6e859c3bec9a2b80f																									
+// Uf89152e9f4e6ca233af10d7da55a580b																									
+// U2dc9c67b70f99c4cafc4d679f61eea1b																									
+// Uc4c9956c65e8c5855142597b1b457329																									
+// Ub19475bd10e35560a151081b57206729																									
+// Uc09bf51991d0b514d6729122632a3bea																									
+// U6aa33ae04125daafdbf43f29023ddc92																									
+// U375b600bbc5b94812c6379a38ed1eb52																									
+// U960e4c9c032c87ad65d0ea9e74f84236																									
+// Ub27c7a2820f7c914b5860008afeb02d2																									
+// Ucef4fb1564a50a97b54005ec3d5db3e7																									
+// U7c4d78794678daecaf9076c4092e1eaf																									
+// U9c3330bda3904314597929d9fd6cffaf																									
+// U5ed6b1909dc53f453fc5715849180e6a																									
+// U76edae762c15794ea7b3919e4640f978																									
+// U30b03127be8da1028650db996a57b7c9																									
+// U7c09c81511605a3419df68c5319941ca																									
+// Ue252a96f11ca5637e7583072f1fa6b21																									
+// U6ba21c2b781b68952eb73d3617be576c																									
+// Uafb3ae73011d4f76694b02ed0dd19b24																									
+// U63dd122143307df70ca40e753a9bbad1																									
+// Uee36d0b1f86fe070d417b768bc30ca52																									
+// Uf494e359d5a69a2a20c049e25b5a73ed																									
+// Uae77a42984163946f1150aed9c3ccbf8																									
+// U15a2723119f08dd324ec1c3b98c53e52																									
+// Ue5ce450cd1bd35db18b638f41c9c1f5c																									
+// U26d0586ead83f0883e7207d16c8baf5a																									
+// Uf2a22b5ef8353a84c9472c928bed4ad6																									
+// U6a2e147a49dd599d6db77da26250e203																									
+// Ua9e8c865680d1ae7a4ae2b37ffb7461b																									
+// Ub020195dcb3be548cedde35089f39ea4																									
+// U956797d3b91b10c073550f4844bee937																									
+// Ua9e4222328a4c31e6632321723b11a37																									
+// Ucff5a4bafa69b1f159f7ac8779862f99																									
+// Uc1d7ce7152488e230daec5fb20ca9d39																									
+// U7ac2496fee685e5b5fea28ba2b508db8																									
+// U0ab92c844d43a9708037d9e3ed3d9223																									
+// U55cbf2b42e745cba14bb99900a066b1b																									
+// U1dc99d069c46361c44a9a6cbccd96cf5																									
+// U79bac4ea097a874529ba8fd7557a6bdb																									
+// Uf8cfb4c44cb44308a83216bd2b10621c																									
+// U45db769188cd5bb7914f0dc2f4e5ab40																									
+// Uaa839ee266a8bfac08a18ceb67a9ef9c																									
+// U2109c54a0552244e4a8e5b822a14d3cb																									
+// U404c6d323e7d9f41e1dda52e0bbf8ee0																									
+// U16e62e8fdc642ddf71b98461f79e7dfe																									
+// U399753f19bb9e3d685cc77d5f881cf1f																									
+// Uc70fa5314ffcd20d954f6c8c934625a7																									
+// Ue7c93abb5dc814a0874098932f5b3c01																									
+// U66b68aad13af82d99272fd4fbd603344																									
+// Uf1dcda381b2ad5678b21467f062a4a31																									
+// Ue1254c86cd44c28903e7eb8d812cae55																									
+// U80eb509e98645ea99c6f90c231d00ae7																									
+// U54de372bdc0dc6538d78acadddbb9b94																									
+// U50c58220af0c4b0cbe3dccdce5a4c634																									
+// U654123bf2f4e16a8456a916b4205c4e6																									
+// Ubee7321cbda889d19ec1abc698b2f819																									
+// Ueba00603d0fb3e8a6647a8936006812f																									
+// U5a5453ed00c0f77a7c3f82314f6d166e																									
+// U7f2a9130c179c80cf177e5f08b211455																									
+// Ub08fdd80860e1523a7c760cebf85751e																									
+// U5225611994a44243330af23aa9931b4e																									
+// Udd12491f5b5f799463b18eab3b197233																									
+// U863e71633332776370fc9127cb324221																									
+// Uf26d4d963a9a94f2af449a5fc73208b0																									
+// U4f4830990cad69a596a59c369057cb7f																									
+// U1979b09984c49efaa0e146861b73dbb8																									
+// U749128b38a3fd9c0cc7344374d3d6a70																									
+// Uea8a09ff0c03c2fd4eaaec0f9c2bdb2b																									
+// Uddcc4929ab4a66a362febb240a1b00b5																									
+// U8fbc9df379e119dedf231f893fcf4d8e																									
+// U762ff40f4aebabb3c4bb247fa555559d																									
+// U9ebdc90b533db4229bbc47b4e93fa70b																									
+// U93628ea7a24a9605c87b13e51eaf0a28																									
+// U89304139ad8315ea699f21f2366e2efd																									
+// U9f9101e9bd599a12f6b5c082cb00613f																									
+// Uc1f9d2aee85ae1dbc28f6cb3c27e5c0a																									
+// Ucd605fd9c3bb7c08b89aaed2d5c5f289																									
+// U2444f3c1d4d2c00706ad290864f10e0c																									
+// Ucdf1978302dc52c9615d914f2ac9d47f																									
+// U78ece9aaf59fc9da76291899f46f6984																									
+// U11d2de6f5dc3608726dd14f7a67efd9d																									
+// U9873e9a077214b7ad833c0728a642525																									
+// Uca3d0b2604e89a9d79b640e52720f08d																									
+// U2487dbeedecb06dbc8c90520806ac70c																									
+// Uc5def3a62cd37f3a5191818c196c21f5																									
+// Uf338c52ae18dc6497604c65f23f2df9c																									
+// U6ce717603c9938465f6cc0383afdef44																									
+// U2b279162f5531859935e3584ed29955f																									
+// Uf121d5cf9f31ff213cc33ccc85912ba5																									
+// Uf317e5be18220590d1f17bf9f41e7aa0																									
+// U876e689ed32e42b499e4fcaa1c4bd8f2																									
+// U07f73c76ccf8de8a6c78dc433ab88cbc																									
+// U3cdb660d3da317bb508fb7c9ecaa4a86																									
+// U864aae96b150964b813d6275b868b698																									
+// Ud07be263e71dffb8e7cff9ba1f8be73a																									
+// U6b0dd92c47050290ef676843bf0f0f2a																									
+// Ufca3782ed5629b02b1e098ff445947f9																									
+// U009aa2c172b8703e306cb38b803e05b1																									
+// U96f545485ede50f1dc36574e7269d1a3																									
+// Uf781329b3afbb70cae67b454c5ea28e2																									
+// U1e90ffca82fb01f83bb4c7fbfd56aa68																									
+// U5a6581d03def661695eead5988492149																									
+// U2d0884010ead4d5b6a960aea5411f4fc																									
+// Ub83636c6959813e33ff8189f3d1971bb																									
+// U33454e565cb241b544365228e0548815																									
+// U69a0e164c9d772e37520f85692f3a046																									
+// U69ffce48315bb43c628ab2aa7a47096a																									
+// U8687a481ad1a46657fd9da030347ac03																									
+// Ud6e701791b15e5a8e029d37371b6cd8c																									
+// Ue46cc638f1afe944db997df08a8a6d8f																									
+// Ua268c68d30ea37f63e722ac057a177a7																									
+// U356eabdae97bdfd31cde9f47bcd48c9d																									
+// Uc2df550e97345297fad034591c879120																									
+// Ue613a53eed6bb11dcae08474b31a5133																									
+// Ub183b879c434b64599977748dc2942bf																									
+// U2822905ee8d0dcdf9cfa479589b15918																									
+// Ueec983d4329a3a5673eeac36a6774cae																									
+// U09f14c01a072d0fc53ca157997b9b51a																									
+// Ud6b7349395a07f29b7b6b123fb967e5c																									
+// U5395778f869dad264fd68c0db4dc098a																									
+// Udfd976d993e9a564fe38e6376f6ce9dd																									
+// Ua847b8f65991a3a47010b69f065b2041																									
+// U5bb0c9ee5ac60b3d094ab990efe73892																									
+// Ucb9c9876d5ae8c3c5f2c6b640154b4aa																									
+// Ub94147aa2f90c64ae2ccdfc04697ec4f																									
+// U880f3fda7f182856d5bba7f980f85c02																									
+// U3efeb5b8bdeb309cd5a77edad5f7f301																									
+// Ub365d1da08af483964c3b24c9a33068b																									
+// Uc9e582e3c74b43d9315a1048aeda3a4b																									
+// Uf531b48c8d23e8d046ba4bacbc83bc57																									
+// U2e27a816117cf65d132b0abd7dbc43ad																									
+// Ue077d7a730d2ea31fbf9daa1dfaa8a22																									
+// U5a779dc46c0c73b939a379dbd204d386																									
+// U1728843663f256138f36dc5f42e298f7																									
+// U289438471c90a76fc37d363d2ee66c76																									
+// U81f67a015be79d2432a1daea25fa2b2e																									
+// U4e1c94fd2558600603b7d20ba59d3a6d																									
+// U985e7d46ee9377f875a969c2d67e4583																									
+// U6dfaa363de943feb3dab086e090d1f83																									
+// Uefec8835a407232e088a4f467609473e																									
+// U95384d7a93e4ceabeda1e7b27a0155e8																									
+// U0367122f04df40928a3df305854a7545																									
+// Ub0466c217bab483e0dbbb560d72f82cb																									
+// Uaa59fb6e2c880748cde0ea6d0a70af96																									
+// Ud9883922bce1daf62e3cd0a2ef8e2b81																									
+// Ubb20221fba471e9586f6a1b22a905ba3																									
+// U5621d1f8d078c2f23529b84697fe2110																									
+// U6719c1eda92f187cf83d2c31d4907634																									
+// Uf5d4149d922ed4482434fe95b7fde900																									
+// Uae51bb969fd8b0fdc27d64f186168f15																									
+// U96f83f3266822ce78d5b48aee795079b																									
+// U987eb80c8954c2e03f120e77725d1387																									
+// U56845d6549a8694f997517575174e8a6																									
+// U85b7cea58888724419a962928a85e589																									
+// U75f2b6c5477c8cf2192fc8c2f91e22b0																									
+// Uae5c34aa31c2ae0b594234939c589f81																									
+// U6ce43ecd878009d4d8a342daaa9edf72																									
+// U3d56febed991e973f5150eb0245a1961																									
+// U3a9ea98078af31c01952ef4e068e83cf																									
+// U66dc8f7bb86c164b75d6521f0fe57a16																									
+// U8ccffbb2a4a56f241fe2d0e035669b9f																									
+// U99922965b9d05b26b77b3df6e085c213																									
+// Uf1c8e90def00b62cc188fc4617888fcc																									
+// U801f0bf5adbbe9f1e670415a8e85d393																									
+// U1565d3f5319b12f1d9c4a3cce32595b3																									
+// Ub35d7969c94dada090ee17e224a850b0																									
+// U4afade6d802ea22311fad35b41d558be																									
+// U04afa9c371706d5b691b309f907f47d0																									
+// U704fac3e7002e2cf5363bc8874ec7cf6																									
+// U2e69b04550c6d6e33b89d3c2bb028c96																									
+// U59acaf61d25e33d61e6817b4ba2c937d																									
+// U07c96924366526b876ba5dfeb93b5d5e																									
+// U2121eb2cc38bc1a5ff70f002a3c59228																									
+// U23cc7b59822a7b14831929732537aeff																									
+// U7b6d449cfeb9d4f8445586e019e25510																									
+// Ue45f4b1e35144cb78cbd76208b3ec96e																									
+// Uc148f244c983f56dcf46867ceb2ade15																									
+// U47582f41fed67e1e46f332ffb97eb376																									
+// Ue46c5fe67ffa1502e3e21223fc428682																									
+// U4372d81462f4b1732e0c494b32f85a79																									
+// Ub0a45fff59190793b2d054fc2bac4ce3																									
+// U0a97f64bc53040cb2aa53496e5700e6a																									
+// Udcee1c54a1a4510e3044c7326b187044																									
+// Uad632341939e260f8d699b1a25af3999																									
+// U029b9cb43bb9d7cb2f9f98099b866ad0																									
+// U0c3ca3bff76deef6a92f481ca366cc81																									
+// U20b138b9740e8f8711f825ff210490d9																									
+// U54427f8ad30c464acbbae7f082d3c9c4																									
+// Uda051449b2aaddc7662c2a112e02880f																									
+// U67cb82b5682264988213133ae1322df0																									
+// Uc42cf2c1555fba9b3e410e41d8eccadf																									
+// Ub35721273a504644b608edc7610b4c80																									
+// U4292692fffbf7efd429bb4d0e7b56720																									
+// Ub99a23344f11480c93bf9e615e3358bb																									
+// U87d18d9ea363a7c6c8620cbb88d4c120																									
+// U40e9b55525067330f8603b286a2c6f1f																									
+// U1d6a7d2874f2659d28024d0505095539																									
+// Ucafbbf78d3d1349f6803a22e4317f2c7																									
+// Ub8ebcdc82944861b5af4d204d4371ea2																									
+// U0fc172e5bf7ca04c585b9494b3b77225																									
+// Uafa2aa54e4f010629f3808ae82d4a948																									
+// U3679ab8d953fa02749d814af9d9c8601																									
+// Ua9123a4fc07811ee77b6eb39b679e1e7																									
+// U7a0e33b270076fd86cc23eb228430097																									
+// U09cbfe55d26a40dbcf2e04dc97efccf6																									
+// Ud2e075c75d23701981ccc6eb4ed8020c																									
+// U8acd99b13051b27e60f76c8e3516453c																									
+// U3b5a6406b85725433722fe17f97a04fb																									
+// Ua80983d124cbe6b0f85b029bc2a60652																									
+// U46029680ba2ebf364cb05a45c3b111dd																									
+// U6d8d4b6c9f9958efc5b997ce02ba6ed3																									
+// Ue26dffab32e4f31b192e918f2c0c719a																									
+// Uda0af71db8afd3fddfd658c667d04824																									
+// U8b2d66c327d204923af3bb5a3e8d9377																									
+// Ufc0eaf7810b39d8ac3dc9727900f9009																									
+// U4a7bdcfb93eeecf9cf2d533841ee8887																									
+// Ua8909762de075bd2f8868153f6cd5dc3																									
+// U4d6b1d5a0eddcd3adea3d5f277b4c340																									
+// Ued542f4c5cac2c063618ef9f3e7191d4																									
+// U01f2f41250e10bc442896d288c22d103																									
+// Ud04e2530394a6ebe1206ae7efabbdf05																									
+// U3c9ef722865aa22a9499979051e3de4d																									
+// Uec3fff1aa1fe85629765488475898af6																									
+// Ueb9a656a862934f574974d9be772f766																									
+// U960e30e63086857dc966a8bc9132ba92																									
+// U4f2055c11cb50da2af9989889c584fb3																									
+// U332fffa102d2271227e99de60dfc31a9																									
+// Ud8ea29c86831ddadeeed5c833f0af3e6																									
+// U43bc6f49244f14ac1c156d610fdf9c00																									
+// U2b8641e3bc27f9731b93d6007416eb6f																									
+// Ue2c13333688120070de2af010c9e671e																									
+// Uc2a72bb043a0e88b3719b8c4477f771f																									
+// U5cac6d8d161479237957422d59d14533																									
+// Uba00fcf26cc2529c006403cc30351847																									
+// U0fdf789165944b2e3648a218e07f9bfc																									
+// U4bac4ed622a36d2e7a2654b03f05b17c																									
+// U3b08d6db5d0164cee7ee9c5d1ce8229f																									
+// Ufdbd45f7f4711a5c465b595ffe4ded73																									
+// U5e63ca7c1987baf3d63dbedfe244bf80																									
+// U06b583b26bb518c61dd704ca5ff3d3ad																									
+// U4f5ad204c53f40667c1b43a35698b8e0																									
+// U152e3ad9ad3fac5a9bee27425ffd5afc																									
+// U22c05fcdfd20fe3da5f77c838649eb21																									
+// U90d16447342a7cefb42125082235f9f0																									
+// Uaef122aec43c11878f0eed48d817441e																									
+// U8330cd501d0591a4eb09ec074425f593																									
+// Uf92c69a882bde68387a6ae4f5db68a07																									
+// U6553ce4b64637c4dd18d3e74392a1021																									
+// U3c77afbe30cf37bbfd56e2a3305fe0d6																									
+// Ucc35ab6f6ad83b3ffb806db5323afb93																									
+// Ud9926d7465ca0d81be1d7b80d4d2f9d7																									
+// U3ab775af55600cc4aee13166344e9032																									
+// Uff8cd3bea888be3b49a049803435ffd3																									
+// U5db0fc95e5dd9cd1177233bcb08c9c28																									
+// U98d3564a4bc0cd14cc8616f894f4d64f																									
+// Uadce31823852bc0a919257ae36f3ae10																									
+// U278b8ff416a88c74277be40a7ac19633																									
+// U80fbcf3c71cc95cf6abc7d7c6defa23d																									
+// U1e5a27f545ec92da52e14138002264e7																									
+// U0057187d690d2daf3dfaf65090bebf48																									
+// U9fc163c6575faabb293d5c0fb6fbeb94																									
+// U4ab7a7e52f4e29187cb758d074a21b22																									
+// U68f8847f9a23ada16ed6061cf7ea6e85																									
+// U3ae2cf6cf7d8183f3e8747310c4d90df																									
+// U35dc50fdc6da3e15df9d6b31926becc4																									
+// Uf18c27abf653a6fea24cfa613c3ffe5a																									
+// Uc569842707e5e30d877c72101fe8afdd																									
+// U72360577e65540bd5b1112c2f3d47fc6																									
+// U265a0bd466907850eefaa36b15073b3b																									
+// U7f3fb48bb09c600d86309a6af138a65d																									
+// U19ff4c3c680315c78ac858c2480493ae																									
+// U665b569941cffdcef77562f2ed479537																									
+// U371a0c8cb62f76ad0449806b11507d58																									
+// U60bf896021d9a762b6e9af848c91bd76																									
+// U41704ce012af7a3843cd19195c206365																									
+// Uab8cc25a3c6af65adaa7dc43491808b0																									
+// U2871fe145173e4a758de496ca82a8dea																									
+// U71e2dbd091236f40517a257a1ee3c95e																									
+// Ue96eefc46ac72bdd96bebb2f091a4dd0																									
+// U6b3c7acb486d32c8e75d461b56dec2e4																									
+// U6254aacd90f37179f25f5ef66187e484																									
+// U2d4e0d847ee5a82dd35645d796773647																									
+// Ueaafa149bb7c7e3d26f81e4f4904a7ba																									
+// U6a5ed09b8258953aa8343c4417541790																									
+// U54c6c6857a4144e3f81fd4027589999d																									
+// U06a519da2af60f38a1e0458ba8654536																									
+// Ud3f68dfd848ec3eda0a8465b05286593																									
+// U528f35676dbfdd91c6737f416d479e6f																									
+// Uec53607a42be2fac84277eebe1f5f86c																									
+// U92a6c3a9eb8c1e28a0c6124124134f14																									
+// U93bc1e8b63d583e048fe418bb5bb6151																									
+// U95fdfc951c9dffc896736d687ca20ddc																									
+// U42d4e1b8e6460a83ed349358b7b49f34																									
+// U36f0c8efa8fde0ddce906104a96aa599																									
+// U6aea038a47bd16277ec9153d939db1db																									
+// Uff475b68a8ebb33720fc0a68a777c3b8																									
+// U952acf372a6531e391d7dd239fd23510																									
+// U34337da1db883f622cf28b65392c606e																									
+// Ud364c13a580e401320d9dff70b847852																									
+// U1342a0c2f441dc049fd888cf735b3b3c																									
+// Ufcd5704b70f5594b9aa3615beeaeed12																									
+// U2bf552d3a3ce094198b8e94471dd5507																									
+// U833ed7393271fa72942edee3a4a8f140																									
+// Ua5cd49c566ce4ae118599997f6c17f97																									
+// Ue3fdc56e87767133fc38bbabe9ce7205																									
+// U36af21447cb037159a9817c866940fd9																									
+// Uba96e3e0b7c8ab0a86a2e9378440fb46																									
+// U789427ab518e3f3bcb56ac445368b719																									
+// U41d3e0b645fb909cb1aee0610398e4da																									
+// U85d5d613a0c68bce4b440404a69c3c99																									
+// Ud88e9bbaf52eadca8a82970927f10af0																									
+// Uc6048f35dff8fb20088cef3cb115c580																									
+// U244d2b59ffaf9e7a5a75e9fc23acfc03																									
+// Ua6f618349df88b7a3ff5b5a94dace0ea																									
+// U7cc451e41586f2c8ac66748d7a9cecf8																									
+// Ue4a125ef646a7f221d2622e2ebb1aea3																									
+// Ue5d7269349f04da6f33cb39563cdc549																									
+// U9c554aa50c56767fa25acbf80d15515c																									
+// U3dd431e83769e04474738f5150d01264																									
+// Ub15bbb45d40170035d23322d2e904cfc																									
+// U805c1fef050cda4c00b3430d25d2ae6a																									
+// Ua7e4e8db94217c223c418805b071e4fa																									
+// U31cb7787d952d9cd399ccff299e2740b																									
+// U355abdf9d93291ea82ebed19bcb41aa0																									
+// U7562cb6e3ddd362d6452f5d4fd9a59ba																									
+// Ub547fc9a5a59988596a1bbc257c34a5a																									
+// U282b4e32c4415a244a6f78ed051589eb																									
+// U9de6317b90f432394d98be7406f05607																									
+// U044c47c4e160a4416963130eca8d3c5f																									
+// Uccc5ea6fab489842748018bd4b0ac13b																									
+// U040c0bb3c896bfcf162ec406937feaea																									
+// `;
