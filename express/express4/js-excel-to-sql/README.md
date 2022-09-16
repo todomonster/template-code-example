@@ -78,3 +78,21 @@ https://www.delftstack.com/zh-tw/howto/javascript/javascript-read-excel-file/#%2
 icon 來源:
 
 https://materialdesignicons.com/icon/content-save
+
+===
+data backup: 
+
+https://drive.google.com/drive/folders/1YX6PZR5DExGu567mEaIiLARIVrN7q4rH?usp=sharing
+
+## 資料夾作用
+server
+client
+excel
+中鼎訂單 excel 轉SQL進DB
+
+後來發現其實不用訂單做比較快,因為訂單要撈DB很慢
+fix_bug
+gas
+online_order
+sarani_move_cash_mobile
+usage_order_mapping_stores

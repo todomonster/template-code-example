@@ -1,7 +1,10 @@
 // 這支程式負責 修改補足gas數量
-const { executeSQL } = require("./db");
-// const { dateToString, addHours } = require("../server/helper/date-parser");
+const { executeSQL } = require("../db");
 
+// old 
+// 這支程式負責 在已經產生好的coupon加入scgas標籤方便區分 是否是電子帳單的獲得的5張coupon
+// 直接修改DB:true
+// 產生檔案:false
 const sqls = {
   cash: {
     6: `SELECT id  FROM coupon_coupon_usages WHERE  DATE_FORMAT(used_at,'%Y-%m') = '2022-06' AND paytype=1 AND store_id>0 ORDER BY RAND() LIMIT 1464;`,
@@ -64,51 +67,52 @@ async function update(data) {
     return;
   }
 }
-//
-function genRandomGas(
-  min = 1,
-  max = 5,
-  people = 1400,
-  totalCoupon = 4648,
-  limitMaxRate = 0.2
-) {
-  const arr = [];
-  let counter = 0;
-  let maxCounter = 0;
-  const hasMaxAmountPeople = Math.floor(people * limitMaxRate);
-  for (let i = 0; i < totalCoupon; i++) {
-    if (counter >= totalCoupon) break;
-    const random = Math.floor(Math.random() * people);
-    if (arr[random] >= max) {
-      i--;
-      continue;
-    }
-    // 加次數
-    if (arr[random] || arr[random] === 0) {
-      arr[random] += 1;
-      if (arr[random] === max) {
-        maxCounter++;
-        // 若超過限制比例的話跳過
-        if (maxCounter > hasMaxAmountPeople) {
-          arr[random] -= 1;
-          i--;
-          maxCounter--;
-          continue;
-        }
-      }
-      counter++;
-    } else {
-      arr[random] = min;
-      counter += min;
-    }
-  }
-  const log = [];
-  for (let i = min; i < max + 1; i++) {
-    log.push(i);
-  }
-  console.log("迴圈包含:", log, maxCounter);
-  console.log(arr);
-  return arr;
-}
-const arr = genRandomGas();
-console.log('排序後',arr.sort());
+//=============================
+// 產生一組數字array [] 原本用來產生電子帳單瓦斯數量
+// function genRandomGas(
+//   min = 1,
+//   max = 5,
+//   people = 1400,
+//   totalCoupon = 4648,
+//   limitMaxRate = 0.2
+// ) {
+//   const arr = [];
+//   let counter = 0;
+//   let maxCounter = 0;
+//   const hasMaxAmountPeople = Math.floor(people * limitMaxRate);
+//   for (let i = 0; i < totalCoupon; i++) {
+//     if (counter >= totalCoupon) break;
+//     const random = Math.floor(Math.random() * people);
+//     if (arr[random] >= max) {
+//       i--;
+//       continue;
+//     }
+//     // 加次數
+//     if (arr[random] || arr[random] === 0) {
+//       arr[random] += 1;
+//       if (arr[random] === max) {
+//         maxCounter++;
+//         // 若超過限制比例的話跳過
+//         if (maxCounter > hasMaxAmountPeople) {
+//           arr[random] -= 1;
+//           i--;
+//           maxCounter--;
+//           continue;
+//         }
+//       }
+//       counter++;
+//     } else {
+//       arr[random] = min;
+//       counter += min;
+//     }
+//   }
+//   const log = [];
+//   for (let i = min; i < max + 1; i++) {
+//     log.push(i);
+//   }
+//   console.log("迴圈包含:", log, maxCounter);
+//   console.log(arr);
+//   return arr;
+// }
+// const arr = genRandomGas();
+// console.log('排序後',arr.sort());

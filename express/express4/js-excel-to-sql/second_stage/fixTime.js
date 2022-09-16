@@ -1,6 +1,10 @@
 const { executeSQL } = require("./db");
 const { dateToString, addHours } = require("../server/helper/date-parser");
 
+// 這支程式負責把 已使用的coupon 條件:錯誤的expired_at時間(id們)抓出來修改他們的時間 
+// 只適用錯誤的coupon到期時間
+// 直接修改DB:true
+// 產生檔案:false
 const sqls = {
   4: `SELECT *  FROM coupon_coupon_usages WHERE  DATE_FORMAT(used_at,'%Y-%m') = '2022-04' AND paytype=1 AND store_id>0;`,
   5: `SELECT *  FROM coupon_coupon_usages WHERE  DATE_FORMAT(used_at,'%Y-%m') = '2022-05' AND paytype=1 AND store_id>0;`,

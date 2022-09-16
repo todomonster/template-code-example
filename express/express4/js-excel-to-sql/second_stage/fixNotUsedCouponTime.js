@@ -1,7 +1,11 @@
 const { executeSQL } = require("./db");
 const { dateToString, addHours } = require("../server/helper/date-parser");
 
-//moveTo 678
+// 這支程式負責把 之前他們產生的4月5月coupon刪除，接著把多的4月coupon分別轉到6,7,8月，不能重複使用
+//要先下刪除SQL
+// 直接修改DB:true
+// 產生檔案:false
+
 /**
 DELETE  FROM coupon_coupon_usages WHERE  DATE_FORMAT(taken_at,'%Y-%m') = '2022-04' AND store_id=0 AND expired_at LIKE('%23:59:59') ORDER BY RAND() LIMIT 19303;
 DELETE  FROM coupon_coupon_usages WHERE  DATE_FORMAT(taken_at,'%Y-%m') = '2022-05' AND store_id=0 AND expired_at LIKE('%23:59:59') ORDER BY RAND() LIMIT 31764;
