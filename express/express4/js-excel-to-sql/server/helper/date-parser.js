@@ -94,8 +94,8 @@ function getTomorrowMidnight(dateObj) {
 }
 
 function genRandomDate(
-  start = "2022-06-01",
-  end = "2022-06-30",
+  start = new Date("2022-06-01"),
+  end = new Date("2022-06-30"),
   hourStart = "00",
   hourEnd = "23"
 ) {
@@ -111,7 +111,8 @@ function genRandomDate(
   }
   const randomDate = (dateStart, dateEnd, hourStart, hourEnd) => {
     const date = new Date(dateStart + Math.random() * (dateEnd - dateStart));
-    const hour = 0 + Math.round(Math.random() * (hourEnd - hourStart) + hourStart) || 0;
+    const hour =
+      0 + Math.round(Math.random() * (hourEnd - hourStart) + hourStart) || 0;
     const minute = 0 + Math.floor(Math.random() * (59 - 0)) || 0;
     const second = 0 + Math.floor(Math.random() * (59 - 0)) || 0;
     date.setHours(hour);
@@ -123,6 +124,37 @@ function genRandomDate(
   const newStart = new Date(start).getTime();
   const newEnd = new Date(end).getTime();
   return randomDate(newStart, newEnd, hStart, hEnd);
+
+  function isValidDate(d) {
+    return d instanceof Date && !isNaN(d);
+  }
+}
+
+function genDifferentDates(num = 3, config) {
+  const {
+    start = new Date("2022-06-01"),
+    end = new Date("2022-06-30"),
+    hourStart = "00",
+    hourEnd = "23",
+  } = config;
+  const ans = [];
+  const log = [];
+  for (let i = 0; i < num; i++) {
+    const dateTime = genRandomDate(start, end, hourStart, hourEnd);
+    const year = dateTime.getFullYear() - 1911;
+    const month = dateTime.getMonth() + 1;
+    const date = dateTime.getDate();
+    const dateString = `${year}-${month}-${date}`
+    if (log.includes(dateString)) {
+      i--;
+      continue;
+    } else {
+      log.push(dateString);
+      ans.push(dateTime);
+    }
+  }
+  console.log(ans);
+  return ans;
 }
 
 module.exports = {
@@ -133,4 +165,5 @@ module.exports = {
   addHours,
   getTomorrowMidnight,
   genRandomDate,
+  genDifferentDates
 };

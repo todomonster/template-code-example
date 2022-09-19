@@ -3,6 +3,8 @@ const {
   genRandomDate,
   dateToString,
   addHours,
+  genDifferentDates,
+  getTomorrowMidnight,
 } = require("../server/helper/date-parser");
 
 const { executeSQL } = require("./db");
@@ -94,6 +96,7 @@ const config = [
       mobile: 18412,
       notUsed: 10666,
     },
+    limitPersonUseCoupon: 4,
   },
   {
     start: new Date("2022-09-01"),
@@ -103,6 +106,7 @@ const config = [
       mobile: Math.floor((17723 * 14) / 19),
       notUsed: Math.floor((10225 * 14) / 19),
     },
+    limitPersonUseCoupon: 4,
   },
   {
     start: new Date("2022-09-15"),
@@ -112,13 +116,14 @@ const config = [
       mobile: Math.floor(123),
       notUsed: Math.floor(0),
     },
+    limitPersonUseCoupon: 4,
   },
 ];
 const { generateRandomBinary } = require("../server/helper/digit-helper");
 async function genCouponNotByOrder(config) {
   let less = JSON.parse(fs.readFileSync("user結合store_less.json"));
   let more = JSON.parse(fs.readFileSync("user結合store_more.json"));
-  const { start, end, amount } = config;
+  const { start, end, amount, limitPersonUseCoupon } = config;
   for (let i = 0; i < config.length; i++) {
     const date = new Date();
     // cash
@@ -135,20 +140,34 @@ async function genCouponNotByOrder(config) {
   async function loop(mode, limit) {
     const ans = [];
     const log = {
-      'a':[new Date()]
-    }
+      a: [new Date()],
+    };
     for (let i = 0; i < limit; i++) {
       const people = draw({ more, less });
+      const { line_id, store_id, couponAmount } = people;
 
-      //  taken_id,
-      const taken_id = genTakenId([8, 4, 4, 4, 12]);
-
-      //  taken_at, used_at, expired_at,
-      let taken_at;
-      let used_at;
-      let expired_at;
-      if (mode === "notUsed") used_at = null;
-      ans.push({});
+      const random = (max = 1) => Math.round(Math.random() * (max - 1)) + 1;
+      const dates = genDifferentDates(random(limitPersonUseCoupon), {
+        start: start,
+        end: end,
+        hourStart: "09",
+        hourEnd: "22",
+      });
+      for (let j = 0; j < dates.length; j++) {
+        const date = dates[i];
+        //  taken_id,
+        const taken_id = genTakenId([8, 4, 4, 4, 12]);
+        //  taken_at, used_at, expired_at,
+        const timeConfig = genTimeConfig(date);
+        let { taken_at, used_at, expired_at } = timeConfig;
+        if (mode === "notUsed") used_at = null;
+        ans.push({
+          line_id,
+          taken_id,
+          store_id,
+          taken_at,
+        });
+      }
     }
   }
 
@@ -166,12 +185,26 @@ async function genCouponNotByOrder(config) {
   }
 }
 
-function sameDate(a,b) {
-  return (
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
-  );
+function genTimeConfig(dateObj) {
+  return {
+    taken_at: dateToString(dateObj),
+    used_at: dateToString(dateObj),
+    expired_at: getTomorrowMidnight(dateObj), //日期+一天後 取前面就好 +00:00:00
+  };
 }
 
+// function sameDate(a, b) {
+//   return (
+//     a.getFullYear() === b.getFullYear() &&
+//     a.getMonth() === b.getMonth() &&
+//     a.getDate() === b.getDate()
+//   );
+// }
+
 // 剩下產生日期
+const start = new Date("2022-08-16");
+const end = new Date("2022-08-30");
+//  date 10點到19點
+const createDateTime = genRandomDate(start, end, "09", "22");
+const month = createDateTime.getMonth() + 1;
+const year = createDateTime.getFullYear() - 1911;
