@@ -140,7 +140,7 @@ const config = [
   },
 ];
 
-const ef = 1;
+const ef = 0;
 const  hourStart= "09";
 const  hourEnd= "22";
 genCouponNotByOrder(config);
