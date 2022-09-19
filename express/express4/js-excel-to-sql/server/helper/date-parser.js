@@ -58,7 +58,12 @@ function addDay(dateString, num = 1) {
 // console.log(addDay("2022-03-13", NaN));
 // console.log(addDay("2022-03-13", 1));
 
+function addMinutes(date, minutes) {
+  return new Date(date.getTime() + minutes*60000);
+}
+
 function dateToString(dateObj) {
+  // if (!dateObj) return null;
   let dateString = dateObj.toLocaleString("zh-TW", {
     timeZone: "UTC",
     hour12: false,
@@ -82,6 +87,7 @@ function addHours(numOfHours, date = new Date()) {
 }
 
 function getTomorrowMidnight(dateObj) {
+  if (!dateObj) return null;
   const dateString = dateToString(dateObj).slice(0, 9);
   let date = new Date(dateObj);
   date.setDate(date.getDate() + 1);
@@ -90,7 +96,7 @@ function getTomorrowMidnight(dateObj) {
     ("0" + (date.getMonth() + 1)).slice(-2),
     ("0" + date.getDate()).slice(-2),
   ];
-  return dateArr.join("-") + " 00:00:00";
+  return dateArr.join("/") + " 00:00:00";
 }
 
 function genRandomDate(
@@ -144,7 +150,7 @@ function genDifferentDates(num = 3, config) {
     const year = dateTime.getFullYear() - 1911;
     const month = dateTime.getMonth() + 1;
     const date = dateTime.getDate();
-    const dateString = `${year}-${month}-${date}`
+    const dateString = `${year}-${month}-${date}`;
     if (log.includes(dateString)) {
       i--;
       continue;
@@ -153,11 +159,12 @@ function genDifferentDates(num = 3, config) {
       ans.push(dateTime);
     }
   }
-  console.log(ans);
+  // console.log(ans);
   return ans;
 }
 
 module.exports = {
+  addMinutes,
   addDay,
   addMonth,
   isValidDate,
@@ -165,5 +172,5 @@ module.exports = {
   addHours,
   getTomorrowMidnight,
   genRandomDate,
-  genDifferentDates
+  genDifferentDates,
 };
