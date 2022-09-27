@@ -2,36 +2,48 @@ const fs = require("fs");
 const parseExcel = require("./server/xlsx/index");
 const excelPath = "./index.xlsx";
 const sheetsName = "work2";
-main3();
 
-async function main1() {
+// 產生紀錄
+// main1('cycle');
+
+// 產生週期
+// main2('cycle','cycle');
+// 產生 lastDate
+// main2('cycle','lastDate',['2022-07-15','2022-08-15']);
+
+async function main1(outputKeyname='cycle') {
   // 引入 excel
   const excel = await parseExcel(excelPath, sheetsName);
   const ans = 顧客回購週期計算依天數合併(excel.data);
-  await saveFile("coupon_usage_cycle_log.json", JSON.stringify(ans));
+  await saveFile(`coupon_usage_${outputKeyname}_log.json`, JSON.stringify(ans));
 }
 
-// log to 顧客回購週期計算依天數合併 JSON
-async function main2(){
+async function main2(readkeyname='cycle',outputKeyname='cycle',condition){
+  // log to 顧客回購週期計算依天數合併 JSON
   const ans2 = {};
-  let ans = JSON.parse(fs.readFileSync("coupon_usage_cycle_log.json"));
+  let ans = JSON.parse(fs.readFileSync(`coupon_usage_${readkeyname}_log.json`));
   ans.lineIds.forEach((el) => {
-    ans2[el] = ans[el].cycle;
+    // 加入時間條件模組
+    if(condition){
+      const now = new Date(ans[el][outputKeyname]);
+      const startDate = new Date(condition[0]);
+      const endDate = new Date(condition[1]);
+      if(now>=startDate&&now<=endDate){
+        ans2[el] = ans[el][outputKeyname];
+      }
+    }else{
+      ans2[el] = ans[el][outputKeyname];
+    }
   });
-  //   JSON檔案後面再跑回圈 做抽取
-  await saveFile("coupon_usage_cycle_ok.json", JSON.stringify(ans2));
-}
-
+  await saveFile(`coupon_usage_${outputKeyname}_ok.json`, JSON.stringify(ans2));
 // JSON to csv
-async function main3(){
-  let ans2 = 'lineId\t顧客回購週期(計算依天數合併)\n';
-  const ans = JSON.parse(fs.readFileSync("coupon_usage_cycle_ok.json"));
-  const keys = Object.keys(ans)
+  const csvHeader='lineId\txxx\n';
+  let csv = csvHeader;
+  const keys = Object.keys(ans2)
   keys.forEach((el) => {
-    ans2 += el + '\t' + ans[el] + '\n'
+    csv += el + '\t' + ans[el] + '\n'
   });
-  //   JSON檔案後面再跑回圈 做抽取
-  await saveFile("coupon_usage_cycle_ok.csv", (ans2));
+  await saveFile(`coupon_usage_${outputKeyname}_ok.csv`, (csv));
 }
 
 function calculateAvg(aDates) {
@@ -41,7 +53,7 @@ function calculateAvg(aDates) {
 function 顧客回購週期計算依天數合併(aData) {
   const ans = { lineIds: [] };
   for (let i = 0, len = aData.length; i < len; i++) {
-    if (i % 500 === 0) console.log("目前次數:", i);
+    if (i % 2000 === 0) console.log("目前次數:", i);
     if (i === len - 1) break;
     const data1 = aData[i];
     const data2 = aData[i + 1];
@@ -49,7 +61,7 @@ function 顧客回購週期計算依天數合併(aData) {
     const { user_id: id2, used_at: time2 } = data2;
     // 塞入預設值
     if (!ans[id1]) {
-      ans[id1] = { record: [], cycle: 0 };
+      ans[id1] = { record: [], cycle: 0, lastDate: 0 };
     }
 
     // 1. 同LineId有大於2筆才繼續
@@ -58,6 +70,11 @@ function 顧客回購週期計算依天數合併(aData) {
       if (ans[id1]["record"].length > 0) {
         ans[id1]["cycle"] = calculateAvg(ans[id1]["record"]);
         ans.lineIds.push(id1);
+        // 紀錄最後一次時間
+        const lastDate = new Date(time1)
+        if(lastDate>ans[id1]['lastDate']){
+          ans[id1]['lastDate'] = time1;
+        }
       }
       continue;
     }
