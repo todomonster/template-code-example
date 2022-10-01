@@ -1,0 +1,91 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "TDM-API",
+    "description": "TDM API (建議搭配 http://json.parser.online.fr/ 使用)\n    驗證 token:\n    【Bearer \"$token\"】.\n    "
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Project",
+      "description": "Project"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "securityDefinitions": {},
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/member/new": {
+      "get": {
+        "tags": [
+          "Project"
+        ],
+        "description": "新增商品資料",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "body",
+            "description": "body資料",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User successfully obtained.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Jhon Doe"
+                },
+                "age": {
+                  "type": "number",
+                  "example": 29
+                },
+                "about": {
+                  "type": "string",
+                  "example": ""
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "id": {
+      "type": "number",
+      "example": 1
+    },
+    "Product": {
+      "type": "object",
+      "properties": {
+        "a": {
+          "type": "number",
+          "example": 1
+        },
+        "b": {
+          "type": "number",
+          "example": 2
+        }
+      }
+    }
+  }
+}

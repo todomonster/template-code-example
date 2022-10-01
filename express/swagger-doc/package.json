@@ -1,0 +1,30 @@
+{
+  "name": "server-todomonster",
+  "version": "1.0.0",
+  "description": "後端\r ## 指令紀錄",
+  "main": "index.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "swagger-autogen": "^2.21.3",
+    "swagger-ui-express": "^4.4.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "gendoc": "node ./swagger.js",
+    "start": "node ./app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/todomonster/server-todomonster.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/todomonster/server-todomonster/issues"
+  },
+  "homepage": "https://github.com/todomonster/server-todomonster#readme"
+}
