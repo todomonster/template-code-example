@@ -122,13 +122,27 @@ const myfreeRouter = [
       }
     ]
   },
-  // walletIndex
-  // productIndex
-  // {
-  //   path: "/example/list",
-  //   name: "ListExample",
-  //   component: () => import('@/view/custom/ListHasDetailExample/list.vue'),
-  // },
+  {
+    path: "/wallet",
+    component: () => import('@/view/custom/wallet/walletIndex.vue'),
+    redirect: "/wallet/list",
+    meta: {
+      requiresAuth: true
+    },
+    children: [
+      {
+        path: "list",
+        meta: {
+          showHeader: true,
+          showFooter: true,
+          requiresAuth: true
+        },
+        components: {
+          default: () => import('@/view/custom/wallet/walletList.vue')
+        },
+      }
+    ]
+  },
 ]
 
 let routes = [...myfreeRouter, ...basicRoute,];
