@@ -1,9 +1,4 @@
-# myfrees-vue-cli
-
-my福利社 store 端因為用flutter2寫無法上架，要打掉用框架包webview
-
-HeaderArea.vue => pelin fixed
-HeaderArea2.vue => ally no-fixed
+# project
 
 ## 使用套件
 
