@@ -57,7 +57,7 @@ export default {
         </a>
       </div>
       <div class="col cursor-pointer">
-        <a @click="$router.push({ path: '/setting/list' })" :class="classList[2]">
+        <a @click="$router.push({ path: '/wallet/list' })" :class="classList[2]">
           <div class="tab-img"><i class="far fa-question-circle"></i></div>
           <div class="tab-title">錢包</div>
         </a>
