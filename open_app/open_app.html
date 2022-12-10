@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- https://adon988.hoohoo.top/blog/7397804/ -->
+<!-- https://blog.51cto.com/u_15315127/3243379 -->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test open app</title>
+</head>
+
+<body>
+    <div id="userAgent"></div>
+    <button onclick="dynamic()">動態判斷</button>
+    <button onclick="AndroidOpenApp()">open android</button>
+    <button onclick="iOSOpenApp()">open ios</button>
+    <br>
+    <div id="diff"></div>
+    <script>
+        const baseUrl = `http://210.64.205.11:8080/myfree/public` || `http://172.16.70.156/myfree/public` || `http://127.0.0.1:8080`
+
+        const userAgent = navigator.userAgent
+        const text = document.getElementById('userAgent')
+        text.innerHTML = userAgent.split(' ').join('<br>')
+
+        function dynamic() {
+            const android = userAgent.indexOf('Android') > -1 || userAgent.indexOf('Adr') > -1; // android
+            const iOS = !!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios
+            const iPad = userAgent.indexOf('Mac OS') > -1
+            if (android == true) {
+                AndroidOpenApp();
+            } else if (iOS == true || iPad == true) {
+                iOSOpenApp();
+            }
+            else {
+                AndroidOpenApp();
+            }
+        }
+
+        function AndroidOpenApp() {
+            const before = new Date().valueOf();
+            setTimeout(function () {
+                //此時間會直到APP返回時才會取得 (如果沒有安裝APP，理論上，很快就會取得這個時間)
+                const after = new Date().valueOf();
+                document.getElementById('diff').innerHTML = after - before
+                if (after - before > 600) { return; }
+                window.location = ('https://play.google.com/store/apps/details?id=tw.org.taitra.miceiti');
+            }, 300);
+            window.location = ("miceiti://");
+        }
+
+        function iOSOpenApp() {
+            const before = new Date().valueOf();
+            setTimeout(function () {
+                //此時間會直到APP返回時才會取得 (如果沒有安裝APP，理論上，很快就會取得這個時間)
+                const after = new Date().valueOf();
+                document.getElementById('diff').innerHTML = after - before
+                if (after - before > 1800) { return; }
+                window.location = ('https://apps.apple.com/tw/app/mice-training/id1632885184');
+            }, 1500);
+            window.location = ('miceiti://');
+        }
+        // function AndroidOpenApp() {
+        //     const before = new Date().valueOf();
+        //     setTimeout(function () {
+        //         const after = new Date().valueOf();
+        //         if (after - before > 200) { return; }
+        //         window.location = ('https://play.google.com/store/apps/details?id=com.twitter.android');
+        //     }, 100);
+        //     window.location = ("twitter://post?message=hello%20world%23thisisyourhashtag.");
+        // }
+
+        // function iOSOpenApp() {
+        //     const before = new Date().valueOf();
+        //     setTimeout(function () {
+        //         const after = new Date().valueOf();
+        //         if (after - before > 1500) { return; }
+        //         window.location = ('https://apps.apple.com/tw/app/twitter/id333903271');
+        //     }, 1000);
+        //     window.location = ('twitter://post?message=hello%20world');
+        // }
+    </script>
+
+</body>
+
+</html>

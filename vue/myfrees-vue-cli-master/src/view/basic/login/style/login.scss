@@ -1,0 +1,178 @@
+// public
+//  
+@import "@/assets/custom/mixins";
+
+.fullScreen {
+  overflow-y: hidden;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("@/assets/image/login_bg2.png");
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: 100vw auto;
+}
+
+.login-main2 {
+  margin: 1rem auto;
+  display: flex;
+  justify-content: center;
+  color: #909090;
+
+  div {
+    margin: 0 0.2rem;
+    cursor: pointer;
+  }
+}
+
+// forgetPage
+
+.forget {
+  margin-top: 3.75rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+  }
+
+  .main {
+    .form-control {
+      margin: 1.5rem 0;
+    }
+  }
+}
+
+// loginPage
+.login {
+  margin-top: 3.75rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+  }
+
+  .login-main {
+    .form-control {
+      margin: 1.5rem 0;
+      color: #909090;
+      border-color: #bfbfbf;
+      @include placeholder(#909090);
+
+      &:focus {
+        color: #909090;
+        border-color: $primary-color;
+      }
+
+      &[readonly] {
+        background-color: #f9f9f9;
+
+        &:focus {
+          border-color: #bfbfbf;
+        }
+      }
+    }
+
+    .btn-container {
+      padding-top: 15px;
+
+      .row {
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .col {
+        text-align: center;
+      }
+    }
+
+    .btn {
+      padding: 0.3125rem 0.5rem;
+      width: 7.25rem;
+      border-radius: 2rem;
+    }
+
+    .btn-primary {
+      background-color: $primary-color;
+      border-color: $primary-color;
+
+      &:active,
+      &:hover,
+      &:focus {
+        background-color: $primary-color;
+        border-color: $primary-color;
+      }
+    }
+
+    .btn-outline-primary {
+      color: $primary-color;
+      border-color: $primary-color;
+
+      &:active {
+        color: $primary-color;
+        background-color: white;
+        border-color: $primary-color;
+      }
+
+      &:hover {
+        color: white;
+        background-color: $primary-color;
+        border-color: $primary-color;
+      }
+    }
+  }
+
+  .login-main3 {
+    .hr-solid-content {
+      color: #909090;
+      border: 0;
+      // font-size: 12px;
+      padding: 1em 0;
+      position: relative;
+    }
+
+    .hr-solid-content::before {
+      content: attr(data-content);
+      position: absolute;
+      line-height: 1px;
+      border: solid #909090;
+      border-width: 0 99vw;
+      width: fit-content;
+      white-space: nowrap;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .otherLogin {
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
+
+//   signup page
+.signup {
+  margin-top: 3.75rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+  }
+
+  .signup-main {
+    .form-control {
+      margin: 1.5rem 0;
+    }
+  }
+
+  .btn {
+    width: 7.25rem;
+  }
+}

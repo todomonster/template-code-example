@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <!-- font-awesome -->
+  <link rel="stylesheet" href="<%= BASE_URL %>font-awesome/css/all.min.css">
+  <title>
+    <%= htmlWebpackPlugin.options.title %>
+  </title>
+
+</head>
+
+<body>
+  <!-- 載入Maps JavaScript API -->
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_J6u0CAmQPnxknn1RQwQV0bOjj8ZKF8o"></script>
+
+  <noscript>
+    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
+        Please enable it to continue.</strong>
+  </noscript>
+  <!-- <div style="position: fixed; display: flex; top:39px; z-index: 99999;">
+    <p><input type="button" value="顯示" onclick="displayConsoleMessage(true)"></p>
+    <p><input type="button" value="隱藏" onclick="displayConsoleMessage(false)"></p>
+  </div> -->
+  <div id="app"></div>
+  <!-- <script>
+    var os = "";
+
+    initOS();
+
+    function initOS() {
+
+      var sAgent = navigator.userAgent.toLowerCase();
+      //alert(sAgent);
+      os = navigator.platform.toLowerCase();
+      //alert(os);
+      if (os.indexOf("linux") > -1) {
+        if (sAgent.indexOf("android") > -1) {
+          os = "android";
+        }
+      }
+      if (os.indexOf("iphone") > -1 || os.indexOf("ipad") > -1) {
+        os = "ios";
+      }
+
+      //這是重點
+      if (os == 'ios') {
+        console.log = function (message) {
+          window.webkit.messageHandlers.logger.postMessage(message);
+        };
+      }
+
+      console.log('initOS');
+    }
+
+    function displayConsoleMessage(flag) {
+
+      var data = JSON.stringify({
+        "function": "displayConsoleMessage",
+        "flag": flag
+      });
+
+      if (os == "android") {
+        ExtCall.postMessage(data);
+      } else if (os == "ios") {
+        window.webkit.messageHandlers.ExtCall.postMessage(data);
+      }
+
+      console.log("displayConsoleMessage:" + flag);
+
+      return true;
+    }
+
+
+
+  </script> -->
+</body>
+
+</html>

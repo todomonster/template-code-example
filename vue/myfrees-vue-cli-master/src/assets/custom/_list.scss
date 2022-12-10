@@ -1,0 +1,398 @@
+.card {
+    flex-direction: row;
+    background-color: transparent;
+    border: 0;
+    border-bottom: 1px solid $border-color;
+    border-radius: 0;
+    &.card-notwork {
+        background-color: rgba($border-color, .35);
+    }
+    .card-header {
+        flex: 0 0 auto;
+        padding: .75rem 0 .75rem .75rem;
+        background-color: transparent;
+        border: 0;
+        border-radius: 0;
+        .card-link {
+            display: block;
+            position: relative;
+            i {
+                width: 2rem;
+                height: 2rem;
+                text-align: center;
+                color: white;
+                font-size: 1.1875rem;
+                line-height: 1.875rem;
+                background-color: rgba(nth($primary-color, $style), .75);
+                border-radius: 50%;
+            }
+            .fa-link {
+                font-size: 1.125rem;
+            }
+        }
+    }
+    .card-img {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        border: 1px solid $border-color;
+        border-radius: .25rem;
+        object-fit: cover;
+        object-position: center top;
+    }
+    .card-body {
+        flex: 0 0 auto;
+        padding: .75rem;
+        width: 100%;
+        .card-link {
+            text-decoration: none;
+        }
+    }
+    .card-title {
+        margin-bottom: .25rem;
+        color: #333;
+        font-size: 1rem;
+        i {
+            margin-left: .5rem;
+            color: #ff345f;
+            font-weight: bold;
+        }
+        .fa-mars {
+            color: #1bb1ff;
+        }
+    }
+    .card-info, .card-license, .card-text, .card-kind, .card-date, .card-time, .card-rate, .card-location, .card-punch, .card-organize, .card-hour, .card-charge, .card-disease {
+        color: #777;
+        font-size: .875rem;
+        .finish, .payment, .makeup {
+            display: inline-block;
+            min-width: 1.375rem;
+            text-align: center;
+            color: white;
+            font-size: .8125rem;
+            line-height: 1.375rem;
+            background-color: nth($primary-color, $style);
+            border-radius: 2rem;
+        }
+        .makeup {
+            margin-right: .25rem;
+            min-width: 1.25rem;
+            font-size: .75rem;
+            line-height: 1.25rem;
+            background-color: nth($primary-color, 2);
+        }
+        .payment {
+            background-color: #ffa922;
+        }
+        .percent {
+            color: nth($primary-color, 2);
+        }
+        .yes {
+            color: #41B423;
+        }
+        .no {
+            color: #FF345F;
+        }
+        .signin, .cash {
+            color: #fa9615;
+        }
+        .signout {
+            color: #157efa;
+        }
+    }
+    .card-license, .card-rate, .card-punch, .card-charge {
+        color: nth($secondary-color, 1);
+    }
+    .card-text {
+        display: -webkit-box;
+        height: 2.625rem;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+    .card-rating {
+        text-align: right;
+        line-height: 1.3;
+        .average {
+            color: #777;
+            font-size: .8125rem;
+        }
+        .star {
+            margin-left: .25rem;
+            vertical-align: .0625rem;
+            i {
+                margin-left: .1875rem;
+                color: #ccc;
+                font-size: .75rem;
+                &.active {
+                    color: #fbbc04;
+                }
+            }
+        }
+        .total {
+            margin-left: .375rem;
+            color: #777;
+            font-size: .8125rem;
+        }
+    }
+    .card-date {
+        .col-left {
+            flex: 0 0 auto;
+            width: 4.375rem;
+            white-space: nowrap;
+        }
+        .col-right {
+            flex: 0 0 auto;
+            width: calc(100% - 4.375rem);
+            span {
+                &:first-child {
+                    margin-left: .25rem;
+                }
+            }
+        }
+    }
+    .card-state {
+        position: absolute;
+        right: .75rem;
+        bottom: .8125rem;
+        line-height: 1;
+    }
+    .btn {
+        width: auto;
+    }
+    .btn-favorite, .btn-delete {
+        position: absolute;
+        right: 0;
+        top: .1875rem;
+        padding: .6875rem;
+        border: 0;
+        border-radius: 0;
+        i {
+            color: #ccc;
+            font-size: 1.125rem;
+        }
+        &.active {
+            i {
+                color: #ff345f;
+            }
+            .far {
+                font-weight: 900;
+            }
+        }
+    }
+    .btn-delete {
+        i {
+            color: #ff345f;
+        }
+    }
+    .btn-state, .btn-wait, .btn-item {
+        padding: 0 .4375rem;
+        color: nth($secondary-color, 1);
+        font-size: .875rem;
+        background-color: white;
+        border: 1px solid nth($secondary-color, 1);
+        border-radius: .25rem;
+    }
+    .btn-wait {
+        color: white;
+        background-color: rgba(nth($secondary-color, 1), .5);
+        border-color: transparent;
+    }
+    .btn-item {
+        padding: 0;
+        margin-top: .625rem;
+        width: 100%;
+        white-space: nowrap;
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+    .btn-completed, .btn-notwork {
+        padding: 0;
+        color: rgba(nth($primary-color, 2), .6);
+        font-size: 1.125rem;
+        line-height: 1.1;
+        border-radius: 0;
+    }
+    .btn-notwork {
+        color: rgba(#909090, .5);
+    }
+}
+.caregiver-outer {
+    .card {
+        .card-header {
+            padding: .875rem 0 .875rem .75rem;
+            width: 30%;
+            .card-link {
+                display: block;
+                &:after {
+                    content: "";
+                    display: block;
+                    padding-bottom: 133%;
+                }
+            }
+        }
+        .card-body {
+            padding: .875rem .75rem;
+            width: 70%;
+        }
+    }
+}
+.work-container {
+    .card {
+        .card-header {
+            width: 18%;
+            .card-link {
+                i {
+                    margin-left: 0;
+                    width: 100%;
+                    height: auto;
+                    color: #ff345f;
+                    font-size: 1.875rem;
+                    line-height: 1.1;
+                    background-color: transparent;
+                    border-radius: 0;
+                }
+                .fa-mars {
+                    color: #1bb1ff;
+                }
+            }
+        }
+        .card-body {
+            width: 82%;
+        }
+    }
+}
+.notice-container, .resource-container {
+    .card {
+        .card-header {
+            width: 2.75rem;
+        }
+        .card-body {
+            width: calc(100% - 2.75rem);
+        }
+        .card-date {
+            margin-top: .25rem;
+            color: nth($secondary-color, $style);
+        }
+        .card-text {
+            display: block;
+            height: auto;
+            overflow: visible;
+            -webkit-line-clamp: initial;
+        }
+    }
+}
+.schedule-container {
+    .card {
+        &:first-child {
+            border-top: 1px solid $border-color;
+        }
+    }
+}
+.list-container {
+    padding: 1rem;
+}
+.kind-container {
+    .title {
+        color: nth($secondary-color, $style);
+        font-size: 1.25rem;
+        font-weight: bold;
+        i {
+            margin-right: .625rem;
+            width: 2.125rem;
+            height: 2.125rem;
+            text-align: center;
+            color: white;
+            line-height: 2.125rem;
+            background-color: rgba(nth($primary-color, $style), .75);
+            border-radius: 50%;
+        }
+    }
+}
+.list-group {
+    border-radius: 0;
+    .list-group-item {
+        display: flex;
+        align-items: center;
+        padding: .5rem .5rem .5rem .75rem;
+        color: #333;
+        font-size: 1rem;
+        border-width: 0 0 1px 0;
+        border-color: $border-color;
+        &:after {
+            content: "";
+            flex-shrink: 0;
+            margin-left: auto;
+            width: .875rem;
+            height: .875rem;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23999999'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+            background-size: .875rem;
+            @include rotate(-90deg);
+        }
+        &:active, &:hover, &:focus {
+            background-color: white;
+        }
+        .mobile, .cash {
+            flex-shrink: 0;
+            margin-left: auto;
+        }
+        .cash {
+            color: #fa9615;
+        }
+    }
+}
+.help-container, .recommender-container {
+    margin-bottom: 1rem;
+    &:last-child {
+        margin-bottom: 0;
+    }
+    .list-group {
+        .list-group-item {
+            margin-bottom: .625rem;
+            border-width: 1px;
+        }
+    }
+}
+.recommender-container, .orderhistory-container {
+    .list-group {
+        .list-group-item {
+            padding: .5rem .75rem;
+            &:after {
+                display: none;
+            }
+        }
+    }
+}
+.recommender-container-2 {
+    .row {
+        --bs-gutter-x: 1rem;
+    }
+    .col {
+        margin-left: calc(var(--bs-gutter-x) * .5);
+        margin-right: calc(var(--bs-gutter-x) * .5);
+        padding: 1.125rem .875rem;
+        text-align: center;
+        border: 1px solid $border-color;;
+    }
+    .title {
+        margin-bottom: .25rem;
+        color: black;
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+    .total {
+        color: black;
+        font-size: .875rem;
+    }
+    .person {
+        margin: 0 .25rem;
+        color: nth($primary-color, 2);
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+}

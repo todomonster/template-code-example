@@ -1,0 +1,88 @@
+.nodata-outer {
+    .image {
+        margin-top: 5.75rem;
+        margin-bottom: .875rem;
+        text-align: center;
+        img {
+            width: 11rem;
+        }
+    }
+    .title {
+        text-align: center;
+        color: #909090;
+        font-size: .875rem;
+    }
+}
+.calendar-container {
+    padding: .875rem .75rem;
+    text-align: center;
+}
+.detail-container {
+    padding: 1.125rem;
+}
+.helpdetail-container, .coursedetail-container {
+    .title {
+        margin-bottom: 1rem;
+        color: black;
+        font-size: 1.25rem;
+    }
+    .subtitle {
+        margin-bottom: .5rem;
+        color: nth($secondary-color, $style);
+        font-size: 1rem;
+    }
+    .text {
+        color: #777;
+        font-size: .875rem;
+        line-height: 1.6;
+        &:last-child {
+            margin-bottom: 0;
+        }
+        a {
+            color: nth($primary-color, $style);
+            text-decoration: none;
+        }
+    }
+    .image {
+        margin-bottom: 1rem;
+        text-align: center;
+        &:last-child {
+            margin-bottom: 0;
+        }
+        img {
+            max-width: 100%;
+        }
+    }
+}
+.map-container {
+    position: relative;
+    iframe {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100% !important;
+        height: 100% !important;
+    }
+}
+.clock-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+    width: 12.5rem;
+    height: 12.5rem;
+    border: .375rem solid #eee;
+    border-radius: 50%;
+    .clock-content {
+        text-align: center;
+    }
+    #clock {
+        color: #157efa;
+        font-size: 2.75rem;
+        line-height: 1.1;
+    }
+    .date {
+        color: #888;
+        font-size: .8125rem;
+    }
+}
