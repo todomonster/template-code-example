@@ -1,20 +1,31 @@
 <script>
-import { onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { useGlobalStore } from "@/store/global";
+import { errorHandle } from "@/utils/errorHandle";
 
 import img_06 from "@/assets/icon/member06.svg";
 // call api
-import { apiLogout } from "@/api/api";
-
-import { ExtCall } from "@/utils/extCall";
+import { apiGetWallet } from "@/api/myfree";
 
 export default {
   name: "MenuList",
   setup() {
+    const walletData = ref({});
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
 
-    onMounted(async () => {});
+    const getData = async () => {
+      const token = localStorage.getItem("accessToken");
+
+      let response = await apiGetWallet(token);
+      if (response.result) {
+        handleListData(response);
+      }
+    };
+
+    const handleListData = async (response) => {
+      if (response.result) walletData.value = response;
+    };
 
     const name = ["會員回饋確認", "回饋紀錄", "交易紀錄"];
     const link = [
@@ -23,13 +34,23 @@ export default {
       "/wallet/moneyRecord",
     ];
 
+    onMounted(async () => {
+      try {
+        await getData();
+      } catch (error) {
+        errorHandle(error);
+      }
+    });
+
     return {
       name,
       link,
       goto,
       img_06,
+      walletData,
     };
   },
+
   components: {},
 };
 </script>
@@ -39,7 +60,7 @@ export default {
     <div class="main2">
       <ul class="list-group list-group-flush">
         <div class="listItem">
-          {{ `NT$ 可用餘額` }}
+          {{ `NT$ ${walletData.balance} 可用餘額` }}
         </div>
         <div class="listItem">
           <button
