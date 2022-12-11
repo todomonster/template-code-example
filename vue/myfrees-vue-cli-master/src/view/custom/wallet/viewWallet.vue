@@ -15,16 +15,10 @@ export default {
     const goto = globalStore.goto;
 
     const getData = async () => {
-      const token = localStorage.getItem("accessToken");
-
-      let response = await apiGetWallet(token);
+      let response = await apiGetWallet();
       if (response.result) {
-        handleListData(response);
+        walletData.value = response;
       }
-    };
-
-    const handleListData = async (response) => {
-      if (response.result) walletData.value = response;
     };
 
     const name = ["會員回饋確認", "回饋紀錄", "交易紀錄"];
