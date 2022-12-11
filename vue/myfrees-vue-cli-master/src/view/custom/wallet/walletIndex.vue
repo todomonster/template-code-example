@@ -19,7 +19,7 @@ export default {
     v-show="$route.meta.showHeader"
   />
   <!-- <router-view v-slot="{ Component }">
-    <keep-alive include="viewWallet">
+    <keep-alive include="ViewWallet">
       <component :is="Component" />
     </keep-alive>
   </router-view> -->
