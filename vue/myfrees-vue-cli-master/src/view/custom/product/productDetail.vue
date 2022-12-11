@@ -3,9 +3,8 @@ import { ref, onMounted } from "vue";
 import { useGlobalStore } from "@/store/global";
 import { errorHandle } from "@/utils/errorHandle";
 
-import img_06 from "@/assets/icon/member06.svg";
 // call api
-import { apiGetProductList } from "@/api/myfree";
+// import { apiGetProductList } from "@/api/myfree";
 
 export default {
   name: "ProductList",
@@ -15,14 +14,14 @@ export default {
     const goto = globalStore.goto;
 
     const getData = async () => {
-      let response = await apiGetProductList();
-      if (response.result) {
-        productList.value = response;
-      }
+      //   let response = await apiGetProductList();
+      //   if (response.result) {
+      //     productList.value = response;
+      //   }
     };
 
-    // const name = ["上架", "圖片", "商品名稱", "商品描述", "價格", "庫存"];
-    // const link = [];
+    const name = ["上架", "圖片", "商品名稱*", "商品描述", "價格*", "庫存*"];
+    const link = ["", "", "", "", "", ""];
 
     onMounted(async () => {
       try {
@@ -33,10 +32,9 @@ export default {
     });
 
     return {
-    //   name,
-    //   link,
+      name,
+      link,
       goto,
-      img_06,
       productList,
     };
   },
@@ -49,8 +47,24 @@ export default {
   <div class="main-content">
     <div class="main2">
       <ul class="list-group list-group-flush">
-        <div class="listItem">上架</div>
-        <div class="listItem">圖片</div>
+        <div class="listItem">{{ name[0] }}</div>
+        <div class="listItem">{{ name[1] }}</div>
+        <div>
+          {{ name[2] }}
+          <button @click="goto('router', link[2])">尚未設定</button>
+        </div>
+        <div>
+          {{ name[3] }}
+          <button @click="goto('router', link[3])">尚未設定</button>
+        </div>
+        <div>
+          {{ name[4] }}
+          <button @click="goto('router', link[4])">尚未設定</button>
+        </div>
+        <div>
+          {{ name[5] }}
+          <button @click="goto('router', link[5])">尚未設定</button>
+        </div>
       </ul>
       <div class="listItem">
         <button class="btn btn-primary" type="button">新增</button>
