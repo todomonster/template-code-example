@@ -1,6 +1,6 @@
 <script>
 import { ref, onMounted } from "vue";
-import { apiGetRewardApplyList } from "@/api/myfree";
+import { apiGetRewardApplyList, apiResponseRewardApply } from "@/api/myfree";
 import { errorHandle } from "@/utils/errorHandle";
 
 import { onBeforeRouteLeave } from "vue-router";
@@ -82,7 +82,9 @@ export default {
           <div>{{ item.createTime }}</div>
         </div>
         <div class="col d-flex flex-column">
-          <button>確認</button>
+          <button @click="apiResponseRewardApply(item.dealRecordId, item)">
+            確認
+          </button>
           <button>拒絕</button>
         </div>
       </div>
