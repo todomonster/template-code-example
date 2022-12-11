@@ -51,7 +51,7 @@ export default {
           ExtCall.replaceSetting(" ", defaultUrl);
         }
       } catch (error) {
-         Toast(`電腦版不能執行 ${error}`);
+        Toast(`電腦版不能執行 ${error}`);
       }
     };
 
@@ -71,12 +71,24 @@ export default {
       }
     };
 
+    const passwordEyeClass = ref("fa fa-eye-slash");
+    const passwordType = ref("password"); 
+    const handleEyeClick = () => {
+      const className = passwordEyeClass.value;
+      passwordEyeClass.value =
+        className === "fa fa-eye" ? "fa fa-eye-slash" : "fa fa-eye";
+      passwordType.value = className === "fa fa-eye" ? "password" : "";
+    };
+
     return {
       inputData,
       login,
       form,
       handleBackDoorOpen,
       isBackDoor,
+      passwordEyeClass,
+      handleEyeClick,
+      passwordType,
     };
   },
 };
@@ -86,6 +98,7 @@ export default {
   <div class="fullScreen">
     <div class="login">
       <div class="title" @click="handleBackDoorOpen(inputData)">會員登入</div>
+
       <select
         v-if="isBackDoor"
         v-model="inputData.option"
@@ -109,9 +122,9 @@ export default {
               required
             />
           </div>
-          <div class="mb-3">
+          <div class="mb-3 input-group">
             <input
-              type="password"
+              :type="passwordType"
               class="form-control"
               placeholder="請輸入密碼"
               v-model="inputData.password"
@@ -119,6 +132,15 @@ export default {
               title="最少6個字元，需有英文及數字"
               required
             />
+            <!--  -->
+            <div class="input-group-text" @click="handleEyeClick">
+              <i
+                :class="passwordEyeClass"
+                id="togglePassword"
+                style="cursor: pointer"
+              ></i>
+            </div>
+            <!--  -->
           </div>
         </form>
         <div class="mt-4b btn-container">
@@ -149,6 +171,24 @@ export default {
         <div>.</div> -->
         <div @click="$router.push({ path: '/login/forget' })">忘記密碼</div>
       </div>
+      <!-- <div class="mb-3 input-group">
+        <input
+          type="password"
+          class="form-control"
+          placeholder="請輸入密碼"
+          v-model="inputData.password"
+          pattern="^(?=.*[A-Za-z])(?=.*[0-9]).{6,}$"
+          title="最少6個字元，需有英文及數字"
+          required
+        />
+
+        <div class="input-group-text" @click="handleEyeClick">
+          <i
+            :class="passwordEyeClass"
+            style="cursor: pointer"
+          ></i>
+        </div>
+      </div> -->
     </div>
   </div>
 </template>
