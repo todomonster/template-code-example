@@ -7,7 +7,7 @@ import { onBeforeRouteLeave } from "vue-router";
 import { isBetweenBottom, windowScrollTo } from "@/utils/helper";
 
 export default {
-  name: "WalletList",
+  name: "RewardApply",
   setup() {
     let windowScrollY = 0;
     let getApiTimer = null;
