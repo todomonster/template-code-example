@@ -7,6 +7,7 @@ import { onBeforeRouteLeave } from "vue-router";
 import { isBetweenBottom, windowScrollTo } from "@/utils/helper";
 
 export default {
+  // 回饋申請列表
   name: "RewardApply",
   setup() {
     let windowScrollY = 0;
@@ -15,8 +16,8 @@ export default {
     const walletList = ref([]);
     const APIparams = ref({ page: 1, limit: 10 });
     const total = ref(Infinity);
-    const getListData = async () => {
-      if (isBetweenBottom()) {
+    const getListData = async (mode) => {
+      if (mode === "init" || isBetweenBottom()) {
         const { page, limit } = APIparams.value;
         // 預測下一頁，如果不超過資料上限才做GET
         if (limit * page < total.value + limit) {
@@ -52,7 +53,7 @@ export default {
       try {
         // 位移到暫存的y
         windowScrollTo({ top: windowScrollY });
-        await getListData();
+        await getListData("init");
 
         getApiTimer = setInterval(getListData, 500);
       } catch (error) {
@@ -74,6 +75,7 @@ export default {
 
 <template>
   <div class="main-content">
+    <div v-if="walletList.length === 0">暫時沒有資料</div>
     <div v-for="item in walletList" :key="item.createTime">
       <div class="row my-5">
         <div class="col">
@@ -82,10 +84,14 @@ export default {
           <div>{{ item.createTime }}</div>
         </div>
         <div class="col d-flex flex-column">
-          <button @click="apiResponseRewardApply(item.dealRecordId, item)">
+          <button
+            @click="apiResponseRewardApply(item.dealRecordId, item)"
+            class="btn btn-primary"
+            type="button"
+          >
             確認
           </button>
-          <button>拒絕</button>
+          <button class="btn btn-primary" type="button">拒絕</button>
         </div>
       </div>
       <br />
@@ -93,4 +99,8 @@ export default {
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+button {
+  margin: 3px;
+}
+</style>

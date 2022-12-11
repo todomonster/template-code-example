@@ -143,7 +143,7 @@ export const isBetweenBottom = () => {
     // console.log("scrollTop: ",scrollTop); 
     // console.log("windowHeight: ",windowHeight); 
     // console.log("scrollHeight: ",scrollHeight);     
-    if (scrollHeight !== windowHeight && scrollHeight >= scrollTop + windowHeight) {
+    if (scrollTop + windowHeight >=  scrollHeight) {
         return true;
     } else {
         return false;

@@ -7,6 +7,7 @@ import { onBeforeRouteLeave } from "vue-router";
 import { isBetweenBottom, windowScrollTo } from "@/utils/helper";
 
 export default {
+  // 交易紀錄
   name: "MoneyRecord",
   setup() {
     let windowScrollY = 0;
@@ -15,8 +16,8 @@ export default {
     const walletList = ref([]);
     const APIparams = ref({ page: 1, limit: 10 });
     const total = ref(Infinity);
-    const getListData = async () => {
-      if (isBetweenBottom()) {
+    const getListData = async (mode) => {
+      if (mode === "init" || isBetweenBottom()) {
         const { page, limit } = APIparams.value;
         // 預測下一頁，如果不超過資料上限才做GET
         if (limit * page < total.value + limit) {
@@ -44,9 +45,9 @@ export default {
       try {
         // 位移到暫存的y
         windowScrollTo({ top: windowScrollY });
-        await getListData();
+        await getListData("init");
 
-        getApiTimer = setInterval(getListData, 600 * 1000);
+        getApiTimer = setInterval(getListData, 500);
       } catch (error) {
         errorHandle(error);
       }
@@ -66,13 +67,14 @@ export default {
 
 <template>
   <div class="main-content">
+    <div v-if="walletList.length === 0">暫時沒有資料</div>
     <div v-for="item in walletList" :key="item.createTime">
       <div class="row my-5">
-        <div class="col">
+        <div class="col-8">
           <div>{{ item.name }}</div>
           <div>{{ item.createTime }}</div>
         </div>
-        <div class="col">
+        <div class="col-4">
           <div>{{ item.amount }}</div>
         </div>
       </div>
