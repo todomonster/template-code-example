@@ -1,48 +1,52 @@
-import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
+import {
+  createRouter,
+  createWebHashHistory,
+  createWebHistory,
+} from "vue-router";
 import { Toast } from "@/components/global/swal";
-import { useCookie, useStorage } from '@/utils/helper';
+import { useCookie, useStorage } from "@/utils/helper";
 const tokenKey = "accessToken";
 
 const basicRoute = [
   {
     path: "/",
     name: "login",
-    component: () => import('@/view/basic/login/loginPage.vue'),
+    component: () => import("@/view/basic/login/loginPage.vue"),
   },
   {
     path: "/home",
     name: "home",
-    component: () => import('@/view/basic/home/homePage_.vue'),
+    component: () => import("@/view/basic/home/homePage_.vue"),
   },
   {
     path: "/login/forget",
     name: "forget",
-    component: () => import('@/view/basic/login/forgetPage.vue'),
+    component: () => import("@/view/basic/login/forgetPage.vue"),
   },
   {
     path: "/signup",
     name: "signup",
-    component: () => import('@/view/basic/login/signupPage.vue'),
+    component: () => import("@/view/basic/login/signupPage.vue"),
   },
   {
     path: "/password",
     name: "password",
-    component: () => import('@/view/basic/password/passwordPage.vue'),
-    meta: { requiresAuth: true }
+    component: () => import("@/view/basic/password/passwordPage.vue"),
+    meta: { requiresAuth: true },
   },
   {
     path: "/:catchAll(.*)",
     redirect: "/home",
-  }
+  },
 ];
 
 const myfreeRouter = [
   {
     path: "/profile",
-    component: () => import('@/view/custom/profile/profileIndex.vue'),
+    component: () => import("@/view/custom/profile/profileIndex.vue"),
     redirect: "/profile/view",
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
     },
     children: [
       {
@@ -50,10 +54,10 @@ const myfreeRouter = [
         meta: {
           showHeader: true,
           showFooter: true,
-          requiresAuth: true
+          requiresAuth: true,
         },
         components: {
-          default: () => import('@/view/custom/profile/viewProfile.vue')
+          default: () => import("@/view/custom/profile/viewProfile.vue"),
         },
       },
       {
@@ -61,20 +65,20 @@ const myfreeRouter = [
         meta: {
           showHeader: true,
           showFooter: false,
-          requiresAuth: true
+          requiresAuth: true,
         },
         components: {
-          default: () => import('@/view/custom/profile/editProfile.vue')
+          default: () => import("@/view/custom/profile/editProfile.vue"),
         },
-      }
-    ]
+      },
+    ],
   },
   {
     path: "/setting",
-    component: () => import('@/view/custom/setting/settingIndex.vue'),
+    component: () => import("@/view/custom/setting/settingIndex.vue"),
     redirect: "/setting/list",
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
     },
     children: [
       {
@@ -82,10 +86,10 @@ const myfreeRouter = [
         meta: {
           showHeader: true,
           showFooter: true,
-          requiresAuth: true
+          requiresAuth: true,
         },
         components: {
-          default: () => import('@/view/custom/setting/menuList.vue')
+          default: () => import("@/view/custom/setting/menuList.vue"),
         },
       },
       {
@@ -93,20 +97,20 @@ const myfreeRouter = [
         meta: {
           showHeader: true,
           showFooter: false,
-          requiresAuth: true
+          requiresAuth: true,
         },
         components: {
-          default: () => import('@/view/custom/setting/qrCode.vue')
+          default: () => import("@/view/custom/setting/qrCode.vue"),
         },
-      }
-    ]
+      },
+    ],
   },
   {
     path: "/notify",
-    component: () => import('@/view/custom/notify/notifyIndex.vue'),
+    component: () => import("@/view/custom/notify/notifyIndex.vue"),
     redirect: "/notify/list",
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
     },
     children: [
       {
@@ -114,20 +118,20 @@ const myfreeRouter = [
         meta: {
           showHeader: true,
           showFooter: true,
-          requiresAuth: true
+          requiresAuth: true,
         },
         components: {
-          default: () => import('@/view/custom/notify/notifyList.vue')
+          default: () => import("@/view/custom/notify/notifyList.vue"),
         },
-      }
-    ]
+      },
+    ],
   },
   {
     path: "/wallet",
-    component: () => import('@/view/custom/wallet/walletIndex.vue'),
+    component: () => import("@/view/custom/wallet/walletIndex.vue"),
     redirect: "/wallet/list",
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
     },
     children: [
       {
@@ -135,21 +139,55 @@ const myfreeRouter = [
         meta: {
           showHeader: true,
           showFooter: true,
-          requiresAuth: true
+          requiresAuth: true,
         },
         components: {
-          default: () => import('@/view/custom/wallet/walletList.vue')
+          default: () => import("@/view/custom/wallet/viewWallet.vue"),
         },
-      }
-    ]
+      },
+      {
+        path: "rewardApply",
+        meta: {
+          showHeader: true,
+          showFooter: false,
+          requiresAuth: true,
+        },
+        components: {
+          default: () => import("@/view/custom/wallet/subPage/rewardApply.vue"),
+        },
+      },
+      {
+        path: "rewardRecord",
+        meta: {
+          showHeader: true,
+          showFooter: false,
+          requiresAuth: true,
+        },
+        components: {
+          default: () =>
+            import("@/view/custom/wallet/subPage/rewardRecord.vue"),
+        },
+      },
+      {
+        path: "moneyRecord",
+        meta: {
+          showHeader: true,
+          showFooter: false,
+          requiresAuth: true,
+        },
+        components: {
+          default: () => import("@/view/custom/wallet/subPage/moneyRecord.vue"),
+        },
+      },
+    ],
   },
-]
+];
 
-let routes = [...myfreeRouter, ...basicRoute,];
+let routes = [...myfreeRouter, ...basicRoute];
 
 const router = createRouter({
   history: createWebHashHistory(process.env.BASE_URL),
-  routes
+  routes,
 });
 router.beforeEach((to, from, next) => {
   // 是否 match
@@ -168,6 +206,6 @@ router.beforeEach((to, from, next) => {
     next();
     return true;
   }
-})
+});
 
-export { router }
+export { router };
