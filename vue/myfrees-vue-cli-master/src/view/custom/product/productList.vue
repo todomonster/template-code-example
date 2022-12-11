@@ -3,7 +3,6 @@ import { ref, onMounted } from "vue";
 import { useGlobalStore } from "@/store/global";
 import { errorHandle } from "@/utils/errorHandle";
 
-import img_06 from "@/assets/icon/member06.svg";
 // call api
 import { apiGetProductList } from "@/api/myfree";
 
@@ -14,17 +13,36 @@ export default {
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
 
-    const getData = async () => {
+    const getProductList = async () => {
       let response = await apiGetProductList();
-      if (response.result) {
-        console.log(response);
-        // productList.value = response;
+      if (response.result) handleListData(response);
+    };
+
+    const handleListData = async (response) => {
+      const { products } = response.data;
+      console.log(products);
+
+      // 處理空值
+      if (response.total === 0) {
+        productList.value = [{ content: "尚未新增商品" }];
       }
+
+      let newData = products.map((item) => {
+        item.price = `$ ${item.price}`;
+        item.stock = `庫存(${item.stock})`;
+        item.status = item.status ? "上架中" : "下架中";
+        return item;
+      });
+
+      // 處理有值
+      productList.value = productList.value.concat(newData);
+      //   total.value = response.total;
+      //   APIparams.value.page++;
     };
 
     onMounted(async () => {
       try {
-        await getData();
+        await getProductList();
       } catch (error) {
         errorHandle(error);
       }
@@ -32,7 +50,7 @@ export default {
 
     return {
       goto,
-      img_06,
+      productList,
     };
   },
 
@@ -43,18 +61,26 @@ export default {
 <template>
   <div class="main-content">
     <div class="main2">
-      <ul class="list-group list-group-flush">
-        <div class="listItem">
-          {{ "商品" }}
+      <ul
+        v-for="item in productList"
+        :key="item.id"
+        class="list-group list-group-flush"
+      >
+        <div class="border my-3">
+          <img :src="item.image[0]" style="width: 150px" />
+          <div>{{ item.name }}</div>
+          <div>{{ item.price }}</div>
+          <div>{{ item.status }}</div>
+          <div>{{ item.stock }}</div>
         </div>
-        <button
-          class="btn btn-primary"
-          type="button"
-          @click="goto('router', '/product/detail')"
-        >
-          {{ "新增商品" }}
-        </button>
       </ul>
+      <button
+        class="btn btn-primary"
+        type="button"
+        @click="goto('router', '/product/detail')"
+      >
+        {{ "新增商品" }}
+      </button>
     </div>
   </div>
 </template>
