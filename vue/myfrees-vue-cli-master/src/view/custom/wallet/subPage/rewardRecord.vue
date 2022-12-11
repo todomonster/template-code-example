@@ -88,11 +88,16 @@ export default {
 <template>
   <div class="main-content">
     <div v-for="item in walletList" :key="item.createTime">
-      <div>{{ item.status }}</div>
-      <div>{{ item.phone }}</div>
-      <div>{{ item.amount }}</div>
-      <div>{{ item.createTime }}</div>
-      <br />
+      <div class="row my-5">
+        <div class="col">
+          <span>{{ item.status }}</span>
+          <span>{{ item.phone }}</span>
+          <div>{{ item.createTime }}</div>
+        </div>
+        <div class="col">
+          <div>{{ item.amount }}</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

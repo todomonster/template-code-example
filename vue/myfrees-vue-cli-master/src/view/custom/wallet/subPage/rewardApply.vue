@@ -37,7 +37,7 @@ export default {
       let newData = data.map((item) => {
         let { amount, phone } = item;
         item.amount = "消費金額" + amount;
-        item.phone = phone.slice(0, 2) + "xxxxx" + phone.slice(-3) ;
+        item.phone = phone.slice(0, 2) + "xxxxx" + phone.slice(-3);
 
         return item;
       });
@@ -75,9 +75,17 @@ export default {
 <template>
   <div class="main-content">
     <div v-for="item in walletList" :key="item.createTime">
-      <div>{{ item.phone }}</div>
-      <div>{{ item.amount }}</div>
-      <div>{{ item.createTime }}</div>
+      <div class="row my-5">
+        <div class="col">
+          <div>{{ item.phone }}</div>
+          <div>{{ item.amount }}</div>
+          <div>{{ item.createTime }}</div>
+        </div>
+        <div class="col d-flex flex-column">
+          <button>確認</button>
+          <button>拒絕</button>
+        </div>
+      </div>
       <br />
     </div>
   </div>
