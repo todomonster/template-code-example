@@ -140,10 +140,11 @@ export const isBetweenBottom = () => {
     let scrollTop = document.documentElement.scrollTop || document.body.scrollTop // 滾動條到最頂部的距離
     let windowHeight = document.documentElement.clientHeight || document.body.clientHeight // 可是區的高度 
     let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight //DOM 元素的高度，包含超出畫面(視窗外)的内容
-    // console.log("scrollTop: ",scrollTop); 
-    // console.log("windowHeight: ",windowHeight); 
-    // console.log("scrollHeight: ",scrollHeight);     
-    if (scrollHeight !== windowHeight && scrollHeight >= scrollTop + windowHeight) {
+    // console.log("scrollTop: ", scrollTop);
+    // console.log("windowHeight: ", windowHeight);
+    // console.log("scrollHeight: ", scrollHeight);
+
+    if (scrollTop + windowHeight >= scrollHeight) {
         return true;
     } else {
         return false;

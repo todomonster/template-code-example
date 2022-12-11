@@ -15,8 +15,14 @@ export default {
     const notifyList = ref([]);
     const APIparams = ref({ page: 1, limit: 10 });
     const total = ref(Infinity);
-    const getListData = async () => {
+    
+    const handleScrollGetData = () => {
       if (isBetweenBottom()) {
+        getListData();
+      }
+    };
+
+    const getListData = async () => {
         const { page, limit } = APIparams.value;
         // 預測下一頁，如果不超過資料上限才做GET
         if (limit * page < total.value + limit) {
@@ -25,8 +31,8 @@ export default {
             handleListData(response);
           }
         }
-      }
     };
+    
     const handleListData = async (response) => {
       const { data } = response;
       // 處理空值
@@ -47,9 +53,9 @@ export default {
       try {
         // 位移到暫存的y
         windowScrollTo({ top: windowScrollY });
-        await getListData();
+        await getListData("init");
 
-        getApiTimer = setInterval(getListData, 500);
+        getApiTimer = setInterval(handleScrollGetData, 500);
       } catch (error) {
         errorHandle(error);
       }

@@ -8,7 +8,7 @@ import img_06 from "@/assets/icon/member06.svg";
 import { apiGetWallet } from "@/api/myfree";
 
 export default {
-  name: "MenuList",
+  name: "ViewWallet",
   setup() {
     const walletData = ref({});
     const globalStore = useGlobalStore();
@@ -60,7 +60,7 @@ export default {
     <div class="main2">
       <ul class="list-group list-group-flush">
         <div class="listItem">
-          {{ `NT$ ${walletData.balance} 可用餘額` }}
+          {{ `NT$ ${walletData.balance ? walletData.balance : ""} 可用餘額` }}
         </div>
         <div class="listItem">
           <button

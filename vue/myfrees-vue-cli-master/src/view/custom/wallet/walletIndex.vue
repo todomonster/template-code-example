@@ -18,12 +18,12 @@ export default {
     rightIcon="bell"
     v-show="$route.meta.showHeader"
   />
-  <router-view v-slot="{ Component }">
-    <keep-alive include="viewWallet">
+  <!-- <router-view v-slot="{ Component }">
+    <keep-alive include="ViewWallet">
       <component :is="Component" />
     </keep-alive>
-  </router-view>
-  <!-- <router-view /> -->
+  </router-view> -->
+  <router-view />
   <Footer v-show="$route.meta.showFooter" />
 </template>
 
