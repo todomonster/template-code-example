@@ -1,6 +1,6 @@
 <script>
 import { ref, onMounted, computed } from "vue";
-import { ToastConfirm } from "@/components/global/swal";
+import { ToastConfirm, ToastInputConfirm } from "@/components/global/swal";
 import { useGlobalStore } from "@/store/global";
 
 import img_06 from "@/assets/icon/member06.svg";
@@ -40,20 +40,13 @@ export default {
     };
     const logout = async () => {
       // 有做清除cookie和storage處理
-      await apiLogout();
       const confirm = await ToastConfirm("是否要登出?");
       if (confirm) {
+        await apiLogout();
         goto("router", "/");
       }
     };
-    const test = (val) => {
-      const url = "https://myfree.tako.life/privacy";
-      if (val === 1) {
-        window.open(url, "_blank");
-      } else {
-        window.location.href = url;
-      }
-    };
+
     return {
       member,
       name,
@@ -64,7 +57,6 @@ export default {
       logout,
       avatarImgUrl,
       handleWebView,
-      test,
     };
   },
   components: {},
