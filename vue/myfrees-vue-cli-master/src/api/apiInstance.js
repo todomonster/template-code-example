@@ -106,6 +106,10 @@ apiInstance.interceptors.response.use(
               })
             /* eslint-enable */
           }
+          if(!turnOnRefreshToken){
+            toLogin();
+            return Promise.reject(error);
+          }
 
           break;
         case 404:
@@ -134,7 +138,7 @@ function toLogin() {
   //把驗證改0
   localStorage.setItem("is_Login", 0)
   Toast("請重新登入");
-  // window.location.href = "./index.html";
+  window.location.href = "./index.html";
 }
 
 function saveToken(response) {
