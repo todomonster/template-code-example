@@ -123,10 +123,27 @@ export const useStorage = {
     }
 };
 
+
+/**
+ * 要弄懂
+scrollTop
+window.scrollY
+window.innerHeight
+clientHeight
+window.screen.height
+document.body.scrollHeight
+ */
+
 // 判斷是否在底部的共用邏輯
 export const isBetweenBottom = () => {
     // window.screen.height = window.innerHeight
-    if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+    let scrollTop = document.documentElement.scrollTop || document.body.scrollTop // 滾動條到最頂部的距離
+    let windowHeight = document.documentElement.clientHeight || document.body.clientHeight // 可是區的高度 
+    let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight //DOM 元素的高度，包含超出畫面(視窗外)的内容
+    // console.log("scrollTop: ",scrollTop); 
+    // console.log("windowHeight: ",windowHeight); 
+    // console.log("scrollHeight: ",scrollHeight);     
+    if (scrollHeight >= scrollTop + windowHeight) {
         return true;
     } else {
         return false;
