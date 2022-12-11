@@ -8,12 +8,17 @@ export const Toast = (text) => {
     });
     result.fire(text);
 }
+
+const confirmConfig = {
+    confirmButtonColor,
+    showCancelButton: true,
+    cancelButtonText: "取消",
+    confirmButtonText: "確定"
+}
+
 export const ToastConfirm = (text) => {
     const result = Swal.mixin({
-        confirmButtonColor,
-        showCancelButton: true,
-        cancelButtonText: "取消",
-        confirmButtonText: "確定"
+        ...confirmConfig
     });
     return result.fire(text).then((result) => {
         if (result.isConfirmed) {
@@ -22,4 +27,17 @@ export const ToastConfirm = (text) => {
             return false;
         }
     });
+}
+
+export const ToastInputConfirm = (text = "", placeHolder = "") => {
+    return Swal.fire({
+        ...confirmConfig,
+        title: text,
+        input: 'textarea',
+        inputLabel: '',
+        inputPlaceholder: placeHolder,
+        inputAttributes: {
+            'aria-label': 'Type your message here'
+        },
+    })
 }
