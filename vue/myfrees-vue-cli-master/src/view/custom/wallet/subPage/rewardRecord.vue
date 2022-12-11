@@ -16,8 +16,14 @@ export default {
     const walletList = ref([]);
     const APIparams = ref({ page: 1, limit: 10 });
     const total = ref(Infinity);
-    const getListData = async (mode) => {
-      if (mode === "init" || isBetweenBottom()) {
+
+    const handleScrollGetData = () => {
+      if (isBetweenBottom()) {
+        getListData();
+      }
+    };
+
+    const getListData = async () => {
         const { page, limit } = APIparams.value;
         // 預測下一頁，如果不超過資料上限才做GET
         if (limit * page < total.value + limit) {
@@ -26,7 +32,6 @@ export default {
             handleListData(response);
           }
         }
-      }
     };
     const handleListData = async (response) => {
       const { data } = response;
@@ -68,7 +73,7 @@ export default {
         windowScrollTo({ top: windowScrollY });
         await getListData("init");
 
-        getApiTimer = setInterval(getListData, 5000);
+        getApiTimer = setInterval(handleScrollGetData, 5000);
       } catch (error) {
         errorHandle(error);
       }

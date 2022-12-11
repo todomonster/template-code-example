@@ -23,9 +23,9 @@ export default {
 
     const optText = ref("發送");
     const inputData = ref({
-      mobile: "",
+      mobile: "0988287945",
       password: "newpci1qaz",
-      verifyCode: "",
+      verifyCode: "1234",
       name: "心居酒屋",
       city: 11,
       area: 119,
@@ -38,11 +38,13 @@ export default {
     });
     const password2 = ref("newpci1qaz");
 
-    const isSendVerify = ref(false);
+    const showSendOtpBtn = ref(true);
+    const showVerifyOtpBtn = ref(false);
+    const showJoinBtn = ref(false);
     const form = ref(null);
     const form2 = ref(null);
 
-    const sendVerify = async ($event) => {
+    const sendOtp = async ($event) => {
       $event.preventDefault();
 
       if (form.value.reportValidity()) {
@@ -56,32 +58,36 @@ export default {
           setCountDown();
         }
         // ========
-        const response = await apiPushOtp({ mobile: inputData.value.mobile });
-        if (response.success === "OK") {
-          Toast("驗證碼已發送");
-          isSendVerify.value = true;
-        } else {
-          errorHandle(response);
-        }
+        // const response = await apiPushOtp({ mobile: inputData.value.mobile });
+        // if (response.success === "OK") {
+        Toast("驗證碼已發送");
+        showVerifyOtpBtn.value = true;
+        // } else {
+        //   errorHandle(response);
+        // }
       }
     };
 
-    const handleOtp = async ($event) => {
+    const handleOtpVerify = async ($event) => {
       $event.preventDefault();
       if (form.value.reportValidity()) {
         //驗證簡訊
-        const response = await apiVerifyOtp(inputData.value.mobile, {
-          verify_code: inputData.value.verifyCode,
-        });
-        if (response.success === "OK") {
-          // 開啟註冊畫面
-        } else {
-          errorHandle(response);
-        }
+        // const response = await apiVerifyOtp(inputData.value.mobile, {
+        //   verify_code: inputData.value.verifyCode,
+        // });
+        // if (response.success === "OK") {
+        //   // 開啟註冊畫面
+        //   showJoinBtn.value = true;
+        // } else {
+        //   errorHandle(response);
+        // }
+        showJoinBtn.value = true;
+        showSendOtpBtn.value = false;
+        showVerifyOtpBtn.value = false;
       }
     };
 
-    const register = async ($event) => {
+    const handleRegister = async ($event) => {
       $event.preventDefault();
       if (form2.value.reportValidity()) {
         if (inputData.value.password != password2.value) {
@@ -111,15 +117,17 @@ export default {
       inputData,
       form,
       form2,
-      register,
-      isSendVerify,
-      sendVerify,
+      handleRegister,
+      showVerifyOtpBtn,
+      sendOtp,
       password2,
       optText,
-      handleOtp,
+      handleOtpVerify,
       // =========
       showText,
       // =========
+      showJoinBtn,
+      showSendOtpBtn
     };
   },
 };
@@ -143,7 +151,7 @@ export default {
             />
           </div>
         </form>
-        <div class="mb-3" v-if="isSendVerify">
+        <div class="mb-3" v-if="showVerifyOtpBtn">
           <input
             type="text"
             class="form-control"
@@ -153,7 +161,7 @@ export default {
           />
         </div>
         <form ref="form2">
-          <div class="mb-3" v-if="isSendVerify">
+          <div class="mb-3" v-if="showJoinBtn">
             <input
               type="password"
               class="form-control"
@@ -164,39 +172,55 @@ export default {
               required
             />
           </div>
+          <div class="mb-3" v-if="showJoinBtn">
+            <input
+              type="password"
+              class="form-control"
+              placeholder="請再次確認密碼"
+              v-model="password2"
+              required
+            />
+          </div>
+          <!-- 
+            storeImg
+            storeName
+            contact
+            cityId areaId
+            address
+            telephone
+            storeOpenTime
+            storeCategory
+            priceRange
+
+          -->
         </form>
-        <div class="mb-3" v-if="isSendVerify">
-          <input
-            type="password"
-            class="form-control"
-            placeholder="請再次確認密碼"
-            v-model="password2"
-            required
-          />
-        </div>
 
         <div class="mt-4b btn-container">
           <div class="row">
-            <div class="col">
+            <div class="col" v-if="showSendOtpBtn">
               <button
                 class="btn btn-primary"
                 type="button"
-                @click.prevent="sendVerify"
+                @click.prevent="sendOtp"
               >
                 {{ `${optText}` }}{{ showText() }}
               </button>
             </div>
-            <div class="col">
+            <div class="col" v-if="showVerifyOtpBtn">
               <button
                 class="btn btn-primary"
                 type="button"
-                @click.prevent="handleOtp"
+                @click.prevent="handleOtpVerify"
               >
                 驗證簡訊
               </button>
             </div>
-            <div class="col" v-if="isSendVerify">
-              <button class="btn btn-primary" type="button" @click="register">
+            <div class="col" v-if="showJoinBtn">
+              <button
+                class="btn btn-primary"
+                type="button"
+                @click="handleRegister"
+              >
                 加入會員
               </button>
             </div>
