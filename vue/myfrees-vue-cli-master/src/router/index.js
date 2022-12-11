@@ -127,6 +127,38 @@ const myfreeRouter = [
     ],
   },
   {
+    path: "/product",
+    component: () => import("@/view/custom/product/productIndex.vue"),
+    redirect: "/product/list",
+    meta: {
+      requiresAuth: true,
+    },
+    children: [
+      {
+        path: "list",
+        meta: {
+          showHeader: true,
+          showFooter: true,
+          requiresAuth: true,
+        },
+        components: {
+          default: () => import("@/view/custom/product/productList.vue"),
+        },
+      },
+      {
+        path: "detail",
+        meta: {
+          showHeader: true,
+          showFooter: true,
+          requiresAuth: true,
+        },
+        components: {
+          default: () => import("@/view/custom/product/productDetail.vue"),
+        },
+      },
+    ],
+  },
+  {
     path: "/wallet",
     component: () => import("@/view/custom/wallet/walletIndex.vue"),
     redirect: "/wallet/list",

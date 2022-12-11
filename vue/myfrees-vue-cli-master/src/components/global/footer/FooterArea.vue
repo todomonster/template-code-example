@@ -45,7 +45,7 @@ export default {
         </a>
       </div>
       <div class="col cursor-pointer">
-        <a @click="$router.push({ path: '/setting/list' })" :class="classList[1]">
+        <a @click="$router.push({ path: '/product/list' })" :class="classList[1]">
           <div class="tab-img"><i class="far fa-calendar"></i></div>
           <div class="tab-title">我的商品</div>
         </a>
