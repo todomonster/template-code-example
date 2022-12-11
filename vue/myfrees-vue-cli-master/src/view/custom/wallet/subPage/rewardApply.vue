@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import { apiGetRewardApplyList, apiResponseRewardApply } from "@/api/myfree";
 import { errorHandle } from "@/utils/errorHandle";
+import { ToastInputConfirm } from "@/components/global/swal";
 
 import { onBeforeRouteLeave } from "vue-router";
 import { isBetweenBottom, windowScrollTo } from "@/utils/helper";
@@ -54,6 +55,22 @@ export default {
       APIparams.value.page++;
     };
 
+    const handleApply = async (id, isConfirm) => {
+      await ToastInputConfirm(
+        "請確認",
+        `請輸入理由${isConfirm ? "(選填)" : "(必填)"}`
+      ).then((result) => {
+        if (result.isConfirmed) removeAppliedItem(id);
+        // if (isConfirm) apiResponseRewardApply(id, { result: 1, remark: result.value });
+        // else apiResponseRewardApply(id, { result: 0, remark: result.value });
+      });
+    };
+
+    const removeAppliedItem = (id) =>
+      (walletList.value = walletList.value.filter(
+        (item) => item.dealRecordId !== id
+      ));
+
     onMounted(async () => {
       try {
         // 位移到暫存的y
@@ -72,7 +89,12 @@ export default {
       clearInterval(getApiTimer);
       next();
     });
-    return { walletList, APIparams, total };
+    return {
+      walletList,
+      APIparams,
+      total,
+      handleApply,
+    };
   },
   components: {},
 };
@@ -90,13 +112,19 @@ export default {
         </div>
         <div class="col d-flex flex-column">
           <button
-            @click="apiResponseRewardApply(item.dealRecordId, item)"
+            @click="handleApply(item.dealRecordId, true)"
             class="btn btn-primary"
             type="button"
           >
             確認
           </button>
-          <button class="btn btn-primary" type="button">拒絕</button>
+          <button
+            @click="handleApply(item.dealRecordId, false)"
+            class="btn btn-primary"
+            type="button"
+          >
+            拒絕
+          </button>
         </div>
       </div>
       <br />
