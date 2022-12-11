@@ -27,10 +27,10 @@ export default {
       password: "newpci1qaz",
       verifyCode: "1234",
       name: "心居酒屋",
+      contact: "心老闆",
       city: 11,
       area: 119,
       address: "大連路二段101號",
-      contact: "心老闆",
       rewardRange: 1,
       all_addr: "xx",
       is_open: 0,
@@ -127,19 +127,19 @@ export default {
       showText,
       // =========
       showJoinBtn,
-      showSendOtpBtn
+      showSendOtpBtn,
     };
   },
 };
 </script>
 
 <template>
-  <div class="fullScreen">
+  <div class="main-content">
     <div class="signup">
       <div class="title">會員註冊</div>
       <div class="signup-main">
         <form ref="form">
-          <div class="mb-3">
+          <div class="col">
             <input
               type="text"
               class="form-control"
@@ -151,7 +151,7 @@ export default {
             />
           </div>
         </form>
-        <div class="mb-3" v-if="showVerifyOtpBtn">
+        <div class="col" v-if="showVerifyOtpBtn">
           <input
             type="text"
             class="form-control"
@@ -160,8 +160,9 @@ export default {
             v-model="inputData.verifyCode"
           />
         </div>
-        <form ref="form2">
-          <div class="mb-3" v-if="showJoinBtn">
+        <!-- form2 -->
+        <form ref="form2" v-if="showJoinBtn">
+          <div class="col">
             <input
               type="password"
               class="form-control"
@@ -172,7 +173,7 @@ export default {
               required
             />
           </div>
-          <div class="mb-3" v-if="showJoinBtn">
+          <div class="col">
             <input
               type="password"
               class="form-control"
@@ -181,18 +182,7 @@ export default {
               required
             />
           </div>
-          <!-- 
-            storeImg
-            storeName
-            contact
-            cityId areaId
-            address
-            telephone
-            storeOpenTime
-            storeCategory
-            priceRange
 
-          -->
         </form>
 
         <div class="mt-4b btn-container">

@@ -3,7 +3,8 @@ import { parseUrlEncode } from "@/utils/helper"
 
 // 命名規則: 如果是 CRUD 動詞+名詞 ex:GetStore 
 // urlencoded form x
-
+/** city_area/list a-0-0*/
+export const apiGetCityArea = () => apiInstance.get(`/city_area/list`);
 // =============================================簡訊
 /** /mobile/verify/push_sms 發送簡訊 form */
 export const apiPushOtp = (data) => apiInstance.formDataLogin(`/mobile/verify/push_sms`, (data));
@@ -26,8 +27,8 @@ export const apiStoreLogin = (data) => apiInstance.formDataLogin(`/store/login`,
 /** store a-1-5 x */
 export const apiGetStore = () => apiInstance.get(`/store`);
 
-/** image/store a-1-6 form */
-export const apiStoreUpload = (data) => apiInstance.formDataPOST(`/image/store`, (data));
+/** image/store a-1-6 form=>上傳用post就好 */
+export const apiStoreUpload = (data) => apiInstance.post(`/image/store`, (data));
 /** store/upd a-1-7 urlencoded */
 export const apiUpdateStore = (data) => apiInstance.put(`/store/upd`, parseUrlEncode(data));
 
