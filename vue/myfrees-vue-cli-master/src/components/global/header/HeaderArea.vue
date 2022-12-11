@@ -69,7 +69,7 @@ export default {
   <header class="c-header">
     <nav class="navbar ui-navbar">
       <ul class="navbar-nav">
-        <li class="nav-item">
+        <li class="nav-item" style="cursor: pointer">
           <a @click="goto('back')" class="nav-link"
             ><i class="fa fa-chevron-left"></i
           ></a>
@@ -77,7 +77,7 @@ export default {
       </ul>
       <h1 class="navbar-brand">{{ title }}</h1>
       <ul class="navbar-nav">
-        <li class="nav-item">
+        <li class="nav-item" style="cursor: pointer">
           <a class="nav-link" @click="execute()"
             ><i :class="iconCode"
               ><span>{{ titleText }}</span></i
