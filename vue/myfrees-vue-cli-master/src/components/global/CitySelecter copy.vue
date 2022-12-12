@@ -1,56 +1,41 @@
 <script>
-import { ref, onMounted, onBeforeMount, computed, watch } from "vue";
-import CitySelecter from "@/components/global/CitySelecter.vue";
-import { Toast } from "@/components/global/swal.js";
-import { apiGetStore, apiUpdateStore, apiStoreUpload } from "@/api/myfree";
+import { ref, onMounted, watch } from "vue";
+import { apiGetCityArea } from "@/api/myfree";
 
 export default {
-  name: "EditProfile",
-  setup() {
-    const storeData = ref({});
-    const cityAreaData = ref([]);
-    const areaList = computed(() =>
-      findAreaWithCityId(cityAreaData.value, storeData.value.city)
-    );
+  props: {
+    cityIdx_p: Number,
+    areaIdx_p: Number,
+    storeData: Object,
+  },
+  setup(props, { emit }) {
+    const allData = ref(props.storeData);
+    let cityAreaData = ref([]);
+    let areaList = ref([]);
 
-    //表單驗證
-    const form = ref(null);
-    const save = async (e) => {
-      e.preventDefault();
-      if (form.value.reportValidity()) {
-        try {
-          // let msg = await apiPutCaretaker(storeData.value);
-          console.log(storeData.value);
-          // if (msg.data == "更新成功") {
-          //   Toast(msg.data);
-          // } else {
-          //   Toast(msg.message);
-          // }
-        } catch (error) {
-          console.log(error);
-        }
-      }
+    let cityIdx = ref(props.cityIdx_p);
+    let areaIdx = ref(props.areaIdx_p);
+
+    const changeCityIdx = (e) => {
+      cityIdx.value = e.target.value;
+      // console.log(cityIdx.value)
+    };
+    const changeAreaIdx = (e) => {
+      areaIdx.value = e.target.value;
+      // console.log(areaIdx.value)
     };
 
     const findAreaWithCityId = (data, cityId) => {
-      if (cityId) {
-        let city = JSON.parse(JSON.stringify(data));
-        let targetArea = city.filter((item) => item.id === cityId);
-        if (targetArea.length > 0) {
-          return targetArea[0].areas;
-        }
-      }
-      return [];
+      let city = JSON.parse(JSON.stringify(data));
+      const targetArea = city.filter((item) => item.id === cityId);
+      return targetArea[0].areas;
     };
-    watch(
-      () => storeData.value.city,
-      async () => {
-        storeData.value.area = areaList.value[0].id;
-      }
-    );
+
     onMounted(async () => {
-      // //取會員資料
-      //   await apiGetCityArea();
+      console.log(allData.value);
+      // cityAreaData.value = await apiGetCityArea()
+      // cityIdx.value = props.cityIdx_p || 1;
+      // areaIdx.value = props.areaIdx_p || 1;
       const response = [
         {
           id: 1,
@@ -2839,260 +2824,70 @@ export default {
           ],
         },
       ];
-      cityAreaData.value = response;
-      storeData.value = await apiGetStore();
-      // console.log(storeData.value)
+
+      //   cityAreaData.value = response;
+
+      //   if (cityIdx.value) {
+      //     areaList.value = findAreaWithCityId(cityAreaData.value, cityIdx.value);
+      //   }
     });
 
-    //檔案上傳
-    const myUploadFile = ref(null);
-    const handleFileUpload = async () => {
-      //一定要這樣寫 [ref的名稱].value.files //固定寫files=FileList
-      let requestData = new FormData();
-      requestData.append("images", myUploadFile.value.files[0]);
-      // console.log("myUploadFile", myUploadFile.value.files[0]);
-      // console.log("requestData", requestData.get('images'));
-      //檢查上傳檔案大小
-      // const fileInput = document.getElementById("formFile");
-      // const getFile = fileInput.files[0].size / 1024 / 1024;
-
-      // if (getFile > process.env.VUE_APP_UPLOAD_LIMIT) {
-      //   Toast("圖片檔案大小上限為6MB");
-      // } else {
-      try {
-        const response = await apiStoreUpload(requestData);
-        if (response.result) {
-          storeData.value.images = `["${response.path}"]` || "";
-        }
-      } catch (error) {
-        console.log("error", error);
-      }
-      // }
-    };
-
-    //
-    const priceRangeOption = ["$", "$$", "$$$", "$$$$", "$$$$$"];
-    const priceRangeClass = (item) =>
-      item === storeData.value.price_range
-        ? "btn btn-primary"
-        : "btn btn-outline-primary";
-    const handlePriceRange = (item) => {
-      storeData.value.price_range = item;
-    };
-
-    const categoryOption = ["食", "衣", "住", "行", "樂"];
-    const categoryClass = (item) =>
-      item === storeData.value.category
-        ? "btn btn-primary"
-        : "btn btn-outline-primary";
-    const handleCategory = (item) => {
-      storeData.value.category = item;
-    };
-
-    const handleImg = (item) => {
-      if (item) {
-        return JSON.parse(item)[0];
-      }
-      return "";
-    };
-    const isStoreOpen = ref(true);
     watch(
-      () => isStoreOpen.value,
-      (val) => {
-        storeData.value.is_open = val ? 1 : 0;
+      () => cityIdx.value,
+      async (val) => {
+        if (cityIdx.value) {
+          cityIdx.value = props.cityIdx_p;
+          areaList.value = findAreaWithCityId(
+            cityAreaData.value,
+            cityIdx.value
+          );
+        }
+        emit("cityIdx", cityIdx);
       }
     );
+    watch(
+      () => areaIdx.value,
+      async (val) => {
+        areaIdx.value = props.areaIdx_p;
+        emit("areaIdx", areaIdx);
+      }
+    );
+
     return {
-      storeData,
-      save,
-      form,
-      myUploadFile,
-      handleFileUpload,
       cityAreaData,
       areaList,
-      findAreaWithCityId,
-      priceRangeOption,
-      priceRangeClass,
-      handlePriceRange,
-      categoryOption,
-      categoryClass,
-      handleCategory,
-      isStoreOpen,
-      handleImg,
+      changeCityIdx,
+      changeAreaIdx,
+      cityIdx,
+      areaIdx,
     };
   },
-  components: {},
 };
 </script>
 
 <template>
-  <div class="main-content">
-    <form ref="form">
-      <div class="mb-3 avatar-container">
-        <label class="form-file-label">
-          <img :src="handleImg(storeData.images)" v-if="storeData.images" />
-          <img src="@/assets/image/noavatar.jpg" v-if="!storeData.images" />
-          <i class="fas fa-camera"></i>
-          <input
-            class="form-control"
-            type="file"
-            id="formFile"
-            accept="image/png, image/jpeg"
-            ref="myUploadFile"
-            @change="handleFileUpload"
-            style="display: none"
-          />
-        </label>
-      </div>
-      <div>
-        <div class="mb-3">
-          <label class="form-label">商店名稱<span class="star">*</span></label>
-          <input
-            type="text"
-            class="form-control"
-            placeholder="請輸入商店名稱"
-            v-model="storeData.name"
-            required
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">聯絡人<span class="star">*</span></label>
-          <input
-            type="text"
-            class="form-control"
-            placeholder="請輸入聯絡人名稱"
-            v-model="storeData.contact"
-            required
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">通訊地址<span class="star">*</span></label>
-          <div class="input-group">
-            <select
-              class="col form-control form-select"
-              v-model="storeData.city"
-            >
-              <option value="undefined" disabled>請選擇縣市</option>
-              <option
-                v-for="item in cityAreaData"
-                :value="item.id"
-                :key="item.id"
-              >
-                {{ item.city_name }}
-              </option>
-            </select>
-            <select
-              class="col form-control form-select"
-              v-model="storeData.area"
-            >
-              <option value="undefined" disabled>請選擇鄉鎮區</option>
-              <option v-for="item in areaList" :value="item.id" :key="item.id">
-                {{ item.area_name }}
-              </option>
-            </select>
-          </div>
-          <input
-            type="text"
-            class="form-control mt-3"
-            placeholder="請輸入其他地址"
-            v-model="storeData.address"
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">店家電話<span class="star">*</span></label>
-
-          <input
-            type="text"
-            class="form-control"
-            placeholder="請輸入店家電話"
-            v-model="storeData.tel"
-            required
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">大分類<span class="star">*</span></label>
-          <div class="row">
-            <div class="col" v-for="item in categoryOption" :key="item">
-              <button
-                :class="categoryClass(item)"
-                type="button"
-                @click="handleCategory(item)"
-              >
-                {{ item }}
-              </button>
-            </div>
-          </div>
-          <!-- <input
-            type="text"
-            class="form-control"
-            placeholder="請輸入大分類"
-            v-model="storeData.category"
-            required
-          /> -->
-        </div>
-        <div class="mb-3">
-          <label class="form-label">價格範圍<span class="star">*</span></label>
-          <div class="row">
-            <div class="col" v-for="item in priceRangeOption" :key="item">
-              <button
-                :class="priceRangeClass(item)"
-                type="button"
-                @click="handlePriceRange(item)"
-              >
-                {{ item }}
-              </button>
-            </div>
-          </div>
-          <!-- <input
-            type="text"
-            class="form-control"
-            placeholder="請輸入價格範圍"
-            v-model="storeData.price_range"
-            required
-          /> -->
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label"
-            >分類標籤(請用逗號分隔)<span class="star">*</span></label
-          >
-          <input
-            type="text"
-            class="form-control"
-            placeholder="請輸入分類標籤"
-            v-model="storeData.keywords"
-            required
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">是否營業<span class="star">*</span></label>
-          <div class="form-check form-switch">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              role="switch"
-              id="flexSwitchCheckChecked"
-              v-model="isStoreOpen"
-              checked
-            />
-          </div>
-        </div>
-
-        <div class="mt-4b btn-container">
-          <div class="row">
-            <div class="col">
-              <button
-                class="btn btn-outline-primary"
-                type="button"
-                @click="save"
-              >
-                儲存資料
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
+  <div class="input-group">
+    {{ cityIdx + "  " + areaIdx }}
+    <select
+      class="col form-control form-select"
+      v-model="cityIdx"
+      @change="changeCityIdx"
+    >
+      <option value="undefined" disabled>請選擇縣市</option>
+      <option v-for="item in cityAreaData" :value="item.id" :key="item.id">
+        {{ item.city_name }}
+      </option>
+    </select>
+    <select
+      class="col form-control form-select"
+      v-model="areaIdx"
+      @change="changeAreaIdx"
+    >
+      <option value="undefined" disabled>請選擇鄉鎮區</option>
+      <option v-for="item in areaList" :value="item.id" :key="item.id">
+        {{ item.area_name }}
+      </option>
+    </select>
   </div>
 </template>
 

@@ -103,7 +103,7 @@ export default {
         v-if="isBackDoor"
         v-model="inputData.option"
         class="form-select"
-        aria-label="Default select example"
+        aria-label=""
       >
         <option value="">選擇要切換到哪個版本?</option>
         <option value="1" selected>穩定版</option>
