@@ -13,15 +13,7 @@ export default {
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
 
-    const getData = async () => {
-      //   let response = await apiGetProductList();
-      //   if (response.result) {
-      //     productList.value = response;
-      //   }
-    };
-
-    const name = ["上架", "圖片", "商品名稱*", "商品描述", "價格*", "庫存*"];
-    const link = ["", "", "", "", "", ""];
+    const getData = async () => {};
 
     onMounted(async () => {
       try {
@@ -32,8 +24,6 @@ export default {
     });
 
     return {
-      name,
-      link,
       goto,
       productList,
     };
@@ -44,94 +34,82 @@ export default {
 </script>
 
 <template>
-  <div class="main-content">
-    <div class="main2">
-      <ul class="list-group list-group-flush">
-        <div class="listItem">{{ name[0] }}</div>
-        <div class="listItem">{{ name[1] }}</div>
-        <div>
-          {{ name[2] }}
-          <button @click="goto('router', link[2])">尚未設定</button>
-        </div>
-        <div>
-          {{ name[3] }}
-          <button @click="goto('router', link[3])">尚未設定</button>
-        </div>
-        <div>
-          {{ name[4] }}
-          <button @click="goto('router', link[4])">尚未設定</button>
-        </div>
-        <div>
-          {{ name[5] }}
-          <button @click="goto('router', link[5])">尚未設定</button>
-        </div>
-      </ul>
-      <div class="listItem">
-        <button class="btn btn-primary" type="button">新增</button>
+  <div class="main c-product">
+    <section class="c-main">
+      <div class="form-container form-container-3">
+        <form>
+          <div class="mb-2">
+            <div class="form-check form-switch">
+              <label class="form-check-label" for="SwitchCheck">上架</label>
+              <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="SwitchCheck"
+              />
+            </div>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">圖片</label>
+            <div class="plus-container">
+              <label class="form-file-label">
+                <i class="icon icon-plus-grey"></i>
+              </label>
+              <input type="file" class="form-file-input" />
+            </div>
+          </div>
+          <div class="mb-2">
+            <label class="form-label"
+              >商店名稱<span class="must">必填</span></label
+            >
+            <input
+              type="text"
+              class="form-control"
+              placeholder="請輸入商店名稱"
+              value=""
+            />
+          </div>
+          <div class="mb-2">
+            <label class="form-label">商品描述</label>
+            <textarea
+              class="form-control"
+              rows="5"
+              placeholder="請輸入商品描述"
+            ></textarea>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">價格<span class="must">必填</span></label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="請輸入價格"
+              value=""
+            />
+          </div>
+          <div class="mb-2">
+            <label class="form-label">庫存<span class="must">必填</span></label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="請輸入庫存"
+              value=""
+            />
+          </div>
+        </form>
       </div>
-    </div>
+      <div class="add-container">
+        <button class="btn btn-add" type="button">新增</button>
+      </div>
+    </section>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.member {
-  margin-bottom: calc($footer-height + 15px);
-  display: flex;
-  flex-direction: column;
-
-  .main {
-    background-image: url("@/assets/image/member_bg.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  .mainblur {
-    backdrop-filter: blur(3px);
-    height: 12.875rem;
-  }
-
-  .topArea {
-    .headShot {
-      margin-top: 1rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      width: 100vw;
-      height: 12.875rem;
-
-      img {
-        width: 6.625rem;
-        height: 6.625rem;
-        border-radius: 50%;
-      }
-
-      p {
-        margin: 0.75rem auto;
-        font-size: 1.25rem;
-        font-weight: 700;
-      }
-    }
-  }
-
-  .listItem {
-    border-bottom: 1px solid #e8e8e8;
-
-    button {
-      height: 50px;
-      font-size: 1rem;
-      font-weight: 400;
-      border: none;
-      color: #333333;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      img {
-        width: 2rem;
-        margin-right: 0.75rem;
-      }
-    }
-  }
+.c-product {
+  background-color: #eee;
+}
+.main {
+  margin-top: $header-height;
+  padding-top: 0.125rem;
 }
 </style>

@@ -39,33 +39,39 @@ export default {
   <footer class="c-footer">
     <div class="row ui-tabbar">
       <div class="col cursor-pointer">
-        <a @click="$router.push({ path: '/profile/view' })" :class="classList[0]">
-          <div class="tab-img"><i class="far fa-search"></i></div>
+        <a
+          :class="classList[0]"
+          @click="$router.push({ path: '/profile/view' })"
+        >
+          <div class="tab-img"><i class="icon icon-shop"></i></div>
           <div class="tab-title">商店資訊</div>
         </a>
       </div>
       <div class="col cursor-pointer">
-        <a @click="$router.push({ path: '/product/list' })" :class="classList[1]">
-          <div class="tab-img"><i class="far fa-calendar"></i></div>
+        <a
+          :class="classList[1]"
+          @click="$router.push({ path: '/product/list' })"
+        >
+          <div class="tab-img"><i class="icon icon-product"></i></div>
           <div class="tab-title">我的商品</div>
         </a>
       </div>
       <div class="col cursor-pointer">
-        <a @click="$router.push({ path: '/home' })" class="tab-link">
-          <div class="tab-img"><i class="fas fa-home-lg"></i></div>
-          <div class="tab-title">首頁</div>
-        </a>
-      </div>
-      <div class="col cursor-pointer">
-        <a @click="$router.push({ path: '/wallet/list' })" :class="classList[2]">
-          <div class="tab-img"><i class="far fa-question-circle"></i></div>
+        <a
+          :class="classList[2]"
+          @click="$router.push({ path: '/wallet/list' })"
+        >
+          <div class="tab-img"><i class="icon icon-cash"></i></div>
           <div class="tab-title">錢包</div>
         </a>
       </div>
       <div class="col cursor-pointer">
-        <a @click="$router.push({ path: '/setting/list' })" :class="classList[3]">
-          <div class="tab-img"><i class="far fa-user"></i></div>
-          <div class="tab-title">設定</div>
+        <a
+          :class="classList[3]"
+          @click="$router.push({ path: '/setting/list' })"
+        >
+          <div class="tab-img"><i class="icon icon-member"></i></div>
+          <div class="tab-title">商店管理</div>
         </a>
       </div>
     </div>
@@ -73,7 +79,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-//  
+//
 @import "@/assets/custom/mixins";
 .cursor-pointer {
   cursor: pointer;
