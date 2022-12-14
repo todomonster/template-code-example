@@ -2926,174 +2926,288 @@ export default {
 </script>
 
 <template>
-  <div class="main-content">
-    <form ref="form">
-      <div class="mb-3 avatar-container">
-        <label class="form-file-label">
-          <img :src="handleImg(storeData.images)" v-if="storeData.images" />
-          <img src="@/assets/image/noavatar.jpg" v-if="!storeData.images" />
-          <i class="fas fa-camera"></i>
-          <input
-            class="form-control"
-            type="file"
-            id="formFile"
-            accept="image/png, image/jpeg"
-            ref="myUploadFile"
-            @change="handleFileUpload"
-            style="display: none"
-          />
-        </label>
-      </div>
-      <div>
-        <div class="mb-3">
-          <label class="form-label">商店名稱<span class="star">*</span></label>
-          <input
-            type="text"
-            class="form-control"
-            placeholder="請輸入商店名稱"
-            v-model="storeData.name"
-            required
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">聯絡人<span class="star">*</span></label>
-          <input
-            type="text"
-            class="form-control"
-            placeholder="請輸入聯絡人名稱"
-            v-model="storeData.contact"
-            required
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">通訊地址<span class="star">*</span></label>
-          <div class="input-group">
-            <select
-              class="col form-control form-select"
-              v-model="storeData.city"
-            >
-              <option value="undefined" disabled>請選擇縣市</option>
-              <option
-                v-for="item in cityAreaData"
-                :value="item.id"
-                :key="item.id"
-              >
-                {{ item.city_name }}
-              </option>
-            </select>
-            <select
-              class="col form-control form-select"
-              v-model="storeData.area"
-            >
-              <option value="undefined" disabled>請選擇鄉鎮區</option>
-              <option v-for="item in areaList" :value="item.id" :key="item.id">
-                {{ item.area_name }}
-              </option>
-            </select>
-          </div>
-          <input
-            type="text"
-            class="form-control mt-3"
-            placeholder="請輸入其他地址"
-            v-model="storeData.address"
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">店家電話<span class="star">*</span></label>
-
-          <input
-            type="text"
-            class="form-control"
-            placeholder="請輸入店家電話"
-            v-model="storeData.tel"
-            required
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">大分類<span class="star">*</span></label>
-          <div class="row">
-            <div class="col" v-for="item in categoryOption" :key="item">
-              <button
-                :class="categoryClass(item)"
-                type="button"
-                @click="handleCategory(item)"
-              >
-                {{ item }}
-              </button>
+  <div class="main">
+    <section class="c-main">
+      <div class="form-container">
+        <form>
+          <div class="image-container">
+            <div class="image">
+              <!-- <img src="@/assets/images/img_shop.png"> -->
+              <img :src="handleImg(storeData.images)" v-if="storeData.images" />
+              <img src="@/assets/image/noavatar.jpg" v-if="!storeData.images" />
+              <input
+                class="form-control"
+                type="file"
+                id="formFile"
+                accept="image/png, image/jpeg"
+                ref="myUploadFile"
+                @change="handleFileUpload"
+                style="display: none"
+              />
+            </div>
+            <div class="camera-container">
+              <label class="form-file-label">
+                <i class="icon icon-camera"></i>
+              </label>
+              <input type="file" class="form-file-input" />
             </div>
           </div>
-          <!-- <input
-            type="text"
-            class="form-control"
-            placeholder="請輸入大分類"
-            v-model="storeData.category"
-            required
-          /> -->
-        </div>
-        <div class="mb-3">
-          <label class="form-label">價格範圍<span class="star">*</span></label>
-          <div class="row">
-            <div class="col" v-for="item in priceRangeOption" :key="item">
-              <button
-                :class="priceRangeClass(item)"
-                type="button"
-                @click="handlePriceRange(item)"
-              >
-                {{ item }}
-              </button>
-            </div>
-          </div>
-          <!-- <input
-            type="text"
-            class="form-control"
-            placeholder="請輸入價格範圍"
-            v-model="storeData.price_range"
-            required
-          /> -->
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label"
-            >分類標籤(請用逗號分隔)<span class="star">*</span></label
-          >
-          <input
-            type="text"
-            class="form-control"
-            placeholder="請輸入分類標籤"
-            v-model="storeData.keywords"
-            required
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">是否營業<span class="star">*</span></label>
-          <div class="form-check form-switch">
+          <div class="mb-2">
+            <label class="form-label"
+              >商店名稱<span class="must">必填</span></label
+            >
             <input
-              class="form-check-input"
-              type="checkbox"
-              role="switch"
-              id="flexSwitchCheckChecked"
-              v-model="isStoreOpen"
-              checked
+              type="text"
+              class="form-control"
+              placeholder="請輸入商店名稱"
+              v-model="storeData.name"
+              required
             />
           </div>
-        </div>
-
-        <div class="mt-4b btn-container">
-          <div class="row">
-            <div class="col">
-              <button
-                class="btn btn-outline-primary"
-                type="button"
-                @click="save"
-              >
-                儲存資料
-              </button>
+          <div class="mb-2">
+            <label class="form-label">負責人</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="請輸入負責人名稱"
+              v-model="storeData.contact"
+              required
+            />
+          </div>
+          <div class="mb-2">
+            <label class="form-label"
+              >商店地址<span class="must">必填</span></label
+            >
+            <div class="row mb-2">
+              <div class="col">
+                <select
+                  class="col form-control form-select"
+                  v-model="storeData.city"
+                  required
+                >
+                  <option value="undefined" disabled>請選擇縣市</option>
+                  <option
+                    v-for="item in cityAreaData"
+                    :value="item.id"
+                    :key="item.id"
+                  >
+                    {{ item.city_name }}
+                  </option>
+                </select>
+              </div>
+              <div class="col">
+                <select
+                  class="col form-control form-select"
+                  v-model="storeData.area"
+                  required
+                >
+                  <option value="undefined" disabled>請選擇鄉鎮區</option>
+                  <option
+                    v-for="item in areaList"
+                    :value="item.id"
+                    :key="item.id"
+                  >
+                    {{ item.area_name }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="請輸入商店地址"
+              v-model="storeData.address"
+            />
+          </div>
+          <div class="mb-2">
+            <label class="form-label">電話</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="請輸入店家電話"
+              v-model="storeData.tel"
+            />
+          </div>
+          <!-- no -->
+          <div class="mb-2">
+            <label class="form-label">營業時間</label>
+            <div class="input-list">
+              <div class="form-check mb-2">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  name="week1"
+                  id="week1"
+                />
+                <label class="form-check-label" for="week1">星期日</label>
+              </div>
+              <div class="form-check mb-2">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  name="week2"
+                  id="week2"
+                  checked
+                />
+                <label class="form-check-label" for="week2">星期一</label>
+              </div>
+              <div class="row mb-2">
+                <div class="col">
+                  <input
+                    type="time"
+                    class="form-control"
+                    placeholder="請選擇時間"
+                  />
+                </div>
+                <div class="col">
+                  <input
+                    type="time"
+                    class="form-control"
+                    placeholder="請選擇時間"
+                  />
+                </div>
+              </div>
+              <div class="form-check mb-2">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  name="week3"
+                  id="week3"
+                />
+                <label class="form-check-label" for="week3">星期二</label>
+              </div>
+              <div class="form-check mb-2">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  name="week4"
+                  id="week4"
+                />
+                <label class="form-check-label" for="week4">星期三</label>
+              </div>
+              <div class="form-check mb-2">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  name="week5"
+                  id="week5"
+                />
+                <label class="form-check-label" for="week5">星期四</label>
+              </div>
+              <div class="form-check mb-2">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  name="week6"
+                  id="week6"
+                />
+                <label class="form-check-label" for="week6">星期五</label>
+              </div>
+              <div class="form-check mb-2">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  name="week7"
+                  id="week7"
+                />
+                <label class="form-check-label" for="week7">星期六</label>
+              </div>
             </div>
           </div>
-        </div>
+          <!--  -->
+          <div class="mb-2">
+            <label class="form-label">大分類</label>
+            <div class="input-pill">
+              <div class="row">
+                <div
+                  class="col form-check"
+                  v-for="item in categoryOption"
+                  :key="item"
+                >
+                  <input
+                    type="radio"
+                    class="form-check-input"
+                    name="kind"
+                    :id="item"
+                    :checked="item === storeData.category"
+                  />
+                  <label
+                    class="form-check-label"
+                    :for="item"
+                    @click="handleCategory(item)"
+                    >{{ item }}</label
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">價格範圍</label>
+            <div class="input-pill">
+              <div class="row">
+                <div
+                  class="col form-check"
+                  v-for="item2 in priceRangeOption"
+                  :key="item2"
+                >
+                  <input
+                    type="radio"
+                    class="form-check-input"
+                    name="price"
+                    :id="item2"
+                    :checked="item2  === storeData.price_range"
+                  />
+                  <label
+                    class="form-check-label"
+                    :for="item2"
+                    @click="handlePriceRange(item2)"
+                    >{{ item2 }}</label
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">分類標籤(請用逗號分格標籤)</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="請輸入分類標籤"
+              v-model="storeData.keywords"
+            />
+          </div>
+          <div class="mt-3 mb-2">
+            <div class="form-check form-switch">
+              <label class="form-check-label" for="SwitchCheck">商店狀態</label>
+              <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                v-model="isStoreOpen"
+                checked
+              />
+            </div>
+          </div>
+          <div class="btn-container mt-4 d-flex justify-content-center">
+            <button class="btn btn-next-grey" type="submit" @click="save">
+              <i class="icon icon-next"></i>
+            </button>
+          </div>          
+          <!-- <div class="btn-container mt-4 d-flex justify-content-between">
+            <button class="btn btn-skip" type="button">Skip</button>
+            <button class="btn btn-next-grey" type="submit" @click="save">
+              <i class="icon icon-next"></i>
+            </button>
+          </div> -->
+        </form>
       </div>
-    </form>
+    </section>
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.main {
+  margin-top: $header-height;
+  padding: 0.25rem;
+}
+</style>

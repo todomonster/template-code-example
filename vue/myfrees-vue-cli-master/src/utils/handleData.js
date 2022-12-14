@@ -17,7 +17,7 @@ function dateToChinese(date) {
 function combineTime(weekday, time) {
     let ans = `${dateToChinese(weekday)}\n`;
     time.map((item) => {
-        ans += `${item.start} - ${item.end}\n`
+        ans += `\t${item.start} - ${item.end}\n`
     })
     return ans;
 }

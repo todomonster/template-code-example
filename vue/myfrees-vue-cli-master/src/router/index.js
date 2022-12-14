@@ -16,6 +16,7 @@ const basicRoute = [
   {
     path: "/home",
     name: "home",
+    redirect: "/profile/view",
     component: () => import("@/view/basic/home/homePage_.vue"),
   },
   {
@@ -138,7 +139,7 @@ const myfreeRouter = [
         path: "list",
         meta: {
           showHeader: true,
-          showFooter: true,
+          showFooter: false,
           requiresAuth: true,
         },
         components: {
@@ -149,7 +150,7 @@ const myfreeRouter = [
         path: "detail",
         meta: {
           showHeader: true,
-          showFooter: true,
+          showFooter: false,
           requiresAuth: true,
         },
         components: {

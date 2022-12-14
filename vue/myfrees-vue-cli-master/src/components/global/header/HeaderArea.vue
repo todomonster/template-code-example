@@ -1,5 +1,5 @@
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useGlobalStore } from "@/store/global";
 import { apiGetNotifyUnreadAmount } from "@/api/myfree";
 
@@ -18,6 +18,8 @@ export default {
     let iconCode = ref("");
     let titleText = ref("");
     let execute = ref(new Function());
+
+    const isShowBellText = ref(false);
 
     const handleBellClick = () => {
       goto("router", "/notify");
@@ -38,7 +40,7 @@ export default {
           setValue("far fa-search", " 搜尋");
           break;
         case "bell":
-          setValue("far fa-bell", " ");
+          setValue("icon icon-notice", " ");
           execute.value = handleBellClick;
           break;
         default:
@@ -48,19 +50,20 @@ export default {
 
     onMounted(async () => {
       setIcon(props.rightIcon);
-      if (iconCode.value === "far fa-bell") {
+      if (iconCode.value === "icon icon-notice") {
         // 鈴鐺開啟才打API
         const response = await apiGetNotifyUnreadAmount();
         if (response.result && response.unread) {
           unread.value = response.unread;
           if (props.rightTextStatus == "show") {
             titleText.value = unread;
+            isShowBellText.value = true;
           }
         }
       }
     });
 
-    return { iconCode, titleText, goto, execute };
+    return { iconCode, titleText, goto, execute, isShowBellText };
   },
 };
 </script>
@@ -71,83 +74,23 @@ export default {
       <ul class="navbar-nav">
         <li class="nav-item" style="cursor: pointer">
           <a @click="goto('back')" class="nav-link"
-            ><i class="fa fa-chevron-left"></i
+            ><i class="icon icon-back"></i
           ></a>
         </li>
       </ul>
-      <h1 class="navbar-brand">{{ title }}</h1>
+      <h1 class="navbar-brand">
+        <img src="@/assets/images/logo_s.png" v-if="!title" />
+        <span>{{ title }}</span>
+      </h1>
       <ul class="navbar-nav">
         <li class="nav-item" style="cursor: pointer">
-          <a class="nav-link" @click="execute()"
-            ><i :class="iconCode"
-              ><span>{{ titleText }}</span></i
-            ></a
-          >
+          <a class="nav-link" @click="execute()">
+            <i :class="iconCode">
+              <span :class="isShowBellText">{{ titleText }}</span>
+            </i>
+          </a>
         </li>
       </ul>
     </nav>
   </header>
 </template>
-
-<style lang="scss" scoped>
-// @import "../../../assets/layout.scss";
-//
-@import "@/assets/custom/mixins";
-
-// header
-.c-header {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  z-index: 2;
-}
-
-.ui-navbar {
-  padding-top: 0;
-  padding-bottom: 0;
-  height: $header-height;
-  background-color: $primary-color;
-
-  .nav-link {
-    padding-left: 0.875rem;
-    padding-right: 0.875rem;
-    color: white;
-    font-size: 0.8125rem;
-    line-height: 1;
-    white-space: nowrap;
-
-    i {
-      font-size: 1.125rem;
-      color: white;
-    }
-
-    span {
-      font-size: 0.8125rem;
-      padding-left: 0.25rem;
-    }
-
-    .fa-chevron-left {
-      font-size: 1.25rem;
-    }
-  }
-}
-
-.navbar-brand {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  margin-right: 0;
-  margin-bottom: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  color: white;
-  font-size: 1.25rem;
-  white-space: nowrap;
-  @include translate(-50%, -50%);
-
-  img {
-    height: 2.1875rem;
-  }
-}
-</style>
