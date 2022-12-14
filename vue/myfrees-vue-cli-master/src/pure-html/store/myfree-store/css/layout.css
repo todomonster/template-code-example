@@ -149,6 +149,14 @@
   background-image: url(../images/icon_reset.png);
 }
 
+.form-icon .icon-eye {
+  background-image: url(../images/icon_eye.png);
+}
+
+.form-icon .icon-eye-slash {
+  background-image: url(../images/icon_eye_slash.png);
+}
+
 .form-control {
   padding: .5rem .875rem;
   color: #737373;

@@ -96,6 +96,12 @@
     .icon-reset {
         background-image: url(#{$img}icon_reset.png);
     }
+    .icon-eye {
+        background-image: url(#{$img}icon_eye.png);
+    }
+    .icon-eye-slash {
+        background-image: url(#{$img}icon_eye_slash.png);
+    }
 }
 .form-control {
     padding: .5rem .875rem;
