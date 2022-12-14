@@ -1,0 +1,32 @@
+$img: '../images/';
+
+$header-height: 3.5rem;
+$footer-height: 3.5rem;
+
+.c-login {
+	background: url(#{$img}bg_login.png) no-repeat center top/cover;
+}
+.c-product {
+	background-color: #eee;
+}
+
+@media (max-width: 360px) {
+	html, body {
+		font-size: .96rem;
+	}
+}
+@media (max-width: 320px) {
+	html, body {
+		font-size: .85rem;
+	}
+}
+@media (min-width: 411px) {
+	html, body {
+		font-size: 1.1rem;
+	}
+}
+@media (min-width: 768px) {
+	html, body {
+		font-size: 1.25rem;
+	}
+}
