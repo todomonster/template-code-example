@@ -81,7 +81,5 @@ export default {
 <style lang="scss" scoped>
 //
 @import "@/assets/custom/mixins";
-.cursor-pointer {
-  cursor: pointer;
-}
+
 </style>
