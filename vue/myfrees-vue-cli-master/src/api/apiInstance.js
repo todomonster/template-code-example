@@ -138,7 +138,7 @@ function toLogin() {
   //把驗證改0
   localStorage.setItem("is_Login", 0)
   Toast("請重新登入");
-  // window.location.href = "./index.html";
+  setTimeout(() => window.location.href = "./index.html", 1500);
 }
 
 function saveToken(response) {
@@ -171,10 +171,10 @@ function saveToken(response) {
 }
 
 function takeToken() {
-  if(saveInCookie){
+  if (saveInCookie) {
     return useCookie.getItem(tokenKey)
   }
-  if(saveInStorage){
+  if (saveInStorage) {
     return useStorage.getItem(tokenKey)
   }
   return token;
