@@ -9,19 +9,42 @@
       >
         <input type="checkbox" class="form-check-input" :id="date.weekday" />
         <label class="form-check-label" :for="date.weekday">
-            {{date.weekday}}
+          {{ date.weekday }}
         </label>
-        <button class="btn btn-primary btn-sm mb-2 ml-2" type="button">+</button>
+        <button
+          class="btn btn-outline-secondary btn-sm mb-2 ml-2 rounded-circle"
+          type="button"
+        >
+          十
+        </button>
         <div
           class="row mb-2"
           v-for="(time, index) in newTime[index1]"
           :key="index"
         >
-          <div class="col-6">
-            <input type="time" class="form-control" placeholder="請選擇時間" v-model="time.start"/>
+          <div class="col-4">
+            <input
+              type="time"
+              class="form-control"
+              placeholder="請選擇時間"
+              v-model="time.start"
+            />
           </div>
-          <div class="col-6">
-            <input type="time" class="form-control" placeholder="請選擇時間" v-model="time.end"/>
+          <div class="col-4">
+            <input
+              type="time"
+              class="form-control"
+              placeholder="請選擇時間"
+              v-model="time.end"
+            />
+          </div>
+          <div class="col-1">
+            <button
+              class="btn btn-outline-danger btn-sm mb-2 ml-2 rounded-circle"
+              type="button"
+            >
+              ─
+            </button>
           </div>
         </div>
       </div>
@@ -110,3 +133,10 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+button {
+  border: 2px solid;
+  font-weight: bolder;
+}
+</style>
