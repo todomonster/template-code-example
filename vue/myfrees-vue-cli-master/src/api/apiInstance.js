@@ -61,10 +61,10 @@ apiInstance.interceptors.response.use(
     globalStore.globalLoading = false;
 
     if (error.code === "ERR_NETWORK") {
+      error.message = "網路出了點問題，請重新連線後重整網頁"
       return Promise.reject(error);
     }
     if (error.code === "ECONNABORTED") {
-
       Toast("timeout error");
       return Promise.reject(error);
     }

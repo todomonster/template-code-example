@@ -74,7 +74,7 @@ export default {
           <div class="image">
             <img :src="data.images" alt="myfreeCard" v-if="data.images" />
             <img
-              src="https://fakeimg.pl/300x200/"
+              src="https://fakeimg.pl/340x200/"
               alt="myfreeCard"
               v-if="!data.images"
             />

@@ -2,15 +2,17 @@
 import { ref, computed, onMounted } from "vue";
 import { Toast } from "@/components/global/swal";
 import { errorHandle } from "@/utils/errorHandle";
-import { apiPushOtp, apiVerifyOtp, apiStoreRegister } from "@/api/myfree";
+import { apiPushOtp, apiVerifyOtp } from "@/api/myfree";
 import { useGlobalStore } from "@/store/global";
 
 import { useCoolDownStore } from "@/store/smsCoolDown2";
 import { onBeforeRouteLeave } from "vue-router";
 
 import { storeToRefs } from "pinia";
+
 export default {
   setup() {
+    const byPassOtp = false;
     // ========
     const smsCoolDown = useCoolDownStore();
     const { isSmsCoolDownOk } = storeToRefs(smsCoolDown);
@@ -19,34 +21,29 @@ export default {
     // ========
 
     const globalStore = useGlobalStore();
-    const goto = globalStore.goto;
+    const { goto, setStoreData } = globalStore;
+    const { isToAddStore } = storeToRefs(globalStore);
 
-    const optText = ref("發送");
     const inputData = ref({
-      mobile: "0988287945",
-      password: "newpci1qaz",
-      verifyCode: "1234",
-      name: "心居酒屋",
-      contact: "心老闆",
-      city: 11,
-      area: 119,
-      address: "大連路二段101號",
-      rewardRange: 1,
-      all_addr: "xx",
-      is_open: 0,
-      price_range: "$$$",
+      mobile: "",
+      password: "",
+      password2: "",
+      verifyCode: "",
     });
-    const password2 = ref("newpci1qaz");
 
-    const showSendOtpBtn = ref(true);
-    const showVerifyOtpBtn = ref(false);
+    // const showSendOtpBtn = ref(true);
+    const showSendOtpBtn = computed(() => (showText() ? false : true));
 
     const form1 = ref(null);
 
-    const currentStep = ref(0);//0沒發送&沒驗證簡訊//1已發送&沒驗證//2已發送&已驗證//3跳轉
+    const currentStep = ref(0); //0沒發送&沒驗證簡訊//1已發送&沒驗證//2已發送&已驗證//
 
     const sendOtp = async ($event) => {
       $event.preventDefault();
+      if (byPassOtp === true) {
+        currentStep.value = 2;
+        return;
+      }
 
       if (form1.value.reportValidity()) {
         //發送簡訊
@@ -59,13 +56,15 @@ export default {
           setCountDown();
         }
         // ========
-        // const response = await apiPushOtp({ mobile: inputData.value.mobile });
-        // if (response.success === "OK") {
-        Toast("驗證碼已發送");
-        currentStep.value = 1;
-        // } else {
-        //   errorHandle(response);
-        // }
+        const response = await apiPushOtp({ mobile: inputData.value.mobile });
+        if (response.success === "OK") {
+          Toast("驗證碼已發送");
+          if (currentStep.value !== 2) {
+            currentStep.value = 1;
+          }
+        } else {
+          errorHandle(response);
+        }
       }
     };
 
@@ -73,50 +72,57 @@ export default {
       $event.preventDefault();
       if (form1.value.reportValidity()) {
         //驗證簡訊
-        // const response = await apiVerifyOtp(inputData.value.mobile, {
-        //   verify_code: inputData.value.verifyCode,
-        // });
-        // if (response.success === "OK") {
-        //   // 開啟註冊畫面
-
-        // } else {
-        //   errorHandle(response);
-        // }
-
-        showSendOtpBtn.value = false;
-
+        const response = await apiVerifyOtp(inputData.value.mobile, {
+          verify_code: inputData.value.verifyCode,
+        });
+        if (response.success === "OK") {
+          // 開啟註冊畫面
+          currentStep.value = 2;
+        } else {
+          errorHandle(response);
+        }
       }
     };
-
-    // const handleRegister = async ($event) => {
-    //   $event.preventDefault();
-    //   if (form2.value.reportValidity()) {
-    //     if (inputData.value.password != password2.value) {
-    //       Toast("密碼不相符，請再確認!");
-    //       return;
-    //     }
-    //     const response = await apiStoreRegister(inputData.value);
-    //     if (response.success === "OK") {
-    //       Toast("加入會員成功");
-    //       goto("router", `/`);
-    //     } else {
-    //       errorHandle(response);
-    //     }
-    //   }
-    // };
-    const handleArrowBtn = () => {
-      console.log(1);
-      
-      // sendOtp();
-      // handleOtpVerify();
-
-      // handleRegister();
+    const handleToEditStoreData = ($event) => {
+      // 檢查相同
+      $event.preventDefault();
+      if (inputData.value.password !== inputData.value.password2) {
+        Toast("密碼不相符，請再確認!");
+        return;
+      }
+      if (form1.value.reportValidity()) {
+        // save {phone,password} to pinia
+        setStoreData({
+          status: true,
+          mobile: inputData.value.mobile,
+          password: inputData.value.password,
+        });
+        goto("router", "/profile/edit");
+      }
+    };
+    const handleArrowBtn = ($event) => {
+      if (currentStep.value === 0) {
+        sendOtp($event);
+      } else if (currentStep.value === 1) {
+        handleOtpVerify($event);
+      } else if (currentStep.value === 2) {
+        handleToEditStoreData($event);
+      }
     };
     // ========
     onMounted(() => {
       document.body.className = "c-login";
+      // 計時器初始化
       init();
       setCountDown();
+      // 如果pinia有phone currentStep跳到2 +給予 手機 + 密碼
+      const { mobile, password } = isToAddStore.value;
+      if (mobile) {
+        inputData.value.mobile = mobile;
+        inputData.value.password = password;
+        inputData.value.password2 = password;
+        currentStep.value = 2;
+      }
     });
     onBeforeRouteLeave((to, from, next) => {
       document.body.className = "";
@@ -135,14 +141,13 @@ export default {
     return {
       inputData,
       form1,
-      handleArrowBtn,
 
+      handleArrowBtn,
       sendOtp,
-      password2,
-      optText,
-      handleOtpVerify,
+
       // =========
       showText,
+      currentStep,
       // =========
 
       showSendOtpBtn,
@@ -155,14 +160,11 @@ export default {
 </script>
 
 <template>
-  <section class="c-main">
+  <section class="c-main" >
     <div class="main-header">
       <div class="main-navbar">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <!-- <a href="" class="nav-link">
-              <i class="icon icon-clear"></i>
-            </a> -->
           </li>
         </ul>
       </div>
@@ -172,8 +174,8 @@ export default {
         <img src="@/assets/images/logo.png" />
       </div>
     </div>
-    <!-- form 1 -->
-    <div class="form-container form-container-2">
+    <!-- form start -->
+    <div class="form-container form-container-2 ">
       <form ref="form1">
         <div class="position-relative mb-3">
           <label class="form-label form-label-2"
@@ -188,11 +190,18 @@ export default {
             title="請輸入手機號碼"
             required
           />
-          <div class="form-icon cursor-pointer" @click.prevent="sendOtp" v-if="showSendOtpBtn">
+          <div
+            class="form-icon cursor-pointer"
+            @click.prevent="sendOtp"
+            v-if="showSendOtpBtn"
+          >
             <i class="icon icon-reset"></i>
           </div>
         </div>
-        <div class="position-relative mb-3">
+        <div
+          class="position-relative mb-3"
+          v-if="currentStep > 0 && currentStep < 2"
+        >
           <label class="form-label form-label-2"
             ><i class="icon icon-lock"></i
           ></label>
@@ -205,7 +214,7 @@ export default {
             required
           />
         </div>
-        <div class="position-relative mb-3">
+        <div class="position-relative mb-3" v-if="currentStep > 1">
           <label class="form-label form-label-2"
             ><i class="icon icon-lock"></i
           ></label>
@@ -222,7 +231,7 @@ export default {
             <i :class="passwordEyeClass" id="togglePassword"></i>
           </div>
         </div>
-        <div class="position-relative mb-3">
+        <div class="position-relative mb-3" v-if="currentStep > 1">
           <label class="form-label form-label-2"
             ><i class="icon icon-lock"></i
           ></label>
@@ -230,7 +239,7 @@ export default {
             :type="passwordType"
             class="form-control form-control-2"
             placeholder="請再次確認密碼"
-            v-model="password2"
+            v-model="inputData.password2"
             title="請再次確認密碼"
             required
           />
@@ -245,9 +254,18 @@ export default {
             登入
           </div>
         </div>
+        <div class="row form-word text-center">
+          <div class="col-12 ml-4">
+            {{
+              !showSendOtpBtn
+                ? `還沒有收到驗證碼嗎？請等候${showText()}s後再重新發送`
+                : ""
+            }}
+          </div>
+        </div>
         <div class="btn-container mt-5 text-center cursor-pointer">
           <button
-            class="btn btn-next cursor-pointer"
+            class="btn btn-next"
             type="submit"
             @click.prevent="handleArrowBtn"
           >
@@ -255,11 +273,9 @@ export default {
           </button>
         </div>
       </form>
-      <!-- form 2 -->
+      <!-- form end -->
     </div>
   </section>
 </template>
 
-<style lang="scss" scoped>
-@import "./style/login.scss";
-</style>
+<style lang="scss" scoped></style>

@@ -1,9 +1,10 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import {router} from "@/router/index"
+import { router } from "@/router/index"
 
 export const useGlobalStore = defineStore('global', () => {
     const globalLoading = ref(false);
+
 
     const goto = (mode, val) => {
 
@@ -18,9 +19,19 @@ export const useGlobalStore = defineStore('global', () => {
         if (mode === "back") {
             router.back();
         }
-
     };
 
-    return { globalLoading, goto }
+    const isToAddStore = ref({
+        status: false,
+        password: "",
+        mobile: "",
+    });
+    const setStoreData = ({ status, password, mobile }) => {
+        if (status === true || status === false) isToAddStore.value.status = status;
+        if (password) isToAddStore.value.password = password;
+        if (mobile) isToAddStore.value.mobile = mobile;
+    }
+
+    return { isToAddStore, setStoreData, globalLoading, goto }
 })
 
