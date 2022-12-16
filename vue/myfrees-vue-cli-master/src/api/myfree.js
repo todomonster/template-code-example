@@ -5,6 +5,13 @@ import { parseUrlEncode } from "@/utils/helper"
 // urlencoded form x
 /** city_area/list a-0-0*/
 export const apiGetCityArea = () => apiInstance.get(`/city_area/list`);
+export const apiGetCityList = () => apiInstance.get(`/city/list`);
+export const apiGetAreaList = () => apiInstance.get(`/area/list`);
+
+/** store/rewardRange S-1-11 x*/
+export const apiGetRewardRange = () => apiInstance.get(`/rewardRange`);
+
+
 // =============================================簡訊
 /** /mobile/verify/push_sms 發送簡訊 form */
 export const apiPushOtp = (data) => apiInstance.formDataLogin(`/mobile/verify/push_sms`, (data));
@@ -12,8 +19,6 @@ export const apiPushOtp = (data) => apiInstance.formDataLogin(`/mobile/verify/pu
 export const apiVerifyOtp = (mobile, data) => apiInstance.formDataLogin(`/mobile/verify/${mobile}`, (data));
 
 //  =============================================store 資料
-/** store/rewardRange S-1-11 x*/
-export const apiGetRewardRange = () => apiInstance.get(`/rewardRange`);
 
 /** store/forgotpwd a-1-1 urlencoded */
 export const apiStoreForgetPwd = (data) => apiInstance.post(`/store/forgotpwd`, parseUrlEncode(data));

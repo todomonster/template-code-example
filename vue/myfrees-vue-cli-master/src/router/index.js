@@ -16,6 +16,7 @@ const basicRoute = [
   {
     path: "/home",
     name: "home",
+    redirect: "/profile/view",
     component: () => import("@/view/basic/home/homePage_.vue"),
   },
   {
@@ -46,7 +47,7 @@ const myfreeRouter = [
     component: () => import("@/view/custom/profile/profileIndex.vue"),
     redirect: "/profile/view",
     meta: {
-      requiresAuth: true,
+      requiresAuth: false,
     },
     children: [
       {
@@ -63,9 +64,9 @@ const myfreeRouter = [
       {
         path: "edit",
         meta: {
-          showHeader: true,
+          showHeader: false,
           showFooter: false,
-          requiresAuth: true,
+          requiresAuth: false,
         },
         components: {
           default: () => import("@/view/custom/profile/editProfile.vue"),
@@ -138,7 +139,7 @@ const myfreeRouter = [
         path: "list",
         meta: {
           showHeader: true,
-          showFooter: true,
+          showFooter: false,
           requiresAuth: true,
         },
         components: {
@@ -149,7 +150,7 @@ const myfreeRouter = [
         path: "detail",
         meta: {
           showHeader: true,
-          showFooter: true,
+          showFooter: false,
           requiresAuth: true,
         },
         components: {

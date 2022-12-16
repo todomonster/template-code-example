@@ -166,5 +166,5 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@import "./style/login.scss";
+// @import "./style/login.scss";
 </style>

@@ -15,7 +15,7 @@ export default {
     const notifyList = ref([]);
     const APIparams = ref({ page: 1, limit: 10 });
     const total = ref(Infinity);
-    
+
     const handleScrollGetData = () => {
       if (isBetweenBottom()) {
         getListData();
@@ -23,16 +23,16 @@ export default {
     };
 
     const getListData = async () => {
-        const { page, limit } = APIparams.value;
-        // 預測下一頁，如果不超過資料上限才做GET
-        if (limit * page < total.value + limit) {
-          let response = await apiGetNotifyList(APIparams.value);
-          if (response.result) {
-            handleListData(response);
-          }
+      const { page, limit } = APIparams.value;
+      // 預測下一頁，如果不超過資料上限才做GET
+      if (limit * page < total.value + limit) {
+        let response = await apiGetNotifyList(APIparams.value);
+        if (response.result) {
+          handleListData(response);
         }
+      }
     };
-    
+
     const handleListData = async (response) => {
       const { data } = response;
       // 處理空值
@@ -75,11 +75,21 @@ export default {
 
 <template>
   <div class="main-content">
-    <div v-for="item in notifyList" :key="item.createTime">
-      <div>{{ item.notifyType }}</div>
-      <div>{{ item.content }}</div>
-      <div>{{ item.createTime }}</div>
-      <br />
+    <div class="notice-container">
+      <div class="card" v-for="item in notifyList" :key="item.createTime">
+        <div class="card-header">
+          <div class="card-link">
+            <img src="@/assets/images/img_myfree_s.png" class="card-img" />
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">{{ item.notifyType }}</div>
+          <div class="card-text">
+            {{ item.content }}
+          </div>
+          <div class="card-date">{{ item.createTime }}</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

@@ -11,27 +11,16 @@ export default {
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
 
-    const spanTitle = [
-      "商店名稱: ",
-      "負責人: ",
-      "商店地址: ",
-      "電話: ",
-      "營業時間: ",
-      "價格: ",
-      "分類標籤: ",
-      "回饋%數: ",
-      "開店狀態: ",
-    ];
-    const spanData = [
-      "name",
-      "contact",
-      "all_addr",
-      "tel",
-      "business_hours",
-      "price_range",
-      "category",
-      "rewardRangeName",
-      "is_open",
+    const storeText = [
+      { key: "商店名稱: ", value: "name" },
+      { key: "負責人: ", value: "contact" },
+      { key: "商店地址: ", value: "all_addr" },
+      { key: "電話: ", value: "tel" },
+      { key: "營業時間: ", value: "business_hours" },
+      { key: "價格: ", value: "price_range" },
+      { key: "分類標籤: ", value: "category" },
+      { key: "回饋%數: ", value: "rewardRangeName" },
+      { key: "開店狀態: ", value: "is_open" },
     ];
     const data = ref({});
     onMounted(async () => {
@@ -69,9 +58,8 @@ export default {
 
     return {
       goto,
-      spanTitle,
-      spanData,
       data,
+      storeText,
     };
   },
   components: {},
@@ -79,65 +67,45 @@ export default {
 </script>
 
 <template>
-  <div class="main-content">
-    <img
-      :src="data.images"
-      alt="myfreeCard"
-      v-if="data.images"
-      style="max-width: 320px"
-    />
-    <img
-      src="https://fakeimg.pl/300x200/"
-      alt="myfreeCard"
-      v-if="!data.images"
-      style="max-width: 320px"
-    />
-    <div>
-      <span>{{ spanTitle[0] }}</span>
-      <span>{{ data[spanData[0]] }}</span>
-    </div>
-    <div>
-      <span>{{ spanTitle[1] }}</span>
-      <span>{{ data[spanData[1]] }}</span>
-    </div>
-    <div>
-      <span>{{ spanTitle[2] }}</span>
-      <span>{{ data[spanData[2]] }}</span>
-    </div>
-    <div>
-      <span>{{ spanTitle[3] }}</span>
-      <span>{{ data[spanData[3]] }}</span>
-    </div>
-    <div style="display: flex">
-      <span>{{ spanTitle[4] }}</span>
-      <span>&nbsp;</span>
-      <pre>{{ data[spanData[4]] }}</pre>
-    </div>
-    <div>
-      <span>{{ spanTitle[5] }}</span>
-      <span>{{ data[spanData[5]] }}</span>
-    </div>
-    <div>
-      <span>{{ spanTitle[6] }}</span>
-      <span>{{ data[spanData[6]] }}</span>
-    </div>
-    <div>
-      <span>{{ spanTitle[7] }}</span>
-      <span>{{ data[spanData[7]] }}</span>
-    </div>
-    <div>
-      <span>{{ spanTitle[8] }}</span>
-      <span>{{ data[spanData[8]] }}</span>
-    </div>
-    <br />
-    <button
-      class="btn btn-primary"
-      type="button"
-      @click="goto('router', `/profile/edit`)"
-    >
-      編輯
-    </button>
+  <div class="main"> 
+    <section class="c-main">
+      <div class="detail-container">
+        <div class="image-container">
+          <div class="image">
+            <img :src="data.images" alt="myfreeCard" v-if="data.images" />
+            <img
+              src="https://fakeimg.pl/340x200/"
+              alt="myfreeCard"
+              v-if="!data.images"
+            />
+          </div>
+        </div>
+        <div class="item-container">
+          <div class="d-flex" v-for="item in storeText" :key="item.key">
+            <div class="col-left">{{ item.key }}</div>
+            <div class="col-right" style="white-space: pre-wrap">
+              {{ data[item.value] }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="edit-container">
+        <button
+          class="btn btn-edit"
+          type="button"
+          @click="goto('router', `/profile/edit`)"
+        >
+          <i class="icon icon-edit"></i>
+        </button>
+      </div>
+    </section>
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.main {
+  margin-top: $header-height;
+  margin-bottom: calc($footer-height + 15px);
+  padding: 0.25rem;
+}
+</style>

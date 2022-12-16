@@ -1,6 +1,6 @@
 <script>
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, onBeforeRouteLeave } from "vue-router";
 import { Toast } from "@/components/global/swal.js";
 import { errorHandle } from "@/utils/errorHandle";
 import { apiStoreLogin } from "@/api/myfree";
@@ -11,18 +11,13 @@ export default {
   setup() {
     const router = useRouter();
     const inputData = ref({
-      mobile: "",
-      password: "",
+      mobile: "0900000000",
+      password: "1234qwer",
       option: "",
     });
     let msg = "";
     const form = ref(null);
-    // onMounted先判斷驗證 is_Login = 1? 進首頁
-    onMounted(() => {
-      if (localStorage.getItem("is_Login") == 1) {
-        router.push({ path: "/home" });
-      }
-    });
+
     const isLoginSuccess = (msg) => {
       if (msg.token) {
         return true;
@@ -71,15 +66,25 @@ export default {
       }
     };
 
-    const passwordEyeClass = ref("fa fa-eye-slash");
-    const passwordType = ref("password"); 
+    const passwordEyeClass = ref("icon icon-eye");
+    const passwordType = ref("password");
     const handleEyeClick = () => {
       const className = passwordEyeClass.value;
       passwordEyeClass.value =
-        className === "fa fa-eye" ? "fa fa-eye-slash" : "fa fa-eye";
-      passwordType.value = className === "fa fa-eye" ? "password" : "";
+        className === "icon icon-eye" ? "icon-eye-slash" : "icon icon-eye";
+      passwordType.value = className === "icon-eye-slash" ? "password" : "";
     };
-
+    // onMounted先判斷驗證 is_Login = 1? 進首頁
+    onMounted(() => {
+      document.body.className = "c-login";
+      if (localStorage.getItem("is_Login") == 1) {
+        router.push({ path: "/home" });
+      }
+    });    
+    onBeforeRouteLeave((to, from, next) => {
+      document.body.className = "";
+      next();
+    });
     return {
       inputData,
       login,
@@ -95,104 +100,91 @@ export default {
 </script>
 
 <template>
-  <div class="fullScreen">
-    <div class="login">
-      <div class="title" @click="handleBackDoorOpen(inputData)">會員登入</div>
-
-      <select
-        v-if="isBackDoor"
-        v-model="inputData.option"
-        class="form-select"
-        aria-label=""
-      >
-        <option value="">選擇要切換到哪個版本?</option>
-        <option value="1" selected>穩定版</option>
-        <option value="2">開發版</option>
-      </select>
-      <div class="login-main">
-        <form ref="form">
-          <div class="mb-3">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="請輸入手機號碼"
-              v-model="inputData.mobile"
-              pattern="^09\d{2}?\d{3}?\d{3}$"
-              title="請輸入手機號碼"
-              required
-            />
-          </div>
-          <div class="mb-3 input-group">
-            <input
-              :type="passwordType"
-              class="form-control"
-              placeholder="請輸入密碼"
-              v-model="inputData.password"
-              pattern="^(?=.*[A-Za-z])(?=.*[0-9]).{6,}$"
-              title="最少6個字元，需有英文及數字"
-              required
-            />
-            <!--  -->
-            <div class="input-group-text" @click="handleEyeClick">
-              <i
-                :class="passwordEyeClass"
-                id="togglePassword"
-                style="cursor: pointer"
-              ></i>
-            </div>
-            <!--  -->
-          </div>
-        </form>
-        <div class="mt-4b btn-container">
-          <div class="row">
-            <div class="col">
-              <button
-                class="btn btn-primary"
-                type="button"
-                @click.prevent="login"
-              >
-                登入
-              </button>
-            </div>
-            <div class="col">
-              <button
-                class="btn btn-outline-primary"
-                type="button"
-                @click="$router.push({ path: '/signup' })"
-              >
-                註冊
-              </button>
-            </div>
-          </div>
-        </div>
+  <section class="c-main">
+    <div class="main-header">
+      <div class="main-navbar">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <!-- <a href="" class="nav-link">
+              <i class="icon icon-clear"></i>
+            </a> -->
+          </li>
+        </ul>
       </div>
-      <div class="login-main2">
-        <!-- <div @click="$router.push({ path: '/home' })">訪客登入</div>
-        <div>.</div> -->
-        <div @click="$router.push({ path: '/login/forget' })">忘記密碼</div>
-      </div>
-      <!-- <div class="mb-3 input-group">
-        <input
-          type="password"
-          class="form-control"
-          placeholder="請輸入密碼"
-          v-model="inputData.password"
-          pattern="^(?=.*[A-Za-z])(?=.*[0-9]).{6,}$"
-          title="最少6個字元，需有英文及數字"
-          required
-        />
-
-        <div class="input-group-text" @click="handleEyeClick">
-          <i
-            :class="passwordEyeClass"
-            style="cursor: pointer"
-          ></i>
-        </div>
-      </div> -->
     </div>
-  </div>
+    <div class="logo-container">
+      <div class="logo" @click="handleBackDoorOpen(inputData)">
+        <img src="@/assets/images/logo.png" />
+      </div>
+    </div>
+    <div class="form-container form-container-2">
+      <form ref="form">
+        <select
+          v-if="isBackDoor"
+          v-model="inputData.option"
+          class="form-select mb-3"
+          aria-label=""
+        >
+          <option value="">選擇要切換到哪個版本?</option>
+          <option value="1" selected>穩定版</option>
+          <option value="2">開發版</option>
+        </select>
+        <div class="position-relative mb-3">
+          <label class="form-label form-label-2"
+            ><i class="icon icon-member-s"></i
+          ></label>
+          <input
+            type="text"
+            class="form-control form-control-2"
+            placeholder="請輸入手機號碼"
+            v-model="inputData.mobile"
+            pattern="^09\d{2}?\d{3}?\d{3}$"
+            title="請輸入手機號碼"
+            required
+          />
+          <!-- <div class="form-icon">
+            <i class="icon icon-reset"></i>
+          </div> -->
+        </div>
+        <div class="position-relative mb-3">
+          <label class="form-label form-label-2"
+            ><i class="icon icon-lock"></i
+          ></label>
+          <input
+            :type="passwordType"
+            class="form-control form-control-2"
+            placeholder="請輸入密碼"
+            v-model="inputData.password"
+            pattern="^(?=.*[A-Za-z])(?=.*[0-9]).{6,}$"
+            title="最少6個字元，需有英文及數字"
+            required
+          />
+          <div class="form-icon cursor-pointer" @click="handleEyeClick">
+            <i :class="passwordEyeClass" id="togglePassword"></i>
+          </div>
+        </div>
+        <div
+          class="row form-word text-end text-decoration-underline cursor-pointer"
+        >
+          <div class="col-12 ml-4" @click="$router.push({ path: '/signup' })">
+            註冊
+          </div>
+          <!-- <div class="col-12 ml-4" @click="$router.push({ path: '/login/forget' })">
+            忘記密碼
+          </div>-->
+        </div>
+        <div class="btn-container mt-5 text-center">
+          <button
+            class="btn btn-next cursor-pointer"
+            type="submit"
+            @click.prevent="login"
+          >
+            <i class="icon icon-next"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
 </template>
 
-<style lang="scss" scoped>
-@import "./style/login.scss";
-</style>
+<style lang="scss" scoped></style>

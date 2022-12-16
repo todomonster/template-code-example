@@ -61,10 +61,10 @@ apiInstance.interceptors.response.use(
     globalStore.globalLoading = false;
 
     if (error.code === "ERR_NETWORK") {
+      error.message = "網路出了點問題，請重新連線後重整網頁"
       return Promise.reject(error);
     }
     if (error.code === "ECONNABORTED") {
-
       Toast("timeout error");
       return Promise.reject(error);
     }
@@ -106,7 +106,7 @@ apiInstance.interceptors.response.use(
               })
             /* eslint-enable */
           }
-          if(!turnOnRefreshToken){
+          if (!turnOnRefreshToken) {
             toLogin();
             return Promise.reject(error);
           }
@@ -128,7 +128,7 @@ apiInstance.interceptors.response.use(
       Toast(`${publicWord} 網路出了點問題，請重新連線後重整網頁`);
       return;
     }
-    
+
     return Promise.reject(error);
     // return error;
   }
@@ -138,7 +138,7 @@ function toLogin() {
   //把驗證改0
   localStorage.setItem("is_Login", 0)
   Toast("請重新登入");
-  window.location.href = "./index.html";
+  setTimeout(() => window.location.href = "./index.html", 1500);
 }
 
 function saveToken(response) {
@@ -171,7 +171,13 @@ function saveToken(response) {
 }
 
 function takeToken() {
-  return useCookie.getItem(tokenKey) || useStorage.getItem(tokenKey) || token;
+  if (saveInCookie) {
+    return useCookie.getItem(tokenKey)
+  }
+  if (saveInStorage) {
+    return useStorage.getItem(tokenKey)
+  }
+  return token;
 }
 
 export default {

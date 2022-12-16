@@ -16,7 +16,7 @@ export default {
     title=""
     rightTextStatus="show"
     rightIcon="bell"
-    v-show="$route.meta.showHeader"
+    v-if="$route.meta.showHeader"
   />
   <router-view v-slot="{ Component }">
     <keep-alive include="EditProfile">

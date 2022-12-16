@@ -20,7 +20,7 @@ export default {
 
     const handleListData = async (response) => {
       const { products } = response.data;
-      console.log(products);
+      // console.log(products);
 
       // 處理空值
       if (response.total === 0) {
@@ -59,91 +59,50 @@ export default {
 </script>
 
 <template>
-  <div class="main-content">
-    <div class="main2">
-      <ul
-        v-for="item in productList"
-        :key="item.id"
-        class="list-group list-group-flush"
-      >
-        <div class="border my-3">
-          <img :src="item.image[0]" style="width: 150px" />
-          <div>{{ item.name }}</div>
-          <div>{{ item.price }}</div>
-          <div>{{ item.status }}</div>
-          <div>{{ item.stock }}</div>
+  <div class="main c-product" >
+    <section class="c-main">
+      <div class="product-container">
+
+        <div class="card" v-for="item in productList" :key="item.id">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-left">
+                <img :src="item.image[0]" class="card-img" />
+              </div>
+              <div class="col-right">
+                <div class="card-title">{{ item.name }}</div>
+                <div class="card-price">{{ item.price }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-between">
+              <div class="card-shelf"><span class="green">{{ item.status }}</span></div>
+              <div class="card-stock">{{ item.stock }}</div>
+            </div>
+          </div>
         </div>
-      </ul>
-      <button
-        class="btn btn-primary"
-        type="button"
-        @click="goto('router', '/product/detail')"
-      >
-        {{ "新增商品" }}
-      </button>
-    </div>
+
+      </div>
+      <div class="add-container">
+        <button
+          class="btn btn-add"
+          type="button"
+          @click="goto('router', '/product/detail')"
+        >
+          新增商品
+        </button>
+      </div>
+    </section>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.member {
-  margin-bottom: calc($footer-height + 15px);
-  display: flex;
-  flex-direction: column;
-
-  .main {
-    background-image: url("@/assets/image/member_bg.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  .mainblur {
-    backdrop-filter: blur(3px);
-    height: 12.875rem;
-  }
-
-  .topArea {
-    .headShot {
-      margin-top: 1rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      width: 100vw;
-      height: 12.875rem;
-
-      img {
-        width: 6.625rem;
-        height: 6.625rem;
-        border-radius: 50%;
-      }
-
-      p {
-        margin: 0.75rem auto;
-        font-size: 1.25rem;
-        font-weight: 700;
-      }
-    }
-  }
-
-  .listItem {
-    border-bottom: 1px solid #e8e8e8;
-
-    button {
-      height: 50px;
-      font-size: 1rem;
-      font-weight: 400;
-      border: none;
-      color: #333333;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      img {
-        width: 2rem;
-        margin-right: 0.75rem;
-      }
-    }
-  }
+.c-product {
+	background-color: #eee;
+}
+.main {
+  margin-top: $header-height;
+  padding: 0rem;
 }
 </style>
