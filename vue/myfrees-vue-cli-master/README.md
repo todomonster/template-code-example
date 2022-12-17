@@ -62,6 +62,9 @@ component名稱一律全部大駝峰，而且要2個單字組成，因為git的�
 
 若用到 `new Date()` 在ios是不吃`"2022-09-01"`減號格式的!
 
+todo 
+product,wallet
+=======
 ## 版本紀錄
 
 v2.0.0 更新UI
