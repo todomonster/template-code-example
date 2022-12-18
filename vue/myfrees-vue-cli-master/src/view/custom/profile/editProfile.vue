@@ -167,7 +167,10 @@ export default {
         storeData.value.is_open = val ? "1" : "0";
       }
     );
-
+    //
+    const handleEmit = (v) => {
+      storeData.value.business_hours = JSON.stringify(v);
+    };
     return {
       storeData,
       save,
@@ -189,6 +192,7 @@ export default {
       addStorePinia,
       rewardList,
       showReward,
+      handleEmit,
     };
   },
   components: {
@@ -333,9 +337,7 @@ export default {
               v-model="storeData.tel"
             />
           </div>
-          <!-- no -->
-          <ChooseDate :data="storeData"/>
-          <!--  -->
+          <ChooseDate :data="storeData" @business_hours="handleEmit" />
           <div class="mb-2">
             <label class="form-label">大分類</label>
             <div class="input-pill">

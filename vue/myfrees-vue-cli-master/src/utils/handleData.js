@@ -42,5 +42,6 @@ function storeImages(images) {
 export const handleStoreProfile = {
     businessHours,
     storeImages,
-    isOpen
+    isOpen,
+    dateToChinese
 }
