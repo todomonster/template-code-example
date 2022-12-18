@@ -46,7 +46,7 @@
     .col-left {
         flex: 0 0 auto;
         width: 33.333333%;
-        color: #FB7B1A;
+        color: nth($form-icon-color, $style);
         font-size: 1rem;
         white-space: nowrap;
     }

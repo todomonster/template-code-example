@@ -38,17 +38,35 @@ export default {
 
 <template>
   <div class="main-content">
-    <vue-qrcode
-      :value="qrcodeUrl"
-      :options="{ width: 300 }"
-      id="qrCanvas"
-    ></vue-qrcode>
+    <div class="row text-center">
+      <div class="col">
+        <vue-qrcode
+          :value="qrcodeUrl"
+          :options="{ width: 300 }"
+          id="qrCanvas"
+        ></vue-qrcode>
+      </div>
+    </div>
+    <div class="row text-center">
+      <div class="col">
+        <button
+          class="btn btn-primary custom-primary"
+          type="button"
+          @click="download"
+        >
+          下載 QR Code
+        </button>
+      </div>
+    </div>
+
     <br />
     <br />
-    <button class="btn btn-primary" type="button" @click="download">
-      下載 QR Code
-    </button>
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.custom-primary {
+  background-color: nth($camera-color, $style);
+  border: 0;
+}
+</style>

@@ -10,7 +10,7 @@ import { apiLogout } from "@/api/api";
 
 import { ExtCall } from "@/utils/extCall";
 
-import ArrowIcon from "./component/ArrowIcon.vue";
+import ArrowIcon from "@/components/global/ArrowIcon.vue";
 
 export default {
   name: "MenuList",
@@ -74,7 +74,7 @@ export default {
         >
           <div class="d-flex justify-content-between grey">
             <div>
-              <i class="fa fa-sign-out mx-1" aria-hidden="true"></i>
+              <i class="fa fa-lock mx-1" aria-hidden="true"></i>
               隱私權條款
             </div>
             <ArrowIcon />
@@ -105,9 +105,10 @@ export default {
         >
           <div class="d-flex justify-content-between grey">
             <div>
-              <i class="fa fa-lock mx-1" aria-hidden="true"></i>
+              <i class="fa fa-sign-out mx-1" aria-hidden="true"></i>
               登出
             </div>
+            <ArrowIcon />
           </div>
         </button>
       </div>

@@ -50,6 +50,7 @@ export default {
     onMounted(async () => {
       try {
         // 位移到暫存的y
+        document.body.style = "background-color: #EEEEEE;";
         windowScrollTo({ top: windowScrollY });
         await getListData("init");
 
@@ -61,6 +62,8 @@ export default {
 
     onBeforeRouteLeave((to, from, next) => {
       // 離開前紀錄滾動位置
+
+      setTimeout(() => (document.body.style = ""), 500);
       windowScrollY = window.scrollY || 0;
       clearInterval(getApiTimer);
       next();
@@ -75,12 +78,12 @@ export default {
   <div class="main-content">
     <div v-if="walletList.length === 0">暫時沒有資料</div>
     <div v-for="item in walletList" :key="item.createTime">
-      <div class="row my-5">
-        <div class="col-8">
+      <div class="d-flex justify-content-between m-2 bg-white">
+        <div class="col-9 m-1">
           <div>{{ item.name }}</div>
           <div>{{ item.createTime }}</div>
         </div>
-        <div class="col-4">
+        <div class="col-3 m-1 text-end money">
           <div>{{ item.amount }}</div>
         </div>
       </div>
@@ -88,4 +91,6 @@ export default {
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import "./style/index";
+</style>

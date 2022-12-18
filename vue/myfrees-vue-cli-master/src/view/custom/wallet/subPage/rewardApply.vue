@@ -15,7 +15,7 @@ export default {
     let getApiTimer = null;
 
     const walletList = ref([]);
-    const APIparams = ref({ page: 1, limit: 10 });
+    const APIparams = ref({ page: 1, limit: 10, status: 0 });
     const total = ref(Infinity);
 
     const handleScrollGetData = () => {
@@ -43,7 +43,7 @@ export default {
 
       let newData = data.map((item) => {
         let { amount, phone } = item;
-        item.amount = "消費金額" + amount;
+        item.amount = "" + amount;
         item.phone = phone.slice(0, 2) + "xxxxx" + phone.slice(-3);
 
         return item;
@@ -74,6 +74,7 @@ export default {
     onMounted(async () => {
       try {
         // 位移到暫存的y
+        document.body.style = "background-color: #EEEEEE;";
         windowScrollTo({ top: windowScrollY });
         await getListData();
 
@@ -85,6 +86,7 @@ export default {
 
     onBeforeRouteLeave((to, from, next) => {
       // 離開前紀錄滾動位置
+      setTimeout(() => (document.body.style = ""), 500);
       windowScrollY = window.scrollY || 0;
       clearInterval(getApiTimer);
       next();
@@ -101,33 +103,40 @@ export default {
 </script>
 
 <template>
-  <div class="main-content">
-    <div v-if="walletList.length === 0">暫時沒有資料</div>
-    <div v-for="item in walletList" :key="item.createTime">
-      <div class="row my-5">
-        <div class="col">
-          <div>{{ item.phone }}</div>
-          <div>{{ item.amount }}</div>
-          <div>{{ item.createTime }}</div>
-        </div>
-        <div class="col d-flex flex-column">
-          <button
-            @click="handleApply(item.dealRecordId, true)"
-            class="btn btn-primary"
-            type="button"
-          >
-            確認
-          </button>
-          <button
-            @click="handleApply(item.dealRecordId, false)"
-            class="btn btn-primary"
-            type="button"
-          >
-            拒絕
-          </button>
-        </div>
-      </div>
+  <div class="main-content c-product">
+    <div>
       <br />
+      <div v-if="walletList.length === 0">暫時沒有資料</div>
+      <div v-for="item in walletList" :key="item.createTime">
+        <div class="row mt-1 bg-white">
+          <div class="col-7 m-1">
+            <div class="m-1">
+              <h4>{{ item.phone }}</h4>
+            </div>
+            <div>
+              消費金額<span class="money">{{ item.amount }}</span>
+            </div>
+            <div>{{ item.createTime }}</div>
+          </div>
+          <div class="col d-flex flex-column">
+            <button
+              @click="handleApply(item.dealRecordId, true)"
+              class="btn btn-primary custom-primary"
+              type="button"
+            >
+              確認
+            </button>
+            <button
+              @click="handleApply(item.dealRecordId, false)"
+              class="btn btn-danger"
+              type="button"
+            >
+              拒絕
+            </button>
+          </div>
+        </div>
+        <br />
+      </div>
     </div>
   </div>
 </template>
@@ -136,4 +145,5 @@ export default {
 button {
   margin: 3px;
 }
+@import "./style/index";
 </style>

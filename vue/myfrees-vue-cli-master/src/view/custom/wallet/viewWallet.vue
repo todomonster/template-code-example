@@ -6,6 +6,7 @@ import { errorHandle } from "@/utils/errorHandle";
 import img_06 from "@/assets/icon/member06.svg";
 // call api
 import { apiGetWallet } from "@/api/myfree";
+import ArrowIcon from "@/components/global/ArrowIcon.vue";
 
 export default {
   name: "ViewWallet",
@@ -45,108 +46,99 @@ export default {
     };
   },
 
-  components: {},
+  components: { ArrowIcon },
 };
 </script>
 
 <template>
-  <div class="main-content">
-    <div class="main2">
-      <ul class="list-group list-group-flush">
-        <div class="listItem">
-          {{ `NT$ ${walletData.balance ? walletData.balance : ""} 可用餘額` }}
-        </div>
-        <div class="listItem">
-          <button
-            type="button"
-            class="list-group-item list-group-item-action"
-            @click="goto('router', link[0])"
-          >
-            <div><img :src="img_06" /> {{ name[0] }}</div>
-          </button>
-        </div>
-        <div class="listItem">
-          <button
-            type="button"
-            class="list-group-item list-group-item-action"
-            @click="goto('router', link[1])"
-          >
-            <div><img :src="img_06" /> {{ name[1] }}</div>
-          </button>
-        </div>
-        <div class="listItem">
-          <button
-            type="button"
-            class="list-group-item list-group-item-action"
-            @click="goto('router', link[2])"
-          >
-            <div><img :src="img_06" /> {{ name[2] }}</div>
-          </button>
-        </div>
-      </ul>
-    </div>
+  <div class="main">
+    <ul class="list-group list-group-flush">
+      <div class="money">
+        NT$<span>{{
+          ` ${walletData.balance ? walletData.balance : "$$$$$"} `
+        }}</span
+        >可用餘額
+      </div>
+      <div class="listItem">
+        <button
+          type="button"
+          class="list-group-item list-group-item-action"
+          @click="goto('router', link[0])"
+        >
+          <div class="d-flex justify-content-between grey">
+            <div>
+              <i class="fa fa-file mx-1" aria-hidden="true"></i>
+              {{ name[0] }}
+            </div>
+            <ArrowIcon />
+          </div>
+        </button>
+      </div>
+      <div class="listItem">
+        <button
+          type="button"
+          class="list-group-item list-group-item-action"
+          @click="goto('router', link[1])"
+        >
+          <div class="d-flex justify-content-between grey">
+            <div>
+              <i class="fa fa-file mx-1" aria-hidden="true"></i>
+              {{ name[1] }}
+            </div>
+            <ArrowIcon />
+          </div>
+        </button>
+      </div>
+
+      <div class="listItem">
+        <button
+          type="button"
+          class="list-group-item list-group-item-action"
+          @click="goto('router', link[2])"
+        >
+          <div class="d-flex justify-content-between grey">
+            <div>
+              <i class="fa fa-coins mx-1" aria-hidden="true"></i>
+              {{ name[2] }}
+            </div>
+            <ArrowIcon />
+          </div>
+        </button>
+      </div>
+    </ul>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.member {
+.grey {
+  color: #7d7d7d;
+}
+
+.main {
+  margin-top: $header-height;
   margin-bottom: calc($footer-height + 15px);
-  display: flex;
-  flex-direction: column;
-
-  .main {
-    background-image: url("@/assets/image/member_bg.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  .mainblur {
-    backdrop-filter: blur(3px);
-    height: 12.875rem;
-  }
-
-  .topArea {
-    .headShot {
-      margin-top: 1rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      width: 100vw;
-      height: 12.875rem;
-
-      img {
-        width: 6.625rem;
-        height: 6.625rem;
-        border-radius: 50%;
-      }
-
-      p {
-        margin: 0.75rem auto;
-        font-size: 1.25rem;
-        font-weight: 700;
-      }
-    }
-  }
+  padding: 0rem;
 
   .listItem {
-    border-bottom: 1px solid #e8e8e8;
+    border-bottom: 0px solid #e8e8e8;
 
     button {
       height: 50px;
       font-size: 1rem;
       font-weight: 400;
       border: none;
-      color: #333333;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      img {
-        width: 2rem;
-        margin-right: 0.75rem;
-      }
     }
   }
 }
+
+.money {
+  background-color: #fef4d4;
+  color: #fca647;
+  padding: 0.5rem;
+  span {
+    font-size: 1.5rem;
+    font-weight: 900 !important;
+  }
+}
+
 </style>
