@@ -11,6 +11,8 @@ export const apiGetAreaList = () => apiInstance.get(`/area/list`);
 /** store/rewardRange S-1-11 x*/
 export const apiGetRewardRange = () => apiInstance.get(`/rewardRange`);
 
+// {{api_path}}/api/mobile/check/type/:type/:mobile
+export const apiCheckAccount = ({type,mobile}) => apiInstance.get(`/mobile/check/type/${type}/${mobile}`);
 
 // =============================================簡訊
 /** /mobile/verify/push_sms 發送簡訊 form */

@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from "vue";
 import { Toast } from "@/components/global/swal";
 import { errorHandle } from "@/utils/errorHandle";
-import { apiPushOtp, apiVerifyOtp } from "@/api/myfree";
+import { apiPushOtp, apiVerifyOtp, apiCheckAccount } from "@/api/myfree";
 import { useGlobalStore } from "@/store/global";
 
 import { useCoolDownStore } from "@/store/smsCoolDown2";
@@ -46,6 +46,15 @@ export default {
       }
 
       if (form1.value.reportValidity()) {
+        // 先檢查是否存在
+        const checkStatus = await apiCheckAccount({
+          type: "store",
+          mobile: inputData.value.mobile,
+        });
+        if(checkStatus.is_regist === true){
+          Toast("此帳號已存在!");
+          return
+        }
         //發送簡訊
         // ========
         if (isSmsCoolDownOk.value === false) {
@@ -160,12 +169,11 @@ export default {
 </script>
 
 <template>
-  <section class="c-main" >
+  <section class="c-main">
     <div class="main-header">
       <div class="main-navbar">
         <ul class="navbar-nav">
-          <li class="nav-item">
-          </li>
+          <li class="nav-item"></li>
         </ul>
       </div>
     </div>
@@ -175,7 +183,7 @@ export default {
       </div>
     </div>
     <!-- form start -->
-    <div class="form-container form-container-2 ">
+    <div class="form-container form-container-2">
       <form ref="form1">
         <div class="position-relative mb-3">
           <label class="form-label form-label-2"
