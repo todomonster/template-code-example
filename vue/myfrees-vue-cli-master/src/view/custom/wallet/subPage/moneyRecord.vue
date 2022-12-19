@@ -5,6 +5,7 @@ import { errorHandle } from "@/utils/errorHandle";
 
 import { onBeforeRouteLeave } from "vue-router";
 import { isBetweenBottom, windowScrollTo } from "@/utils/helper";
+import NoData from "@/components/global/NoData.vue";
 
 export default {
   // 交易紀錄
@@ -70,13 +71,13 @@ export default {
     });
     return { walletList, APIparams, total };
   },
-  components: {},
+  components: { NoData },
 };
 </script>
 
 <template>
   <div class="main-content">
-    <div v-if="walletList.length === 0">暫時沒有資料</div>
+    <NoData v-if="walletList.length == 0" />
     <div v-for="item in walletList" :key="item.createTime">
       <div class="d-flex justify-content-between m-2 bg-white">
         <div class="col-9 m-1">

@@ -70,3 +70,4 @@ scss config`$img: '@/assets/images/';`
 v2.0.0 更新UI
 v2.1.1 更新UI包含的功能
 v2.2.0 整合storeUI
+v2.2.1 修正Header問題，完成除了product之外的其他區域

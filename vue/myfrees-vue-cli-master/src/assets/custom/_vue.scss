@@ -7,3 +7,21 @@
 .cursor-pointer {
   cursor: pointer;
 }
+
+.no-data {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  margin-top: 3rem;
+
+  img {
+    width: 50%;
+    margin: 0 auto;
+  }
+
+  p {
+    color: #777777;
+    font-size: 1rem;
+    margin: 0 auto;
+  }
+}

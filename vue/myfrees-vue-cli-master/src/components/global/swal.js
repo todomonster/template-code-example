@@ -29,6 +29,12 @@ export const ToastConfirm = (text) => {
     });
 }
 
+// {
+//     "isConfirmed": true,
+//     "isDenied": false,
+//     "isDismissed": false,
+//     "value": ""
+// }
 export const ToastInputConfirm = (text = "", placeHolder = "") => {
     return Swal.fire({
         ...confirmConfig,

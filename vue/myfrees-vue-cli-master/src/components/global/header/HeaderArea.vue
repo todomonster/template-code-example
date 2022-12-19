@@ -19,8 +19,6 @@ export default {
     let titleText = ref("");
     let execute = ref(new Function());
 
-    const isShowBellText = ref(false);
-
     const handleBellClick = () => {
       goto("router", "/notify");
     };
@@ -57,13 +55,12 @@ export default {
           unread.value = response.unread;
           if (props.rightTextStatus == "show") {
             titleText.value = unread;
-            isShowBellText.value = true;
           }
         }
       }
     });
 
-    return { iconCode, titleText, goto, execute, isShowBellText };
+    return { iconCode, titleText, goto, execute };
   },
 };
 </script>
@@ -82,15 +79,15 @@ export default {
         <img src="@/assets/images/logo_s.png" v-if="!title" />
         <span>{{ title }}</span>
       </h1>
-      <ul class="navbar-nav">
+       <ul class="navbar-nav">
         <li class="nav-item" style="cursor: pointer">
           <a class="nav-link" @click="execute()">
-            <i :class="iconCode">
-              <span :class="isShowBellText">{{ titleText }}</span>
+            <i class="icon icon-notice">
+              <span class="count" v-show="titleText.trim()">{{ titleText }}</span>
             </i>
           </a>
         </li>
-      </ul>
+      </ul> 
     </nav>
   </header>
 </template>

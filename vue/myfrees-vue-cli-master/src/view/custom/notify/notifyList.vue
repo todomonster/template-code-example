@@ -36,9 +36,9 @@ export default {
     const handleListData = async (response) => {
       const { data } = response;
       // 處理空值
-      if (response.total === 0) {
-        notifyList.value = [{ content: "暫時沒有通知!" }];
-      }
+      // if (response.total === 0) {
+      //   notifyList.value = [{ content: "暫時沒有通知!" }];
+      // }
       // 處理有值
       notifyList.value = notifyList.value.concat(data);
       total.value = response.total;
@@ -76,6 +76,7 @@ export default {
 <template>
   <div class="main-content">
     <div class="notice-container">
+      <NoData v-if="notifyList.length == 0" />      
       <div class="card" v-for="item in notifyList" :key="item.createTime">
         <div class="card-header">
           <div class="card-link">
