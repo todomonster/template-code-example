@@ -15,9 +15,9 @@ export default {
     const goto = globalStore.goto;
     const unread = ref(0);
 
-    let iconCode = ref("");
-    let titleText = ref("");
-    let execute = ref(new Function());
+    const iconCode = ref("");
+    const titleText = ref("");
+    const execute = ref(new Function());
 
     const handleBellClick = () => {
       goto("router", "/notify");
@@ -79,15 +79,17 @@ export default {
         <img src="@/assets/images/logo_s.png" v-if="!title" />
         <span>{{ title }}</span>
       </h1>
-       <ul class="navbar-nav">
+      <ul class="navbar-nav">
         <li class="nav-item" style="cursor: pointer">
           <a class="nav-link" @click="execute()">
             <i class="icon icon-notice">
-              <span class="count" v-show="titleText.trim()">{{ titleText }}</span>
+              <span class="count" v-show="titleText || titleText.trim()">{{
+                titleText
+              }}</span>
             </i>
           </a>
         </li>
-      </ul> 
+      </ul>
     </nav>
   </header>
 </template>
