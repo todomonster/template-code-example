@@ -87,7 +87,7 @@ export const parseUrlEncode = (objParam = {}) => {
                 ans.push([key, value]);
             }
         } else {
-            if (value === 0 || value) {
+            if (value === 0 || value === false || value) {
                 ans.push([key, value]);
             }
         }

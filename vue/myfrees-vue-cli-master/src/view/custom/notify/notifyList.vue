@@ -6,6 +6,8 @@ import { errorHandle } from "@/utils/errorHandle";
 import { onBeforeRouteLeave } from "vue-router";
 import { isBetweenBottom, windowScrollTo } from "@/utils/helper";
 
+import NoData from "@/components/global/NoData.vue";
+
 export default {
   name: "NotifyList",
   setup() {
@@ -69,7 +71,7 @@ export default {
     });
     return { notifyList, APIparams, total };
   },
-  components: {},
+  components: {NoData},
 };
 </script>
 

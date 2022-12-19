@@ -148,6 +148,7 @@ const myfreeRouter = [
       },
       {
         path: "detail",
+        name: "ProductDetail",
         meta: {
           showHeader: true,
           showFooter: false,

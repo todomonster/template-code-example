@@ -403,7 +403,7 @@ export default {
           </div>
           <div class="mt-3 mb-2">
             <div class="form-check form-switch">
-              <label class="form-label form-check-label" for="SwitchCheck"
+              <label class="form-label form-check-label"
                 >商店狀態<span class="must">必填</span></label
               >
               <input

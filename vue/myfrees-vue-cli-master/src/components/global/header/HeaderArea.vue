@@ -59,8 +59,17 @@ export default {
         }
       }
     });
+    const countBell = computed(() => {
+      if (titleText.value === 0) {
+        return true;
+      }
+      if (typeof titleText.value === "string") {
+        return titleText.value.trim() === "" ? false : true;
+      }
+      return false;
+    });
 
-    return { iconCode, titleText, goto, execute };
+    return { iconCode, titleText, goto, execute, countBell };
   },
 };
 </script>
@@ -83,9 +92,7 @@ export default {
         <li class="nav-item" style="cursor: pointer">
           <a class="nav-link" @click="execute()">
             <i class="icon icon-notice">
-              <span class="count" v-show="titleText || titleText.trim()">{{
-                titleText
-              }}</span>
+              <span class="count" v-show="countBell">{{ titleText }}</span>
             </i>
           </a>
         </li>
