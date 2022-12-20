@@ -3,6 +3,8 @@ import { ref, onMounted } from "vue";
 import { apiGenQrcode, apiGetStore } from "@/api/myfree";
 import { errorHandle } from "@/utils/errorHandle";
 
+import { ExtCall } from "@/utils/extCall";
+
 export default {
   name: "QrCode",
   setup() {
@@ -21,13 +23,22 @@ export default {
       const canvas = document.getElementById(id);
       return canvas.toDataURL();
     };
-    const download = () => {
+    const download = async (type) => {
       const aTag = document.createElement("a");
-      aTag.href = canvasToDataUrl("qrCanvas");
-      aTag.download = "myfrees_store_qrcode.png";
-      document.body.appendChild(aTag);
-      aTag.click();
-      document.body.removeChild(aTag);
+      try {
+        aTag.href = canvasToDataUrl("qrCanvas");
+        aTag.download = "myfrees_store_qrcode.png";
+
+        ExtCall.shareFile({
+          subject: "share",
+          title: "store_qr_code",
+          base64: aTag.href,
+        });
+      } catch (error) {
+        document.body.appendChild(aTag);
+        aTag.click();
+        document.body.removeChild(aTag);
+      }
     };
 
     return { qrcodeUrl, download };
@@ -42,7 +53,7 @@ export default {
       <div class="col">
         <vue-qrcode
           :value="qrcodeUrl"
-          :options="{ width: 300 }"
+          :options="{ width: 325 }"
           id="qrCanvas"
         ></vue-qrcode>
       </div>
@@ -50,15 +61,14 @@ export default {
     <div class="row text-center">
       <div class="col">
         <button
-          class="btn btn-primary custom-primary"
+          class="btn btn-primary custom-primary w-75"
           type="button"
           @click="download"
         >
-          下載 QR Code
+          分享 QRcode
         </button>
       </div>
     </div>
-
     <br />
     <br />
   </div>

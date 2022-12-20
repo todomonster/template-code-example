@@ -1,6 +1,5 @@
 // https://wtteam2.atlassian.net/l/cp/C7i7U0wy
 
-
 // old 棄用問題找時間修改
 // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/platform
 function initOS() {
@@ -31,9 +30,9 @@ function executeExtCall(data = {}) {
          * https://hackmd.io/@ChuBoy/ryinChg3L
          */
         // ExtCall.postMessage(data);
-        window.ExtCall.postMessage(data);
+        return window.ExtCall.postMessage(data);
     } else if (os == "ios") {
-        window.webkit.messageHandlers.ExtCall.postMessage(data);
+        return window.webkit.messageHandlers.ExtCall.postMessage(data);
     } else {
         // 故意噴錯讓外層 try catch 處理
         throw new Error(os);
@@ -43,7 +42,9 @@ function executeExtCall(data = {}) {
 // 有需要可以持續擴充
 export const ExtCall = {
     openNewWebView,
-    replaceSetting
+    replaceSetting,
+    downloadFile,
+    shareFile
 }
 
 function openNewWebView(openUrl = "") {
@@ -62,5 +63,42 @@ function replaceSetting(id = "", download_url = "") {
         url: download_url
         // ex: https://myfree.tako.life/app/store/store_settings.txt
     });
+    executeExtCall(data);
+}
+// callback 回傳路徑 app_code + "_file" + /dirName/fileName
+function downloadFile(dirname, filename, url) {
+
+    const data = JSON.stringify({
+        "function": "downloadFileWithURL",
+        "callback": "",
+        "dirname": dirname,
+        "filename": filename,
+        "url": url,
+        "type": "progress"  //填空白，不會出現下載進度條
+    });
+    return executeExtCall(data);
+}
+
+function shareFile({ subject = "", title = "", message = null, imageUrl = null, base64 = null }) {
+
+    const config = {
+        "function": "share",
+        "subject": subject,
+        "title": title,
+    }
+    if (message) {
+        config.message = message;
+    } else if (imageUrl) {
+        config.imageUrl = imageUrl;
+    } else if (base64 && typeof (base64) === 'string') {
+        const realBase64 = base64.split(',')[1];
+        base64 = realBase64;
+        config.base64 = base64;
+    } else {
+        config.message = "share"
+    }
+
+    const data = JSON.stringify(config);
+
     executeExtCall(data);
 }
