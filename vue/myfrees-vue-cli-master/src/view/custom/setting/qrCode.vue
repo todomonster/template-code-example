@@ -65,7 +65,8 @@ export default {
           type="button"
           @click="download"
         >
-          分享 QRcode
+          <i class="fa fa-share-alt me-1" aria-hidden="true"></i>
+          分享
         </button>
       </div>
     </div>
