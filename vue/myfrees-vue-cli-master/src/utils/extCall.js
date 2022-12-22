@@ -1,4 +1,6 @@
+//ExtCall文件
 // https://wtteam2.atlassian.net/l/cp/C7i7U0wy
+// ExtCall callback會比較晚 所以不能用await要用setTimeout
 
 // old 棄用問題找時間修改
 // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/platform
@@ -39,14 +41,9 @@ function executeExtCall(data = {}) {
     }
 }
 
-// 有需要可以持續擴充
-export const ExtCall = {
-    openNewWebView,
-    replaceSetting,
-    downloadFile,
-    shareFile
-}
 
+
+// 開新的webview
 function openNewWebView(openUrl = "") {
     const data = JSON.stringify({
         function: "popWebview",
@@ -55,7 +52,7 @@ function openNewWebView(openUrl = "") {
     executeExtCall(data);
 }
 
-// 這隻是能觸發 初始化 新的設定檔 => 不同設定檔去觸發新的 zip
+// 這觸發 初始化 新的設定檔 => 不同設定檔去觸發新的 zip
 function replaceSetting(id = "", download_url = "") {
     const data = JSON.stringify({
         function: "changeProjectSettingURL",
@@ -65,20 +62,8 @@ function replaceSetting(id = "", download_url = "") {
     });
     executeExtCall(data);
 }
-// callback 回傳路徑 app_code + "_file" + /dirName/fileName
-function downloadFile(dirname, filename, url) {
 
-    const data = JSON.stringify({
-        "function": "downloadFileWithURL",
-        "callback": "",
-        "dirname": dirname,
-        "filename": filename,
-        "url": url,
-        "type": "progress"  //填空白，不會出現下載進度條
-    });
-    return executeExtCall(data);
-}
-
+// 呼叫App原生分享
 function shareFile({ subject = "", title = "", message = null, imageUrl = null, base64 = null }) {
 
     const config = {
@@ -102,3 +87,135 @@ function shareFile({ subject = "", title = "", message = null, imageUrl = null, 
 
     executeExtCall(data);
 }
+
+// 取得設定檔url
+/** Example
+    let SettingsURL = "";
+    window.getExtCallSettingsURL = (url) => SettingsURL = url;
+    ExtCall.getSettingsURL("getExtCallSettingsURL");
+    setTimeout(() => console.log(SettingsURL), 100);
+ */
+function getSettingsURL(windowFunctionName = "") {
+
+    const data = JSON.stringify({
+        "function": "getSettingsURL",
+        "callback": windowFunctionName
+    });
+    executeExtCall(data);
+
+}
+
+// 取得Firebase推播id
+/** Example
+    let FcmToken = "";
+    window.getFcmPushToken = (token) => (FcmToken = token);
+    ExtCall.getFcmPushId("getFcmPushToken");
+    setTimeout(() => console.log(FcmToken), 100);
+ */
+function getFcmPushId(windowFunctionName = "") {
+    const data = JSON.stringify({
+        "function": "getPushId",
+        "callback": windowFunctionName
+    });
+    executeExtCall(data);
+}
+
+// 開啟掃條碼(AVFoundation) ios
+/**
+    let ScanCode = "";
+    window.openScanCode = (appScanCode) => ScanCode = appScanCode;
+    ExtCall.openScanCode("openScanCode");
+    setTimeout(() => console.log(ScanCode), 100);
+ */
+function openScanCode(windowFunctionName = "") {
+
+    const config = {
+        "function": "openScancode",
+        "callback": windowFunctionName
+    }
+    // 判斷os
+    let os = initOS() || "";
+    // 開啟掃條碼(zxing)
+    if (os == "android") {
+        config.scanner = "zxing"
+    }
+    const data = JSON.stringify(config);
+    executeExtCall(data);
+}
+
+// 取得URL Scheme 帶入參數後，並清除。
+// 沒資料預設是空字串
+/**
+    let SchemeInput = "";
+    window.getUrlSchemeInput = (val) => SchemeInput = val;
+    ExtCall.getUrlSchemeInput("getUrlSchemeInput");
+    setTimeout(() => console.log(SchemeInput), 100);
+ */
+function getUrlSchemeInput(windowFunctionName = "") {
+    const data = JSON.stringify({
+        "function": "resetAfterGetSchemeParameter",
+        "callback": windowFunctionName
+    });
+    executeExtCall(data);
+}
+
+// 有需要可以持續擴充
+export const ExtCall = {
+    openNewWebView,
+    replaceSetting,
+    shareFile,
+    getSettingsURL,
+    getFcmPushId,
+    openScanCode,
+    getUrlSchemeInput
+}
+
+export const ExtCallThird = {
+    lineLogout(channel_id = "", windowFunctionName = "") {
+        const data = JSON.stringify({
+            "function": "lineLogout",
+            "channel_id": channel_id,
+            "callback": windowFunctionName
+        });
+        executeExtCall(data);
+    },
+    lineLogin(channel_id = "", windowFunctionName = "") {
+        const data = JSON.stringify({
+            "function": "lineLogin",
+            "channel_id": channel_id,
+            "callback": windowFunctionName
+        });
+        executeExtCall(data);
+    },
+    appleLogin(windowFunctionName = "") {
+        const data = JSON.stringify({
+            "function": "appleLogin",
+            "callback": windowFunctionName
+        });
+        executeExtCall(data);
+    },
+    googleSignInfo(windowFunctionName = "") {
+        const data = JSON.stringify({
+            "function": "googleSignInfo",
+            "callback": windowFunctionName
+        });
+        executeExtCall(data);
+    },
+    googleSignIn(windowFunctionName = "") {
+        const data = JSON.stringify({
+            "function": "googleSignIn",
+            "callback": windowFunctionName
+        });
+        executeExtCall(data);
+    },
+    googleSignOut(windowFunctionName = "") {
+        const data = JSON.stringify({
+            "function": "googleSignOut",
+            "callback": windowFunctionName
+        });
+        executeExtCall(data);
+    }
+
+}
+
+

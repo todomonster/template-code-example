@@ -27,18 +27,18 @@ export default {
       try {
         const response = await apiGetStore();
         let {
-          name,
-          contact,
-          all_addr,
-          tel,
-          business_hours,
+          name = "",
+          contact = "",
+          all_addr = "",
+          tel = "",
           price_range,
-          category,
+          category = "",
           // rewardRange,
-          rewardRangeName,
-          is_open,
-          images,
+          rewardRangeName = "",
+          is_open = 0,
         } = response;
+        let business_hours = response.business_hours || "[]";
+        let images = response.images || "[]";
         data.value = {
           name,
           contact,
@@ -67,7 +67,7 @@ export default {
 </script>
 
 <template>
-  <div class="main"> 
+  <div class="main">
     <section class="c-main">
       <div class="detail-container">
         <div class="image-container">

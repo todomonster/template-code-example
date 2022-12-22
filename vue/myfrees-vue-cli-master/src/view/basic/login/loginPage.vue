@@ -1,9 +1,9 @@
 <script>
-import { ref, onMounted,onBeforeMount } from "vue";
+import { ref, onMounted, onBeforeMount } from "vue";
 import { useRouter, onBeforeRouteLeave } from "vue-router";
 import { Toast } from "@/components/global/swal.js";
 import { errorHandle } from "@/utils/errorHandle";
-import { apiStoreLogin } from "@/api/myfree";
+import { apiStoreLogin, apiStoreSaveFcmToken } from "@/api/myfree";
 
 import { ExtCall } from "@/utils/extCall";
 
@@ -17,6 +17,7 @@ export default {
     });
     let msg = "";
     const form = ref(null);
+    let fcmToken = "";
 
     const isLoginSuccess = (msg) => {
       if (msg.token) {
@@ -57,6 +58,13 @@ export default {
         //post API
         msg = await apiStoreLogin(inputData.value);
         if (isLoginSuccess(msg)) {
+          if (fcmToken) {
+            const response = await apiStoreSaveFcmToken({
+              token: fcmToken,
+              type: "store",
+            });
+            console.log(JSON.stringify(response), "fcm");
+          }
           Toast("登入成功");
           localStorage.setItem("is_Login", 1);
           router.push({ path: "/home" });
@@ -80,7 +88,19 @@ export default {
       if (localStorage.getItem("is_Login") == 1) {
         router.push({ path: "/home" });
       }
-    });    
+    });
+    onMounted(() => {
+      try {
+        window.getFcmPushToken = (val) => {
+          if (val) {
+            fcmToken = val;
+          }
+        };
+        ExtCall.getFcmPushId("getFcmPushToken");
+      } catch (error) {
+        console.log(error, "😃 onMounted");
+      }
+    });
     onBeforeRouteLeave((to, from, next) => {
       document.body.className = "";
       next();

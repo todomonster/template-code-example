@@ -7,10 +7,11 @@ import { parseUrlEncode } from "@/utils/helper"
 export const apiGetCityArea = () => apiInstance.get(`/city_area/list`);
 export const apiGetCityList = () => apiInstance.get(`/city/list`);
 export const apiGetAreaList = () => apiInstance.get(`/area/list`);
-
+/** /notify/token 存 推播token form */
+export const apiStoreSaveFcmToken = (data) => apiInstance.post(`/notify/token`, parseUrlEncode(data));
 /** store/rewardRange S-1-11 x*/
 export const apiGetRewardRange = () => apiInstance.get(`/rewardRange`);
-
+export const apiLogout = () => apiInstance.logout();
 // {{api_path}}/api/mobile/check/type/:type/:mobile
 export const apiCheckAccount = ({type,mobile}) => apiInstance.get(`/mobile/check/type/${type}/${mobile}`);
 
