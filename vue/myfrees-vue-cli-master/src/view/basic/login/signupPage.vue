@@ -1,5 +1,5 @@
 <script>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onBeforeMount } from "vue";
 import { Toast } from "@/components/global/swal";
 import { errorHandle } from "@/utils/errorHandle";
 import { apiPushOtp, apiVerifyOtp, apiCheckAccount } from "@/api/myfree";
@@ -119,8 +119,10 @@ export default {
       }
     };
     // ========
-    onMounted(() => {
+    onBeforeMount(() => {
       document.body.className = "c-login";
+    });     
+    onMounted(() => {
       // 計時器初始化
       init();
       setCountDown();

@@ -1,5 +1,5 @@
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted,onBeforeMount } from "vue";
 import { useRouter, onBeforeRouteLeave } from "vue-router";
 import { Toast } from "@/components/global/swal.js";
 import { errorHandle } from "@/utils/errorHandle";
@@ -75,7 +75,7 @@ export default {
       passwordType.value = className === "icon-eye-slash" ? "password" : "";
     };
     // onMounted先判斷驗證 is_Login = 1? 進首頁
-    onMounted(() => {
+    onBeforeMount(() => {
       document.body.className = "c-login";
       if (localStorage.getItem("is_Login") == 1) {
         router.push({ path: "/home" });
