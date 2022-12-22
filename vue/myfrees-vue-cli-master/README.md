@@ -73,9 +73,14 @@ scss config`$img: '@/assets/images/';`
 
 ## 版本紀錄
 
-v2.0.0 更新UI
-v2.1.1 更新UI包含的功能
-v2.2.0 整合storeUI
-v2.2.1 修正Header問題，完成除了 product 之外的其他區域
-v2.2.2 修正小鈴鐺空資料bug 完成 product
-v2.2.3 修正 filter bug，串接推播token
+- v2.0.0 更新UI
+- v2.1.1 更新UI包含的功能
+- v2.2.0 整合storeUI
+- v2.2.1 修正Header問題，完成除了 product 之外的其他區域
+- v2.2.2 修正小鈴鐺空資料bug 完成 product
+- v2.2.3 修正 filter bug，串接推播token
+
+- v2.2.4 修正 bug
+
+  - 開店狀態
+  - bell number read

@@ -99,7 +99,7 @@ export default {
       fullArea.value = getAreaList.data;
       areaList.value = getAreaList.data;
 
-      // 取得 pinia 的 password 和 phone
+      // 取得 pinia 的 password 和 phone 判斷是否是註冊
       const { password, mobile, status } = globalStore.isToAddStore;
       if (status) {
         showReward.value = true;
@@ -107,7 +107,13 @@ export default {
         rewardList.value = getRewardList.data;
         addStorePinia.value = { password, mobile, status };
       } else {
+        // 不是註冊 進入編輯流程
         storeData.value = await apiGetStore();
+        
+        if (storeData.value.is_open == 0) {
+          isStoreOpen.value = false;
+          
+        }
       }
     });
 

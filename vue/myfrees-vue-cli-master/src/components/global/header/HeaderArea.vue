@@ -6,6 +6,7 @@ import { apiGetNotifyUnreadAmount } from "@/api/myfree";
 export default {
   props: {
     title: String,
+    leftIcon: String,
     rightIcon: String,
     rightTextStatus: String,
     backToPath: String,
@@ -15,7 +16,8 @@ export default {
     const goto = globalStore.goto;
     const unread = ref(0);
 
-    const iconCode = ref("");
+    const rightIconCode = ref("");
+    const leftIconCode = ref("icon icon-back");
     const titleText = ref("");
     const execute = ref(new Function());
 
@@ -23,7 +25,7 @@ export default {
       goto("router", "/notify");
     };
     function setValue(icon, inputString) {
-      iconCode.value = icon || "";
+      rightIconCode.value = icon || "";
       titleText.value = inputString || " ";
     }
     const setIcon = (iconState) => {
@@ -48,28 +50,26 @@ export default {
 
     onMounted(async () => {
       setIcon(props.rightIcon);
-      if (iconCode.value === "icon icon-notice") {
+      if (rightIconCode.value === "icon icon-notice") {
         // 鈴鐺開啟才打API
         const response = await apiGetNotifyUnreadAmount();
-        if (response.result && response.unread) {
+        if (response.result && response.unread > 0) {
           unread.value = response.unread;
-          if (props.rightTextStatus == "show") {
-            titleText.value = unread;
-          }
+          titleText.value = String(unread.value);
         }
+      }
+      if (props.leftIcon === "") {
+        leftIconCode.value = "";
       }
     });
     const countBell = computed(() => {
-      if (titleText.value === 0) {
-        return true;
-      }
       if (typeof titleText.value === "string") {
         return titleText.value.trim() === "" ? false : true;
       }
       return false;
     });
 
-    return { iconCode, titleText, goto, execute, countBell };
+    return { rightIconCode, titleText, goto, execute, countBell, leftIconCode };
   },
 };
 </script>
@@ -80,7 +80,7 @@ export default {
       <ul class="navbar-nav">
         <li class="nav-item" style="cursor: pointer">
           <a @click="goto('back')" class="nav-link"
-            ><i class="icon icon-back"></i
+            ><i :class="leftIconCode"></i
           ></a>
         </li>
       </ul>
@@ -91,7 +91,7 @@ export default {
       <ul class="navbar-nav">
         <li class="nav-item" style="cursor: pointer">
           <a class="nav-link" @click="execute()">
-            <i class="icon icon-notice">
+            <i :class="rightIconCode">
               <span class="count" v-show="countBell">{{ titleText }}</span>
             </i>
           </a>

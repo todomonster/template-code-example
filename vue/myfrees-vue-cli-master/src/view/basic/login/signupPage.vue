@@ -195,7 +195,7 @@ export default {
             type="text"
             class="form-control form-control-2"
             placeholder="請輸入手機號碼"
-            v-model="inputData.mobile"
+            v-model.trim="inputData.mobile"
             pattern="^09\d{2}?\d{3}?\d{3}$"
             title="請輸入手機號碼"
             required
@@ -219,7 +219,7 @@ export default {
             type="text"
             class="form-control form-control-2"
             placeholder="請輸入驗證碼"
-            v-model="inputData.verifyCode"
+            v-model.trim="inputData.verifyCode"
             title="簡訊驗證碼"
             required
           />
@@ -232,7 +232,7 @@ export default {
             :type="passwordType"
             class="form-control form-control-2"
             placeholder="請輸入密碼"
-            v-model="inputData.password"
+            v-model.trim="inputData.password"
             title="8~20個字元(包含英文及數字)"
             pattern="^(?=.*[A-Za-z])(?=.*[0-9]).{8,20}$"
             required
@@ -249,7 +249,7 @@ export default {
             :type="passwordType"
             class="form-control form-control-2"
             placeholder="請再次確認密碼"
-            v-model="inputData.password2"
+            v-model.trim="inputData.password2"
             title="請再次確認密碼"
             required
           />
@@ -260,9 +260,9 @@ export default {
         <div
           class="row form-word text-end text-decoration-underline cursor-pointer"
         >
-          <div class="col-12 ml-4" @click="$router.push({ path: '/' })">
-            登入
-          </div>
+          <div class="col-12 ml-4 ">
+            <span class="cursor-pointer"  @click="$router.push({ path: '/' })">登入</span>
+          </div>          
         </div>
         <div class="row form-word text-center">
           <div class="col-12 ml-4">

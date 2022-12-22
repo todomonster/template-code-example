@@ -12,7 +12,7 @@ export default {
 </script>
 
 <template>
-  <Header title="" v-show="$route.meta.showHeader" />
+  <Header title="" rightIcon="" v-show="$route.meta.showHeader" />
   <router-view v-slot="{ Component }">
     <keep-alive include="xxx">
       <component :is="Component" />

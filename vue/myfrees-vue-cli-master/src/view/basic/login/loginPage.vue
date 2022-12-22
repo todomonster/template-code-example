@@ -11,8 +11,8 @@ export default {
   setup() {
     const router = useRouter();
     const inputData = ref({
-      mobile: "0900000000",
-      password: "1234qwer",
+      mobile: "",
+      password: "",
       option: "",
     });
     let msg = "";
@@ -157,7 +157,7 @@ export default {
             type="text"
             class="form-control form-control-2"
             placeholder="請輸入手機號碼"
-            v-model="inputData.mobile"
+            v-model.trim="inputData.mobile"
             pattern="^09\d{2}?\d{3}?\d{3}$"
             title="請輸入手機號碼"
             required
@@ -174,7 +174,7 @@ export default {
             :type="passwordType"
             class="form-control form-control-2"
             placeholder="請輸入密碼"
-            v-model="inputData.password"
+            v-model.trim="inputData.password"
             pattern="^(?=.*[A-Za-z])(?=.*[0-9]).{6,}$"
             title="最少6個字元，需有英文及數字"
             required
@@ -184,10 +184,10 @@ export default {
           </div>
         </div>
         <div
-          class="row form-word text-end text-decoration-underline cursor-pointer"
+          class="row form-word text-end text-decoration-underline "
         >
-          <div class="col-12 ml-4" @click="$router.push({ path: '/signup' })">
-            註冊
+          <div class="col-12 ml-4 ">
+            <span class="cursor-pointer"  @click="$router.push({ path: '/signup' })">註冊</span>
           </div>
           <!-- <div class="col-12 ml-4" @click="$router.push({ path: '/login/forget' })">
             忘記密碼

@@ -47,8 +47,14 @@ export default {
       APIparams.value.page++;
 
       // 處理已讀
-      const readIdArray = data.map((item) => item.personalNotifyId);
-      await apiReadNotify({ "id[]": readIdArray });
+      const readIdArray = data
+        .filter((item) => item.isRead == 0)
+        .map((item) => item.personalNotifyId);
+      if (readIdArray.length > 0) {
+        await apiReadNotify({
+          "id[]": readIdArray,
+        });
+      }
     };
 
     onMounted(async () => {
@@ -71,14 +77,14 @@ export default {
     });
     return { notifyList, APIparams, total };
   },
-  components: {NoData},
+  components: { NoData },
 };
 </script>
 
 <template>
   <div class="main-content">
     <div class="notice-container">
-      <NoData v-if="notifyList.length == 0" />      
+      <NoData v-if="notifyList.length == 0" />
       <div class="card" v-for="item in notifyList" :key="item.createTime">
         <div class="card-header">
           <div class="card-link">
