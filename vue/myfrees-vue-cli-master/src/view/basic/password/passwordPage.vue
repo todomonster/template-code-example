@@ -5,7 +5,7 @@ import Footer from "@/components/global/footer/FooterArea.vue";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
 // call api
-import { apiPostPassword } from "@/api/api";
+// import { apiPostPassword } from "@/api/api";
 
 export default {
   setup() {
@@ -28,14 +28,14 @@ export default {
           Swal.fire("新密碼不相符，請重新輸入");
         } else {
           //post API
-          msg.value = await apiPostPassword(inputData);
-          if (msg.value.message) {
-            Swal.fire("密碼錯誤，請重新輸入");
-          }
-          if (!msg.value.message) {
-            Swal.fire("密碼已修改");
-            router.push({ path: "/member" });
-          }
+          // msg.value = await apiPostPassword(inputData);
+          // if (msg.value.message) {
+          //   Swal.fire("密碼錯誤，請重新輸入");
+          // }
+          // if (!msg.value.message) {
+          //   Swal.fire("密碼已修改");
+          //   router.push({ path: "/member" });
+          // }
           inputData.oldPassword = "";
           inputData.newPassword = "";
           newPassword2.value = "";
