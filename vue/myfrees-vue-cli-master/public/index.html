@@ -28,6 +28,9 @@
     <p><input type="button" value="隱藏" onclick="displayConsoleMessage(false)"></p>
   </div> -->
   <div id="app"></div>
+  <script>
+    document.onselectstart = () => event.returnValue = false;
+  </script>
   <!-- <script>
     var os = "";
 
@@ -74,11 +77,11 @@
       console.log("displayConsoleMessage:" + flag);
 
       return true;
-    }
+    } -->
 
 
 
-  </script> -->
+  </script>
 </body>
 
 </html>

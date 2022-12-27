@@ -8,7 +8,7 @@ import img_09 from "@/assets/icon/member09.png";
 // call api
 import { apiLogout, apiStoreSaveFcmToken } from "@/api/myfree";
 
-import { ExtCall } from "@/utils/extCall";
+import { ExtCall, ExtCallGPS } from "@/utils/extCall";
 
 import ArrowIcon from "@/components/global/ArrowIcon.vue";
 
@@ -43,7 +43,6 @@ export default {
       // 有做清除cookie和storage處理
       const confirm = await ToastConfirm("是否要登出?");
       if (confirm) {
-        
         const response = await apiStoreSaveFcmToken({
           token: "null",
           type: "store",
@@ -53,14 +52,37 @@ export default {
         goto("router", "/");
       }
     };
-    // const testExtCall = () => {
+    // const testExtCall = (type) => {
     //   try {
-    //     let ScanCode = "";
-    //     window.openScanCode = (appScanCode) => (ScanCode = appScanCode);
-    //     ExtCall.openScanCode("openScanCode");
-    //     setTimeout(() => console.log(ScanCode), 100);
+    //     if (type == "startGPS") {
+    //       console.log(type, 1);
+    //       let Input = "";
+    //       window.ExtCallStartGPS = (val) => (Input = val);
+    //       ExtCallGPS.startGPS("ExtCallStartGPS");
+    //       setTimeout(() => console.log(Input), 100);
+    //     }
+    //     if (type == "stopGPS") {
+    //       console.log(type, 2);
+    //       ExtCallGPS.stopGPS();
+    //     }
+    //     if (type == "getCurrentLocation") {
+    //       console.log(type, 3);
+    //       let Input = { time: "", lat: "", long: "" };
+    //       window.ExtCallGetCurrentLocation = (time, lat, long) => {
+    //         Input = { time, lat, long };
+    //       };
+    //       ExtCallGPS.getCurrentLocation("ExtCallGetCurrentLocation");
+    //       setTimeout(() => console.log(Input), 100);
+    //     }
+    //     if (type == "getUserLocationHistory") {
+    //       console.log(type, 4);
+    //       let Input = {};
+    //       window.ExtCallGetUserLocationHistory = (val) => (Input = val);
+    //       ExtCallGPS.getUserLocationHistory("ExtCallGetUserLocationHistory");
+    //       setTimeout(() => console.log(JSON.stringify(Input)), 100);
+    //     }
     //   } catch (error) {
-    //     console.log(error);
+    //     console.log(error, "QQQQQ");
     //   }
     // };
 
@@ -133,12 +155,12 @@ export default {
         <button
           type="button"
           class="list-group-item list-group-item-action"
-          @click="testExtCall"
+          @click="testExtCall('startGPS')"
         >
           <div class="d-flex justify-content-between grey">
             <div>
               <i class="fa fa-sign-out mx-1" aria-hidden="true"></i>
-              testExtCall 呼叫相機
+              startGPS
             </div>
             <ArrowIcon />
           </div>

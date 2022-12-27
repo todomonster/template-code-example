@@ -1,6 +1,7 @@
-import { ref } from 'vue'
-import { defineStore } from 'pinia'
-import { router } from "@/router/index"
+import { ref } from 'vue';
+import { defineStore } from 'pinia';
+import { router } from "@/router/index";
+import { ExtCall } from "@/utils/extCall";
 
 export const useGlobalStore = defineStore('global', () => {
     const globalLoading = ref(false);
@@ -37,7 +38,8 @@ export const useGlobalStore = defineStore('global', () => {
             });
         }
         if (mode === "back") {
-            router.back();
+            // router.back(); //ios會失敗所以改呼叫ExtCall做返回
+            ExtCall.goBack();
         }
 
     };

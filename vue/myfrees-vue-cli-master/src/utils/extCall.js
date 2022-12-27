@@ -159,6 +159,15 @@ function getUrlSchemeInput(windowFunctionName = "") {
     executeExtCall(data);
 }
 
+// App 返回 
+function goBack() {
+    const data = JSON.stringify({
+        "function": "goBack"
+    });
+
+    executeExtCall(data);
+}
+
 // 有需要可以持續擴充
 export const ExtCall = {
     openNewWebView,
@@ -167,7 +176,8 @@ export const ExtCall = {
     getSettingsURL,
     getFcmPushId,
     openScanCode,
-    getUrlSchemeInput
+    getUrlSchemeInput,
+    goBack
 }
 
 export const ExtCallThird = {
@@ -215,6 +225,62 @@ export const ExtCallThird = {
         });
         executeExtCall(data);
     }
+
+}
+export const ExtCallGPS = {
+    /**
+        let Input = "";
+        window.ExtCallStartGPS = (val) => (Input = val);
+        ExtCallGPS.startGPS("ExtCallStartGPS");
+        setTimeout(() => console.log(Input), 100);
+    */
+    startGPS(windowFunctionName = "") {
+        const data = JSON.stringify({
+            "function": "startGPS",
+            "callback": windowFunctionName
+        });
+
+        executeExtCall(data);
+    },
+
+    stopGPS() {
+        const data = JSON.stringify({
+            "function": "stopGPS"
+        });
+
+        executeExtCall(data);
+    },
+    /**
+        let Input = { time: "", lat: "", long: "" };
+        window.ExtCallGetCurrentLocation = (time, lat, long) => {
+        //傳回三個參數(日期、經度、緯度)
+        Input = { time, lat, long };
+        };
+        ExtCallGPS.getCurrentLocation("ExtCallGetCurrentLocation");
+        setTimeout(() => console.log(Input), 100);
+    */
+    getCurrentLocation(windowFunctionName = "") {
+        const data = JSON.stringify({
+            "function": "getCurrentLocation",
+            "callback": windowFunctionName
+        });
+
+        executeExtCall(data);
+    },
+    /**
+        let Input = "";
+        window.ExtCallGetUserLocationHistory = (val) => Input = val;
+        ExtCallGPS.getUserLocationHistory("ExtCallGetUserLocationHistory");
+        setTimeout(() => console.log(Input), 100);
+    */
+    getUserLocationHistory(windowFunctionName = "") {
+        const data = JSON.stringify({
+            "function": "getUserLocationHistory",
+            "callback": windowFunctionName
+        });
+
+        executeExtCall(data);
+    },
 
 }
 

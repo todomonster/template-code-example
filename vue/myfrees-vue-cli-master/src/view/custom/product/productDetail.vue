@@ -57,6 +57,7 @@ export default {
           if (response.result) {
             productData.value = defaultData;
             Toast("新增完成");
+            goto("back");
           }
         }
       } catch (error) {
@@ -70,6 +71,7 @@ export default {
           const response = await apiUpdateProduct(id.value, productData.value);
           if (response.result) {
             Toast("已儲存");
+            // goto("back");
           }
         }
       } catch (error) {

@@ -81,6 +81,8 @@ scss config`$img: '@/assets/images/';`
 - v2.2.3 修正 filter bug，串接推播token
 
 - v2.2.4 修正 bug
-
   - 開店狀態
   - bell number read
+- v2.2.5
+  - 修正 ios 返回 bug
+  - 鎖定不讓使用者複製文字
