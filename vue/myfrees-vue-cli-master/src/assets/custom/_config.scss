@@ -22,6 +22,9 @@ $camera-color: #5DCE78, #FB7B1A;
 
 .c-login {
 	background: url(#{$img}#{nth($bg-login-image, $style)}) no-repeat center top/cover;
+	margin: 0;
+	height: 100%;
+	overflow: hidden;
 }
 .c-product {
 	background-color: #eee;
