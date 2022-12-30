@@ -84,7 +84,7 @@ export default {
     };
     // onMounted先判斷驗證 is_Login = 1? 進首頁
     onBeforeMount(() => {
-      document.body.className = "c-login";
+      document.body.classList.add("c-login");
       if (localStorage.getItem("is_Login") == 1) {
         router.push({ path: "/home" });
       }
@@ -102,7 +102,7 @@ export default {
       }
     });
     onBeforeRouteLeave((to, from, next) => {
-      document.body.className = "";
+      document.body.classList.remove("c-login");
       next();
     });
     return {
@@ -183,11 +183,13 @@ export default {
             <i :class="passwordEyeClass" id="togglePassword"></i>
           </div>
         </div>
-        <div
-          class="row form-word text-end text-decoration-underline "
-        >
-          <div class="col-12 ml-4 ">
-            <span class="cursor-pointer"  @click="$router.push({ path: '/signup' })">註冊</span>
+        <div class="row form-word text-end text-decoration-underline">
+          <div class="col-12 ml-4">
+            <span
+              class="cursor-pointer"
+              @click="$router.push({ path: '/signup' })"
+              >註冊</span
+            >
           </div>
           <!-- <div class="col-12 ml-4" @click="$router.push({ path: '/login/forget' })">
             忘記密碼
@@ -207,4 +209,5 @@ export default {
   </section>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>
