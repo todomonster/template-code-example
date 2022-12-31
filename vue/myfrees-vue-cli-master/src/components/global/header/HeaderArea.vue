@@ -12,6 +12,8 @@ export default {
     backToPath: String,
   },
   setup(props) {
+    const backPath = ref(props.backToPath);
+
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
     const unread = ref(0);
@@ -22,7 +24,9 @@ export default {
     const execute = ref(new Function());
 
     const handleBellClick = () => {
-      goto("router", "/notify");
+      // goto("router", "/notify");
+      // console.log(window.location.href)
+      window.location.href = "./index.html#/notify/list"
     };
     function setValue(icon, inputString) {
       rightIconCode.value = icon || "";
@@ -69,7 +73,15 @@ export default {
       return false;
     });
 
-    return { rightIconCode, titleText, goto, execute, countBell, leftIconCode };
+    return {
+      rightIconCode,
+      titleText,
+      goto,
+      execute,
+      countBell,
+      leftIconCode,
+      backPath,
+    };
   },
 };
 </script>

@@ -83,6 +83,13 @@ scss config`$img: '@/assets/images/';`
 - v2.2.4 修正 bug
   - 開店狀態
   - bell number read
-- v2.2.5
-  - 修正 ios 返回 bug
+- v2.2.5 對應 {file: store_settings.txt , "version": 14}
+  - 測試鎖定文字
+  - 測試ios返回
+- v2.3.0 對應 {file: store_settings.txt , "version": 16}
+  - 新增移除帳號
+  - 鎖定登入頁面不要滑動
   - 鎖定不讓使用者複製文字
+  - ios返回路由 先寫死路徑 同步ios+Android
+  - 加上版本號
+  - 鈴鐺拔掉

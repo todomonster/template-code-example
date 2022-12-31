@@ -27,6 +27,8 @@ export const apiVerifyOtp = (mobile, data) => apiInstance.formDataLogin(`/mobile
 export const apiStoreForgetPwd = (data) => apiInstance.post(`/store/forgotpwd`, parseUrlEncode(data));
 /** store/changepwd a-1-2 urlencoded */
 export const apiStoreChangePwd = (data) => apiInstance.post(`/store/changepwd`, parseUrlEncode(data));
+/** /api/store/remove */
+export const apiStoreRemove = () => apiInstance.post(`/store/remove`);
 
 /** store/regist a-1-3 form */
 export const apiStoreRegister = (data) => apiInstance.formDataPOST(`/store/regist`, (data));

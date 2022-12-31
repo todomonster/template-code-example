@@ -4,7 +4,7 @@
 
 // old 棄用問題找時間修改
 // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/platform
-function initOS() {
+export function initOS() {
 
     const agent = navigator.userAgent.toLowerCase() || "";
     let platform = navigator.platform.toLowerCase() || "";
