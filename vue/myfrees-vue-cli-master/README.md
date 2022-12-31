@@ -99,3 +99,4 @@ scss config`$img: '@/assets/images/';`
   - 註冊後沒有更新到編輯模式 清空bug
   - 註冊成功沒有提示bug
   - 後端回傳時間值不是[]提示bug
+  - 時間v-for 不知道為什麼變成null bug

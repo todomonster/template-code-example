@@ -105,7 +105,6 @@ export default {
     data: Object,
   },
   setup(props, { emit }) {
-  
     const handleChange = () => {
       emit("business_hours", newData.value);
     };
@@ -129,7 +128,10 @@ export default {
     watch(
       () => props?.data?.business_hours,
       (val) => {
-        const ans = val || "[]";
+        if (val === "null") val = "";
+        let ans =
+          val ||
+          `[{"time": [], "active": false, "weekday": "Mon"}, {"time": [], "active": false, "weekday": "Tue"}, {"time": [], "active": false, "weekday": "Wed"}, {"time": [], "active": false, "weekday": "Thu"}, {"time": [], "active": false, "weekday": "Fri"}, {"time": [], "active": false, "weekday": "Sat"}, {"time": [], "active": false, "weekday": "Sun"}]`;
         newData.value = JSON.parse(ans);
       }
     );
@@ -145,7 +147,7 @@ export default {
       handleAdd,
       handleDelete,
       handleChange,
-      handleStoreProfile
+      handleStoreProfile,
     };
   },
 };
