@@ -79,6 +79,10 @@ export default {
 
     const handleOtpVerify = async ($event) => {
       $event.preventDefault();
+      if(!inputData.value.verifyCode.trim()){
+        Toast("請輸入驗證碼")
+        return;
+      }
       if (form1.value.reportValidity()) {
         //驗證簡訊
         const response = await apiVerifyOtp(inputData.value.mobile, {
@@ -221,7 +225,6 @@ export default {
             placeholder="請輸入驗證碼"
             v-model.trim="inputData.verifyCode"
             title="簡訊驗證碼"
-            required
           />
         </div>
         <div class="position-relative mb-3" v-if="currentStep > 1">

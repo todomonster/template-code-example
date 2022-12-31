@@ -93,3 +93,9 @@ scss config`$img: '@/assets/images/';`
   - ios返回路由 先寫死路徑 同步ios+Android
   - 加上版本號
   - 鈴鐺拔掉
+- v2.3.1 對應 {file: store_settings.txt , "version": 17}
+  - 註冊帳號返回失效bug
+  - 無法重新送簡訊表單被阻擋
+  - 註冊後沒有更新到編輯模式 清空bug
+  - 註冊成功沒有提示bug
+  - 後端回傳時間值不是[]提示bug
