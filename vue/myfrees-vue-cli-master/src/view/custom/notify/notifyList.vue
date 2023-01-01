@@ -6,6 +6,8 @@ import { errorHandle } from "@/utils/errorHandle";
 import { onBeforeRouteLeave } from "vue-router";
 import { isBetweenBottom, windowScrollTo } from "@/utils/helper";
 
+import NoData from "@/components/global/NoData.vue";
+
 export default {
   name: "NotifyList",
   setup() {
@@ -36,17 +38,23 @@ export default {
     const handleListData = async (response) => {
       const { data } = response;
       // 處理空值
-      if (response.total === 0) {
-        notifyList.value = [{ content: "暫時沒有通知!" }];
-      }
+      // if (response.total === 0) {
+      //   notifyList.value = [{ content: "暫時沒有通知!" }];
+      // }
       // 處理有值
       notifyList.value = notifyList.value.concat(data);
       total.value = response.total;
       APIparams.value.page++;
 
       // 處理已讀
-      const readIdArray = data.map((item) => item.personalNotifyId);
-      await apiReadNotify({ "id[]": readIdArray });
+      const readIdArray = data
+        .filter((item) => item.isRead == 0)
+        .map((item) => item.personalNotifyId);
+      if (readIdArray.length > 0) {
+        await apiReadNotify({
+          "id[]": readIdArray,
+        });
+      }
     };
 
     onMounted(async () => {
@@ -69,13 +77,14 @@ export default {
     });
     return { notifyList, APIparams, total };
   },
-  components: {},
+  components: { NoData },
 };
 </script>
 
 <template>
   <div class="main-content">
     <div class="notice-container">
+      <NoData v-if="notifyList.length == 0" />
       <div class="card" v-for="item in notifyList" :key="item.createTime">
         <div class="card-header">
           <div class="card-link">

@@ -30,7 +30,7 @@
         padding-left: .375rem;
     }
     .form-control {
-        background-color: rgba(#eee, .35);
+        background-color: #f9f9f9;
         border: 0;
     }
     .form-switch {
@@ -67,20 +67,19 @@
         background-size: contain;
     }
     .icon-member-s {
-        background-image: url(#{$img}icon_member_s.png);
+        background-image: url(#{$img}#{nth($icon-member-s-image, $style)});
     }
     .icon-lock {
-        background-image: url(#{$img}icon_lock.png);
+        background-image: url(#{$img}#{nth($icon-lock-image, $style)});
     }
 }
 .form-icon {
     position: absolute;
     right: 1rem;
     top: 1.0625rem;
-    // top: 1.0625rem;
     padding: .1875rem .25rem;
     line-height: 1;
-    background-color: #FB7B1A;
+    background-color: nth($form-icon-color, $style);
     border-radius: 50%;
     i {
         display: inline-block;
@@ -133,6 +132,7 @@
         margin-left: .875rem;
     }
     .form-check-input {
+        border-color: #B5B5B5;
         &[type=checkbox] {
             width: 1.0625em;
             height: 1.0625em;
@@ -219,7 +219,7 @@
     bottom: .75rem;
     .form-file-label {
         padding: .5625rem .625rem;
-        background-color: #FB7B1A;
+        background-color: nth($camera-color, $style);
         line-height: 1;
         border-radius: 50%;
         i {
@@ -279,7 +279,7 @@
     }
 }
 .form-word {
-    color: white;
+    color: nth($form-word-color, $style);
     font-size: .875rem;
 }
 .btn-next, .btn-next-grey, .btn-edit, .btn-skip {
@@ -302,7 +302,7 @@
 }
 .btn-next {
     padding: .8125rem .875rem;
-    background-color: #6BB738;
+    background-color: nth($btn-next-color, $style);
     i {
         width: 1.625rem;
         height: 1.625rem;

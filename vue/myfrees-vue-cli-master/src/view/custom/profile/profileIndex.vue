@@ -16,6 +16,7 @@ export default {
     title=""
     rightTextStatus="show"
     rightIcon="bell"
+    leftIcon=""
     v-if="$route.meta.showHeader"
   />
   <router-view v-slot="{ Component }">

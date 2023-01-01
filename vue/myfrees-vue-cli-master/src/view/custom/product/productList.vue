@@ -5,11 +5,13 @@ import { errorHandle } from "@/utils/errorHandle";
 
 // call api
 import { apiGetProductList } from "@/api/myfree";
+import NoData from "@/components/global/NoData.vue";
 
 export default {
   name: "ProductList",
   setup() {
     const productList = ref([]);
+
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
 
@@ -54,20 +56,30 @@ export default {
     };
   },
 
-  components: {},
+  components: { NoData },
 };
 </script>
 
 <template>
-  <div class="main c-product" >
+  <NoData v-if="productList.length == 0" />
+  <div class="main c-product">
     <section class="c-main">
       <div class="product-container">
-
-        <div class="card" v-for="item in productList" :key="item.id">
+        <div
+          class="card"
+          v-for="item in productList"
+          :key="item.id"
+          @click="
+            goto('routerQuery', '/product/detail', {
+              query: { mode: 'view', id: item.id },
+            })
+          "
+        >
           <div class="card-body">
             <div class="row">
               <div class="col-left">
-                <img :src="item.image[0]" class="card-img" />
+                <img :src="item.image[0]" class="card-img" v-if="item.image[0]"/>
+                <img src="https://fakeimg.pl/110x110/" class="card-img" v-if="!item.image[0]"/>
               </div>
               <div class="col-right">
                 <div class="card-title">{{ item.name }}</div>
@@ -77,18 +89,23 @@ export default {
           </div>
           <div class="card-footer">
             <div class="d-flex justify-content-between">
-              <div class="card-shelf"><span class="green">{{ item.status }}</span></div>
+              <div class="card-shelf">
+                <span :class="!item.status ? 'green' : 'red'">{{
+                  item.status
+                }}</span>
+              </div>
               <div class="card-stock">{{ item.stock }}</div>
             </div>
           </div>
         </div>
-
       </div>
       <div class="add-container">
         <button
           class="btn btn-add"
           type="button"
-          @click="goto('router', '/product/detail')"
+          @click="
+            goto('routerQuery', '/product/detail', { query: { mode: 'add' } })
+          "
         >
           新增商品
         </button>
@@ -99,7 +116,7 @@ export default {
 
 <style lang="scss" scoped>
 .c-product {
-	background-color: #eee;
+  background-color: #eee;
 }
 .main {
   margin-top: $header-height;

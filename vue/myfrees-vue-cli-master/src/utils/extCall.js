@@ -1,9 +1,10 @@
+//ExtCall文件
 // https://wtteam2.atlassian.net/l/cp/C7i7U0wy
-
+// ExtCall callback會比較晚 所以不能用await要用setTimeout
 
 // old 棄用問題找時間修改
 // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/platform
-function initOS() {
+export function initOS() {
 
     const agent = navigator.userAgent.toLowerCase() || "";
     let platform = navigator.platform.toLowerCase() || "";
@@ -31,21 +32,18 @@ function executeExtCall(data = {}) {
          * https://hackmd.io/@ChuBoy/ryinChg3L
          */
         // ExtCall.postMessage(data);
-        window.ExtCall.postMessage(data);
+        return window.ExtCall.postMessage(data);
     } else if (os == "ios") {
-        window.webkit.messageHandlers.ExtCall.postMessage(data);
+        return window.webkit.messageHandlers.ExtCall.postMessage(data);
     } else {
         // 故意噴錯讓外層 try catch 處理
         throw new Error(os);
     }
 }
 
-// 有需要可以持續擴充
-export const ExtCall = {
-    openNewWebView,
-    replaceSetting
-}
 
+
+// 開新的webview
 function openNewWebView(openUrl = "") {
     const data = JSON.stringify({
         function: "popWebview",
@@ -54,7 +52,7 @@ function openNewWebView(openUrl = "") {
     executeExtCall(data);
 }
 
-// 這隻是能觸發 初始化 新的設定檔 => 不同設定檔去觸發新的 zip
+// 這觸發 初始化 新的設定檔 => 不同設定檔去觸發新的 zip
 function replaceSetting(id = "", download_url = "") {
     const data = JSON.stringify({
         function: "changeProjectSettingURL",
@@ -64,3 +62,226 @@ function replaceSetting(id = "", download_url = "") {
     });
     executeExtCall(data);
 }
+
+// 呼叫App原生分享
+function shareFile({ subject = "", title = "", message = null, imageUrl = null, base64 = null }) {
+
+    const config = {
+        "function": "share",
+        "subject": subject,
+        "title": title,
+    }
+    if (message) {
+        config.message = message;
+    } else if (imageUrl) {
+        config.imageUrl = imageUrl;
+    } else if (base64 && typeof (base64) === 'string') {
+        const realBase64 = base64.split(',')[1];
+        base64 = realBase64;
+        config.base64 = base64;
+    } else {
+        config.message = "share"
+    }
+
+    const data = JSON.stringify(config);
+
+    executeExtCall(data);
+}
+
+// 取得設定檔url
+/** Example
+    let SettingsURL = "";
+    window.getExtCallSettingsURL = (url) => SettingsURL = url;
+    ExtCall.getSettingsURL("getExtCallSettingsURL");
+    setTimeout(() => console.log(SettingsURL), 100);
+ */
+function getSettingsURL(windowFunctionName = "") {
+
+    const data = JSON.stringify({
+        "function": "getSettingsURL",
+        "callback": windowFunctionName
+    });
+    executeExtCall(data);
+
+}
+
+// 取得Firebase推播id
+/** Example
+    let FcmToken = "";
+    window.getFcmPushToken = (token) => (FcmToken = token);
+    ExtCall.getFcmPushId("getFcmPushToken");
+    setTimeout(() => console.log(FcmToken), 100);
+ */
+function getFcmPushId(windowFunctionName = "") {
+    const data = JSON.stringify({
+        "function": "getPushId",
+        "callback": windowFunctionName
+    });
+    executeExtCall(data);
+}
+
+// 開啟掃條碼(AVFoundation) ios
+/**
+    let ScanCode = "";
+    window.openScanCode = (appScanCode) => ScanCode = appScanCode;
+    ExtCall.openScanCode("openScanCode");
+    setTimeout(() => console.log(ScanCode), 100);
+ */
+function openScanCode(windowFunctionName = "") {
+
+    const config = {
+        "function": "openScancode",
+        "callback": windowFunctionName
+    }
+    // 判斷os
+    let os = initOS() || "";
+    // 開啟掃條碼(zxing)
+    if (os == "android") {
+        config.scanner = "zxing"
+    }
+    const data = JSON.stringify(config);
+    executeExtCall(data);
+}
+
+// 取得URL Scheme 帶入參數後，並清除。
+// 沒資料預設是空字串
+/**
+    let SchemeInput = "";
+    window.getUrlSchemeInput = (val) => SchemeInput = val;
+    ExtCall.getUrlSchemeInput("getUrlSchemeInput");
+    setTimeout(() => console.log(SchemeInput), 100);
+ */
+function getUrlSchemeInput(windowFunctionName = "") {
+    const data = JSON.stringify({
+        "function": "resetAfterGetSchemeParameter",
+        "callback": windowFunctionName
+    });
+    executeExtCall(data);
+}
+
+// App 返回 
+function goBack() {
+    const data = JSON.stringify({
+        "function": "goBack"
+    });
+
+    executeExtCall(data);
+}
+
+// 有需要可以持續擴充
+export const ExtCall = {
+    openNewWebView,
+    replaceSetting,
+    shareFile,
+    getSettingsURL,
+    getFcmPushId,
+    openScanCode,
+    getUrlSchemeInput,
+    goBack
+}
+
+export const ExtCallThird = {
+    lineLogout(channel_id = "", windowFunctionName = "") {
+        const data = JSON.stringify({
+            "function": "lineLogout",
+            "channel_id": channel_id,
+            "callback": windowFunctionName
+        });
+        executeExtCall(data);
+    },
+    lineLogin(channel_id = "", windowFunctionName = "") {
+        const data = JSON.stringify({
+            "function": "lineLogin",
+            "channel_id": channel_id,
+            "callback": windowFunctionName
+        });
+        executeExtCall(data);
+    },
+    appleLogin(windowFunctionName = "") {
+        const data = JSON.stringify({
+            "function": "appleLogin",
+            "callback": windowFunctionName
+        });
+        executeExtCall(data);
+    },
+    googleSignInfo(windowFunctionName = "") {
+        const data = JSON.stringify({
+            "function": "googleSignInfo",
+            "callback": windowFunctionName
+        });
+        executeExtCall(data);
+    },
+    googleSignIn(windowFunctionName = "") {
+        const data = JSON.stringify({
+            "function": "googleSignIn",
+            "callback": windowFunctionName
+        });
+        executeExtCall(data);
+    },
+    googleSignOut(windowFunctionName = "") {
+        const data = JSON.stringify({
+            "function": "googleSignOut",
+            "callback": windowFunctionName
+        });
+        executeExtCall(data);
+    }
+
+}
+export const ExtCallGPS = {
+    /**
+        let Input = "";
+        window.ExtCallStartGPS = (val) => (Input = val);
+        ExtCallGPS.startGPS("ExtCallStartGPS");
+        setTimeout(() => console.log(Input), 100);
+    */
+    startGPS(windowFunctionName = "") {
+        const data = JSON.stringify({
+            "function": "startGPS",
+            "callback": windowFunctionName
+        });
+
+        executeExtCall(data);
+    },
+
+    stopGPS() {
+        const data = JSON.stringify({
+            "function": "stopGPS"
+        });
+
+        executeExtCall(data);
+    },
+    /**
+        let Input = { time: "", lat: "", long: "" };
+        window.ExtCallGetCurrentLocation = (time, lat, long) => {
+        //傳回三個參數(日期、經度、緯度)
+        Input = { time, lat, long };
+        };
+        ExtCallGPS.getCurrentLocation("ExtCallGetCurrentLocation");
+        setTimeout(() => console.log(Input), 100);
+    */
+    getCurrentLocation(windowFunctionName = "") {
+        const data = JSON.stringify({
+            "function": "getCurrentLocation",
+            "callback": windowFunctionName
+        });
+
+        executeExtCall(data);
+    },
+    /**
+        let Input = "";
+        window.ExtCallGetUserLocationHistory = (val) => Input = val;
+        ExtCallGPS.getUserLocationHistory("ExtCallGetUserLocationHistory");
+        setTimeout(() => console.log(Input), 100);
+    */
+    getUserLocationHistory(windowFunctionName = "") {
+        const data = JSON.stringify({
+            "function": "getUserLocationHistory",
+            "callback": windowFunctionName
+        });
+
+        executeExtCall(data);
+    },
+
+}
+
+

@@ -62,10 +62,41 @@ component名稱一律全部大駝峰，而且要2個單字組成，因為git的�
 
 若用到 `new Date()` 在ios是不吃`"2022-09-01"`減號格式的!
 
-todo 
-product,wallet
+scss config`$img: '@/assets/images/';`
+
+### 如何製作上傳圖片
+
+宣告 myUploadFile,handleFileUpload
+若用vue3.0語法務必將2個都return給模板
+
 =======
+
 ## 版本紀錄
 
-v2.0.0 更新UI
-v2.1.1 更新UI包含的功能
+- v2.0.0 更新UI
+- v2.1.1 更新UI包含的功能
+- v2.2.0 整合storeUI
+- v2.2.1 修正Header問題，完成除了 product 之外的其他區域
+- v2.2.2 修正小鈴鐺空資料bug 完成 product
+- v2.2.3 修正 filter bug，串接推播token
+
+- v2.2.4 修正 bug
+  - 開店狀態
+  - bell number read
+- v2.2.5 對應 {file: store_settings.txt , "version": 14}
+  - 測試鎖定文字
+  - 測試ios返回
+- v2.3.0 對應 {file: store_settings.txt , "version": 16}
+  - 新增移除帳號
+  - 鎖定登入頁面不要滑動
+  - 鎖定不讓使用者複製文字
+  - ios返回路由 先寫死路徑 同步ios+Android
+  - 加上版本號
+  - 鈴鐺拔掉
+- v2.3.1 對應 {file: store_settings.txt , "version": 17}
+  - 註冊帳號返回失效bug
+  - 無法重新送簡訊表單被阻擋
+  - 註冊後沒有更新到編輯模式 清空bug
+  - 註冊成功沒有提示bug
+  - 後端回傳時間值不是[]提示bug
+  - 時間v-for 不知道為什麼變成null bug

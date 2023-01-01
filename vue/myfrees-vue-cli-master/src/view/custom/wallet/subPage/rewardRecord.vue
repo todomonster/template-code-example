@@ -5,7 +5,7 @@ import { errorHandle } from "@/utils/errorHandle";
 
 import { onBeforeRouteLeave } from "vue-router";
 import { isBetweenBottom, windowScrollTo } from "@/utils/helper";
-
+import NoData from "@/components/global/NoData.vue";
 export default {
   // 回饋紀錄
   name: "RewardRecord",
@@ -24,14 +24,14 @@ export default {
     };
 
     const getListData = async () => {
-        const { page, limit } = APIparams.value;
-        // 預測下一頁，如果不超過資料上限才做GET
-        if (limit * page < total.value + limit) {
-          let response = await apiGetRewardApplyList(APIparams.value);
-          if (response.result) {
-            handleListData(response);
-          }
+      const { page, limit } = APIparams.value;
+      // 預測下一頁，如果不超過資料上限才做GET
+      if (limit * page < total.value + limit) {
+        let response = await apiGetRewardApplyList(APIparams.value);
+        if (response.result) {
+          handleListData(response);
         }
+      }
     };
     const handleListData = async (response) => {
       const { data } = response;
@@ -42,22 +42,20 @@ export default {
 
       let newData = data.map((item) => {
         let { amount, status, phone } = item;
-
-        item.amount = status === 1 ? "-" + amount : "";
+        item.amount = status === 1 ? "-" + amount : "$";
 
         switch (status) {
           case 2:
-            item.status = "拒絕";
+            item.status = "拒絕❌";
             break;
           case 1:
-            item.status = "成功";
+            item.status = "同意✔️";
             break;
           default:
-            item.status = "待確認";
+            item.status = "待審↪";
         }
 
         item.phone = phone.slice(0, 2) + "xxxxx" + phone.slice(-3) + "申請";
-
         return item;
       });
 
@@ -70,6 +68,7 @@ export default {
     onMounted(async () => {
       try {
         // 位移到暫存的y
+        document.body.style = "background-color: #EEEEEE;";
         windowScrollTo({ top: windowScrollY });
         await getListData("init");
 
@@ -81,27 +80,28 @@ export default {
 
     onBeforeRouteLeave((to, from, next) => {
       // 離開前紀錄滾動位置
+      setTimeout(() => (document.body.style = ""), 500);
       windowScrollY = window.scrollY || 0;
       clearInterval(getApiTimer);
       next();
     });
     return { walletList, APIparams, total };
   },
-  components: {},
+  components: { NoData },
 };
 </script>
 
 <template>
   <div class="main-content">
-    <div v-if="walletList.length === 0">暫時沒有資料</div>
+    <NoData v-if="walletList.length == 0" />
     <div v-for="item in walletList" :key="item.createTime">
-      <div class="row my-5">
-        <div class="col-8">
+      <div class="d-flex justify-content-between m-2 bg-white">
+        <div class="col-9 m-1">
           <span>{{ item.status }}</span>
           <span>{{ item.phone }}</span>
           <div>{{ item.createTime }}</div>
         </div>
-        <div class="col-4">
+        <div class="col-3 m-1 text-end money">
           <div>{{ item.amount }}</div>
         </div>
       </div>
@@ -109,4 +109,6 @@ export default {
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import "./style/index";
+</style>

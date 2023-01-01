@@ -6,26 +6,30 @@ import { apiGetNotifyUnreadAmount } from "@/api/myfree";
 export default {
   props: {
     title: String,
+    leftIcon: String,
     rightIcon: String,
     rightTextStatus: String,
     backToPath: String,
   },
   setup(props) {
+    const backPath = ref(props.backToPath);
+
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
     const unread = ref(0);
 
-    let iconCode = ref("");
-    let titleText = ref("");
-    let execute = ref(new Function());
-
-    const isShowBellText = ref(false);
+    const rightIconCode = ref("");
+    const leftIconCode = ref("icon icon-back");
+    const titleText = ref("");
+    const execute = ref(new Function());
 
     const handleBellClick = () => {
-      goto("router", "/notify");
+      // goto("router", "/notify");
+      // console.log(window.location.href)
+      window.location.href = "./index.html#/notify/list"
     };
     function setValue(icon, inputString) {
-      iconCode.value = icon || "";
+      rightIconCode.value = icon || "";
       titleText.value = inputString || " ";
     }
     const setIcon = (iconState) => {
@@ -50,20 +54,34 @@ export default {
 
     onMounted(async () => {
       setIcon(props.rightIcon);
-      if (iconCode.value === "icon icon-notice") {
+      if (rightIconCode.value === "icon icon-notice") {
         // 鈴鐺開啟才打API
         const response = await apiGetNotifyUnreadAmount();
-        if (response.result && response.unread) {
+        if (response.result && response.unread > 0) {
           unread.value = response.unread;
-          if (props.rightTextStatus == "show") {
-            titleText.value = unread;
-            isShowBellText.value = true;
-          }
+          titleText.value = String(unread.value);
         }
       }
+      if (props.leftIcon === "") {
+        leftIconCode.value = "";
+      }
+    });
+    const countBell = computed(() => {
+      if (typeof titleText.value === "string") {
+        return titleText.value.trim() === "" ? false : true;
+      }
+      return false;
     });
 
-    return { iconCode, titleText, goto, execute, isShowBellText };
+    return {
+      rightIconCode,
+      titleText,
+      goto,
+      execute,
+      countBell,
+      leftIconCode,
+      backPath,
+    };
   },
 };
 </script>
@@ -74,7 +92,7 @@ export default {
       <ul class="navbar-nav">
         <li class="nav-item" style="cursor: pointer">
           <a @click="goto('back')" class="nav-link"
-            ><i class="icon icon-back"></i
+            ><i :class="leftIconCode"></i
           ></a>
         </li>
       </ul>
@@ -85,8 +103,8 @@ export default {
       <ul class="navbar-nav">
         <li class="nav-item" style="cursor: pointer">
           <a class="nav-link" @click="execute()">
-            <i :class="iconCode">
-              <span :class="isShowBellText">{{ titleText }}</span>
+            <i :class="rightIconCode">
+              <span class="count" v-show="countBell">{{ titleText }}</span>
             </i>
           </a>
         </li>

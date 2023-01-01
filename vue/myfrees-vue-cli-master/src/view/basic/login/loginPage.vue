@@ -1,9 +1,9 @@
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeMount } from "vue";
 import { useRouter, onBeforeRouteLeave } from "vue-router";
 import { Toast } from "@/components/global/swal.js";
 import { errorHandle } from "@/utils/errorHandle";
-import { apiStoreLogin } from "@/api/myfree";
+import { apiStoreLogin, apiStoreSaveFcmToken } from "@/api/myfree";
 
 import { ExtCall } from "@/utils/extCall";
 
@@ -11,12 +11,13 @@ export default {
   setup() {
     const router = useRouter();
     const inputData = ref({
-      mobile: "0900000000",
-      password: "1234qwer",
+      mobile: "",
+      password: "",
       option: "",
     });
     let msg = "";
     const form = ref(null);
+    let fcmToken = "";
 
     const isLoginSuccess = (msg) => {
       if (msg.token) {
@@ -57,6 +58,13 @@ export default {
         //post API
         msg = await apiStoreLogin(inputData.value);
         if (isLoginSuccess(msg)) {
+          if (fcmToken) {
+            const response = await apiStoreSaveFcmToken({
+              token: fcmToken,
+              type: "store",
+            });
+            console.log(JSON.stringify(response), "fcm");
+          }
           Toast("登入成功");
           localStorage.setItem("is_Login", 1);
           router.push({ path: "/home" });
@@ -75,14 +83,26 @@ export default {
       passwordType.value = className === "icon-eye-slash" ? "password" : "";
     };
     // onMounted先判斷驗證 is_Login = 1? 進首頁
-    onMounted(() => {
-      document.body.className = "c-login";
+    onBeforeMount(() => {
+      document.body.classList.add("c-login");
       if (localStorage.getItem("is_Login") == 1) {
         router.push({ path: "/home" });
       }
-    });    
+    });
+    onMounted(() => {
+      try {
+        window.getFcmPushToken = (val) => {
+          if (val) {
+            fcmToken = val;
+          }
+        };
+        ExtCall.getFcmPushId("getFcmPushToken");
+      } catch (error) {
+        console.log(error, "😃 onMounted");
+      }
+    });
     onBeforeRouteLeave((to, from, next) => {
-      document.body.className = "";
+      document.body.classList.remove("c-login");
       next();
     });
     return {
@@ -137,7 +157,7 @@ export default {
             type="text"
             class="form-control form-control-2"
             placeholder="請輸入手機號碼"
-            v-model="inputData.mobile"
+            v-model.trim="inputData.mobile"
             pattern="^09\d{2}?\d{3}?\d{3}$"
             title="請輸入手機號碼"
             required
@@ -154,7 +174,7 @@ export default {
             :type="passwordType"
             class="form-control form-control-2"
             placeholder="請輸入密碼"
-            v-model="inputData.password"
+            v-model.trim="inputData.password"
             pattern="^(?=.*[A-Za-z])(?=.*[0-9]).{6,}$"
             title="最少6個字元，需有英文及數字"
             required
@@ -163,11 +183,13 @@ export default {
             <i :class="passwordEyeClass" id="togglePassword"></i>
           </div>
         </div>
-        <div
-          class="row form-word text-end text-decoration-underline cursor-pointer"
-        >
-          <div class="col-12 ml-4" @click="$router.push({ path: '/signup' })">
-            註冊
+        <div class="row form-word text-end text-decoration-underline">
+          <div class="col-12 ml-4">
+            <span
+              class="cursor-pointer"
+              @click="$router.push({ path: '/signup' })"
+              >註冊</span
+            >
           </div>
           <!-- <div class="col-12 ml-4" @click="$router.push({ path: '/login/forget' })">
             忘記密碼
@@ -187,4 +209,5 @@ export default {
   </section>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>

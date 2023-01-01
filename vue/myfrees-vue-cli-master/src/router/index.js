@@ -5,6 +5,8 @@ import {
 } from "vue-router";
 import { Toast } from "@/components/global/swal";
 import { useCookie, useStorage } from "@/utils/helper";
+// import { storeToRefs } from "pinia";
+
 const tokenKey = "accessToken";
 
 const basicRoute = [
@@ -148,6 +150,7 @@ const myfreeRouter = [
       },
       {
         path: "detail",
+        name: "ProductDetail",
         meta: {
           showHeader: true,
           showFooter: false,
@@ -218,11 +221,15 @@ const myfreeRouter = [
 
 let routes = [...myfreeRouter, ...basicRoute];
 
+// let preRouterHistory = {};
+
 const router = createRouter({
   history: createWebHashHistory(process.env.BASE_URL),
   routes,
 });
 router.beforeEach((to, from, next) => {
+  // preRouterHistory = JSON.parse(JSON.stringify(router?.options?.history?.state));
+
   // 是否 match
   const isMatchAuth = to.matched.some((item) => item.meta.requiresAuth);
   if (isMatchAuth) {
@@ -240,5 +247,59 @@ router.beforeEach((to, from, next) => {
     return true;
   }
 });
+// router.beforeResolve((to, from, next) => {
+//   // do something...
+//   // console.log(to)
 
+//   // if(redirect){
+//   //   next(redirect);
+//   //   return true;
+//   // }  
+//   next();
+//   return true;    
+// });
+
+// const customRouter = {
+//   // 小孩end : 爸爸start
+//   history: {
+//     "/profile/view": "/"
+//   },
+//   // 爸爸start : 小孩end
+//   temp: {
+//     "/": "/profile/view"
+//   },
+// };
+// const setCustomRouter = (start, end) => {
+//   // 有資料&&是關鍵字要排除
+//   // if (end==="/profile/view") {
+//   //   return;
+//   // }
+//   // 檢查如果是反向進入不要加入
+//   if(customRouter.temp[start] && end===customRouter.temp[start]){
+//     return;
+//   }
+//   // A-B-A
+//   /**
+//    *{
+//    *B:A 
+//    A:B
+//    *}
+//    */
+//   customRouter.history[end] = start;
+//   customRouter.temp[start] = end;
+// };
+router.afterEach((to, from) => {
+  // const redirect = to?.query?.redirect
+  // console.log("_", redirect)
+  // console.log(customRouter)
+  // 儲存路由
+  // const routerHistory = router?.options?.history?.state;
+  
+  // setCustomRouter(routerHistory.current, routerHistory.back);
+  // console.log(JSON.stringify(customRouter));
+  // useStorage.setItem("routerHistory", JSON.stringify(customRouter.history));
+  // useStorage.setItem("preRouterHistory", JSON.stringify(preRouterHistory));
+
+  return true;
+})
 export { router };

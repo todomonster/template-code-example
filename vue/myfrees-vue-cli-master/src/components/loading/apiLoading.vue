@@ -6,8 +6,8 @@
       :on-cancel="onCancel"
       :is-full-page="fullPage"
       loader="bars"
-      background-color="#000"
-      color="#fff"
+      background-color="#fff"
+      color="#000"
       :opacity="opacity"
     />
   </div>
@@ -29,7 +29,7 @@ export default {
     const { globalLoading } = storeToRefs(globalStore);
     const fullPage = ref(true);
     const canCancel = ref(false);
-    const opacity = ref(0.8);
+    const opacity = ref(0.5);
     onMounted(() => {});
 
     const onCancel = () => {

@@ -1,8 +1,8 @@
 <script>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onBeforeMount } from "vue";
 import { Toast } from "@/components/global/swal";
 import { errorHandle } from "@/utils/errorHandle";
-import { apiPushOtp, apiVerifyOtp } from "@/api/myfree";
+import { apiPushOtp, apiVerifyOtp, apiCheckAccount } from "@/api/myfree";
 import { useGlobalStore } from "@/store/global";
 
 import { useCoolDownStore } from "@/store/smsCoolDown2";
@@ -46,6 +46,15 @@ export default {
       }
 
       if (form1.value.reportValidity()) {
+        // 先檢查是否存在
+        const checkStatus = await apiCheckAccount({
+          type: "store",
+          mobile: inputData.value.mobile,
+        });
+        if(checkStatus.is_regist === true){
+          Toast("此帳號已存在!");
+          return
+        }
         //發送簡訊
         // ========
         if (isSmsCoolDownOk.value === false) {
@@ -70,6 +79,10 @@ export default {
 
     const handleOtpVerify = async ($event) => {
       $event.preventDefault();
+      if(!inputData.value.verifyCode.trim()){
+        Toast("請輸入驗證碼")
+        return;
+      }
       if (form1.value.reportValidity()) {
         //驗證簡訊
         const response = await apiVerifyOtp(inputData.value.mobile, {
@@ -110,8 +123,10 @@ export default {
       }
     };
     // ========
-    onMounted(() => {
+    onBeforeMount(() => {
       document.body.className = "c-login";
+    });     
+    onMounted(() => {
       // 計時器初始化
       init();
       setCountDown();
@@ -160,12 +175,11 @@ export default {
 </script>
 
 <template>
-  <section class="c-main" >
+  <section class="c-main">
     <div class="main-header">
       <div class="main-navbar">
         <ul class="navbar-nav">
-          <li class="nav-item">
-          </li>
+          <li class="nav-item"></li>
         </ul>
       </div>
     </div>
@@ -175,7 +189,7 @@ export default {
       </div>
     </div>
     <!-- form start -->
-    <div class="form-container form-container-2 ">
+    <div class="form-container form-container-2">
       <form ref="form1">
         <div class="position-relative mb-3">
           <label class="form-label form-label-2"
@@ -185,7 +199,7 @@ export default {
             type="text"
             class="form-control form-control-2"
             placeholder="請輸入手機號碼"
-            v-model="inputData.mobile"
+            v-model.trim="inputData.mobile"
             pattern="^09\d{2}?\d{3}?\d{3}$"
             title="請輸入手機號碼"
             required
@@ -209,9 +223,8 @@ export default {
             type="text"
             class="form-control form-control-2"
             placeholder="請輸入驗證碼"
-            v-model="inputData.verifyCode"
+            v-model.trim="inputData.verifyCode"
             title="簡訊驗證碼"
-            required
           />
         </div>
         <div class="position-relative mb-3" v-if="currentStep > 1">
@@ -222,7 +235,7 @@ export default {
             :type="passwordType"
             class="form-control form-control-2"
             placeholder="請輸入密碼"
-            v-model="inputData.password"
+            v-model.trim="inputData.password"
             title="8~20個字元(包含英文及數字)"
             pattern="^(?=.*[A-Za-z])(?=.*[0-9]).{8,20}$"
             required
@@ -239,7 +252,7 @@ export default {
             :type="passwordType"
             class="form-control form-control-2"
             placeholder="請再次確認密碼"
-            v-model="inputData.password2"
+            v-model.trim="inputData.password2"
             title="請再次確認密碼"
             required
           />
@@ -250,9 +263,9 @@ export default {
         <div
           class="row form-word text-end text-decoration-underline cursor-pointer"
         >
-          <div class="col-12 ml-4" @click="$router.push({ path: '/' })">
-            登入
-          </div>
+          <div class="col-12 ml-4 ">
+            <span class="cursor-pointer"  @click="$router.push({ path: '/' })">登入</span>
+          </div>          
         </div>
         <div class="row form-word text-center">
           <div class="col-12 ml-4">

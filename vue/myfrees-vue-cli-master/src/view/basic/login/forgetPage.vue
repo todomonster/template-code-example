@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { Toast } from "@/components/global/swal";
 import { errorHandle } from "@/utils/errorHandle";
-import { apiPostOptPassword, apiOtpForget } from "@/api/api";
+// import { apiPostOptPassword, apiOtpForget } from "@/api/api";
 import { apiStoreForgetPwd, apiStoreChangePwd } from "@/api/myfree";
 
 export default {
@@ -24,45 +24,45 @@ export default {
       $event.preventDefault();
       if (form.value.reportValidity()) {
         //發送簡訊S-1-0-5
-        msg = await apiOtpForget({ phoneNumber: inputData.value.phoneNumber });
-        if (msg.status == true) {
-          Toast("驗證碼已發送");
-          isSendVerify.value = true;
-        } else {
-          let errMessage = errorHandle(msg);
-          Toast(errMessage);
-        }
+        // msg = await apiOtpForget({ phoneNumber: inputData.value.phoneNumber });
+        // if (msg.status == true) {
+        //   Toast("驗證碼已發送");
+        //   isSendVerify.value = true;
+        // } else {
+        //   let errMessage = errorHandle(msg);
+        //   Toast(errMessage);
+        // }
       }
     };
     const sendVerify2 = async ($event) => {
       $event.preventDefault();
       if (form.value.reportValidity()) {
         //發送簡訊S-1-0-5
-        msg = await apiOtpForget({ phoneNumber: inputData.value.phoneNumber });
-        if (msg.status == true) {
-          Toast("驗證碼已發送");
-        } else {
-          let errMessage = errorHandle(msg);
-          Toast(errMessage);
-        }
+        // msg = await apiOtpForget({ phoneNumber: inputData.value.phoneNumber });
+        // if (msg.status == true) {
+        //   Toast("驗證碼已發送");
+        // } else {
+        //   let errMessage = errorHandle(msg);
+        //   Toast(errMessage);
+        // }
       }
     };
 
     const send = async ($event) => {
       $event.preventDefault();
       if (form2.value.reportValidity()) {
-        if (inputData.value.newPassword == newPassword2.value) {
-          msg = await apiPostOptPassword(inputData.value);
-          if (msg.status == true) {
-            Toast("密碼已修改，請使用新密碼登入");
-            router.push({ path: "/" });
-          } else {
-            let errMessage = errorHandle(msg);
-            Toast(errMessage);
-          }
-        } else {
-          Toast("密碼不相符，請確認");
-        }
+        // if (inputData.value.newPassword == newPassword2.value) {
+        //   msg = await apiPostOptPassword(inputData.value);
+        //   if (msg.status == true) {
+        //     Toast("密碼已修改，請使用新密碼登入");
+        //     router.push({ path: "/" });
+        //   } else {
+        //     let errMessage = errorHandle(msg);
+        //     Toast(errMessage);
+        //   }
+        // } else {
+        //   Toast("密碼不相符，請確認");
+        // }
       }
     };
 

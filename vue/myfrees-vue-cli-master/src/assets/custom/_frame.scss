@@ -19,7 +19,7 @@
     padding-top: 0;
     padding-bottom: 0;
     height: $header-height;
-    background: url(#{$img}bg.png) no-repeat center top/100% auto;
+    background: url(#{$img}#{nth($bg-image, $style)}) no-repeat center top/100% auto;
 	.nav-link {
 		padding: .5rem 1.25rem;
 		line-height: 1;
@@ -36,7 +36,7 @@
         }
 		.icon-notice {
 			margin-right: .375rem;
-			background-image: url(#{$img}icon_notice.png);
+			background-image: url(#{$img}#{nth($icon-notice-image, $style)});
 			.count {
 				display: inline-block;
 				position: absolute;
@@ -107,7 +107,7 @@
         }
 		.icon-clear {
 			margin-right: .375rem;
-			background-image: url(#{$img}icon_clear.png);
+			background-image: url(#{$img}#{nth($icon-clear-image, $style)});
 		}
     }
 }
@@ -150,6 +150,12 @@
 			background-position: center;
 			background-size: contain;
 		}
+		.icon_good {
+			background-image: url(#{$img}icon_good.png);
+		}
+		.icon-cart {
+			background-image: url(#{$img}icon_cart.png);
+		}
 		.icon-shop {
 			background-image: url(#{$img}icon_shop.png);
 		}
@@ -171,6 +177,12 @@
 	}
 	.active {
 		.tab-img {
+			.icon-good {
+				background-image: url(#{$img}icon_good_select.png);
+			}
+			.icon-cart {
+				background-image: url(#{$img}icon_cart_select.png);
+			}
 			.icon-shop {
 				background-image: url(#{$img}icon_shop_select.png);
 			}
@@ -178,14 +190,14 @@
 				background-image: url(#{$img}icon_product_select.png);
 			}
 			.icon-cash {
-				background-image: url(#{$img}icon_cash_select.png);
+				background-image: url(#{$img}#{nth($icon-cash-select-image, $style)});
 			}
 			.icon-member {
-				background-image: url(#{$img}icon_member_select.png);
+				background-image: url(#{$img}#{nth($icon-member-select-image, $style)});
 			}
 		}
 		.tab-title {
-			color: #FB7B1A;
+			color: nth($primary-color, $style);
 		}
 	}
 }

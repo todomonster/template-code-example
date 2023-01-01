@@ -7,10 +7,13 @@ import { parseUrlEncode } from "@/utils/helper"
 export const apiGetCityArea = () => apiInstance.get(`/city_area/list`);
 export const apiGetCityList = () => apiInstance.get(`/city/list`);
 export const apiGetAreaList = () => apiInstance.get(`/area/list`);
-
+/** /notify/token 存 推播token form */
+export const apiStoreSaveFcmToken = (data) => apiInstance.post(`/notify/token`, parseUrlEncode(data));
 /** store/rewardRange S-1-11 x*/
 export const apiGetRewardRange = () => apiInstance.get(`/rewardRange`);
-
+export const apiLogout = () => apiInstance.logout();
+// {{api_path}}/api/mobile/check/type/:type/:mobile
+export const apiCheckAccount = ({type,mobile}) => apiInstance.get(`/mobile/check/type/${type}/${mobile}`);
 
 // =============================================簡訊
 /** /mobile/verify/push_sms 發送簡訊 form */
@@ -24,6 +27,8 @@ export const apiVerifyOtp = (mobile, data) => apiInstance.formDataLogin(`/mobile
 export const apiStoreForgetPwd = (data) => apiInstance.post(`/store/forgotpwd`, parseUrlEncode(data));
 /** store/changepwd a-1-2 urlencoded */
 export const apiStoreChangePwd = (data) => apiInstance.post(`/store/changepwd`, parseUrlEncode(data));
+/** /api/store/remove */
+export const apiStoreRemove = () => apiInstance.post(`/store/remove`);
 
 /** store/regist a-1-3 form */
 export const apiStoreRegister = (data) => apiInstance.formDataPOST(`/store/regist`, (data));

@@ -1,20 +1,27 @@
 <script>
 import { ref, onMounted, computed } from "vue";
-import { ToastConfirm, ToastInputConfirm } from "@/components/global/swal";
+import {
+  Toast,
+  ToastConfirm,
+  ToastInputConfirm,
+} from "@/components/global/swal";
 import { useGlobalStore } from "@/store/global";
 
 import img_06 from "@/assets/icon/member06.svg";
 import img_09 from "@/assets/icon/member09.png";
 // call api
-import { apiLogout } from "@/api/api";
+import { apiLogout, apiStoreSaveFcmToken, apiStoreRemove } from "@/api/myfree";
 
 import { ExtCall } from "@/utils/extCall";
+
+import ArrowIcon from "@/components/global/ArrowIcon.vue";
 
 export default {
   name: "MenuList",
   setup() {
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
+    const VUE_APP_VERSION = process.env.VUE_APP_VERSION;
 
     const member = ref({
       avatarUrl: "",
@@ -29,7 +36,6 @@ export default {
 
     onMounted(async () => {});
 
-    const name = ["隱私權條款", "掃描/下載 QR Code"];
     const link = ["https://myfree.tako.life/privacy", "/setting/qrCode"];
     const handleWebView = (openUrl) => {
       try {
@@ -38,18 +44,68 @@ export default {
         goto("href", link[0]);
       }
     };
+    const removeAccount = async () => {
+      const confirm = await ToastConfirm("🚨確定要刪除帳號?");
+      if (confirm) {
+        const response = await apiStoreRemove();
+        if (response.result) {
+          await apiLogout();
+          Toast("刪除成功");
+          setTimeout(() => goto("router", "/"), 800);
+        } else {
+          Toast("刪除失敗");
+        }
+      }
+    };
     const logout = async () => {
       // 有做清除cookie和storage處理
       const confirm = await ToastConfirm("是否要登出?");
       if (confirm) {
+        const response = await apiStoreSaveFcmToken({
+          token: "null",
+          type: "store",
+        });
+        // console.log(JSON.stringify(response), "fcm");
         await apiLogout();
         goto("router", "/");
       }
     };
+    // const testExtCall = (type) => {
+    //   try {
+    //     if (type == "startGPS") {
+    //       console.log(type, 1);
+    //       let Input = "";
+    //       window.ExtCallStartGPS = (val) => (Input = val);
+    //       ExtCallGPS.startGPS("ExtCallStartGPS");
+    //       setTimeout(() => console.log(Input), 100);
+    //     }
+    //     if (type == "stopGPS") {
+    //       console.log(type, 2);
+    //       ExtCallGPS.stopGPS();
+    //     }
+    //     if (type == "getCurrentLocation") {
+    //       console.log(type, 3);
+    //       let Input = { time: "", lat: "", long: "" };
+    //       window.ExtCallGetCurrentLocation = (time, lat, long) => {
+    //         Input = { time, lat, long };
+    //       };
+    //       ExtCallGPS.getCurrentLocation("ExtCallGetCurrentLocation");
+    //       setTimeout(() => console.log(Input), 100);
+    //     }
+    //     if (type == "getUserLocationHistory") {
+    //       console.log(type, 4);
+    //       let Input = {};
+    //       window.ExtCallGetUserLocationHistory = (val) => (Input = val);
+    //       ExtCallGPS.getUserLocationHistory("ExtCallGetUserLocationHistory");
+    //       setTimeout(() => console.log(JSON.stringify(Input)), 100);
+    //     }
+    //   } catch (error) {
+    //     console.log(error, "QQQQQ");
+    //   }
+    // };
 
     return {
       member,
-      name,
       link,
       goto,
       img_09,
@@ -57,118 +113,124 @@ export default {
       logout,
       avatarImgUrl,
       handleWebView,
+      removeAccount,
+      VUE_APP_VERSION,
+      // testExtCall,
     };
   },
-  components: {},
+  components: { ArrowIcon },
 };
 </script>
 
 <template>
-  <div class="main-content">
-    <!-- <div class="main">
-      <div class="mainblur">
-        <div class="mb-3 topArea">
-          <label class="headShot">
-            <img :src="avatarImgUrl" v-if="avatarImgUrl" />
-            <img src="@/assets/image/noavatar.jpg" v-if="!avatarImgUrl" />
-            <p>{{ member?.name }}</p>
-          </label>
-        </div>
+  <div class="main">
+    <ul class="list-group list-group-flush">
+      <div class="listItem">
+        <button
+          type="button"
+          class="list-group-item list-group-item-action"
+          @click="handleWebView(link[0])"
+        >
+          <div class="d-flex justify-content-between grey">
+            <div>
+              <i class="fa fa-lock mx-1" aria-hidden="true"></i>
+              隱私權條款
+            </div>
+            <ArrowIcon />
+          </div>
+        </button>
       </div>
-    </div> -->
-    <div class="main2">
-      <ul class="list-group list-group-flush">
-        <div class="listItem">
-          <button
-            type="button"
-            class="list-group-item list-group-item-action"
-            @click="handleWebView(link[0])"
-          >
-            <div><img :src="img_06" /> {{ name[0] }}</div>
-          </button>
-        </div>
-        <div class="listItem">
-          <button
-            type="button"
-            class="list-group-item list-group-item-action"
-            @click="goto('router', link[1])"
-          >
-            <div><img :src="img_06" /> {{ name[1] }}</div>
-          </button>
-        </div>
+      <div class="listItem">
+        <button
+          type="button"
+          class="list-group-item list-group-item-action"
+          @click="goto('router', link[1])"
+        >
+          <div class="d-flex justify-content-between grey">
+            <div>
+              <i class="fa fa-qrcode mx-1" aria-hidden="true"></i>
+              掃描/下載 QR Code
+            </div>
+            <ArrowIcon />
+          </div>
+        </button>
+      </div>
 
-        <div class="listItem">
-          <button
-            type="button"
-            class="list-group-item list-group-item-action"
-            @click="logout"
-          >
-            <div><img :src="img_09" />登出</div>
-          </button>
-        </div>
-      </ul>
-    </div>
+      <div class="listItem">
+        <button
+          type="button"
+          class="list-group-item list-group-item-action"
+          @click="logout"
+        >
+          <div class="d-flex justify-content-between grey">
+            <div>
+              <i class="fa fa-sign-out mx-1" aria-hidden="true"></i>
+              登出
+            </div>
+            <ArrowIcon />
+          </div>
+        </button>
+      </div>
+      <div class="listItem">
+        <button
+          type="button"
+          class="list-group-item list-group-item-action"
+          @click="removeAccount"
+        >
+          <div class="d-flex justify-content-between grey">
+            <div>
+              <i class="fa fa-window-close mx-1" aria-hidden="true"></i>
+              刪除帳號
+            </div>
+            <ArrowIcon />
+          </div>
+        </button>
+      </div>
+      <span class="version">{{ VUE_APP_VERSION }}</span>
+      <!-- <div class="listItem">
+        <button
+          type="button"
+          class="list-group-item list-group-item-action"
+          @click="testExtCall('startGPS')"
+        >
+          <div class="d-flex justify-content-between grey">
+            <div>
+              <i class="fa fa-sign-out mx-1" aria-hidden="true"></i>
+              startGPS
+            </div>
+            <ArrowIcon />
+          </div>
+        </button>
+      </div> -->
+    </ul>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.member {
+.grey {
+  color: #7d7d7d;
+}
+
+.version {
+  color: #f3f6f4;
+  position: fixed;
+  bottom: 10%;
+  left: 45%;
+}
+
+.main {
+  margin-top: $header-height;
   margin-bottom: calc($footer-height + 15px);
-  display: flex;
-  flex-direction: column;
-
-  .main {
-    background-image: url("@/assets/image/member_bg.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  .mainblur {
-    backdrop-filter: blur(3px);
-    height: 12.875rem;
-  }
-
-  .topArea {
-    .headShot {
-      margin-top: 1rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      width: 100vw;
-      height: 12.875rem;
-
-      img {
-        width: 6.625rem;
-        height: 6.625rem;
-        border-radius: 50%;
-      }
-
-      p {
-        margin: 0.75rem auto;
-        font-size: 1.25rem;
-        font-weight: 700;
-      }
-    }
-  }
+  padding: 0rem;
 
   .listItem {
-    border-bottom: 1px solid #e8e8e8;
+    border-bottom: 0px solid #e8e8e8;
 
     button {
       height: 50px;
       font-size: 1rem;
       font-weight: 400;
       border: none;
-      color: #333333;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      img {
-        width: 2rem;
-        margin-right: 0.75rem;
-      }
     }
   }
 }
