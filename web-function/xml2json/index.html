@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <a href="https://dev.to/letswrite/javascriptxml-zhuan-json-3a41">https://dev.to/letswrite/javascriptxml-zhuan-json-3a41</a>
+    <script src="./xml2json.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const url = 'https://api.nlsc.gov.tw/other/TownVillagePointQuery/120.698659/24.156250';
+            fetch(url)
+            .then(res => res.text())
+            .then(res => {
+                const stringData = xml2json(parseXml(res), '')
+                console.log(stringData)
+                console.log(JSON.parse(stringData));
+            })
+
+            // const api = 'https://ptx.transportdata.tw/MOTC/v2/Rail/Metro/Station/TRTC?$format=xml';
+            // fetch(api)
+            //     .then(res => res.text())
+            //     .then(res => {
+            //         const data = xml2json(parseXml(res), '')
+            //         console.log(JSON.parse(data));
+            //     })
+
+        })
+
+        function parseXml(xml) {
+            var dom = null;
+            if (window.DOMParser) {
+                try {
+                    dom = (new DOMParser()).parseFromString(xml, "text/xml");
+                }
+                catch (e) { dom = null; }
+            }
+            else if (window.ActiveXObject) {
+                try {
+                    dom = new ActiveXObject('Microsoft.XMLDOM');
+                    dom.async = false;
+                    if (!dom.loadXML(xml)) // parse error ..
+
+                        window.alert(dom.parseError.reason + dom.parseError.srcText);
+                }
+                catch (e) { dom = null; }
+            }
+            else
+                alert("cannot parse xml string!");
+            return dom;
+        }
+        
+    </script>
+</body>
+
+</html>
