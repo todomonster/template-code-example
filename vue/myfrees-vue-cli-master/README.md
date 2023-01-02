@@ -100,3 +100,8 @@ scss config`$img: '@/assets/images/';`
   - 註冊成功沒有提示bug
   - 後端回傳時間值不是[]提示bug
   - 時間v-for 不知道為什麼變成null bug
+- v2.3.2 對應 {file: store_settings.txt , "version": xx}  
+  - Fix 註冊還能改手機號碼
+  - 移除不用<-返回的頁面
+  - 補回小鈴鐺icon
+  - 完成客製化路由紀錄

@@ -182,3 +182,12 @@ export function windowScrollTo({ top = 0, left = 0, behavior = "instant" }) {
         behavior,
     });
 }
+
+export function hashUrlRemoveQuery() {
+    const hashPath = window.location.hash;
+    if (hashPath.includes("?")) {
+        const arr = hashPath.split("?");
+        return arr[0].slice(1);
+    }
+    return hashPath.slice(1);
+}

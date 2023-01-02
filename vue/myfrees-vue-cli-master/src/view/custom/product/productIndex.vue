@@ -14,8 +14,8 @@ export default {
 <template>
   <Header
     title=""
-    rightTextStatus=""
-    rightIcon=""
+    rightTextStatus="show"
+    rightIcon="bell"
     v-show="$route.meta.showHeader"
   />
   <!-- <router-view v-slot="{ Component }">
