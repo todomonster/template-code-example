@@ -62,7 +62,23 @@ component名稱一律全部大駝峰，而且要2個單字組成，因為git的�
 
 若用到 `new Date()` 在ios是不吃`"2022-09-01"`減號格式的!
 
-scss config`$img: '@/assets/images/';`
+改美術的scss
+
+```scss
+// \src\assets\custom\_config.scss
+$img: '@/assets/images/';
+
+// \src\assets\layout.scss
+@import "custom/vue";
+
+// \src\assets\custom\_config.scss
+.c-login {
+ background: url(#{$img}#{nth($bg-login-image, $style)}) no-repeat center top/cover;
+ margin: 0;
+ height: 100%;
+ overflow: hidden;
+}
+```
 
 ### 如何製作上傳圖片
 
