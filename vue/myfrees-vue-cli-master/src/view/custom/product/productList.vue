@@ -78,7 +78,7 @@ export default {
           <div class="card-body">
             <div class="row">
               <div class="col-left">
-                <img :src="item.image[0]" class="card-img" v-if="item.image[0]"/>
+                <img :src="item.image[0]" class="card-img" v-if="item.image[0]" onerror="this.onerror=null; this.src='https://fakeimg.pl/110x110/'"/>
                 <img src="https://fakeimg.pl/110x110/" class="card-img" v-if="!item.image[0]"/>
               </div>
               <div class="col-right">

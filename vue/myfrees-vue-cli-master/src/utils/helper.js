@@ -184,10 +184,19 @@ export function windowScrollTo({ top = 0, left = 0, behavior = "instant" }) {
 }
 
 export function hashUrlRemoveQuery() {
+    const ans = {
+        path: "",
+        query: {}
+    }
     const hashPath = window.location.hash;
+    // 也要處理原本的query
     if (hashPath.includes("?")) {
         const arr = hashPath.split("?");
-        return arr[0].slice(1);
+        ans.path = arr[0].slice(1);
+        const searchParam = new URLSearchParams(arr[1]);
+    } else {
+        ans.path = hashPath.slice(1);
     }
-    return hashPath.slice(1);
+
+    return ans;
 }

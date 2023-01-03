@@ -249,16 +249,16 @@ router.beforeEach((to, from, next) => {
 const customTable = {
   // 小孩end : 爸爸start
   findStart: {
-    "/profile/view": "/"
+    "/profile/view": { path: "/" }
   },
   // 爸爸start : 小孩end
   findEnd: {
-    "/": "/profile/view"
+    "/": { path: "/profile/view" }
   },
 };
-const setCustomRouter = (fromPath, toPath) => {
-  customTable.findStart[toPath] = fromPath;
-  customTable.findEnd[fromPath] = toPath;
+const setCustomRouter = (fromPath, toPath, fromPathQuery, toPathQuery) => {
+  customTable.findStart[toPath] = { path: fromPath, query: fromPathQuery };
+  customTable.findEnd[fromPath] = { path: toPath, query: toPathQuery };
 };
 const VUE_APP_ROUTER_TABLE = process.env.VUE_APP_ROUTER_TABLE;
 
@@ -271,7 +271,7 @@ router.beforeResolve((to, from, next) => {
     // delete to?.query?.["$back$"];
 
   } else {
-    setCustomRouter(from.path, to.path)
+    setCustomRouter(from.path, to.path, from.query, to.query)
     useStorage.setItem(VUE_APP_ROUTER_TABLE, JSON.stringify(customTable));
   }
 

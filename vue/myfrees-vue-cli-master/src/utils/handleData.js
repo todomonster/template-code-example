@@ -25,7 +25,7 @@ function combineTime(weekday, time) {
 
 // 營業時間
 function businessHours(business_hours) {
-    if(Array.isArray(JSON.parse(business_hours))){
+    if (Array.isArray(JSON.parse(business_hours))) {
         const newHour = JSON.parse(business_hours).filter((x) => x.active);
         const newTime = newHour.map((x) => combineTime(x.weekday, x.time));
         return newTime.join("");
@@ -40,7 +40,11 @@ function isOpen(is_open) {
 }
 
 function storeImages(images) {
-    return JSON.parse(images)[0] || "";
+    // 回傳字串
+    if (Array.isArray(JSON.parse(images))) {
+        return JSON.parse(images)[0]
+    }
+    return "";
 }
 
 export const handleStoreProfile = {
