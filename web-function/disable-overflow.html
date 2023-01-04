@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* 方法2 */
+        .no-scroll {
+            position: fixed !important
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        1
+        <br><br><br><br><br><br><br><br><br><br>
+        <br><br><br><br><br><br><br><br><br><br>
+        <br><br><br><br><br><br><br><br><br><br>
+        <br><br><br><br><br><br><br><br><br><br>
+        <br><br><br><br><br><br><br><br><br><br>
+        10
+    </div>
+</body>
+<script>
+
+    // overflow: visible;
+    // overflow: hidden;
+    // overflow: scroll;
+    // overflow: auto;
+    
+    // 方法一
+    // document.body.style.overflow = 'hidden'
+    
+    // 方法二
+    document.body.classList.add('no-scroll');
+    // document.body.classList.remove('no-scroll');
+
+
+</script>
+
+</html>
