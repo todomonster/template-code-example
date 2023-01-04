@@ -62,7 +62,23 @@ component名稱一律全部大駝峰，而且要2個單字組成，因為git的�
 
 若用到 `new Date()` 在ios是不吃`"2022-09-01"`減號格式的!
 
-scss config`$img: '@/assets/images/';`
+改美術的scss
+
+```scss
+// \src\assets\custom\_config.scss
+$img: '@/assets/images/';
+
+// \src\assets\layout.scss
+@import "custom/vue";
+
+// \src\assets\custom\_config.scss
+.c-login {
+ background: url(#{$img}#{nth($bg-login-image, $style)}) no-repeat center top/cover;
+ margin: 0;
+ height: 100%;
+ overflow: hidden;
+}
+```
 
 ### 如何製作上傳圖片
 
@@ -93,15 +109,25 @@ scss config`$img: '@/assets/images/';`
   - ios返回路由 先寫死路徑 同步ios+Android
   - 加上版本號
   - 鈴鐺拔掉
-- v2.3.1 對應 {file: store_settings.txt , "version": 17}
+- v2.3.1 對應 {file: store_settings.txt , "version": 18}
   - 註冊帳號返回失效bug
   - 無法重新送簡訊表單被阻擋
   - 註冊後沒有更新到編輯模式 清空bug
   - 註冊成功沒有提示bug
   - 後端回傳時間值不是[]提示bug
   - 時間v-for 不知道為什麼變成null bug
-- v2.3.2 對應 {file: store_settings.txt , "version": xx}  
+- v2.3.2 對應 {file: store_settings.txt , "version": 19}  
   - Fix 註冊還能改手機號碼
   - 移除不用<-返回的頁面
   - 補回小鈴鐺icon
   - 完成客製化路由紀錄
+    - 也有處理query
+  - 更新破圖處理
+  - 店家資料
+    - 大分類也改前端必填
+    - 店家電話改前端必填
+    - 分類標籤改前端必填
+- v2.3.3 對應 {file: store_settings.txt , "version": 20}
+  - Fix 回饋確認列表滑動問題
+  - 商店在編輯能修改回饋級距了
+  - boostrap 降版(5.2.2->5.0.2)

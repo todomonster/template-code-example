@@ -1,0 +1,57 @@
+.ui-tab {
+    background-color: #f5f5f5;
+	.swiper-slide {
+		padding: .3125rem .5rem;
+        text-align: center;
+		&:after {
+			content: "";
+			position: absolute;
+			left: .125rem;
+			right: .125rem;
+            top: .125rem;
+			bottom: .125rem;
+			background-color: transparent;
+            border-radius: .5rem;
+            box-shadow: none;
+			transition: all .5s;
+            z-index: 11;
+		}
+		span {
+            position: relative;
+			color: #737373;
+            font-size: .9375rem;
+            z-index: 12;
+		}
+	}
+	.swiper-slide-thumb-active {
+		&:after {
+            background-color: white;
+            box-shadow: 0 .125rem .5rem rgba(black, .15);
+		}
+		span {
+			color: nth($form-icon-color, $style);
+		}
+	}
+}
+.ui-page {
+	.swiper-slide {
+		overflow-y: auto;
+	}
+}
+.filter-containter {
+    background-color: #f5f5f5;
+	.row {
+		--bs-gutter-x: 0;
+	}
+	.filter-link {
+		display: block;
+		padding: .25rem .5rem;
+		text-align: center;
+		color: #737373;
+		font-size: .9375rem;
+		text-decoration: none;
+		&.active {
+			color: nth($form-icon-color, $style);
+		}
+	}
+}

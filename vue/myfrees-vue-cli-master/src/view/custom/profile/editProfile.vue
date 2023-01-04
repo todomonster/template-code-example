@@ -1,5 +1,6 @@
 <script>
 import { ref, onMounted, onBeforeMount, computed, watch } from "vue";
+import { handleStoreProfile } from "@/utils/handleData";
 import { Toast } from "@/components/global/swal.js";
 import {
   apiGetStore,
@@ -57,7 +58,7 @@ export default {
             ...storeData.value,
             ...addStorePinia.value,
             all_addr: all_addr.value,
-            is_open: "1"
+            is_open: "1",
           };
           const response = await apiStoreRegister(newPostData);
           if (response.result || response.success === "OK") {
@@ -65,14 +66,12 @@ export default {
               status: false,
               mobile: "",
               password: "",
-            });            
+            });
             Toast("加入會員成功");
             goto("router", `/`);
           } else {
             errorHandle(response);
           }
-        } else {
-          Toast("請填寫必填資料!");
         }
         return;
       }
@@ -104,14 +103,13 @@ export default {
       const getAreaList = await apiGetAreaList();
       fullArea.value = getAreaList.data;
       areaList.value = getAreaList.data;
-
+      // 處理回饋級距
+      const getRewardList = await apiGetRewardRange();
+      rewardList.value = getRewardList.data;
       // 取得 pinia 的 password 和 phone 判斷是否是註冊
       const { password, mobile, status } = globalStore.isToAddStore;
       if (status) {
         showReward.value = true;
-        
-        const getRewardList = await apiGetRewardRange();
-        rewardList.value = getRewardList.data;
         addStorePinia.value = { password, mobile, status };
       } else {
         // 不是註冊 進入編輯流程
@@ -167,10 +165,7 @@ export default {
     };
 
     const handleImg = (item) => {
-      if (item) {
-        return JSON.parse(item)[0];
-      }
-      return "";
+      return handleStoreProfile.storeImages(item);
     };
     const isStoreOpen = ref(true);
     watch(
@@ -187,12 +182,12 @@ export default {
       const { status } = globalStore.isToAddStore;
       if (status) {
         // 是註冊
-        goto("router","/signup")
+        goto("router", "/signup");
       } else {
         // 不是註冊 進入編輯流程
-        goto("router","/profile/view")
+        goto("router", "/profile/view");
       }
-    }
+    };
     return {
       storeData,
       save,
@@ -215,7 +210,7 @@ export default {
       rewardList,
       showReward,
       handleEmit,
-      goback
+      goback,
     };
   },
   components: {
@@ -245,6 +240,7 @@ export default {
               <div class="image">
                 <img
                   :src="handleImg(storeData.images)"
+                  onerror="this.onerror=null; this.src='https://fakeimg.pl/340x200/'"
                   v-if="storeData.images"
                 />
                 <img
@@ -337,7 +333,7 @@ export default {
                 required
               />
             </div>
-            <div class="mb-2" v-if="showReward">
+            <div class="mb-2">
               <label class="form-label"
                 >回饋級距<span class="must">必填</span></label
               >
@@ -359,17 +355,22 @@ export default {
               </div>
             </div>
             <div class="mb-2">
-              <label class="form-label">電話</label>
+              <label class="form-label"
+                >電話<span class="must">必填</span></label
+              >
               <input
                 type="text"
                 class="form-control"
                 placeholder="請輸入店家電話"
                 v-model="storeData.tel"
+                required
               />
             </div>
             <ChooseDate :data="storeData" @business_hours="handleEmit" />
             <div class="mb-2">
-              <label class="form-label">大分類</label>
+              <label class="form-label"
+                >大分類<span class="must">必填</span></label
+              >
               <div class="input-pill">
                 <div class="row">
                   <div
@@ -383,6 +384,7 @@ export default {
                       name="kind"
                       :id="item"
                       :checked="item === storeData.category"
+                      required
                     />
                     <label
                       class="form-check-label"
@@ -411,6 +413,7 @@ export default {
                       name="price"
                       :id="item2"
                       :checked="item2 === storeData.price_range"
+                      required
                     />
                     <label
                       class="form-check-label"
@@ -423,12 +426,15 @@ export default {
               </div>
             </div>
             <div class="mb-2">
-              <label class="form-label">分類標籤(請用逗號分格標籤)</label>
+              <label class="form-label"
+                >分類標籤(逗號分格)<span class="must">必填</span></label
+              >
               <input
                 type="text"
                 class="form-control"
-                placeholder="請輸入分類標籤"
+                placeholder="美食,回饋"
                 v-model="storeData.keywords"
+                required
               />
             </div>
             <div class="mt-3 mb-2" v-if="!showReward">

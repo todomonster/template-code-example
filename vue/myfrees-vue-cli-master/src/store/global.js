@@ -40,11 +40,26 @@ export const useGlobalStore = defineStore('global', () => {
             });
         }
         if (mode === "back") {
+            // 目前的路由資訊
+            const routerData = { ...router.currentRoute.value };
+            // get localStorage string
             const backPath = useStorage.getItem(VUE_APP_ROUTER_TABLE) || "{}";
             const backPathObj = JSON.parse(backPath);
-            const nowPath = hashUrlRemoveQuery();
-            const father = backPathObj?.findStart?.[nowPath];
-            father ? router.push({ path: father, query: { $back$: '1' } }) : router.push("/");
+
+            //找上一頁的路由 
+            const father = backPathObj?.findStart?.[routerData.path];
+            const { query, path } = father;
+            // 吃到 $back$=1 讓路由守衛知道是上一頁 不用儲存
+            if (path) {
+                if (query) {
+                    router.push({ path: father.path, query: { ...query, $back$: '1' } })
+                    return;
+                } else {
+                    router.push({ path: father.path, query: { $back$: '1' } })
+                    return;
+                }
+            }
+            router.push("/");
         }
 
     };
