@@ -103,14 +103,13 @@ export default {
       const getAreaList = await apiGetAreaList();
       fullArea.value = getAreaList.data;
       areaList.value = getAreaList.data;
-
+      // 處理回饋級距
+      const getRewardList = await apiGetRewardRange();
+      rewardList.value = getRewardList.data;
       // 取得 pinia 的 password 和 phone 判斷是否是註冊
       const { password, mobile, status } = globalStore.isToAddStore;
       if (status) {
         showReward.value = true;
-
-        const getRewardList = await apiGetRewardRange();
-        rewardList.value = getRewardList.data;
         addStorePinia.value = { password, mobile, status };
       } else {
         // 不是註冊 進入編輯流程
@@ -334,7 +333,7 @@ export default {
                 required
               />
             </div>
-            <div class="mb-2" v-if="showReward">
+            <div class="mb-2">
               <label class="form-label"
                 >回饋級距<span class="must">必填</span></label
               >

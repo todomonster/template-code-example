@@ -127,3 +127,7 @@ $img: '@/assets/images/';
     - 大分類也改前端必填
     - 店家電話改前端必填
     - 分類標籤改前端必填
+- v2.3.3 對應 {file: store_settings.txt , "version": 20}
+  - Fix 回饋確認列表滑動問題
+  - 商店在編輯能修改回饋級距了
+  - boostrap 降版(5.2.2->5.0.2)
