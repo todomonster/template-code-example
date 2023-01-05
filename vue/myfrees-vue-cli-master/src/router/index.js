@@ -221,14 +221,12 @@ const myfreeRouter = [
 
 let routes = [...myfreeRouter, ...basicRoute];
 
-// let preRouterHistory = {};
 
 const router = createRouter({
   history: createWebHashHistory(process.env.BASE_URL),
   routes,
 });
 router.beforeEach((to, from, next) => {
-  // preRouterHistory = JSON.parse(JSON.stringify(router?.options?.history?.state));
 
   // 是否 match
   const isMatchAuth = to.matched.some((item) => item.meta.requiresAuth);
@@ -247,59 +245,38 @@ router.beforeEach((to, from, next) => {
     return true;
   }
 });
-// router.beforeResolve((to, from, next) => {
-//   // do something...
-//   // console.log(to)
 
-//   // if(redirect){
-//   //   next(redirect);
-//   //   return true;
-//   // }  
-//   next();
-//   return true;    
-// });
+const customTable = {
+  // 小孩end : 爸爸start
+  findStart: {
+    "/profile/view": { path: "/" }
+  },
+  // 爸爸start : 小孩end
+  findEnd: {
+    "/": { path: "/profile/view" }
+  },
+};
+const setCustomRouter = (fromPath, toPath, fromPathQuery, toPathQuery) => {
+  customTable.findStart[toPath] = { path: fromPath, query: fromPathQuery };
+  customTable.findEnd[fromPath] = { path: toPath, query: toPathQuery };
+};
+const VUE_APP_ROUTER_TABLE = process.env.VUE_APP_ROUTER_TABLE;
 
-// const customRouter = {
-//   // 小孩end : 爸爸start
-//   history: {
-//     "/profile/view": "/"
-//   },
-//   // 爸爸start : 小孩end
-//   temp: {
-//     "/": "/profile/view"
-//   },
-// };
-// const setCustomRouter = (start, end) => {
-//   // 有資料&&是關鍵字要排除
-//   // if (end==="/profile/view") {
-//   //   return;
-//   // }
-//   // 檢查如果是反向進入不要加入
-//   if(customRouter.temp[start] && end===customRouter.temp[start]){
-//     return;
-//   }
-//   // A-B-A
-//   /**
-//    *{
-//    *B:A 
-//    A:B
-//    *}
-//    */
-//   customRouter.history[end] = start;
-//   customRouter.temp[start] = end;
-// };
-router.afterEach((to, from) => {
-  // const redirect = to?.query?.redirect
-  // console.log("_", redirect)
-  // console.log(customRouter)
-  // 儲存路由
-  // const routerHistory = router?.options?.history?.state;
-  
-  // setCustomRouter(routerHistory.current, routerHistory.back);
-  // console.log(JSON.stringify(customRouter));
-  // useStorage.setItem("routerHistory", JSON.stringify(customRouter.history));
-  // useStorage.setItem("preRouterHistory", JSON.stringify(preRouterHistory));
+router.beforeResolve((to, from, next) => {
 
+  // 吃到 $back$=1 代表返回=true 跳過不覆蓋
+  const backQuery = to?.query?.["$back$"]
+  if (backQuery) {
+    //  後來發現移除意義不大
+    // delete to?.query?.["$back$"];
+
+  } else {
+    setCustomRouter(from.path, to.path, from.query, to.query)
+    useStorage.setItem(VUE_APP_ROUTER_TABLE, JSON.stringify(customTable));
+  }
+
+  next();
   return true;
-})
+});
+
 export { router };

@@ -42,7 +42,7 @@
                 </div>
                 <div class="mb-2">
                     <label class="form-label">商店名稱<span class="must">必填</span></label>
-                    <input type="text" class="form-control" placeholder="請輸入商店名稱" value="">
+                    <input type="text" class="form-control" placeholder="請輸入商店名稱" value="" readonly>
                 </div>
                 <div class="mb-2">
                     <label class="form-label">負責人</label>
@@ -94,8 +94,16 @@
                             <label class="form-check-label" for="week2">星期一</label>
                         </div>
                         <div class="row mb-2">
-                            <div class="col"><input type="time" class="form-control" placeholder="請選擇時間"></div>
-                            <div class="col"><input type="time" class="form-control" placeholder="請選擇時間"></div>
+                            <div class="col">
+                                <select class="form-control form-select">
+                                    <option selected>請選擇時間</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <select class="form-control form-select">
+                                    <option selected>請選擇時間</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="form-check mb-2">
                             <input type="checkbox" class="form-check-input" name="week3" id="week3">

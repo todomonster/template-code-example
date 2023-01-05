@@ -24,7 +24,7 @@ export default {
     ];
     const data = ref({});
     onMounted(async () => {
-      try {
+      // try {
         const response = await apiGetStore();
         let {
           name = "",
@@ -51,9 +51,9 @@ export default {
           is_open: handleStoreProfile.isOpen(is_open),
           images: handleStoreProfile.storeImages(images),
         };
-      } catch (error) {
-        errorHandle(error);
-      }
+      // } catch (error) {
+      //   errorHandle(error);
+      // }
     });
 
     return {
@@ -72,7 +72,7 @@ export default {
       <div class="detail-container">
         <div class="image-container">
           <div class="image">
-            <img :src="data.images" alt="myfreeCard" v-if="data.images" />
+            <img :src="data.images" alt="myfreeCard" v-if="data.images" onerror="this.onerror=null; this.src='https://fakeimg.pl/340x200/'"/>
             <img
               src="https://fakeimg.pl/340x200/"
               alt="myfreeCard"

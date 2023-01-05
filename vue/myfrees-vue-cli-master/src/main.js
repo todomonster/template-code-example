@@ -9,7 +9,7 @@ import 'bootstrap'
 
 import "./assets/layout.scss"
 // 讓手機版的鍵盤不要動到footer(Android)
-import "./assets/into.js"
+// import "./assets/into.js"
 import VueQrcode from '@chenfengyuan/vue-qrcode';
 
 const app = createApp(App)

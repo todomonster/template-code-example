@@ -1,5 +1,5 @@
 <script>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, onBeforeMount } from "vue";
 import { useGlobalStore } from "@/store/global";
 import { apiGetNotifyUnreadAmount } from "@/api/myfree";
 
@@ -24,9 +24,8 @@ export default {
     const execute = ref(new Function());
 
     const handleBellClick = () => {
-      // goto("router", "/notify");
-      // console.log(window.location.href)
-      window.location.href = "./index.html#/notify/list"
+      goto("router", "/notify/list");
+      // window.location.href = "./index.html#/notify/list";
     };
     function setValue(icon, inputString) {
       rightIconCode.value = icon || "";
@@ -51,7 +50,11 @@ export default {
           setValue("", "");
       }
     };
-
+    onBeforeMount(() => {
+      if (props.leftIcon === "") {
+        leftIconCode.value = "";
+      }
+    });
     onMounted(async () => {
       setIcon(props.rightIcon);
       if (rightIconCode.value === "icon icon-notice") {
@@ -61,9 +64,6 @@ export default {
           unread.value = response.unread;
           titleText.value = String(unread.value);
         }
-      }
-      if (props.leftIcon === "") {
-        leftIconCode.value = "";
       }
     });
     const countBell = computed(() => {

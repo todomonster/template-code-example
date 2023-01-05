@@ -110,3 +110,82 @@
         }
     }
 }
+.good-container {
+    padding: 1.125rem;
+    .card {
+        margin-bottom: 1.125rem;
+        border-radius: .5rem;
+        box-shadow: 0 .125rem .5rem rgba(black, .15);
+        .card-header {
+            padding: 0;
+            .card-link {
+                position: relative;
+                &:after {
+                    content: "";
+                    display: block;
+                    padding-bottom: 56.25%;
+                }
+            }
+        }
+        .card-img {
+            border: 0;
+            border-radius: .5rem .5rem 0 0;
+        }
+        .card-body {
+            padding: 1rem 1rem .625rem;
+            .card-link {
+                text-decoration: none;
+            }
+            .col + .col {
+                position: relative;
+                &:before {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    top: .5rem;
+                    width: .0625rem;
+                    height: 1.625rem;
+                    background-color: #e5e5e5;
+                }
+            }
+            .btn {
+                display: block;
+                margin-top: .3125rem;
+                text-align: center;
+                color: #A1A1A1;
+                font-size: .875rem;
+                line-height: 1;
+                text-decoration: none;
+                &.active {
+                    color: #FEA949;
+                    .icon-favorite {
+                        background-image: url(#{$img}icon_favorite_select.png);
+                    }
+                }
+                i {
+                    display: inline-block;
+                    margin-right: .5rem;
+                    width: 1.125rem;
+                    height: 1.125rem;
+                    vertical-align: -.25rem;
+                    font-style: normal;
+                    line-height: 1;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: contain;
+                }
+                .icon-favorite {
+                    background-image: url(#{$img}icon_favorite.png);
+                }
+                .icon-navigation {
+                    background-image: url(#{$img}icon_navigation.png);
+                }
+            }
+        }
+        .card-title {
+            margin-bottom: .5rem;
+            color: black;
+            font-size: 1rem;
+        }
+    }
+}

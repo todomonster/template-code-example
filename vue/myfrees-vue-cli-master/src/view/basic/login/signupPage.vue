@@ -44,6 +44,9 @@ export default {
         currentStep.value = 2;
         return;
       }
+      if (currentStep.value === 2) {
+        return;
+      }
 
       if (form1.value.reportValidity()) {
         // 先檢查是否存在
@@ -203,6 +206,7 @@ export default {
             pattern="^09\d{2}?\d{3}?\d{3}$"
             title="請輸入手機號碼"
             required
+            :disabled="currentStep == 2"
           />
           <div
             class="form-icon cursor-pointer"
