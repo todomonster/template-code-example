@@ -13,6 +13,7 @@ import {
   apiStoreUpload,
 } from "@/api/myfree";
 import { Toast, ToastConfirm } from "@/components/global/swal";
+import { focusInput } from "@/utils/helper";
 
 export default {
   name: "ProductDetail",
@@ -116,6 +117,7 @@ export default {
     };
 
     onMounted(async () => {
+      setTimeout(() => focusInput(), 500);
       id.value = Number(query.id) || 0;
       mode.value = query.mode || "add";
       try {
@@ -256,17 +258,23 @@ export default {
         </button>
       </div>
       <!-- 編輯/刪除 -->
-      <div class="product-btn-container" v-if="mode !== 'add'">
-        <button
-          class="btn product-btn-delete"
-          type="button"
-          @click="handleDelete"
-        >
-          刪除
-        </button>
-        <button class="btn product-btn-edit" type="button" @click="handleEdit">
-          儲存
-        </button>
+      <div >
+        <div class="product-btn-container" v-if="mode !== 'add'" id="c-footer">
+          <button
+            class="btn product-btn-delete"
+            type="button"
+            @click="handleDelete"
+          >
+            刪除
+          </button>
+          <button
+            class="btn product-btn-edit"
+            type="button"
+            @click="handleEdit"
+          >
+            儲存
+          </button>
+        </div>
       </div>
     </section>
   </div>
