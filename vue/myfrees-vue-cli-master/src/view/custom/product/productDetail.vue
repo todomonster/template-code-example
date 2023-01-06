@@ -26,8 +26,10 @@ export default {
       price: "100",
       stock: 0,
     };
+    const isStoreOpen = ref(true);
+    const productData = ref({ ...defaultData });
+
     const form1 = ref({});
-    const productData = ref(defaultData);
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
 
@@ -56,7 +58,7 @@ export default {
         if (form1.value.reportValidity()) {
           const response = await apiAddProduct(productData.value);
           if (response.result) {
-            productData.value = defaultData;
+            productData.value = { ...defaultData };
             Toast("新增完成");
             goto("back");
           }
@@ -123,7 +125,6 @@ export default {
       try {
         if (mode.value === "view") {
           const response = await apiGetProduct(id.value);
-          // console.log(response);
           if (response.result) {
             // 將陣列處理成字串
             const imgUrlParse = response.data.image;
@@ -131,14 +132,17 @@ export default {
               response.data.image = JSON.stringify(imgUrlParse);
             }
             productData.value = response.data;
-            isStoreOpen.value = productData.value.status === "1" ? true : false;
+            isStoreOpen.value =
+              response.data.status === "1" || response.data.status == true
+                ? true
+                : false;
           }
         }
       } catch (error) {
         errorHandle(error);
       }
     });
-    const isStoreOpen = ref(true);
+
     watch(
       () => isStoreOpen.value,
       (val) => {
@@ -170,10 +174,8 @@ export default {
       <div class="form-container form-container-3">
         <form ref="form1">
           <div class="mb-2">
+            <label class="form-label">上架<span class="must">必填</span></label>
             <div class="form-check form-switch">
-              <label class="form-check-label"
-                >上架<span class="must">必填</span></label
-              >
               <input
                 class="form-check-input"
                 type="checkbox"
@@ -258,7 +260,7 @@ export default {
         </button>
       </div>
       <!-- 編輯/刪除 -->
-      <div >
+      <div>
         <div class="product-btn-container" v-if="mode !== 'add'" id="c-footer">
           <button
             class="btn product-btn-delete"

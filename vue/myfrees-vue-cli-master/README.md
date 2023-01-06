@@ -135,3 +135,6 @@ $img: '@/assets/images/';
   - Fix 回饋確認拒絕沒有提示
   - into.js改版成純js
     - \src\assets\custom\_frame.scss
+- v2.3.5 對應 {file: store_settings.txt , "version": 22}
+  - Fix 商品上架bug
+  - Fix 地址顯示bug

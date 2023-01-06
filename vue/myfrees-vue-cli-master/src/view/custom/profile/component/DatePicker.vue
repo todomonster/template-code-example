@@ -113,7 +113,6 @@ export default {
       emit("business_hours", newData.value);
     };
     const handleAdd = (date, index1) => {
-      // console.log(date, index1);
       if (date?.time?.length < 4) {
         newData.value[index1].time.push({ end: "18:00", start: "09:00" });
         emit("business_hours", newData.value);
