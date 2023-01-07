@@ -22,7 +22,6 @@ export default {
 
     const handleListData = async (response) => {
       const { products } = response.data;
-      // console.log(products);
 
       // 處理空值
       if (response.total === 0) {
@@ -78,8 +77,17 @@ export default {
           <div class="card-body">
             <div class="row">
               <div class="col-left">
-                <img :src="item.image[0]" class="card-img" v-if="item.image[0]" onerror="this.onerror=null; this.src='https://fakeimg.pl/110x110/'"/>
-                <img src="https://fakeimg.pl/110x110/" class="card-img" v-if="!item.image[0]"/>
+                <img
+                  :src="item.image[0]"
+                  class="card-img"
+                  v-if="item.image[0]"
+                  onerror="this.onerror=null; this.src='https://fakeimg.pl/110x110/'"
+                />
+                <img
+                  src="https://fakeimg.pl/110x110/"
+                  class="card-img"
+                  v-if="!item.image[0]"
+                />
               </div>
               <div class="col-right">
                 <div class="card-title">{{ item.name }}</div>
@@ -90,7 +98,7 @@ export default {
           <div class="card-footer">
             <div class="d-flex justify-content-between">
               <div class="card-shelf">
-                <span :class="!item.status ? 'green' : 'red'">{{
+                <span :class="item.status === '上架中' ? 'green' : 'red'">{{
                   item.status
                 }}</span>
               </div>

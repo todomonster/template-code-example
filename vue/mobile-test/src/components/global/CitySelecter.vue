@@ -20,11 +20,9 @@ export default {
 
         const changeCityIdx = (e) => {
             cityIdx.value = e.target.value
-            // console.log(cityIdx.value)
         }
         const changeAreaIdx = (e) => {
             areaIdx.value = e.target.value
-            // console.log(areaIdx.value)
         }
 
         //往外傳
@@ -39,7 +37,6 @@ export default {
             // call api
             cityAreaData.value = await apiGetCityArea()
             cityAreaData.value = cityAreaData.value.data
-            // console.log(cityIdx.value)
             if (cityIdx.value != undefined) {
                 areaList.value = cityAreaData.value[cityIdx.value - 1].areas
             }

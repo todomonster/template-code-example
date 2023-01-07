@@ -200,3 +200,16 @@ export function hashUrlRemoveQuery() {
 
     return ans;
 }
+
+export function focusInput() {
+    const query = `input:not(input[type = checkbox], input[type = radio], input[type = file], input[readonly], input[disabled]), textarea`
+    const focusItem = document.querySelectorAll(query)
+    focusItem.forEach(item => {
+        item.addEventListener("focus", () => {
+            document.body.classList.add("fixfixed")
+        })
+        item.addEventListener("blur", () => {
+            document.body.classList.remove("fixfixed")
+        })
+    })
+}

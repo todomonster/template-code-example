@@ -98,7 +98,7 @@ export default {
         };
         ExtCall.getFcmPushId("getFcmPushToken");
       } catch (error) {
-        console.log(error, "😃 onMounted");
+        console.log(error.message, "電腦版😃");
       }
     });
     onBeforeRouteLeave((to, from, next) => {

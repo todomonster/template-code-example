@@ -131,3 +131,10 @@ $img: '@/assets/images/';
   - Fix 回饋確認列表滑動問題
   - 商店在編輯能修改回饋級距了
   - boostrap 降版(5.2.2->5.0.2)
+- v2.3.4 對應 {file: store_settings.txt , "version": 21}
+  - Fix 回饋確認拒絕沒有提示
+  - into.js改版成純js
+    - \src\assets\custom\_frame.scss
+- v2.3.5 對應 {file: store_settings.txt , "version": 22}
+  - Fix 商品上架bug
+  - Fix 地址顯示bug

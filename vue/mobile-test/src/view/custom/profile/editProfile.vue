@@ -54,6 +54,7 @@ export default {
         // post
         if (form1.value.reportValidity()) {
           // 拼接資料
+
           const newPostData = {
             ...storeData.value,
             ...addStorePinia.value,
@@ -77,7 +78,13 @@ export default {
       }
       if (form1.value.reportValidity()) {
         // edit
-        const response = await apiUpdateStore(storeData.value);
+        
+        const newData = {
+          ...storeData.value,
+          all_addr: all_addr.value,
+        };
+        
+        const response = await apiUpdateStore(newData);
         if (response.result) {
           Toast("更新成功");
         } else {
@@ -92,7 +99,10 @@ export default {
         const area = JSON.parse(JSON.stringify(fullArea.value));
         const ans = area.filter((area) => area.city_id === val);
         areaList.value = ans;
-        storeData.value.area = areaList.value?.[0]?.id;
+        // 沒有預設值才加上
+        if (!storeData.value.area) {
+          storeData.value.area = areaList.value?.[0]?.id;
+        }
       }
     );
     let showReward = ref(false);
