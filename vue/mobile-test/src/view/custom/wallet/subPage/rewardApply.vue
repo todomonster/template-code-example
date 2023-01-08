@@ -88,6 +88,9 @@ export default {
         // 清除data
         walletList.value.splice(targetIndex, 1);
         Toast(message);
+      } else {
+        const message = response.message || "失敗!";
+        Toast(message + ",請檢查回饋時間");
       }
     };
 
@@ -132,7 +135,11 @@ export default {
     <div>
       <br />
       <NoData v-if="walletList.length == 0" />
-      <div v-for="(item, index) in walletList" :key="item.createTime" class="container">
+      <div
+        v-for="(item, index) in walletList"
+        :key="item.createTime"
+        class="container"
+      >
         <div class="row mt-1 bg-white">
           <div class="col-7 m-1">
             <div class="m-1">
@@ -142,7 +149,6 @@ export default {
               消費金額<span class="money">{{ item.amount }}</span>
             </div>
             <h6>{{ item.createTime }}</h6>
-            
           </div>
           <div class="col d-flex flex-column justify-content-center">
             <button

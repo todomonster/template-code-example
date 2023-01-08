@@ -71,6 +71,9 @@ export default {
       try {
         e.preventDefault();
         if (form1.value.reportValidity()) {
+          if (productData.value?.status === true) {
+            productData.value.status = "1";
+          }
           const response = await apiUpdateProduct(id.value, productData.value);
           if (response.result) {
             Toast("已儲存");
@@ -103,15 +106,23 @@ export default {
         requestData.append("images", myUploadFile.value.files[0]);
         // 檢查上傳檔案大小
         const fileInput = document.getElementById("formFile");
-        const getFile = fileInput.files[0].size / 1024 / 1024;
-        if (getFile > process.env.VUE_APP_UPLOAD_LIMIT) {
-          Toast("圖片檔案大小上限為6MB");
-        } else {
-          const response = await apiStoreUpload(requestData);
 
-          if (response.result) {
-            productData.value.image = `["${response.path}"]` || "";
+        const getFile = fileInput?.files?.[0];
+
+        if (getFile) {
+          const fileSize = getFile?.size / 1024 / 1024;
+          if (fileSize > process.env.VUE_APP_UPLOAD_LIMIT) {
+            fileInput.value = "";
+            Toast(`圖片檔案大小上限為${process.env.VUE_APP_UPLOAD_LIMIT}MB`);
+          } else {
+            const response = await apiStoreUpload(requestData);
+
+            if (response.result) {
+              productData.value.image = `["${response.path}"]` || "";
+            }
           }
+        } else {
+          Toast(`圖片上傳失敗`);
         }
       } catch (error) {
         errorHandle(error);

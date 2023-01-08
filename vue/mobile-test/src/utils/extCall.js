@@ -159,6 +159,51 @@ function getUrlSchemeInput(windowFunctionName = "") {
     executeExtCall(data);
 }
 
+// PDF
+function loadPDFURL2View(url = "") {
+    const data = JSON.stringify({
+        "function": "loadPDF2View",
+        "key": String(Date.now()),
+        "url": url,
+        "timestamp": String(Date.now())
+    });
+
+    executeExtCall(data);
+}
+// PDF
+function loadPDFURLWithKey(url = "") {
+    const data = JSON.stringify({
+        "function": "loadPDFURLWithKey",
+        "key": String(Date.now()),
+        "url": url,
+        "timestamp": String(Date.now())
+    });
+
+    executeExtCall(data);
+}
+// PDF
+function loadPDFURL(url = "") {
+    const data = JSON.stringify({
+        "function": "loadPDFURL",
+        "url": url,
+        "version": Date.now()
+        // version 一定要數字
+    });
+
+    executeExtCall(data);
+}
+
+// toBrowser
+function toBrowser(url = "") {
+    const data = JSON.stringify({
+        "function": "toBrowser",
+        "url": url
+    });
+
+    executeExtCall(data);
+}
+
+
 // App 返回 
 function goBack() {
     const data = JSON.stringify({
@@ -177,10 +222,20 @@ export const ExtCall = {
     getFcmPushId,
     openScanCode,
     getUrlSchemeInput,
-    goBack
+    goBack,
+    loadPDFURL,
+    loadPDFURL2View,
+    loadPDFURLWithKey,
+    toBrowser
 }
 
-export const ExtCallThird = {
+export const ExtCallThirdPart = {
+/**
+    let SchemeInput = "";
+    window.getUrlSchemeInput = (val) => SchemeInput = val;
+    ExtCall.getUrlSchemeInput("getUrlSchemeInput");
+    setTimeout(() => console.log(SchemeInput), 100);
+ */    
     lineLogout(channel_id = "", windowFunctionName = "") {
         const data = JSON.stringify({
             "function": "lineLogout",
@@ -189,6 +244,12 @@ export const ExtCallThird = {
         });
         executeExtCall(data);
     },
+/**
+    let SchemeInput = "";
+    window.getUrlSchemeInput = (val) => SchemeInput = val;
+    ExtCall.getUrlSchemeInput("getUrlSchemeInput");
+    setTimeout(() => console.log(SchemeInput), 100);
+ */    
     lineLogin(channel_id = "", windowFunctionName = "") {
         const data = JSON.stringify({
             "function": "lineLogin",
