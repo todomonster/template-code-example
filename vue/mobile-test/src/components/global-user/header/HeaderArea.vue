@@ -85,7 +85,11 @@ export default {
   <header class="c-header">
     <nav class="navbar ui-navbar">
       <ul class="navbar-nav">
-        <li class="nav-item" style="cursor: pointer">
+        <li
+          class="nav-item"
+          style="cursor: pointer"
+          v-show="!$route.meta.hideHeaderArrow"
+        >
           <a @click="goto('back')" class="nav-link"
             ><i :class="leftIconCode"></i
           ></a>
