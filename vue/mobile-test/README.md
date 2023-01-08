@@ -138,3 +138,9 @@ $img: '@/assets/images/';
 - v2.3.5 對應 {file: store_settings.txt , "version": 22}
   - Fix 商品上架bug
   - Fix 地址顯示bug
+- v2.3.6 對應 {file: store_settings.txt , "version": 23}
+  - Add 隱藏第一階層的返回功能
+  - Fix 商品上架bug
+    - 阻擋圖片大小3MB，並清空
+    - 直接PUT已上架商品後端回傳500
+  - Fix 回饋過期沒顯示bug

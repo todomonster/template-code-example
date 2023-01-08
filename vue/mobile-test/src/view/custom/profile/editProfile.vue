@@ -78,12 +78,12 @@ export default {
       }
       if (form1.value.reportValidity()) {
         // edit
-        
+
         const newData = {
           ...storeData.value,
           all_addr: all_addr.value,
         };
-        
+
         const response = await apiUpdateStore(newData);
         if (response.result) {
           Toast("更新成功");
@@ -140,16 +140,25 @@ export default {
         requestData.append("images", myUploadFile.value.files[0]);
         // 檢查上傳檔案大小
         const fileInput = document.getElementById("formFile");
-        const getFile = fileInput.files[0].size / 1024 / 1024;
-        if (getFile > process.env.VUE_APP_UPLOAD_LIMIT) {
-          Toast("圖片檔案大小上限為6MB");
-        } else {
-          const response = await apiStoreUpload(requestData);
+        const getFile = fileInput?.files?.[0];
 
-          if (response.result) {
-            storeData.value.images = `["${response.path}"]` || "";
+        if (getFile) {
+          const fileSize = getFile?.size / 1024 / 1024;
+          if (fileSize > process.env.VUE_APP_UPLOAD_LIMIT) {
+            fileInput.value = "";
+            Toast(`圖片檔案大小上限為${process.env.VUE_APP_UPLOAD_LIMIT}MB`);
+          } else {
+            const response = await apiStoreUpload(requestData);
+
+            if (response.result) {
+              storeData.value.images = `["${response.path}"]` || "";
+            }
           }
+
+        }else{
+          Toast(`圖片上傳失敗`);
         }
+
       } catch (error) {
         errorHandle(error);
       }
@@ -272,7 +281,7 @@ export default {
                   @change="handleFileUpload"
                 />
               </div>
-            </div>
+            </div>         
             <div class="mb-2">
               <label class="form-label">
                 商店名稱
@@ -447,10 +456,10 @@ export default {
                 required
               />
             </div>
-            <div class="mt-3 mb-2" v-if="!showReward">
+            <div class="mt-3 mb-3" v-if="!showReward">
               <div class="form-check form-switch">
                 <label class="form-label form-check-label"
-                  >商店狀態<span class="must">必填</span></label
+                  >商店開店狀態<span class="must">必填</span></label
                 >
                 <input
                   class="form-check-input"
@@ -460,7 +469,7 @@ export default {
                   checked
                 />
               </div>
-            </div>
+            </div>   
             <div
               class="btn-container mt-4 d-flex justify-content-center cursor-pointer"
             >
