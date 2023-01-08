@@ -4,7 +4,7 @@ $header-height: 3.5rem;
 $footer-height: 3.5rem;
 
 $sites: green, orange;
-$style: index($sites, orange);
+$style: index($sites, green);
 
 $bg-image: 'bg.png', 'bg_02.png';
 $bg-login-image: 'bg_login.png', 'bg_login_02.png';
