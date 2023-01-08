@@ -79,6 +79,7 @@ const myfreeRouter = [
           showHeader: true,
           showFooter: true,
           requiresAuth: true,
+          hideHeaderArrow: true
         },
         components: {
           default: () => import("@/view/custom/setting/menuList.vue"),
@@ -165,6 +166,7 @@ const myfreeRouter = [
           showHeader: true,
           showFooter: true,
           requiresAuth: true,
+          hideHeaderArrow: true
         },
         components: {
           default: () => import("@/view/custom/wallet/viewWallet.vue"),
