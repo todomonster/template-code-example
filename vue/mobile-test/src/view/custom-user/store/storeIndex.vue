@@ -1,6 +1,7 @@
 <script>
 import Header from "@/components/global-user/header/HeaderArea.vue";
 // import Footer from "@/components/global/footer/FooterArea.vue";
+import '../style/public.scss'
 
 export default {
   setup() {},
@@ -13,7 +14,9 @@ export default {
 
 <template>
   <Header title="我要回報"/>
-  <router-view />
+  <div class="main">
+    <router-view />
+  </div>
   <!-- <Footer v-show="$route.meta.showFooter" /> -->
 </template>
 
