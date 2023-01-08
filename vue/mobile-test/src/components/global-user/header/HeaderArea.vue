@@ -1,7 +1,7 @@
 <script>
 import { ref, onMounted, computed, onBeforeMount } from "vue";
 import { useGlobalStore } from "@/store/global";
-import { apiGetNotifyUnreadAmount } from "@/api/myfree";
+// import { apiGetNotifyUnreadAmount } from "@/api/myfree";
 
 export default {
   props: {
@@ -59,11 +59,6 @@ export default {
       setIcon(props.rightIcon);
       if (rightIconCode.value === "icon icon-notice") {
         // 鈴鐺開啟才打API
-        const response = await apiGetNotifyUnreadAmount();
-        if (response.result && response.unread > 0) {
-          unread.value = response.unread;
-          titleText.value = String(unread.value);
-        }
       }
     });
     const countBell = computed(() => {
@@ -90,7 +85,11 @@ export default {
   <header class="c-header">
     <nav class="navbar ui-navbar">
       <ul class="navbar-nav">
-        <li class="nav-item" style="cursor: pointer" v-show="!$route.meta.hideHeaderArrow">
+        <li
+          class="nav-item"
+          style="cursor: pointer"
+          v-show="!$route.meta.hideHeaderArrow"
+        >
           <a @click="goto('back')" class="nav-link"
             ><i :class="leftIconCode"></i
           ></a>
