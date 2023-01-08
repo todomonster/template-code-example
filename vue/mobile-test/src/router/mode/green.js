@@ -53,5 +53,36 @@ export const green = [
       },
     ],
   },
-
+  {
+    path: "/wallet",
+    component: () => import("@/view/custom-user/wallet/walletIndex.vue"),
+    redirect: "/wallet",
+    meta: {
+      requiresAuth: false,
+    },
+    children: [
+      {
+        path: "",
+        meta: {
+          showHeader: true,
+          showFooter: true,
+          requiresAuth: false,
+        },
+        components: {
+          default: () => import("@/view/custom-user/wallet/walletView.vue"),
+        },
+      },
+      {
+        path: "record",
+        meta: {
+          showHeader: true,
+          showFooter: true,
+          requiresAuth: false,
+        },
+        components: {
+          default: () => import("@/view/custom-user/wallet/walletRecord.vue"),
+        },
+      },
+    ],
+  },
 ];
