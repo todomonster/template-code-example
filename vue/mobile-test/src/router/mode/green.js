@@ -1,4 +1,38 @@
-export const green = [
+const basicRoute = [
+  {
+    path: "/",
+    redirect: "/store"
+    // component: () => import("@/view/basic/login/loginPage.vue"),
+  },
+  // {
+  //   path: "/home",
+  //   name: "home",
+  //   redirect: "/profile/view",
+  //   component: () => import("@/view/basic/home/homePage_.vue"),
+  // },
+  // {
+  //   path: "/login/forget",
+  //   name: "forget",
+  //   component: () => import("@/view/basic/login/forgetPage.vue"),
+  // },
+  // {
+  //   path: "/signup",
+  //   name: "signup",
+  //   component: () => import("@/view/basic/login/signupPage.vue"),
+  // },
+  // {
+  //   path: "/password",
+  //   name: "password",
+  //   component: () => import("@/view/basic/password/passwordPage.vue"),
+  //   meta: { requiresAuth: true },
+  // },
+  {
+    path: "/:catchAll(.*)",
+    redirect: "/home",
+  },
+];
+
+const customRoute = [
   {
     path: "/store",
     component: () => import("@/view/custom-user/store/storeIndex.vue"),
@@ -13,6 +47,7 @@ export const green = [
           showHeader: true,
           showFooter: true,
           requiresAuth: false,
+          hideHeaderArrow: true
         },
         components: {
           default: () => import("@/view/custom-user/store/listView.vue"),
@@ -41,7 +76,7 @@ export const green = [
         },
       },
       {
-        path: "report",
+        path: ":id/report",
         meta: {
           showHeader: true,
           showFooter: true,
@@ -86,3 +121,5 @@ export const green = [
     ],
   },
 ];
+
+export const green = [...basicRoute, ...customRoute]

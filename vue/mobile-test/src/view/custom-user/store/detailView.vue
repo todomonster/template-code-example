@@ -1,7 +1,24 @@
 <script>
+import { ref, onMounted } from "vue";
+import { useGlobalStore } from "@/store/global";
+import { errorHandle } from "@/utils/errorHandle";
+import { ExtCall } from "@/utils/extCall";
+
 export default {
   setup() {
-    return {};
+    const globalStore = useGlobalStore();
+    const goto = globalStore.goto;
+
+    const toGoogleMap = () => {
+      const url = "https://www.google.com/maps/dir//台中北屯大連路三段";
+      try {
+        ExtCall.toBrowser(url);
+      } catch (error) {
+        window.open(url, "_blank").focus();
+      }
+    };
+
+    return { goto, toGoogleMap };
   },
 
   components: {},
@@ -17,12 +34,12 @@ export default {
           <div class="image"><img src="@/assets/images/img_shop.png" /></div>
           <div class="row">
             <div class="col">
-              <a href="javascript:void(0);" class="btn btn-link active"
+              <a  class="btn btn-link active"
                 ><i class="icon icon-favorite"></i>收藏</a
               >
             </div>
             <div class="col">
-              <a href="javascript:void(0);" class="btn btn-link"
+              <a @click="toGoogleMap" class="btn btn-link"
                 ><i class="icon icon-navigation"></i>帶路</a
               >
             </div>
@@ -30,8 +47,15 @@ export default {
         </div>
         <div class="item-container">
           <div class="item-title">
-            心居酒屋大連店<a href="info.html" class="item-link"
-              ><i class="icon icon-info"></i
+            心居酒屋大連店<a class="item-link"
+              ><i
+                class="icon icon-info"
+                @click="
+                  goto('routerQuery', '/store/1/report', {
+                    query: { mode: 'view' },
+                  })
+                "
+              ></i
             ></a>
           </div>
           <div class="item-text">$$・餐廳,日式料理,定食,丼飯</div>
@@ -60,17 +84,15 @@ export default {
           <button
             class="btn btn-welfare"
             type="button"
-            onclick="javascript:location.href='welfare.html'"
+            @click="
+              goto('routerQuery', '/store/1/applyReward', {
+                query: { mode: 'view' },
+              })
+            "
           >
             索取福利金
           </button>
-          <button
-            class="btn btn-good"
-            type="button"
-            onclick="javascript:location.href='good.html'"
-          >
-            商品清單
-          </button>
+          <button class="btn btn-good" type="button">商品清單</button>
         </div>
       </div>
     </div>

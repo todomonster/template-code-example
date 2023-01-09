@@ -1,7 +1,25 @@
 <script>
+import { ref, onMounted } from "vue";
+import { useGlobalStore } from "@/store/global";
+import { errorHandle } from "@/utils/errorHandle";
+// import NoData from "@/components/global/NoData.vue";
+import { ExtCall } from "@/utils/extCall";
+
 export default {
   setup() {
-    return {};
+    const globalStore = useGlobalStore();
+    const goto = globalStore.goto;
+
+    const toGoogleMap = () => {
+      const url = "https://www.google.com/maps/dir//台中北屯大連路三段";
+      try {
+        ExtCall.toBrowser(url);
+      } catch (error) {
+        window.open(url, "_blank").focus();
+      }
+    };
+
+    return { goto, toGoogleMap };
   },
 
   components: {},
@@ -175,9 +193,16 @@ export default {
         </form>
       </div>
       <div class="good-container pb-1">
-        <div class="card">
+        <div class="card" v-for="(item, index) in 5" :key="index">
           <div class="card-header">
-            <a href="shop.html" class="card-link">
+            <a
+              @click="
+                goto('routerQuery', '/store/1', {
+                  query: { mode: 'view', id: 1 },
+                })
+              "
+              class="card-link"
+            >
               <img src="@/assets/images/img_shop.png" class="card-img" />
             </a>
           </div>
@@ -188,19 +213,19 @@ export default {
             </a>
             <div class="row">
               <div class="col">
-                <a href="javascript:void(0);" class="btn btn-link active"
+                <a class="btn btn-link active"
                   ><i class="icon icon-favorite"></i>收藏</a
                 >
               </div>
               <div class="col">
-                <a href="javascript:void(0);" class="btn btn-link"
+                <a @click="toGoogleMap" class="btn btn-link"
                   ><i class="icon icon-navigation"></i>帶路</a
                 >
               </div>
             </div>
           </div>
         </div>
-        <div class="card">
+        <!-- <div class="card">
           <div class="card-header">
             <a href="shop.html" class="card-link">
               <img src="@/assets/images/img_shop.png" class="card-img" />
@@ -213,18 +238,18 @@ export default {
             </a>
             <div class="row">
               <div class="col">
-                <a href="javascript:void(0);" class="btn btn-link"
+                <a  class="btn btn-link"
                   ><i class="icon icon-favorite"></i>收藏</a
                 >
               </div>
               <div class="col">
-                <a href="javascript:void(0);" class="btn btn-link"
+                <a  class="btn btn-link"
                   ><i class="icon icon-navigation"></i>帶路</a
                 >
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </section>
