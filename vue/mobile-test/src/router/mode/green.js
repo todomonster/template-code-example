@@ -1,7 +1,7 @@
 const basicRoute = [
   {
     path: "/",
-    redirect: "/store"
+    redirect: "/store",
     // component: () => import("@/view/basic/login/loginPage.vue"),
   },
   // {
@@ -47,7 +47,7 @@ const customRoute = [
           showHeader: true,
           showFooter: true,
           requiresAuth: false,
-          hideHeaderArrow: true
+          hideHeaderArrow: true,
         },
         components: {
           default: () => import("@/view/custom-user/store/listView.vue"),
@@ -102,6 +102,7 @@ const customRoute = [
           showHeader: true,
           showFooter: true,
           requiresAuth: false,
+          hideHeaderArrow: true
         },
         components: {
           default: () => import("@/view/custom-user/wallet/walletView.vue"),
@@ -120,6 +121,28 @@ const customRoute = [
       },
     ],
   },
+  {
+    path: "/notify",
+    component: () => import("@/view/custom-user/notify/notifyIndex.vue"),
+    redirect: "/notify/list",
+    meta: {
+      requiresAuth: false,
+    },
+    children: [
+      {
+        path: "list",
+        meta: {
+          showHeader: true,
+          showFooter: true,
+          requiresAuth: false,
+          hideHeaderArrow: true
+        },
+        components: {
+          default: () => import("@/view/custom-user/notify/notifyView.vue"),
+        },
+      },
+    ],
+  },
 ];
 
-export const green = [...basicRoute, ...customRoute]
+export const green = [...basicRoute, ...customRoute];
