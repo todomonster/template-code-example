@@ -3,6 +3,8 @@ import { ref, onMounted } from "vue";
 import { useGlobalStore } from "@/store/global";
 import { errorHandle } from "@/utils/errorHandle";
 // import NoData from "@/components/global/NoData.vue";
+import BackToTop from "@/components/global-user/BackToTop.vue";
+import SaveWindowY from "@/components/global-user/SaveWindowY.vue";
 import { ExtCall } from "@/utils/extCall";
 
 export default {
@@ -24,13 +26,14 @@ export default {
     return { goto, toGoogleMap, showAdvancedSearch };
   },
 
-  components: {},
+  components: { BackToTop, SaveWindowY },
 };
 </script>
 
 <template>
   <!-- 內容 -->
   <section class="c-main">
+    <SaveWindowY />
     <div class="navbar-container">
       <div class="form-container form-container-4 pb-0">
         <form>
@@ -236,6 +239,7 @@ export default {
         </div>
       </div>
     </div>
+    <BackToTop />
   </section>
 </template>
 
