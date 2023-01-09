@@ -122,6 +122,39 @@ const customRoute = [
     ],
   },
   {
+    path: "/user",
+    component: () => import("@/view/custom-user/user/userIndex.vue"),
+    redirect: "/user",
+    meta: {
+      requiresAuth: false,
+    },
+    children: [
+      {
+        path: "",
+        meta: {
+          showHeader: true,
+          showFooter: true,
+          requiresAuth: false,
+          hideHeaderArrow: true
+        },
+        components: {
+          default: () => import("@/view/custom-user/user/userView.vue"),
+        },
+      },
+      {
+        path: "edit",
+        meta: {
+          showHeader: true,
+          showFooter: true,
+          requiresAuth: false,
+        },
+        components: {
+          default: () => import("@/view/custom-user/user/userEditView.vue"),
+        },
+      },
+    ],
+  },
+  {
     path: "/notify",
     component: () => import("@/view/custom-user/notify/notifyIndex.vue"),
     redirect: "/notify/list",
