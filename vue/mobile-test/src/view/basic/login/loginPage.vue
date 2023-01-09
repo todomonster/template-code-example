@@ -1,5 +1,5 @@
 <script>
-import { ref, onMounted, onBeforeMount } from "vue";
+import { ref, onMounted, onBeforeMount, computed } from "vue";
 import { useRouter, onBeforeRouteLeave } from "vue-router";
 import { Toast } from "@/components/global/swal.js";
 import { errorHandle } from "@/utils/errorHandle";
@@ -9,6 +9,8 @@ import { ExtCall } from "@/utils/extCall";
 
 export default {
   setup() {
+    const VUE_APP_VERSION = process.env.VUE_APP_VERSION || "";
+
     const router = useRouter();
     const inputData = ref({
       mobile: "",
@@ -34,16 +36,22 @@ export default {
         isBackDoor.value = true;
       }
       try {
+        if (option === "1") {
+          // 切換到普通版本
+          const defaultUrl =
+            "https://myfree.tako.life/app/store/store_settings.txt";
+          ExtCall.replaceSetting(" ", defaultUrl);
+        }
         if (option === "2") {
           // 切換到測試版本
           const testUrl =
             "https://myfree.tako.life/app/store/store_settings_v1.txt";
           ExtCall.replaceSetting(" ", testUrl);
         }
-        if (option === "1") {
+        if (option === "3") {
           // 切換到普通版本
           const defaultUrl =
-            "https://myfree.tako.life/app/store/store_settings.txt";
+            "http://210.64.205.11:8080/myfree/public/app/store/store_settings.txt";
           ExtCall.replaceSetting(" ", defaultUrl);
         }
       } catch (error) {
@@ -114,6 +122,7 @@ export default {
       passwordEyeClass,
       handleEyeClick,
       passwordType,
+      VUE_APP_VERSION,
     };
   },
 };
@@ -147,7 +156,8 @@ export default {
         >
           <option value="">選擇要切換到哪個版本?</option>
           <option value="1" selected>穩定版</option>
-          <option value="2">開發版</option>
+          <option value="2">開發-連線版</option>
+          <option value="3">測試機demo版</option>
         </select>
         <div class="position-relative mb-3">
           <label class="form-label form-label-2"
@@ -206,8 +216,15 @@ export default {
         </div>
       </form>
     </div>
+    <span class="version text-center">{{ VUE_APP_VERSION }}</span>
   </section>
 </template>
 
 <style lang="scss" scoped>
+.version {
+  color: #ffd877;
+  position: fixed;
+  bottom: 10%;
+  left: 45%;
+}
 </style>
