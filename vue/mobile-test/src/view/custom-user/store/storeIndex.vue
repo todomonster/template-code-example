@@ -1,7 +1,7 @@
 <script>
 import Header from "@/components/global-user/header/HeaderArea.vue";
 // import Footer from "@/components/global/footer/FooterArea.vue";
-import '../style/public.scss'
+import "../style/public.scss";
 
 export default {
   setup() {},
@@ -13,7 +13,7 @@ export default {
 </script>
 
 <template>
-  <Header title="我要回報"/>
+  <Header />
   <div class="main">
     <router-view />
   </div>
