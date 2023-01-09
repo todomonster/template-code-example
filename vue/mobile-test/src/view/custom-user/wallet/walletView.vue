@@ -1,7 +1,10 @@
 <script>
+import { useGlobalStore } from "@/store/global";
 export default {
   setup() {
-    return {};
+    const globalStore = useGlobalStore();
+    const goto = globalStore.goto;
+    return { goto };
   },
 
   components: {},
@@ -27,7 +30,7 @@ export default {
                         <div class="image"><i class="icon icon-coupon"></i></div>
                         <div class="title">優惠收納箱</div>
                     </a>
-                    <a href="record.html" class="list-link">
+                    <a @click="goto('router', '/wallet/record')" class="list-link">
                         <div class="image"><i class="icon icon-record"></i></div>
                         <div class="title">交易紀錄</div>
                     </a>

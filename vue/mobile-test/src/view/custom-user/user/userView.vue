@@ -1,7 +1,10 @@
 <script>
+import { useGlobalStore } from "@/store/global";
 export default {
   setup() {
-    return {};
+    const globalStore = useGlobalStore();
+    const goto = globalStore.goto;
+    return { goto };
   },
 
   components: {},
@@ -19,7 +22,7 @@ export default {
             <button
               class="btn btn-edit"
               type="button"
-              onclick="javascript:location.href='member-edit.html'"
+              @click="goto('router', '/user/edit')"
             >
               <i class="icon icon-edit"></i>
             </button>
