@@ -73,6 +73,15 @@ export default {
       return false;
     });
 
+    const handleClickBack = () => {
+      console.log();
+      if (backPath.value) {
+        goto("router", "/");
+      } else {
+        goto("back");
+      }
+    };
+
     return {
       rightIconCode,
       titleText,
@@ -81,6 +90,7 @@ export default {
       countBell,
       leftIconCode,
       backPath,
+      handleClickBack,
     };
   },
 };
@@ -90,8 +100,12 @@ export default {
   <header class="c-header">
     <nav class="navbar ui-navbar">
       <ul class="navbar-nav">
-        <li class="nav-item" style="cursor: pointer" v-show="!$route.meta.hideHeaderArrow">
-          <a @click="goto('back')" class="nav-link"
+        <li
+          class="nav-item"
+          style="cursor: pointer"
+          v-show="!$route.meta.hideHeaderArrow"
+        >
+          <a @click="handleClickBack" class="nav-link"
             ><i :class="leftIconCode"></i
           ></a>
         </li>

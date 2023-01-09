@@ -245,10 +245,12 @@ export const ExtCallThirdPart = {
         executeExtCall(data);
     },
 /**
-    let SchemeInput = "";
-    window.getUrlSchemeInput = (val) => SchemeInput = val;
-    ExtCall.getUrlSchemeInput("getUrlSchemeInput");
-    setTimeout(() => console.log(SchemeInput), 100);
+          const channel_id = "1655750341";
+          let LineLoginInput = "";
+          window.lineLogin = (a) => {
+            LineLoginInput = a;
+            alert(JSON.stringify(LineLoginInput));
+          };
  */    
     lineLogin(channel_id = "", windowFunctionName = "") {
         const data = JSON.stringify({

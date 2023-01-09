@@ -66,6 +66,15 @@ const myfreeRouter = [
     ],
   },
   {
+    path: "/notifyListFcm",
+    meta: {
+      requiresAuth: false,
+    },
+    components: {
+      default: () => import("@/view/custom/firebase/applyReward.vue"),
+    },
+  },  
+  {
     path: "/setting",
     component: () => import("@/view/custom/setting/settingIndex.vue"),
     redirect: "/setting/list",
