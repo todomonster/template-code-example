@@ -1,7 +1,19 @@
 <script>
+import { ref, onMounted } from "vue";
+
 export default {
   setup() {
-    return {};
+    const form = ref(null);
+    const inputData = ref({});
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+
+      if (form.value.reportValidity()) {
+        // 處理
+      }
+    };
+
+    return { form, handleSubmit };
   },
 
   components: {},
@@ -20,7 +32,7 @@ export default {
           <div class="item-title mb-2">心居酒屋大連店</div>
         </div>
         <div class="form-container">
-          <form>
+          <form ref="form">
             <div class="mb-3">
               <label class="form-label mb-1">消費金額</label>
               <input
@@ -45,7 +57,13 @@ export default {
               </div>
             </div>
             <div class="btn-container mt-4">
-              <button class="btn btn-welfare" type="submit">索取福利金</button>
+              <button
+                class="btn btn-welfare"
+                type="submit"
+                @click="handleSubmit"
+              >
+                索取福利金
+              </button>
             </div>
           </form>
         </div>
