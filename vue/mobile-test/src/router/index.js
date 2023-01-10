@@ -3,11 +3,12 @@ import {
   createWebHashHistory,
   createWebHistory,
 } from "vue-router";
-import { Toast } from "@/components/global/swal";
 import { useCookie, useStorage } from "@/utils/helper";
 // import { storeToRefs } from "pinia";
 import { orange } from "./mode/orange";
 import { green } from "./mode/green";
+import { Toast, ToastConfirm } from '@/components/global/swal'
+
 //orange green
 const mode = "green";
 const tokenKey = "accessToken";
@@ -25,18 +26,35 @@ const router = createRouter({
   history: createWebHashHistory(process.env.BASE_URL),
   routes,
 });
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // 是否 match
   const isMatchAuth = to.matched.some((item) => item.meta.requiresAuth);
+  const loginStatus = localStorage.getItem("is_Login") || "0"
+
   if (isMatchAuth) {
     const token = useCookie.getItem(tokenKey) || useStorage.getItem(tokenKey);
-    if (!token) {
+    // if (!token) {
+    //   // 沒有token踢回登入
+    //   Toast("請先登入");
+    //   localStorage.setItem("is_Login", 0);
+    //   next("/");
+    //   return true;
+    // }
+
+    if (!token || loginStatus == "0") {
       // 沒有token踢回登入
-      Toast("請先登入");
-      localStorage.setItem("is_Login", 0);
-      next("/");
-      return true;
+      localStorage.setItem("is_Login", 0)
+      const result = await ToastConfirm("請先登入")
+      if (result == true) {
+        // 這裡要改成登入 路由
+        next("/");
+        return true;
+      } else {
+        next(false)
+        return false;
+      }
     }
+
     next();
   } else {
     next();

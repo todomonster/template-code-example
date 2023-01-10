@@ -69,7 +69,7 @@ const customRoute = [
         meta: {
           showHeader: true,
           showFooter: true,
-          requiresAuth: false,
+          requiresAuth: true,
         },
         components: {
           default: () => import("@/view/custom-user/store/applyRewardView.vue"),
@@ -80,7 +80,7 @@ const customRoute = [
         meta: {
           showHeader: true,
           showFooter: true,
-          requiresAuth: false,
+          requiresAuth: true,
         },
         components: {
           default: () => import("@/view/custom-user/store/reportView.vue"),
@@ -123,7 +123,7 @@ const customRoute = [
         meta: {
           showHeader: true,
           showFooter: true,
-          requiresAuth: false,
+          requiresAuth: true,
           hideHeaderArrow: true
         },
         components: {
@@ -134,8 +134,8 @@ const customRoute = [
         path: "record",
         meta: {
           showHeader: true,
-          showFooter: true,
-          requiresAuth: false,
+          showFooter: false,
+          requiresAuth: true,
         },
         components: {
           default: () => import("@/view/custom-user/wallet/walletRecord.vue"),
@@ -167,8 +167,8 @@ const customRoute = [
         path: "edit",
         meta: {
           showHeader: true,
-          showFooter: true,
-          requiresAuth: false,
+          showFooter: false,
+          requiresAuth: true,
         },
         components: {
           default: () => import("@/view/custom-user/user/userEditView.vue"),
@@ -188,9 +188,8 @@ const customRoute = [
         path: "list",
         meta: {
           showHeader: true,
-          showFooter: true,
-          requiresAuth: false,
-          hideHeaderArrow: true
+          showFooter: false,
+          requiresAuth: true,
         },
         components: {
           default: () => import("@/view/custom-user/notify/notifyView.vue"),
