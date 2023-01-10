@@ -246,11 +246,6 @@ export default {
         </div>
       </div>
     </div>
-    <div class="card-header">
-      <a class="">
-        <img src="@/assets/images/img_shop.png" class="card-img" />
-      </a>
-    </div>
     <BackToTop />
   </section>
 </template>
