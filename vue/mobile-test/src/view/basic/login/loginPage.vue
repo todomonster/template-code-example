@@ -229,7 +229,7 @@ export default {
 .version {
   color: #ffd877;
   position: fixed;
-  bottom: 5%;
+  bottom: 0;
   left: 45%;
 }
 </style>
