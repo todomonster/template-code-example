@@ -119,6 +119,7 @@
         .card-header {
             padding: 0;
             .card-link {
+                display: block;
                 position: relative;
                 &:after {
                     content: "";
