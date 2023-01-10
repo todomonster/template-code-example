@@ -115,7 +115,7 @@ export default {
         <span>{{ title }}</span>
       </h1>
       <ul class="navbar-nav">
-        <li class="nav-item" style="cursor: pointer">
+        <li class="nav-item" style="cursor: pointer" v-show="$route.meta.showBell">
           <a class="nav-link" @click="execute()">
             <i :class="rightIconCode">
               <span class="count" v-show="countBell">{{ titleText }}</span>
