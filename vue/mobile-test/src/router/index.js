@@ -9,7 +9,7 @@ import { useCookie, useStorage } from "@/utils/helper";
 import { orange } from "./mode/orange";
 import { green } from "./mode/green";
 //orange green
-const mode = "orange";
+const mode = "green";
 const tokenKey = "accessToken";
 
 // user

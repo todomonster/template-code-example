@@ -89,15 +89,37 @@ const customRoute = [
     ],
   },
   {
-    path: "/wallet",
-    component: () => import("@/view/custom-user/wallet/walletIndex.vue"),
-    redirect: "/wallet",
+    path: "/scan",
+    component: () => import("@/view/custom-user/scan/scanIndex.vue"),
+    redirect: "/scan/qrcode",
     meta: {
       requiresAuth: false,
     },
     children: [
       {
-        path: "",
+        path: "qrcode",
+        meta: {
+          showHeader: true,
+          showFooter: true,
+          requiresAuth: false,
+          hideHeaderArrow: true,
+        },
+        components: {
+          default: () => import("@/view/custom-user/scan/scanView.vue"),
+        },
+      },
+    ],
+  },  
+  {
+    path: "/wallet",
+    component: () => import("@/view/custom-user/wallet/walletIndex.vue"),
+    redirect: "/wallet/list",
+    meta: {
+      requiresAuth: false,
+    },
+    children: [
+      {
+        path: "list",
         meta: {
           showHeader: true,
           showFooter: true,
@@ -124,13 +146,13 @@ const customRoute = [
   {
     path: "/user",
     component: () => import("@/view/custom-user/user/userIndex.vue"),
-    redirect: "/user",
+    redirect: "/user/profile",
     meta: {
       requiresAuth: false,
     },
     children: [
       {
-        path: "",
+        path: "profile",
         meta: {
           showHeader: true,
           showFooter: true,

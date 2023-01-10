@@ -219,7 +219,14 @@ export default {
             </a>
           </div>
           <div class="card-body">
-            <a href="shop.html" class="card-link">
+            <a
+              @click="
+                goto('routerQuery', '/store/1', {
+                  query: { mode: 'view', id: 1 },
+                })
+              "
+              class="card-link"
+            >
               <div class="card-title">春日山 食事処</div>
               <div class="card-text">$$・餐廳,日式料理,定食,丼飯</div>
             </a>
@@ -238,6 +245,11 @@ export default {
           </div>
         </div>
       </div>
+    </div>
+    <div class="card-header">
+      <a class="">
+        <img src="@/assets/images/img_shop.png" class="card-img" />
+      </a>
     </div>
     <BackToTop />
   </section>

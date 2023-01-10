@@ -26,10 +26,10 @@ export default {
                         <div class="cash">超集點：1211 點<br>福利金：244 元</div>
                         <div class="reset"><i class="icon icon-reset"></i></div>
                     </div>
-                    <a href="javascript:void(0);" class="list-link">
+                    <!-- <a class="list-link">
                         <div class="image"><i class="icon icon-coupon"></i></div>
                         <div class="title">優惠收納箱</div>
-                    </a>
+                    </a> -->
                     <a @click="goto('router', '/wallet/record')" class="list-link">
                         <div class="image"><i class="icon icon-record"></i></div>
                         <div class="title">交易紀錄</div>
