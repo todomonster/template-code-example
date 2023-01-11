@@ -28,7 +28,7 @@ const basicRoute = [
   // },
   {
     path: "/:catchAll(.*)",
-    redirect: "/home",
+    redirect: "/",
   },
 ];
 
@@ -144,9 +144,10 @@ const customRoute = [
     ],
   },
   {
-    path: "/user",
+    // setting /user
+    path: "/setting",
     component: () => import("@/view/custom-user/user/userIndex.vue"),
-    redirect: "/user/profile",
+    redirect: "/setting/profile",
     meta: {
       requiresAuth: false,
     },
