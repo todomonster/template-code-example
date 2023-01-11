@@ -1,6 +1,13 @@
 <script>
+import { ref, onMounted, computed, watch } from "vue";
+import "@/utils/swiper/swiper-bundle.min.css";
+import { initSwiper } from "@/utils/swiper/index";
+
 export default {
   setup() {
+    onMounted(() => {
+      initSwiper(3);
+    });
     return {};
   },
 
