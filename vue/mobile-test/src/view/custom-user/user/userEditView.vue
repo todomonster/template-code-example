@@ -46,9 +46,10 @@ export default {
                   id="male"
                   checked
                 />
-                <label class="form-check-label" for="male"
-                  ><i class="icon icon-male"></i
-                ></label>
+                <label class="form-check-label" for="male">
+                  <span class="custom-gender">男</span>
+                  <i class="icon icon-male"></i>
+                </label>
               </div>
               <div class="col form-check">
                 <input
@@ -57,9 +58,10 @@ export default {
                   name="gender"
                   id="female"
                 />
-                <label class="form-check-label" for="female"
-                  ><i class="icon icon-female"></i
-                ></label>
+                <label class="form-check-label" for="female">
+                  <span class="custom-gender">女</span>
+                  <i class="icon icon-female"></i>
+                </label>
               </div>
             </div>
           </div>
@@ -114,3 +116,11 @@ export default {
     </div>
   </section>
 </template>
+
+<style lang="scss" scoped>
+.custom-gender {
+  position: absolute;
+  top: 20%;
+  color: white;
+}
+</style>
