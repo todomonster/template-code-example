@@ -1,5 +1,13 @@
 <script>
 import { useGlobalStore } from "@/store/global";
+import { ExtCall } from "@/utils/extCall";
+import {
+  Toast,
+  ToastConfirm,
+  ToastInputConfirm,
+} from "@/components/global/swal";
+import { errorHandle } from "@/utils/errorHandle";
+
 export default {
   setup() {
     const globalStore = useGlobalStore();
@@ -7,7 +15,26 @@ export default {
 
     const VUE_APP_VERSION = process.env.VUE_APP_VERSION;
 
-    return { goto, VUE_APP_VERSION };
+    const link = ["https://myfree.tako.life/privacy"];
+    const handleWebView = (openUrl) => {
+      try {
+        ExtCall.openNewWebView(openUrl);
+      } catch (error) {
+        goto("href", link[0]);
+      }
+    };
+    const logout = async () => {
+      // 有做清除cookie和storage處理
+      try {
+        const confirm = await ToastConfirm("是否要登出?");
+        if (confirm) {
+          goto("router", "/");
+        }
+      } catch (error) {
+        errorHandle(error);
+      }
+    };
+    return { goto, VUE_APP_VERSION, logout, handleWebView, link };
   },
 
   components: {},
@@ -19,14 +46,10 @@ export default {
   <section class="c-main">
     <div class="navbar-container">
       <div class="member-container">
-        <div class="avatar-container">
+        <div class="avatar-container" @click="goto('router', '/setting/edit')">
           <div class="image"><img src="@/assets/images/noavatar.png" /></div>
           <div class="camera-container">
-            <button
-              class="btn btn-edit"
-              type="button"
-              @click="goto('router', '/setting/edit')"
-            >
+            <button class="btn btn-edit" type="button">
               <i class="icon icon-edit"></i>
             </button>
           </div>
@@ -47,10 +70,10 @@ export default {
             <div class="col-left">年齡層</div>
             <div class="col-right">20~29</div>
           </div>
-          <div class="d-flex">
+          <!-- <div class="d-flex">
             <div class="col-left">預設好康店範圍</div>
             <div class="col-right">台中市 北屯區</div>
-          </div>
+          </div> -->
         </div>
         <div class="mt-3">
           <div class="form-word-2 text-center">
@@ -58,19 +81,19 @@ export default {
           </div>
         </div>
         <div class="list-container mt-5 pb-5">
-          <a href="javascript:void(0);" class="list-link">
+          <a class="list-link" @click="goto('router', '/store/favorite')">
             <div class="image"><i class="icon icon-favorite"></i></div>
             <div class="title">收藏店家</div>
           </a>
-          <a href="javascript:void(0);" class="list-link">
+          <!-- <a  class="list-link">
             <div class="image"><i class="icon icon-feedback"></i></div>
             <div class="title">意見反饋</div>
-          </a>
-          <a href="javascript:void(0);" class="list-link">
+          </a> -->
+          <a class="list-link" @click="handleWebView(link[0])">
             <div class="image"><i class="icon icon-privacy"></i></div>
             <div class="title">隱私權條款</div>
           </a>
-          <a href="javascript:void(0);" class="list-link border-0">
+          <a class="list-link border-0" @click="logout">
             <div class="image"><i class="icon icon-signout"></i></div>
             <div class="title">登出</div>
           </a>

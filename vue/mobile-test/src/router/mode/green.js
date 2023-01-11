@@ -87,6 +87,17 @@ const customRoute = [
           default: () => import("@/view/custom-user/store/reportView.vue"),
         },
       },
+      {
+        path: "favorite",
+        meta: {
+          showHeader: true,
+          showFooter: false,
+          requiresAuth: true,
+        },
+        components: {
+          default: () => import("@/view/custom-user/store/favoriteList.vue"),
+        },
+      },
     ],
   },
   {
