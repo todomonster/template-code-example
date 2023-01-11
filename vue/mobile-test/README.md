@@ -147,6 +147,8 @@ $img: '@/assets/images/';
 - v2.3.7.1 對應 {file: store_settings.txt , "version": 25}
   - Update 隱藏內層小鈴鐺
   - Fix 登入沒清除 pinia 狀態 (註冊流程沒跑完，登入後可以編輯%數)
+- v2.3.7.2 對應 {file: store_settings.txt , "version": 25}
+  - Fix 離線版本錯誤提示
 
 ---
 a tag 可能因為沒有加上 `display: block;` 導致圖片不見
