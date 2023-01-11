@@ -48,6 +48,7 @@ const customRoute = [
           showFooter: true,
           requiresAuth: false,
           hideHeaderArrow: true,
+          showBell: true,
         },
         components: {
           default: () => import("@/view/custom-user/store/listView.vue"),
@@ -124,7 +125,8 @@ const customRoute = [
           showHeader: true,
           showFooter: true,
           requiresAuth: true,
-          hideHeaderArrow: true
+          hideHeaderArrow: true,
+          showBell: true,
         },
         components: {
           default: () => import("@/view/custom-user/wallet/walletView.vue"),
@@ -158,7 +160,8 @@ const customRoute = [
           showHeader: true,
           showFooter: true,
           requiresAuth: false,
-          hideHeaderArrow: true
+          hideHeaderArrow: true,
+          showBell: true,
         },
         components: {
           default: () => import("@/view/custom-user/user/userView.vue"),

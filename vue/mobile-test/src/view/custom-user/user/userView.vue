@@ -4,7 +4,10 @@ export default {
   setup() {
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
-    return { goto };
+
+    const VUE_APP_VERSION = process.env.VUE_APP_VERSION;
+
+    return { goto, VUE_APP_VERSION };
   },
 
   components: {},
@@ -22,7 +25,7 @@ export default {
             <button
               class="btn btn-edit"
               type="button"
-              @click="goto('router', '/user/edit')"
+              @click="goto('router', '/setting/edit')"
             >
               <i class="icon icon-edit"></i>
             </button>
@@ -74,7 +77,7 @@ export default {
         </div>
       </div>
       <div class="edit-container">
-        <div class="version">v1.0.0</div>
+        <div class="version">{{ VUE_APP_VERSION }}</div>
       </div>
     </div>
   </section>

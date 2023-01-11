@@ -56,6 +56,6 @@ export default {
   z-index: 9999;
   position: fixed;
   right: 0;
-  bottom: 0;
+  bottom: 45px;
 }
 </style>
