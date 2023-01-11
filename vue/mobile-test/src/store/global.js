@@ -70,7 +70,6 @@ export const useGlobalStore = defineStore('global', () => {
         mobile: "",
     });
     const setStoreData = ({ status, password, mobile }) => {
-        console.log(status, password, mobile)
         if (status === true || status === false) isToAddStore.value.status = status;
         if (password || password === "") isToAddStore.value.password = password;
         if (mobile || mobile === "") isToAddStore.value.mobile = mobile;

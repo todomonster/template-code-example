@@ -75,7 +75,7 @@ export default {
               token: fcmToken,
               type: "store",
             });
-            console.log(JSON.stringify(response), "fcm");
+            console.log("fcm token 更新成功");
           }
           setStoreData({
             status: false,
