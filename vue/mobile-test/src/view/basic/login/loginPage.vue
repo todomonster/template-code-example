@@ -7,9 +7,13 @@ import { apiStoreLogin, apiStoreSaveFcmToken } from "@/api/myfree";
 
 import { ExtCall } from "@/utils/extCall";
 
+import { useGlobalStore } from "@/store/global";
+
 export default {
   setup() {
     const VUE_APP_VERSION = process.env.VUE_APP_VERSION || "";
+    const globalStore = useGlobalStore();
+    const { goto, setStoreData } = globalStore;
 
     const router = useRouter();
     const inputData = ref({
@@ -73,9 +77,14 @@ export default {
             });
             console.log(JSON.stringify(response), "fcm");
           }
-          Toast("登入成功");
+          setStoreData({
+            status: false,
+            mobile: "",
+            password: "",
+          });
           localStorage.setItem("is_Login", 1);
-          router.push({ path: "/home" });
+          Toast("登入成功");
+          goto("router", "/home");
         } else {
           errorHandle(msg);
         }
@@ -94,7 +103,7 @@ export default {
     onBeforeMount(() => {
       document.body.classList.add("c-login");
       if (localStorage.getItem("is_Login") == 1) {
-        router.push({ path: "/home" });
+        goto("router", "/home");
       }
     });
     onMounted(() => {
@@ -123,6 +132,7 @@ export default {
       handleEyeClick,
       passwordType,
       VUE_APP_VERSION,
+      goto,
     };
   },
 };
@@ -195,15 +205,10 @@ export default {
         </div>
         <div class="row form-word text-end text-decoration-underline">
           <div class="col-12 ml-4">
-            <span
-              class="cursor-pointer"
-              @click="$router.push({ path: '/signup' })"
+            <span class="cursor-pointer" @click="goto('router', '/signup')"
               >註冊</span
             >
           </div>
-          <!-- <div class="col-12 ml-4" @click="$router.push({ path: '/login/forget' })">
-            忘記密碼
-          </div>-->
         </div>
         <div class="btn-container mt-5 text-center">
           <button
@@ -224,7 +229,7 @@ export default {
 .version {
   color: #ffd877;
   position: fixed;
-  bottom: 10%;
+  bottom: 0;
   left: 45%;
 }
 </style>

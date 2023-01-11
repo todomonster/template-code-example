@@ -34,7 +34,6 @@ export default {
   },
   methods: {
     handleScroll() {
-      console.log(1234)
       if (this.scTimer) return
       this.scTimer = setTimeout(() => {
         this.scY = window.scrollY

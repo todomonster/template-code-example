@@ -171,6 +171,9 @@
 		.icon-member {
 			background-image: url(#{$img}icon_member.png);
 		}
+		.icon-qrcode {
+			background-image: url(#{$img}icon_qrcode.png);
+		}
 	}
 	.tab-title {
 		margin-top: .125rem;
@@ -198,6 +201,9 @@
 			.icon-member {
 				background-image: url(#{$img}#{nth($icon-member-select-image, $style)});
 			}
+			.icon-qrcode {
+				background-image: url(#{$img}icon_qrcode_select.png);
+			}			
 		}
 		.tab-title {
 			color: nth($primary-color, $style);

@@ -352,7 +352,7 @@ export default {
                 required
               />
             </div>
-            <div class="mb-2">
+            <div class="mb-2" v-if="showReward">
               <label class="form-label"
                 >回饋級距<span class="must">必填</span></label
               >

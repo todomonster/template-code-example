@@ -10,22 +10,22 @@ const basicRoute = [
     redirect: "/profile/view",
     component: () => import("@/view/basic/home/homePage_.vue"),
   },
-  {
-    path: "/login/forget",
-    name: "forget",
-    component: () => import("@/view/basic/login/forgetPage.vue"),
-  },
+  // {
+  //   path: "/login/forget",
+  //   name: "forget",
+  //   component: () => import("@/view/basic/login/forgetPage.vue"),
+  // },
   {
     path: "/signup",
     name: "signup",
     component: () => import("@/view/basic/login/signupPage.vue"),
   },
-  {
-    path: "/password",
-    name: "password",
-    component: () => import("@/view/basic/password/passwordPage.vue"),
-    meta: { requiresAuth: true },
-  },
+  // {
+  //   path: "/password",
+  //   name: "password",
+  //   component: () => import("@/view/basic/password/passwordPage.vue"),
+  //   meta: { requiresAuth: true },
+  // },
   {
     path: "/:catchAll(.*)",
     redirect: "/home",
@@ -47,6 +47,7 @@ const myfreeRouter = [
           showHeader: true,
           showFooter: true,
           requiresAuth: true,
+          showBell: true,
         },
         components: {
           default: () => import("@/view/custom/profile/viewProfile.vue"),
@@ -88,7 +89,8 @@ const myfreeRouter = [
           showHeader: true,
           showFooter: true,
           requiresAuth: true,
-          hideHeaderArrow: true
+          hideHeaderArrow: true,
+          showBell: true,
         },
         components: {
           default: () => import("@/view/custom/setting/menuList.vue"),
@@ -175,7 +177,8 @@ const myfreeRouter = [
           showHeader: true,
           showFooter: true,
           requiresAuth: true,
-          hideHeaderArrow: true
+          hideHeaderArrow: true,
+          showBell: true,
         },
         components: {
           default: () => import("@/view/custom/wallet/viewWallet.vue"),
