@@ -1,5 +1,5 @@
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useGlobalStore } from "@/store/global";
 import { errorHandle } from "@/utils/errorHandle";
 // import NoData from "@/components/global/NoData.vue";
@@ -23,7 +23,29 @@ export default {
       }
     };
 
-    return { goto, toGoogleMap, showAdvancedSearch };
+    const form = ref(null);
+    const inputData = ref({});
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+
+      if (form.value.reportValidity()) {
+        // 處理
+      }
+    };
+
+    // const favoriteClass = ref("btn btn-link active");
+    const favoriteClass = (isFavorite = false) => {
+      return isFavorite ? "btn btn-link active" : "btn btn-link";
+    };
+
+    return {
+      goto,
+      toGoogleMap,
+      showAdvancedSearch,
+      form,
+      handleSubmit,
+      favoriteClass,
+    };
   },
 
   components: { BackToTop, SaveWindowY },
@@ -36,7 +58,7 @@ export default {
     <SaveWindowY />
     <div class="navbar-container">
       <div class="form-container form-container-4 pb-0">
-        <form>
+        <form ref="form">
           <div class="search-container">
             <input
               type="text"
@@ -45,7 +67,11 @@ export default {
               value=""
             />
             <div class="btn-container">
-              <button class="btn btn-search" type="submit">
+              <button
+                class="btn btn-search"
+                type="submit"
+                @click="handleSubmit"
+              >
                 <i class="icon icon-search"></i>
               </button>
               <button
@@ -232,7 +258,7 @@ export default {
             </a>
             <div class="row">
               <div class="col">
-                <a class="btn btn-link active"
+                <a :class="favoriteClass(index % 2 === 0)"
                   ><i class="icon icon-favorite"></i>收藏</a
                 >
               </div>
