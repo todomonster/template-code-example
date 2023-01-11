@@ -1,7 +1,26 @@
 <script>
+import { ref, onMounted } from "vue";
+import { useGlobalStore } from "@/store/global";
+// import { Toast } from "@/components/global/swal";
+// import { errorHandle } from "@/utils/errorHandle";
+
 export default {
   setup() {
-    return {};
+    const globalStore = useGlobalStore();
+    const goto = globalStore.goto;
+
+    const form = ref(null);
+    const inputData = ref({});
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+
+      if (form.value.reportValidity()) {
+        // 處理
+      }
+      goto("back");
+    };
+
+    return { form, handleSubmit };
   },
 
   components: {},
@@ -12,7 +31,7 @@ export default {
   <!-- 內容 -->
   <section class="c-main">
     <div class="form-container">
-      <form>
+      <form ref="form">
         <div class="avatar-container">
           <div class="image"><img src="@/assets/images/noavatar.png" /></div>
           <div class="camera-container">
@@ -107,8 +126,10 @@ export default {
           </div>
         </div>
         <div class="btn-container mt-5 d-flex justify-content-between">
-          <button class="btn btn-skip" type="button">Skip</button>
-          <button class="btn btn-next-grey" type="submit">
+          <button class="btn btn-skip" type="button" @click="handleSubmit">
+            Skip
+          </button>
+          <button class="btn btn-next-grey" type="submit" @click="handleSubmit">
             <i class="icon icon-next"></i>
           </button>
         </div>
