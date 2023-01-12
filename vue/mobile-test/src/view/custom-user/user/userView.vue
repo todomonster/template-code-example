@@ -55,7 +55,7 @@ export default {
           </div>
         </div>
         <div class="mobile-container">
-          <div class="title">手機號碼<span>0900000000</span></div>
+          <div class="title">手機號碼<span @click="goto('router', '/login')">登入</span></div>
         </div>
         <div class="item-container item-container-2">
           <div class="d-flex">

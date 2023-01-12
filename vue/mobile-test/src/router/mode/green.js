@@ -2,30 +2,17 @@ const basicRoute = [
   {
     path: "/",
     redirect: "/store",
-    // component: () => import("@/view/basic/login/loginPage.vue"),
   },
-  // {
-  //   path: "/home",
-  //   name: "home",
-  //   redirect: "/profile/view",
-  //   component: () => import("@/view/basic/home/homePage_.vue"),
-  // },
-  // {
-  //   path: "/login/forget",
-  //   name: "forget",
-  //   component: () => import("@/view/basic/login/forgetPage.vue"),
-  // },
-  // {
-  //   path: "/signup",
-  //   name: "signup",
-  //   component: () => import("@/view/basic/login/signupPage.vue"),
-  // },
-  // {
-  //   path: "/password",
-  //   name: "password",
-  //   component: () => import("@/view/basic/password/passwordPage.vue"),
-  //   meta: { requiresAuth: true },
-  // },
+  {
+    path: "/login",
+    name: "login",
+    component: () => import("@/view/basic-user/login/loginPage.vue"),
+  },
+  {
+    path: "/signup",
+    name: "signup",
+    component: () => import("@/view/basic-user/login/loginPage.vue"),
+  },
   {
     path: "/:catchAll(.*)",
     redirect: "/",
