@@ -1,5 +1,6 @@
 const MODE = process.env.VUE_APP_MODE
-console.log(`MODE=${MODE} start building...`);
+// https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
+console.log('\x1b[100m', `MODE=${MODE} start...`);
 
 let outputDir = "dist";
 if (MODE === "green") {
