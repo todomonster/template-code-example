@@ -5,50 +5,32 @@ import { errorHandle } from "@/utils/errorHandle";
 // import NoData from "@/components/global/NoData.vue";
 import BackToTop from "@/components/global-user/BackToTop.vue";
 import SaveWindowY from "@/components/global-user/SaveWindowY.vue";
-import { ExtCall } from "@/utils/extCall";
+import StoreCards from "@/view/custom-user/store/components/StoreCard.vue";
+// import { ExtCall } from "@/utils/extCall";
+import { handleStoreProfile } from "@/utils/handleData";
+import { apiGetStoreList } from "@/api/myfree";
+import NoData from "@/components/global/NoData.vue";
 
 export default {
   setup() {
-    const globalStore = useGlobalStore();
-    const goto = globalStore.goto;
+    const dataList = ref([]);
 
-    const showAdvancedSearch = ref(false);
-
-    const toGoogleMap = () => {
-      const url = "https://www.google.com/maps/dir//台中北屯大連路三段";
-      try {
-        ExtCall.toBrowser(url);
-      } catch (error) {
-        window.open(url, "_blank").focus();
-      }
+    const handleData = (arr = []) => {
+      arr.forEach((item) => {
+        item.images = handleStoreProfile.storeImages(item.images);
+      });
+      return arr;
     };
 
-    const form = ref(null);
-    const inputData = ref({});
-    const handleSubmit = async (e) => {
-      e.preventDefault();
+    onMounted(async () => {
+      const response1 = await apiGetStoreList({ favorite: 1 });
+      dataList.value = handleData(response1.data);
+    });
 
-      if (form.value.reportValidity()) {
-        // 處理
-      }
-    };
-
-    // const favoriteClass = ref("btn btn-link active");
-    const favoriteClass = (isFavorite = false) => {
-      return isFavorite ? "btn btn-link active" : "btn btn-link";
-    };
-
-    return {
-      goto,
-      toGoogleMap,
-      showAdvancedSearch,
-      form,
-      handleSubmit,
-      favoriteClass,
-    };
+    return { dataList };
   },
 
-  components: { BackToTop, SaveWindowY },
+  components: { NoData, BackToTop, SaveWindowY, StoreCards },
 };
 </script>
 
@@ -56,61 +38,10 @@ export default {
   <!-- 內容 -->
   <section class="c-main">
     <SaveWindowY />
-    <div class="navbar-container">
-      <div class="good-container pb-1">
-        <div class="card" v-for="(item, index) in 1" :key="index">
-          <div class="card-header">
-            <a
-              @click="
-                goto('routerQuery', '/store/1', {
-                  query: { mode: 'view', id: 1 },
-                })
-              "
-              class="card-link"
-            >
-              <img src="@/assets/images/img_shop.png" class="card-img" />
-            </a>
-          </div>
-          <div class="card-body">
-            <a
-              @click="
-                goto('routerQuery', '/store/1', {
-                  query: { mode: 'view', id: 1 },
-                })
-              "
-              class="card-link"
-            >
-              <div class="card-title">春日山 食事処</div>
-              <div class="card-text">$$・餐廳,日式料理,定食,丼飯</div>
-            </a>
-            <div class="row">
-              <div class="col">
-                <a :class="favoriteClass(index % 2 === 0)"
-                  ><i class="icon icon-favorite"></i>收藏</a
-                >
-              </div>
-              <div class="col">
-                <a @click="toGoogleMap" class="btn btn-link"
-                  ><i class="icon icon-navigation"></i>帶路</a
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <StoreCards :data="dataList" v-if="dataList?.length > 0" />
+    <NoData v-if="!(dataList?.length > 0)" />
     <BackToTop />
   </section>
 </template>
 
-<style scoped lang="scss">
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-}
-</style>
+<style scoped lang="scss"></style>

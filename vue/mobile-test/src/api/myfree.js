@@ -3,6 +3,12 @@ import { parseUrlEncode } from "@/utils/helper"
 
 // 命名規則: 如果是 CRUD 動詞+名詞 ex:GetStore 
 // urlencoded form x
+
+
+/**
+ * store
+ */
+
 /** city_area/list a-0-0*/
 export const apiGetCityArea = () => apiInstance.get(`/city_area/list`);
 export const apiGetCityList = () => apiInstance.get(`/city/list`);
@@ -13,7 +19,7 @@ export const apiStoreSaveFcmToken = (data) => apiInstance.post(`/notify/token`, 
 export const apiGetRewardRange = () => apiInstance.get(`/rewardRange`);
 export const apiLogout = () => apiInstance.logout();
 // {{api_path}}/api/mobile/check/type/:type/:mobile
-export const apiCheckAccount = ({type,mobile}) => apiInstance.get(`/mobile/check/type/${type}/${mobile}`);
+export const apiCheckAccount = ({ type, mobile }) => apiInstance.get(`/mobile/check/type/${type}/${mobile}`);
 
 // =============================================簡訊
 /** /mobile/verify/push_sms 發送簡訊 form */
@@ -77,3 +83,24 @@ export const apiGetNotifyUnreadAmount = () => apiInstance.get(`/store/notify/unr
 
 // =============================================產生QRcode
 export const apiGenQrcode = (data) => apiInstance.formDataPOST(`/qr/generate`, data);
+
+
+/**
+ * user
+ */
+
+// ============================================= 店家
+/** GET /v2/store/list 取店家list query */
+export const apiGetStoreList = (queryData) => apiInstance.get(`/v2/store/list?${parseUrlEncode(queryData)}`);
+/** GET /store/:id 取店家detail */
+export const apiGetStoreDetail = (id) => apiInstance.get(`/store/${id}`);
+/** DELETE /store/favorite  移除最愛  url  */
+// 注意 刪除如果是urlencoded就普通傳參數就好
+export const apiUserRemoveFavorite = ({store_id}) => apiInstance.delete(`/store/favorite?store_id=${store_id}`);
+/** POST /store/favorite  加到最愛  form */
+export const apiUserAddFavorite = (data) => apiInstance.formDataPOST(`/store/favorite`, data);
+
+/** GET /user/store/:id/product/list 取商品 query */
+/** POST /store/report 回報店家 form */
+
+
