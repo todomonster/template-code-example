@@ -81,7 +81,7 @@ export default {
       } else {
         const result = await ToastConfirm("請先登入");
         if (result == true) {
-          goto("/");
+          goto("userGoLogin");
         }
       }
     };

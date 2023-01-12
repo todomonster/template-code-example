@@ -7,6 +7,8 @@ import { useStorage, hashUrlRemoveQuery } from "@/utils/helper";
 export const useGlobalStore = defineStore('global', () => {
     const globalLoading = ref(false);
     const VUE_APP_ROUTER_TABLE = process.env.VUE_APP_ROUTER_TABLE;
+    const VUE_APP_USER_LOGIN_ROUTER = process.env.VUE_APP_USER_LOGIN_ROUTER;
+    const VUE_APP_STORE_LOGIN_ROUTER = process.env.VUE_APP_STORE_LOGIN_ROUTER;
 
 
     const goto = (mode, val, config) => {
@@ -76,6 +78,12 @@ export const useGlobalStore = defineStore('global', () => {
             } catch (error) {
                 window.open(url, "_blank").focus();
             }
+        }
+        else if (mode === "storeGoLogin") {
+            router.push(VUE_APP_STORE_LOGIN_ROUTER);
+        }
+        else if (mode === "userGoLogin") {
+            router.push(VUE_APP_USER_LOGIN_ROUTER);
         }
 
     };

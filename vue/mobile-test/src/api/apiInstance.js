@@ -6,6 +6,9 @@ const globalStore = useGlobalStore();
 
 //env
 const base = process.env.VUE_APP_API_BASE_URL;
+const MODE = process.env.VUE_APP_MODE;
+let LOGIN_ROUTER = MODE === "green" ? process.env.VUE_APP_USER_LOGIN_ROUTER : process.env.VUE_APP_STORE_LOGIN_ROUTER
+
 const publicWord = "Myfrees ";
 
 // 後端驗證token的關鍵字 = accessToken
@@ -138,7 +141,7 @@ function toLogin() {
   //把驗證改0
   localStorage.setItem("is_Login", 0)
   Toast("請重新登入");
-  setTimeout(() => window.location.href = "./index.html", 1500);
+  setTimeout(() => window.location.href = `./index.html${LOGIN_ROUTER}`, 1500);
 }
 
 function saveToken(response) {
