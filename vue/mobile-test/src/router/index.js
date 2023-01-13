@@ -11,17 +11,21 @@ import { Toast, ToastConfirm } from '@/components/global/swal'
 
 //mode = orange | green
 const mode = process.env.VUE_APP_MODE || "green";
+const VUE_APP_USER_LOGIN_ROUTER = process.env.VUE_APP_USER_LOGIN_ROUTER;
+const VUE_APP_STORE_LOGIN_ROUTER = process.env.VUE_APP_STORE_LOGIN_ROUTER;
 
 const byPassLogin = false;
 const tokenKey = "accessToken";
 
-// user
+
 let routes = [];
+let loginPath = "/";
 if (mode === "green") {
   routes = green;
+  loginPath = VUE_APP_USER_LOGIN_ROUTER;
 } else {
-  // orange
   routes = orange;
+  loginPath = VUE_APP_STORE_LOGIN_ROUTER;
 }
 
 const router = createRouter({
@@ -38,14 +42,14 @@ router.beforeEach(async (to, from, next) => {
 
     if (!token || loginStatus == "0") {
       // 沒有token踢回登入
-      
+
       if (byPassLogin === false) {
 
         localStorage.setItem("is_Login", 0)
         const result = await ToastConfirm("請先登入")
         if (result == true) {
           // 這裡要改成登入 路由
-          next("/");
+          next(loginPath);
           return true;
         } else {
           next(false)

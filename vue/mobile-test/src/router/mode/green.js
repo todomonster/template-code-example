@@ -6,12 +6,7 @@ const basicRoute = [
   {
     path: "/login",
     name: "login",
-    component: () => import("@/view/basic-user/login/loginPage.vue"),
-  },
-  {
-    path: "/signup",
-    name: "signup",
-    component: () => import("@/view/basic-user/login/loginPage.vue"),
+    component: () => import("@/view/basic-user/login/loginIndex.vue"),
   },
   {
     path: "/:catchAll(.*)",
@@ -29,6 +24,7 @@ const customRoute = [
     },
     children: [
       {
+        name: "StoreList",
         path: "list",
         meta: {
           showHeader: true,
@@ -42,7 +38,8 @@ const customRoute = [
         },
       },
       {
-        path: ":id",
+        name: "StoreDetail",
+        path: "detail",
         meta: {
           showHeader: true,
           showFooter: true,
@@ -53,10 +50,10 @@ const customRoute = [
         },
       },
       {
-        path: ":id/applyReward",
+        path: "applyReward",
         meta: {
           showHeader: true,
-          showFooter: true,
+          showFooter: false,
           requiresAuth: true,
         },
         components: {
@@ -64,10 +61,10 @@ const customRoute = [
         },
       },
       {
-        path: ":id/report",
+        path: "report",
         meta: {
           showHeader: true,
-          showFooter: true,
+          showFooter: false,
           requiresAuth: true,
         },
         components: {

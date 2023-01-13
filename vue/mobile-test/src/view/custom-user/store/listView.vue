@@ -13,6 +13,7 @@ import { apiGetStoreList } from "@/api/myfree";
 import NoData from "@/components/global/NoData.vue";
 
 export default {
+  name: "StoreList",
   setup() {
     const dataList = ref([]);
 

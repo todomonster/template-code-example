@@ -21,7 +21,12 @@ export default {
     v-if="$route.meta.showHeader"
   />
   <div class="main">
-    <router-view />
+    <!-- <router-view /> -->
+    <router-view v-slot="{ Component }">
+      <keep-alive :include="['StoreList', 'StoreDetail']">
+        <component :is="Component" />
+      </keep-alive>
+    </router-view>
   </div>
   <Footer v-show="$route.meta.showFooter" />
 </template>

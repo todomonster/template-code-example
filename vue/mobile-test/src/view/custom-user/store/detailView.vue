@@ -7,10 +7,12 @@ import { apiGetStoreDetail } from "@/api/myfree";
 import { handleStoreProfile } from "@/utils/handleData";
 import { apiUserAddFavorite, apiUserRemoveFavorite } from "@/api/myfree";
 import { Toast, ToastConfirm } from "@/components/global/swal";
+import { useRoute } from "vue-router";
 
 export default {
+  name: "StoreDetail",
   setup() {
-
+    const { query } = useRoute();
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
 
@@ -46,9 +48,15 @@ export default {
     };
 
     onMounted(async () => {
-      const response = await apiGetStoreDetail(1);
-      if (response.result) {
-        storeData.value = handleData(response.data);
+      try {
+        const id = Number(query.id);
+        const response = await apiGetStoreDetail(id);
+        if (response.result) {
+          storeData.value = handleData(response.data);
+        }
+      } catch (error) {
+        errorHandle(error);
+        // goto("router", "/");
       }
     });
 
@@ -57,11 +65,19 @@ export default {
     };
 
     const handleReport = (id) => {
-      id ? goto("router", `/store/${id}/report`) : Toast("找不到id");
+      const { name = "", images = "" } = storeData.value;
+      id
+        ? goto("routerQuery", "/store/report", { query: { id, name, images } })
+        : Toast("找不到id");
     };
 
     const handleRewardApply = (id) => {
-      id ? goto("router", `/store/${id}/applyReward`) : Toast("找不到id");
+      const { name = "", images = "" } = storeData.value;
+      id
+        ? goto("routerQuery", `/store/applyReward`, {
+            query: { id, name, images },
+          })
+        : Toast("找不到id");
     };
 
     const handleFavorite = async (item, index) => {
@@ -115,7 +131,7 @@ export default {
         :key="item.id"
       >
         <div class="image-container">
-          <div class="image"><img src="@/assets/images/img_shop.png" /></div>
+          <div class="image"><img :src="item.images" /></div>
           <div class="row">
             <div class="col">
               <a

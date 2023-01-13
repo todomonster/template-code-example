@@ -20,7 +20,9 @@ export default {
     };
 
     const handleStoreClick = (id) => {
-      id ? goto("router", `/store/${id}`) : Toast("找不到店家");
+      id
+        ? goto("routerQuery", "/store/detail", { query: { id } })
+        : Toast("找不到店家");
     };
 
     const handleMapClick = (address) => {
