@@ -54,7 +54,7 @@ export default {
         if (option === "2") {
           // 開發-連線版
           const testUrl =
-            "https://myfree.tako.life/app/store/store_settings_v1.txt";
+            "https://myfree.tako.life/app/user/user_settings_v1.txt";
           ExtCall.replaceSetting(" ", testUrl);
         }
         if (option === "3") {
@@ -210,7 +210,7 @@ export default {
 
 <style lang="scss" scoped>
 .version {
-  color: #ffd877;
+  color: #d4ffa0;
   position: fixed;
   bottom: 0;
   left: 45%;
