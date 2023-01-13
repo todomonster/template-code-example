@@ -111,3 +111,17 @@ export const apiUserSaveFcmToken = (token) => apiInstance.post(`/notify/token`, 
 }));
 /** v2/store/login a-1-4 form */
 export const apiUserLogin = (data) => apiInstance.formDataLogin(`/v2/user/login`, (data));
+
+
+/** GET /store/:id 取店家detail */
+export const apiRefreshPoint = () => apiInstance.get(`/user/point/refresh`);
+
+/** POST /user/deal/reward  索取回饋  form */
+export const apiUserApplyReward = (data) => apiInstance.formDataPOST(`/user/deal/reward`, data);
+/**
+POST /user/deal/withdraw 提領申請 form
+GET /user/deal/record/list 紀錄列表 query
+GET /user/deal/currency/list 數值紀錄 query
+GET /user/point/refresh 刷新點數
+GET /wallet/user 取點數
+ */
