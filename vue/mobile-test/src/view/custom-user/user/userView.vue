@@ -7,6 +7,7 @@ import {
   ToastInputConfirm,
 } from "@/components/global/swal";
 import { errorHandle } from "@/utils/errorHandle";
+import { apiLogout, apiUserSaveFcmToken } from "@/api/myfree";
 
 export default {
   setup() {
@@ -28,7 +29,9 @@ export default {
       try {
         const confirm = await ToastConfirm("是否要登出?");
         if (confirm) {
-          goto("router", "/");
+          const response = await apiUserSaveFcmToken("null");
+          await apiLogout();
+          goto("storeGoLogin");
         }
       } catch (error) {
         errorHandle(error);
@@ -55,7 +58,9 @@ export default {
           </div>
         </div>
         <div class="mobile-container">
-          <div class="title">手機號碼<span @click="goto('router', '/login')">登入</span></div>
+          <div class="title">
+            手機號碼<span @click="goto('router', '/login')">登入</span>
+          </div>
         </div>
         <div class="item-container item-container-2">
           <div class="d-flex">

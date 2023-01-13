@@ -38,8 +38,9 @@ export const apiStoreRemove = () => apiInstance.post(`/store/remove`);
 
 /** store/regist a-1-3 form */
 export const apiStoreRegister = (data) => apiInstance.formDataPOST(`/store/regist`, (data));
-/** v2/store/login a-1-4 form */
-export const apiStoreLogin = (data) => apiInstance.formDataLogin(`/store/login`, (data));
+/** /v2/store/login a-1-4 form */
+// 先用v1就好 除非要 "change_password"
+export const apiStoreLogin = (data) => apiInstance.formDataLogin(`/v2/store/login`, (data));
 /** store a-1-5 x */
 export const apiGetStore = () => apiInstance.get(`/store`);
 
@@ -96,11 +97,17 @@ export const apiGetStoreList = (queryData) => apiInstance.get(`/v2/store/list?${
 export const apiGetStoreDetail = (id) => apiInstance.get(`/store/${id}`);
 /** DELETE /store/favorite  移除最愛  url  */
 // 注意 刪除如果是urlencoded就普通傳參數就好
-export const apiUserRemoveFavorite = ({store_id}) => apiInstance.delete(`/store/favorite?store_id=${store_id}`);
+export const apiUserRemoveFavorite = ({ store_id }) => apiInstance.delete(`/store/favorite?store_id=${store_id}`);
 /** POST /store/favorite  加到最愛  form */
 export const apiUserAddFavorite = (data) => apiInstance.formDataPOST(`/store/favorite`, data);
 
 /** GET /user/store/:id/product/list 取商品 query */
 /** POST /store/report 回報店家 form */
 
-
+/** /notify/token 存 推播token form */
+export const apiUserSaveFcmToken = (token) => apiInstance.post(`/notify/token`, parseUrlEncode({
+    token,
+    type: "user",
+}));
+/** v2/store/login a-1-4 form */
+export const apiUserLogin = (data) => apiInstance.formDataLogin(`/v2/user/login`, (data));

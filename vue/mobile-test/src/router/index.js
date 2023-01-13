@@ -12,7 +12,7 @@ import { Toast, ToastConfirm } from '@/components/global/swal'
 //mode = orange | green
 const mode = process.env.VUE_APP_MODE || "green";
 
-const byPassLogin = true;
+const byPassLogin = false;
 const tokenKey = "accessToken";
 
 // user

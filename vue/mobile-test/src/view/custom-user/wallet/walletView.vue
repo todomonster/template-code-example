@@ -17,7 +17,7 @@ export default {
         <div class="navbar-container">
             <div class="cash-container">
                 <div class="image-container">
-                    <div class="image"><img src="@/assets/images/img_shop.png"></div>
+                    <div class="image"><img src="@/assets/images/img_myfree.png"></div>
                 </div>
                 <div class="list-container list-container-2">
                     <div class="list-link list-no">

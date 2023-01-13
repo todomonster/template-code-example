@@ -3,8 +3,10 @@ const MODE = process.env.VUE_APP_MODE
 console.log('\x1b[100m', `MODE=${MODE} start...`);
 
 let outputDir = "dist";
+let webTitle = "store"
 if (MODE === "green") {
   outputDir = "dist_user";
+  webTitle = "user";
 }
 
 module.exports = {
@@ -13,7 +15,7 @@ module.exports = {
   pages: {
     index: {
       entry: './src/main.js',
-      title: 'myfrees_store'
+      title: `myfrees_${webTitle}`
     },
   },
   css: {
