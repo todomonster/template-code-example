@@ -48,7 +48,7 @@ export default {
       <div class="logo">
         <img
           src="@/assets/images/logo.png"
-          @click="triggerBackDoor = !triggerBackDoor"
+          @click="triggerBackDoor = true"
         />
       </div>
     </div>

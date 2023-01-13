@@ -45,22 +45,23 @@ export default {
         isBackDoor.value = true;
       }
       try {
+        const mode = "user"
         if (option === "1") {
           // 切換到穩定版本
           const defaultUrl =
-            "https://myfree.tako.life/app/user/store_settings.txt";
+            `https://myfree.tako.life/app/${mode}/${mode}_settings.txt`;
           ExtCall.replaceSetting(" ", defaultUrl);
         }
         if (option === "2") {
           // 開發-連線版
           const testUrl =
-            "https://myfree.tako.life/app/user/user_settings_v1.txt";
+            `https://myfree.tako.life/app/${mode}/${mode}_settings_v1.txt`;
           ExtCall.replaceSetting(" ", testUrl);
         }
         if (option === "3") {
           // 切換到demo測試機版本
           const defaultUrl =
-            "http://210.64.205.11:8080/myfree/public/app/user/store_settings.txt";
+            `http://210.64.205.11:8080/myfree/public/app/${mode}/${mode}_settings.txt`;
           ExtCall.replaceSetting(" ", defaultUrl);
         }        
       } catch (error) {
