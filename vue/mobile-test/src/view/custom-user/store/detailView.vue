@@ -1,5 +1,5 @@
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onActivated } from "vue";
 import { useGlobalStore } from "@/store/global";
 import { errorHandle } from "@/utils/errorHandle";
 import { ExtCall } from "@/utils/extCall";
@@ -12,9 +12,10 @@ import { useRoute } from "vue-router";
 export default {
   name: "StoreDetail",
   setup() {
-    const { query } = useRoute();
+    
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
+    const id = ref(null);
 
     const storeData = ref({});
 
@@ -47,13 +48,19 @@ export default {
       };
     };
 
-    onMounted(async () => {
+    onActivated(async () => {
       try {
-        const id = Number(query.id);
-        const response = await apiGetStoreDetail(id);
-        if (response.result) {
-          storeData.value = handleData(response.data);
+        const { query } = useRoute();
+        if (id.value === Number(query.id)) {
+          return;
         }
+
+        id.value = Number(query.id);
+        const data = await apiGetStoreDetail(id.value);
+        // if (response.result) {
+        // 這隻沒給result 也不是data模式
+        storeData.value = handleData(data);
+        // }
       } catch (error) {
         errorHandle(error);
         // goto("router", "/");
@@ -114,6 +121,7 @@ export default {
       favoriteClass,
       handleMapClick,
       handleFavorite,
+      id
     };
   },
 
