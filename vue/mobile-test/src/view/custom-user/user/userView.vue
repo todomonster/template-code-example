@@ -104,9 +104,10 @@ export default {
           </a>
         </div>
       </div>
-      <div class="edit-container">
+      <!-- <div class="edit-container">
         <div class="version">{{ VUE_APP_VERSION }}</div>
-      </div>
+      </div> -->
+      <!-- {{VUE_APP_VERSION + '123'}} -->
     </div>
   </section>
 </template>

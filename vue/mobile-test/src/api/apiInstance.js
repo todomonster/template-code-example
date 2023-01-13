@@ -7,7 +7,8 @@ const globalStore = useGlobalStore();
 //env
 const base = process.env.VUE_APP_API_BASE_URL;
 const MODE = process.env.VUE_APP_MODE;
-let LOGIN_ROUTER = MODE === "green" ? process.env.VUE_APP_USER_LOGIN_ROUTER : process.env.VUE_APP_STORE_LOGIN_ROUTER
+let LOGIN_ROUTER = MODE === "green" ? process.env.VUE_APP_OVERTIME_USER_PATH : process.env.VUE_APP_OVERTIME_STORE_PATH
+
 
 const publicWord = "Myfrees ";
 
@@ -141,7 +142,8 @@ function toLogin() {
   //把驗證改0
   localStorage.setItem("is_Login", 0)
   Toast("請重新登入");
-  setTimeout(() => window.location.href = `./index.html${LOGIN_ROUTER}`, 1500);
+  // 路由模式
+  setTimeout(() => window.location.href = `./index.html#${LOGIN_ROUTER}`, 1500);
 }
 
 function saveToken(response) {

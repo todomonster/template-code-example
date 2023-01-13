@@ -45,25 +45,22 @@ export default {
         isBackDoor.value = true;
       }
       try {
-        const mode = "user"
+        const mode = "user";
         if (option === "1") {
           // 切換到穩定版本
-          const defaultUrl =
-            `https://myfree.tako.life/app/${mode}/${mode}_settings.txt`;
+          const defaultUrl = `https://myfree.tako.life/app/${mode}/${mode}_settings.txt`;
           ExtCall.replaceSetting(" ", defaultUrl);
         }
         if (option === "2") {
           // 開發-連線版
-          const testUrl =
-            `https://myfree.tako.life/app/${mode}/${mode}_settings_v1.txt`;
+          const testUrl = `https://myfree.tako.life/app/${mode}/${mode}_settings_v1.txt`;
           ExtCall.replaceSetting(" ", testUrl);
         }
         if (option === "3") {
           // 切換到demo測試機版本
-          const defaultUrl =
-            `http://210.64.205.11:8080/myfree/public/app/${mode}/${mode}_settings.txt`;
+          const defaultUrl = `http://210.64.205.11:8080/myfree/public/app/${mode}/${mode}_settings.txt`;
           ExtCall.replaceSetting(" ", defaultUrl);
-        }        
+        }
       } catch (error) {
         Toast(`電腦版不能執行 ${error}`);
       }
@@ -71,7 +68,9 @@ export default {
     watch(
       () => props.triggerBackDoor,
       (val) => {
-        val ? handleBackDoorOpen(inputData.value) : (isBackDoor.value = false);
+        val == true
+          ? handleBackDoorOpen(inputData.value)
+          : (isBackDoor.value = false);
       }
     );
 

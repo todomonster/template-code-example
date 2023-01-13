@@ -12,7 +12,6 @@ import { useRoute } from "vue-router";
 export default {
   name: "StoreDetail",
   setup() {
-    
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
     const id = ref(null);
@@ -56,14 +55,18 @@ export default {
         }
 
         id.value = Number(query.id);
-        const data = await apiGetStoreDetail(id.value);
-        // if (response.result) {
-        // 這隻沒給result 也不是data模式
-        storeData.value = handleData(data);
-        // }
+        const response = await apiGetStoreDetail(id.value);
+
+        if (response.result == true) {
+          // 測試機
+          storeData.value = handleData(response.data);
+        } else {
+          // 正式機
+          // 正式還沒更新 這隻沒給result 也不是data模式
+          storeData.value = handleData(response);
+        }
       } catch (error) {
         errorHandle(error);
-        // goto("router", "/");
       }
     });
 
@@ -79,33 +82,42 @@ export default {
     };
 
     const handleRewardApply = (id) => {
-      const { name = "", images = "" } = storeData.value;
+      const { name = "", images = "", rewardRange = 0 } = storeData.value;
       id
         ? goto("routerQuery", `/store/applyReward`, {
-            query: { id, name, images },
+            query: { id, name, images, rewardRange },
           })
         : Toast("找不到id");
     };
 
     const handleFavorite = async (item, index) => {
-      const { id, favorite } = item;
+      try {
+        const { id, favorite } = item;
 
-      let response = {};
-      const api = async (apiFunction) => {
-        response = await apiFunction({ store_id: id });
-        if (response.result) {
-          item.favorite = !item.favorite;
+        let response = {};
+        const api = async (apiFunction) => {
+          response = await apiFunction({ store_id: id });
+          if (response.result) {
+            item.favorite = !item.favorite;
+          }
+        };
+
+        const flag = localStorage.getItem("is_Login");
+        // 有登入
+        if (flag == "1") {
+          favorite == true
+            ? api(apiUserRemoveFavorite)
+            : api(apiUserAddFavorite);
+
+          return;
         }
-      };
-
-      const flag = localStorage.getItem("is_Login");
-      if (flag == "1") {
-        favorite == true ? api(apiUserRemoveFavorite) : api(apiUserAddFavorite);
-      } else {
+        // 沒登入
         const result = await ToastConfirm("請先登入");
         if (result == true) {
           goto("userGoLogin");
         }
+      } catch (error) {
+        errorHandle(error);
       }
     };
 
@@ -121,7 +133,7 @@ export default {
       favoriteClass,
       handleMapClick,
       handleFavorite,
-      id
+      id,
     };
   },
 

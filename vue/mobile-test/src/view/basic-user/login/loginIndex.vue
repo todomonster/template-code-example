@@ -24,8 +24,11 @@ export default {
     });
 
     const triggerBackDoor = ref(false);
+    const handleBlack = () => {
+      triggerBackDoor.value = true;
+    };
 
-    return { mode, goto, handleModeChange, triggerBackDoor };
+    return { mode, goto, handleModeChange, handleBlack, triggerBackDoor };
   },
   components: { LoginPage, SignupPage },
 };
@@ -46,10 +49,7 @@ export default {
     </div>
     <div class="logo-container">
       <div class="logo">
-        <img
-          src="@/assets/images/logo.png"
-          @click="triggerBackDoor = true"
-        />
+        <img src="@/assets/images/logo.png" @click="handleBlack" />
       </div>
     </div>
     <LoginPage
