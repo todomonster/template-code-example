@@ -188,7 +188,7 @@ export default {
     </div>
     <div class="logo-container">
       <div class="logo" @click="handleBackDoorOpen(inputData)">
-        <img src="@/assets/images/logo.png" />
+        <img src="@/assets/images/logo_02.png" />
       </div>
     </div>
     <!-- form start -->
@@ -268,7 +268,7 @@ export default {
           class="row form-word text-end text-decoration-underline cursor-pointer"
         >
           <div class="col-12 ml-4 ">
-            <span class="cursor-pointer"  @click="$router.push({ path: '/' })">登入</span>
+            <span class="cursor-pointer"  @click="$router.push({ path: '/' })">去登入</span>
           </div>          
         </div>
         <div class="row form-word text-center">

@@ -41,19 +41,19 @@ export default {
       }
       try {
         if (option === "1") {
-          // 切換到普通版本
+          // 切換到穩定版本
           const defaultUrl =
             "https://myfree.tako.life/app/store/store_settings.txt";
           ExtCall.replaceSetting(" ", defaultUrl);
         }
         if (option === "2") {
-          // 切換到測試版本
+          // 開發-連線版
           const testUrl =
             "https://myfree.tako.life/app/store/store_settings_v1.txt";
           ExtCall.replaceSetting(" ", testUrl);
         }
         if (option === "3") {
-          // 切換到普通版本
+          // 切換到demo測試機版本
           const defaultUrl =
             "http://210.64.205.11:8080/myfree/public/app/store/store_settings.txt";
           ExtCall.replaceSetting(" ", defaultUrl);
@@ -153,7 +153,7 @@ export default {
     </div>
     <div class="logo-container">
       <div class="logo" @click="handleBackDoorOpen(inputData)">
-        <img src="@/assets/images/logo.png" />
+        <img src="@/assets/images/logo_02.png" />
       </div>
     </div>
     <div class="form-container form-container-2">
@@ -206,7 +206,7 @@ export default {
         <div class="row form-word text-end text-decoration-underline">
           <div class="col-12 ml-4">
             <span class="cursor-pointer" @click="goto('router', '/signup')"
-              >註冊</span
+              >去註冊</span
             >
           </div>
         </div>
