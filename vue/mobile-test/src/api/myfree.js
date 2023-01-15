@@ -111,6 +111,8 @@ export const apiUserSaveFcmToken = (token) => apiInstance.post(`/notify/token`, 
 }));
 /** v2/store/login a-1-4 form */
 export const apiUserLogin = (data) => apiInstance.formDataLogin(`/v2/user/login`, (data));
+/** /user/remove 軟刪除 */
+export const apiRemoveUser = () => apiInstance.post(`/user/remove`);
 
 
 /** GET /store/:id 取店家detail */
@@ -118,10 +120,42 @@ export const apiRefreshPoint = () => apiInstance.get(`/user/point/refresh`);
 
 /** POST /user/deal/reward  索取回饋  form */
 export const apiUserApplyReward = (data) => apiInstance.formDataPOST(`/user/deal/reward`, data);
+/** POST /user/deal/withdraw 提領申請 form */
+export const apiUserApplyWithdraw = (data) => apiInstance.formDataPOST(`/user/deal/withdraw`, data);
+
+/** GET /user/deal/record/list 申請紀錄列表 query */
+export const apiGetUserRecordList = (queryData) => apiInstance.get(`/user/deal/record/list?${parseUrlEncode(queryData)}`);
+
+// {
+//     page:1,
+//     limit:10,
+//     type:'point|balance',
+//     startDate:'2022-11-01',
+//     endDate:'2022-11-02'
+// }
+
+/** GET /user/deal/currency/list 福利金|超級點列表紀錄 query */
+export const apiGetUserMoneyList = (queryData) => apiInstance.get(`/user/deal/currency/list?${parseUrlEncode(queryData)}`);
+
+// {
+    //     page:1,
+//     limit:10,
+//     startDate:'2022-11-01',
+//     endDate:'2022-11-02'
+// }
+
+
+/** GET /user/store/:id/product/list 產品list */
+export const apiUserGetProductList = (id) => apiInstance.get(`/user/store/${id}/product/list`);
 /**
-POST /user/deal/withdraw 提領申請 form
-GET /user/deal/record/list 紀錄列表 query
-GET /user/deal/currency/list 數值紀錄 query
-GET /user/point/refresh 刷新點數
-GET /wallet/user 取點數
- */
+ GET /wallet/user 取點數 棄用
+*/
+
+// =============================================小鈴鐺
+/** /user/notify/list S-1-12 x ?*/
+export const apiUserGetNotifyList = (queryData) => apiInstance.get(`/user/notify/list?${parseUrlEncode(queryData)}`);
+/** /user/notify/read S-1-13 urlencoded */
+// 給id陣列 id=[1,2,3]?
+export const apiUserReadNotify = (data) => apiInstance.post(`/user/notify/read`, parseUrlEncode(data));
+/** /user/notify/unread S-1-14 x */
+export const apiGetUserNotifyUnreadAmount = () => apiInstance.get(`/user/notify/unread`);
