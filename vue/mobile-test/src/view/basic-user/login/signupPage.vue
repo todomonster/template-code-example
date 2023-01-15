@@ -99,7 +99,7 @@ export default {
         }
       }
     };
-    const handleToEditStoreData = ($event) => {
+    const handleToEditPage = ($event) => {
       // 檢查相同
       $event.preventDefault();
       if (inputData.value.password !== inputData.value.password2) {
@@ -113,7 +113,7 @@ export default {
           mobile: inputData.value.mobile,
           password: inputData.value.password,
         });
-        goto("router", "/profile/edit");
+        goto("router", "/setting/edit");
       }
     };
     const handleArrowBtn = ($event) => {
@@ -122,7 +122,7 @@ export default {
       } else if (currentStep.value === 1) {
         handleOtpVerify($event);
       } else if (currentStep.value === 2) {
-        handleToEditStoreData($event);
+        handleToEditPage($event);
       }
     };
     // ========
