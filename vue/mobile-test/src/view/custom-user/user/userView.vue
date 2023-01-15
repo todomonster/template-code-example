@@ -6,13 +6,15 @@ import {
   ToastConfirm,
   ToastInputConfirm,
 } from "@/components/global/swal";
+import { ref, onMounted } from "vue";
 import { errorHandle } from "@/utils/errorHandle";
-import { apiLogout, apiUserSaveFcmToken } from "@/api/myfree";
+import { apiLogout, apiUserSaveFcmToken, apiGetUserInfo } from "@/api/myfree";
 
 export default {
   setup() {
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
+    const userData = ref({});
 
     const VUE_APP_VERSION = process.env.VUE_APP_VERSION;
 
@@ -37,7 +39,24 @@ export default {
         errorHandle(error);
       }
     };
-    return { goto, VUE_APP_VERSION, logout, handleWebView, link };
+    onMounted(async () => {
+      try {
+        let response = await apiGetUserInfo();
+        let tmp = response;
+        tmp.gender = tmp.gender === "men" ? "男" : "女";
+
+        tmp.age =
+          tmp.age === 9
+            ? "90以上"
+            : tmp.age === 0
+            ? "0~9"
+            : `${tmp.age}0~${tmp.age}9`;
+        userData.value = tmp;
+      } catch (error) {
+        errorHandle(error);
+      }
+    });
+    return { goto, VUE_APP_VERSION, logout, handleWebView, link, userData };
   },
 
   components: {},
@@ -65,15 +84,15 @@ export default {
         <div class="item-container item-container-2">
           <div class="d-flex">
             <div class="col-left">暱稱</div>
-            <div class="col-right">Jean</div>
+            <div class="col-right">{{ userData.nickname }}</div>
           </div>
           <div class="d-flex">
             <div class="col-left">性別</div>
-            <div class="col-right">女</div>
+            <div class="col-right">{{ userData.gender }}</div>
           </div>
           <div class="d-flex">
             <div class="col-left">年齡層</div>
-            <div class="col-right">20~29</div>
+            <div class="col-right">{{ userData.age }}</div>
           </div>
           <!-- <div class="d-flex">
             <div class="col-left">預設好康店範圍</div>
