@@ -50,6 +50,7 @@ const customRoute = [
         },
       },
       {
+        name: "StoreProduct",
         path: "product",
         meta: {
           showHeader: true,

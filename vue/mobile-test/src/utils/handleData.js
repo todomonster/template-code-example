@@ -46,8 +46,12 @@ function isOpen(is_open) {
 
 function storeImages(images) {
     // 回傳字串
-    if (Array.isArray(JSON.parse(images))) {
-        return JSON.parse(images)[0]
+    const inputType = typeof (images);
+    if (inputType === "string") {
+        images = JSON.parse(images);
+    }
+    if (Array.isArray(images)) {
+        return images[0];
     }
     return "";
 }

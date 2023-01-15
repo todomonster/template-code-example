@@ -1,10 +1,48 @@
 <script>
 import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
+import { errorHandle } from "@/utils/errorHandle";
+import { apiUserGetProductList } from "@/api/myfree";
+import { handleStoreProfile } from "@/utils/handleData";
 
 export default {
+  name: "StoreProduct",
   setup() {
     const { query } = useRoute();
+    const id = ref(null);
+    const productList = ref([]);
+
+    const handleData = (products = []) => {
+      const ans = [];
+      products.forEach((product) => {
+        const { id = 0, name = "", description = "", price1 = 0 } = product;
+        const image = handleStoreProfile.storeImages(product.image);
+        ans.push({
+          id,
+          name,
+          description,
+          price1,
+          image,
+        });
+      });
+      return ans;
+    };
+
+    onMounted(async () => {
+      try {
+        if (id.value === Number(query.id)) {
+          return;
+        }
+        id.value = Number(query.id);
+        const response = await apiUserGetProductList(id.value);
+        if (response.result) {
+          // const count = response?.data?.count
+          productList.value = handleData(response?.data?.products);
+        }
+      } catch (error) {
+        errorHandle(error);
+      }
+    });
 
     const handleClick = (index, itemIsActive) => {
       if (!itemIsActive) {
@@ -19,11 +57,7 @@ export default {
         return "card-body";
       }
     };
-    const productList = ref([
-      { id: 1, isActive: false },
-      { id: 2, isActive: false },
-      { id: 3, isActive: false },
-    ]);
+
     return { cardBodyCss, productList, handleClick };
   },
 
@@ -45,13 +79,13 @@ export default {
             <div class="card" @click="handleClick(index, item.isActive)">
               <div class="card-header">
                 <a class="card-link">
-                  <img src="@/assets/images/img_shop_s.png" class="card-img" />
-                  <div class="card-title">沙拉</div>
-                  <div class="card-price">$ 100</div>
+                  <img :src="item.image" class="card-img" />
+                  <div class="card-title">{{ item.name }}</div>
+                  <div class="card-price">{{ item.price1 }}</div>
                 </a>
               </div>
               <div :class="cardBodyCss(item.isActive)">
-                <div class="card-text">本店必吃NO.1前菜！</div>
+                <div class="card-text">{{ item.description }}</div>
               </div>
             </div>
           </div>
