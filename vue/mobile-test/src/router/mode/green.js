@@ -50,6 +50,17 @@ const customRoute = [
         },
       },
       {
+        path: "product",
+        meta: {
+          showHeader: true,
+          showFooter: false,
+          requiresAuth: false,
+        },
+        components: {
+          default: () => import("@/view/custom-user/store/storeProduct.vue"),
+        },
+      },
+      {
         path: "applyReward",
         meta: {
           showHeader: true,

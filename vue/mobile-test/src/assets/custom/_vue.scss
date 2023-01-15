@@ -31,3 +31,44 @@
     margin: 0 auto;
   }
 }
+
+.fixfixed {
+	// #c-header {
+	//   position: absolute;
+	// }
+	// #c-main {
+	//   padding-bottom: 0 !important;
+	// }
+	#c-footer {
+	  display: none;
+	}
+	// .c-header {
+	//   position: absolute;
+	// }
+	// .c-main {
+	//   padding-bottom: 0 !important;
+	// }
+	// .c-footer {
+	//   position: static;
+	// }
+  
+  
+  }
+//   @-webkit-keyframes fadeIn { from { position: fixed; } to { position: static; } }
+//   @-moz-keyframes fadeIn { from { position: fixed; } to { position: static; } }
+//   @keyframes fadeIn { from { position: fixed; } to { position: static; } }
+
+// -webkit-animation:fadeIn ease-in 0.5;
+// -moz-animation:fadeIn ease-in 0.5;
+// animation:fadeIn ease-in 0.5;
+
+// -webkit-animation-fill-mode:forwards;
+// -moz-animation-fill-mode:forwards;
+// animation-fill-mode:forwards;
+
+// -webkit-animation-duration:0.5s;
+// -moz-animation-duration:0.5s;
+// animation-duration:0.5s;
+
+//   opacity:1 display:''
+//   opacity:0 display:none
