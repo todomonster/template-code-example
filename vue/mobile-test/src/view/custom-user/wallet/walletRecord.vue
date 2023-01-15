@@ -8,8 +8,8 @@ import { errorHandle } from "@/utils/errorHandle";
 export default {
   setup() {
     const recordListData = ref({});
-    const moneyListData = ref({});
     const pointListData = ref({});
+    const moneyListData = ref({});
 
     const getDateMethod = async (inputData, api, query) => {
       let tmp = await api(query);
@@ -106,20 +106,17 @@ export default {
         </div>
         <div class="swiper-slide">
           <div class="item-container item-container-3">
-            <div v-for="data in moneyListData" :key="data.id">
+            <div v-for="data in pointListData" :key="data.id">
               <div class="d-flex">
                 <div class="col-left">
                   <div class="title">{{ data.name }}</div>
                   <div class="date">{{ data.createTime }}</div>
-                  <div v-if="data.status === 2" class="note">
-                    {{ data.memo }}
-                  </div>
                 </div>
                 <div class="col-right">
                   <div v-if="data.status === 1" class="green">
                     {{ data.amount }}
                   </div>
-                  <div v-else-if="data.status === 2" class="red">
+                  <div v-else-if="data.status === 0" class="red">
                     {{ data.amount }}
                   </div>
                 </div>
@@ -129,20 +126,17 @@ export default {
         </div>
         <div class="swiper-slide">
           <div class="item-container item-container-3">
-            <div v-for="data in pointListData" :key="data.id">
+            <div v-for="data in moneyListData" :key="data.id">
               <div class="d-flex">
                 <div class="col-left">
                   <div class="title">{{ data.name }}</div>
                   <div class="date">{{ data.createTime }}</div>
-                  <div v-if="data.status === 2" class="note">
-                    {{ data.memo }}
-                  </div>
                 </div>
                 <div class="col-right">
                   <div v-if="data.status === 1" class="green">
                     {{ data.amount }}
                   </div>
-                  <div v-else-if="data.status === 2" class="red">
+                  <div v-else-if="data.status === 0" class="red">
                     {{ data.amount }}
                   </div>
                 </div>

@@ -129,7 +129,7 @@ export const apiUserLogin = (data) => apiInstance.formDataLogin(`/v2/user/login`
 /** /user/remove 軟刪除 */
 export const apiRemoveUser = () => apiInstance.post(`/user/remove`);
 /** /user 取得使用者資料 */
-export const apiGetUserInfo = () => apiInstance.post(`/user`);
+export const apiGetUserInfo = () => apiInstance.get(`/user`);
 
 
 /** GET /store/:id 取店家detail */
