@@ -101,8 +101,23 @@ export const apiUserRemoveFavorite = ({ store_id }) => apiInstance.delete(`/stor
 /** POST /store/favorite  加到最愛  form */
 export const apiUserAddFavorite = (data) => apiInstance.formDataPOST(`/store/favorite`, data);
 
-/** GET /user/store/:id/product/list 取商品 query */
 /** POST /store/report 回報店家 form */
+export const apiUserReportStore = (data) => apiInstance.formDataPOST(`/store/favorite`, data);
+// {
+//     store_id:1,
+//     option:0, //回報種類, 0:其他 1:店家已停業 2:無法使用優惠 3:款項有爭議(必填,string),
+//     message:'',
+// }
+
+/** /user/forgotpwd urlencoded */
+export const apiUserForgetPwd = (data) => apiInstance.post(`/user/forgotpwd`, parseUrlEncode(data));
+/** /user/changepwd urlencoded */
+export const apiUserChangePwd = (data) => apiInstance.post(`/user/changepwd`, parseUrlEncode(data));
+/** /user/upd urlencoded */
+export const apiUpdateUser = (data) => apiInstance.post(`/user/upd`, parseUrlEncode(data));
+
+/** image/user form 上傳檔案 用post就好*/
+export const apiUserUpload = (data) => apiInstance.post(`/image/user`, (data));
 
 /** /notify/token 存 推播token form */
 export const apiUserSaveFcmToken = (token) => apiInstance.post(`/notify/token`, parseUrlEncode({
@@ -125,21 +140,19 @@ export const apiUserApplyWithdraw = (data) => apiInstance.formDataPOST(`/user/de
 
 /** GET /user/deal/record/list 申請紀錄列表 query */
 export const apiGetUserRecordList = (queryData) => apiInstance.get(`/user/deal/record/list?${parseUrlEncode(queryData)}`);
-
 // {
 //     page:1,
 //     limit:10,
-//     type:'point|balance',
 //     startDate:'2022-11-01',
 //     endDate:'2022-11-02'
 // }
 
 /** GET /user/deal/currency/list 福利金|超級點列表紀錄 query */
 export const apiGetUserMoneyList = (queryData) => apiInstance.get(`/user/deal/currency/list?${parseUrlEncode(queryData)}`);
-
 // {
-    //     page:1,
+//     page:1,
 //     limit:10,
+//     type:'point|balance',
 //     startDate:'2022-11-01',
 //     endDate:'2022-11-02'
 // }
