@@ -2,11 +2,51 @@
 import { ref, onMounted, computed, watch } from "vue";
 import "@/utils/swiper/swiper-bundle.min.css";
 import { initSwiper } from "@/utils/swiper/index";
+import { apiGetUserRecordList, apiGetUserMoneyList } from "@/api/myfree";
+import { errorHandle } from "@/utils/errorHandle";
 
 export default {
   setup() {
-    onMounted(() => {
+    const recordListData = ref({});
+    const moneyListData = ref({});
+    const pointListData = ref({});
+    const queryData = {
+      page: 1,
+      limit: 10,
+      type: "point",
+      // startDate: "2022-11-01",
+      // endDate: "2022-11-02",
+    };
+
+    const getDateMethod = async (inputData, api, query) => {
+      let tmp = await api(query);
+      if (tmp.result) {
+        inputData.value = tmp.data;
+      }
+    };
+
+    onMounted(async () => {
       initSwiper(3);
+      try {
+        getDateMethod(recordListData, apiGetUserRecordList, {
+          page: 1,
+          limit: 10,
+          // startDate: "2022-11-01",
+          // endDate: "2022-11-02",
+        });
+        getDateMethod(moneyListData, apiGetUserMoneyList, {
+          page: 1,
+          limit: 10,
+          type: "balance",
+        });
+        getDateMethod(pointListData, apiGetUserMoneyList, {
+          page: 1,
+          limit: 10,
+          type: "point",
+        });
+      } catch (error) {
+        errorHandle(error);
+      }
     });
     return {};
   },
