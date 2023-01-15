@@ -1,23 +1,51 @@
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
+import { apiUserReportStore } from "@/api/myfree";
+import { errorHandle } from "@/utils/errorHandle";
+import { Toast } from "@/components/global/swal";
+import { useGlobalStore } from "@/store/global";
 
 export default {
   setup() {
+    const globalStore = useGlobalStore();
+    const goto = globalStore.goto;
     const { query } = useRoute();
     const form = ref(null);
-    const inputData = ref({});
+    // const inputData = ref({});
+
+    const storeName = ref("");
+    const storeImages = ref("");
+    const option = ref("1");
+    const message = ref("");
+
+    onMounted(async () => {
+      const { name, images } = query;
+      storeName.value = name;
+      storeImages.value = images;
+    });
 
     const handleSubmit = async (e) => {
       e.preventDefault();
-
+      if (option.value == "0" && !message.value) {
+        Toast("選擇其他時，請輸入理由");
+      }
       const id = Number(query.id);
-      if (form.value.reportValidity()) {
-        // 處理
+      const response = await apiUserReportStore({
+        store_id: id,
+        //回報種類, 0:其他 1:店家已停業 2:無法使用優惠 3:款項有爭議(必填,string),
+        option: option.value,
+        message: message.value,
+      });
+      if (response.result) {
+        Toast("回報成功!")
+        goto("back");
+      } else {
+        errorHandle(response);
       }
     };
 
-    return { form, handleSubmit };
+    return { form, handleSubmit, storeName, storeImages, option, message };
   },
 
   components: {},
@@ -30,10 +58,10 @@ export default {
     <div class="navbar-container">
       <div class="gooddetail-container">
         <div class="image-container">
-          <div class="image"><img src="@/assets/images/img_shop.png" /></div>
+          <div class="image"><img :src="storeImages" /></div>
         </div>
         <div class="item-container">
-          <div class="item-title mb-2">心居酒屋大連店</div>
+          <div class="item-title mb-2">{{ `${storeName}` }}</div>
         </div>
         <div class="form-container">
           <form ref="form">
@@ -46,7 +74,8 @@ export default {
                     class="form-check-input"
                     name="welfare"
                     id="welfare1"
-                    checked
+                    v-model="option"
+                    value="1"
                   />
                   <label class="form-check-label" for="welfare1"
                     >店家已停業</label
@@ -58,6 +87,8 @@ export default {
                     class="form-check-input"
                     name="welfare"
                     id="welfare2"
+                    v-model="option"
+                    value="2"
                   />
                   <label class="form-check-label" for="welfare2"
                     >無法使用優惠</label
@@ -69,6 +100,8 @@ export default {
                     class="form-check-input"
                     name="welfare"
                     id="welfare3"
+                    v-model="option"
+                    value="3"
                   />
                   <label class="form-check-label" for="welfare3"
                     >帳款有爭議</label
@@ -80,8 +113,18 @@ export default {
                     class="form-check-input"
                     name="welfare"
                     id="welfare4"
+                    v-model="option"
+                    value="0"
                   />
                   <label class="form-check-label" for="welfare4">其他</label>
+                </div>
+                <div class="mb-2">
+                  <textarea
+                    class="form-control"
+                    rows="3"
+                    placeholder="請輸入其他理由"
+                    v-model.trim="message"
+                  ></textarea>
                 </div>
               </div>
             </div>
