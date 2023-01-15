@@ -29,6 +29,14 @@ $(function () {
 
     // 抓取最小高度
 	minHeight();
+
+	// 開關
+	$('.product-container-2 .card-link').click(function () {
+		$(this).closest('.card').find('.card-body').addClass('active');
+	})
+	$('.product-container-2 .card-body').click(function () {
+		$(this).removeClass('active');
+	})
 })
 
 $(window).resize(function () {
