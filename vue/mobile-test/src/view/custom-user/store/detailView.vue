@@ -89,6 +89,13 @@ export default {
           })
         : Toast("找不到id");
     };
+    const handleToProduct = (id) => {
+      id
+        ? goto("routerQuery", `/store/product`, {
+            query: { id },
+          })
+        : Toast("找不到id");
+    };
 
     const handleFavorite = async (item, index) => {
       try {
@@ -134,6 +141,7 @@ export default {
       handleMapClick,
       handleFavorite,
       id,
+      handleToProduct,
     };
   },
 
@@ -205,7 +213,13 @@ export default {
           >
             索取福利金
           </button>
-          <button class="btn btn-good" type="button">商品清單</button>
+          <button
+            class="btn btn-good"
+            type="button"
+            @click="handleToProduct(item.id)"
+          >
+            商品清單
+          </button>
         </div>
       </div>
     </div>
