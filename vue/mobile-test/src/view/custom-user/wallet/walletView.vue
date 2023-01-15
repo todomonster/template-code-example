@@ -12,7 +12,11 @@ export default {
     const walletData = ref({});
     const getData = async () => {
       let response = await apiRefreshPoint();
-      if (response.result) walletData.value = response;
+      if (response.result) {
+        walletData.value = response;
+        let tmp = walletData.value.balance;
+        walletData.value.balance = tmp.slice(0, tmp.indexOf("."));
+      }
     };
 
     onMounted(async () => {
@@ -22,6 +26,7 @@ export default {
         errorHandle(error);
       }
     });
+
     return { goto, walletData };
   },
   components: {},
@@ -40,7 +45,11 @@ export default {
           <div class="list-link list-no">
             <div class="image"><i class="icon icon-money"></i></div>
             <div class="title">錢包餘額</div>
-            <div class="cash">超集點：{{ walletData.balance }} 點<br />福利金：{{ walletData.point }} 元</div>
+            <div class="cash">
+              超集點：{{ walletData.balance }} 點
+              <br />
+              福利金：{{ walletData.point }}元
+            </div>
             <div class="reset"><i class="icon icon-reset"></i></div>
           </div>
           <!-- <a class="list-link">
