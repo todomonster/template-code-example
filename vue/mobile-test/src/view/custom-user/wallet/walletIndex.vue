@@ -13,7 +13,13 @@ export default {
 </script>
 
 <template>
-  <Header />
+  <Header
+    title=""
+    rightTextStatus="show"
+    rightIcon="bell"
+    leftIcon="arrow"
+    v-if="$route.meta.showHeader"
+  />
   <div class="main">
     <router-view />
   </div>

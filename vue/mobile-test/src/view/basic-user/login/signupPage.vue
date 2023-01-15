@@ -1,5 +1,5 @@
 <script>
-import { ref, computed, onMounted, onBeforeMount } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { Toast } from "@/components/global/swal";
 import { errorHandle } from "@/utils/errorHandle";
 import { apiPushOtp, apiVerifyOtp, apiCheckAccount } from "@/api/myfree";
@@ -11,6 +11,7 @@ import { onBeforeRouteLeave } from "vue-router";
 import { storeToRefs } from "pinia";
 
 export default {
+  emits: ["mode"],
   setup() {
     const byPassOtp = false;
     // ========
@@ -31,7 +32,6 @@ export default {
       verifyCode: "",
     });
 
-    // const showSendOtpBtn = ref(true);
     const showSendOtpBtn = computed(() => (showText() ? false : true));
 
     const form1 = ref(null);
@@ -51,12 +51,12 @@ export default {
       if (form1.value.reportValidity()) {
         // 先檢查是否存在
         const checkStatus = await apiCheckAccount({
-          type: "store",
+          type: "user",
           mobile: inputData.value.mobile,
         });
-        if(checkStatus.is_regist === true){
+        if (checkStatus.is_regist === true) {
           Toast("此帳號已存在!");
-          return
+          return;
         }
         //發送簡訊
         // ========
@@ -82,8 +82,8 @@ export default {
 
     const handleOtpVerify = async ($event) => {
       $event.preventDefault();
-      if(!inputData.value.verifyCode.trim()){
-        Toast("請輸入驗證碼")
+      if (!inputData.value.verifyCode.trim()) {
+        Toast("請輸入驗證碼");
         return;
       }
       if (form1.value.reportValidity()) {
@@ -126,9 +126,6 @@ export default {
       }
     };
     // ========
-    onBeforeMount(() => {
-      document.body.className = "c-login";
-    });     
     onMounted(() => {
       // 計時器初始化
       init();
@@ -143,7 +140,6 @@ export default {
       }
     });
     onBeforeRouteLeave((to, from, next) => {
-      document.body.className = "";
       handleRouterLeave();
       next();
     });
@@ -156,6 +152,7 @@ export default {
         className === "icon icon-eye" ? "icon-eye-slash" : "icon icon-eye";
       passwordType.value = className === "icon-eye-slash" ? "password" : "";
     };
+
     return {
       inputData,
       form1,
@@ -172,127 +169,123 @@ export default {
       passwordEyeClass,
       passwordType,
       handleEyeClick,
+      goto,
     };
   },
 };
 </script>
 
 <template>
-  <section class="c-main">
-    <div class="main-header">
-      <div class="main-navbar">
-        <ul class="navbar-nav">
-          <li class="nav-item"></li>
-        </ul>
+  <div class="form-container form-container-2">
+    <form ref="form1">
+      <div class="position-relative mb-3">
+        <label class="form-label form-label-2"
+          ><i class="icon icon-member-s"></i
+        ></label>
+        <input
+          type="text"
+          class="form-control form-control-2"
+          placeholder="請輸入手機號碼"
+          v-model.trim="inputData.mobile"
+          pattern="^09\d{2}?\d{3}?\d{3}$"
+          title="請輸入手機號碼"
+          required
+          :disabled="currentStep == 2"
+        />
+        <div
+          class="form-icon cursor-pointer"
+          @click.prevent="sendOtp"
+          v-if="showSendOtpBtn"
+        >
+          <i class="icon icon-reset"></i>
+        </div>
       </div>
-    </div>
-    <div class="logo-container">
-      <div class="logo" @click="handleBackDoorOpen(inputData)">
-        <img src="@/assets/images/logo_02.png" />
+      <div
+        class="position-relative mb-3"
+        v-if="currentStep > 0 && currentStep < 2"
+      >
+        <label class="form-label form-label-2"
+          ><i class="icon icon-lock"></i
+        ></label>
+        <input
+          type="text"
+          class="form-control form-control-2"
+          placeholder="請輸入驗證碼"
+          v-model.trim="inputData.verifyCode"
+          title="簡訊驗證碼"
+        />
       </div>
-    </div>
-    <!-- form start -->
-    <div class="form-container form-container-2">
-      <form ref="form1">
-        <div class="position-relative mb-3">
-          <label class="form-label form-label-2"
-            ><i class="icon icon-member-s"></i
-          ></label>
-          <input
-            type="text"
-            class="form-control form-control-2"
-            placeholder="請輸入手機號碼"
-            v-model.trim="inputData.mobile"
-            pattern="^09\d{2}?\d{3}?\d{3}$"
-            title="請輸入手機號碼"
-            required
-            :disabled="currentStep == 2"
-          />
-          <div
-            class="form-icon cursor-pointer"
-            @click.prevent="sendOtp"
-            v-if="showSendOtpBtn"
+      <div class="position-relative mb-3" v-if="currentStep > 1">
+        <label class="form-label form-label-2"
+          ><i class="icon icon-lock"></i
+        ></label>
+        <input
+          :type="passwordType"
+          class="form-control form-control-2"
+          placeholder="請輸入密碼"
+          v-model.trim="inputData.password"
+          title="8~20個字元(包含英文及數字)"
+          pattern="^(?=.*[A-Za-z])(?=.*[0-9]).{8,20}$"
+          required
+        />
+        <div class="form-icon cursor-pointer" @click="handleEyeClick">
+          <i :class="passwordEyeClass" id="togglePassword"></i>
+        </div>
+      </div>
+      <div class="position-relative mb-3" v-if="currentStep > 1">
+        <label class="form-label form-label-2"
+          ><i class="icon icon-lock"></i
+        ></label>
+        <input
+          :type="passwordType"
+          class="form-control form-control-2"
+          placeholder="請再次確認密碼"
+          v-model.trim="inputData.password2"
+          title="請再次確認密碼"
+          required
+        />
+        <div class="form-icon cursor-pointer" @click="handleEyeClick">
+          <i :class="passwordEyeClass" id="togglePassword2"></i>
+        </div>
+      </div>
+      <div
+        class="row form-word text-end text-decoration-underline cursor-pointer"
+      >
+        <div class="col-12 ml-4">
+          <span class="cursor-pointer" @click="$emit('mode', 'login')"
+            >去登入</span
           >
-            <i class="icon icon-reset"></i>
-          </div>
         </div>
-        <div
-          class="position-relative mb-3"
-          v-if="currentStep > 0 && currentStep < 2"
-        >
-          <label class="form-label form-label-2"
-            ><i class="icon icon-lock"></i
-          ></label>
-          <input
-            type="text"
-            class="form-control form-control-2"
-            placeholder="請輸入驗證碼"
-            v-model.trim="inputData.verifyCode"
-            title="簡訊驗證碼"
-          />
-        </div>
-        <div class="position-relative mb-3" v-if="currentStep > 1">
-          <label class="form-label form-label-2"
-            ><i class="icon icon-lock"></i
-          ></label>
-          <input
-            :type="passwordType"
-            class="form-control form-control-2"
-            placeholder="請輸入密碼"
-            v-model.trim="inputData.password"
-            title="8~20個字元(包含英文及數字)"
-            pattern="^(?=.*[A-Za-z])(?=.*[0-9]).{8,20}$"
-            required
-          />
-          <div class="form-icon cursor-pointer" @click="handleEyeClick">
-            <i :class="passwordEyeClass" id="togglePassword"></i>
-          </div>
-        </div>
-        <div class="position-relative mb-3" v-if="currentStep > 1">
-          <label class="form-label form-label-2"
-            ><i class="icon icon-lock"></i
-          ></label>
-          <input
-            :type="passwordType"
-            class="form-control form-control-2"
-            placeholder="請再次確認密碼"
-            v-model.trim="inputData.password2"
-            title="請再次確認密碼"
-            required
-          />
-          <div class="form-icon cursor-pointer" @click="handleEyeClick">
-            <i :class="passwordEyeClass" id="togglePassword2"></i>
-          </div>
-        </div>
-        <div
-          class="row form-word text-end text-decoration-underline cursor-pointer"
-        >
-          <div class="col-12 ml-4 ">
-            <span class="cursor-pointer"  @click="$router.push({ path: '/' })">去登入</span>
-          </div>          
-        </div>
+      </div>
+      <div class="mt-5">
         <div class="row form-word text-center">
           <div class="col-12 ml-4">
             {{
               !showSendOtpBtn
                 ? `還沒有收到驗證碼嗎？請等候${showText()}s後再重新發送`
                 : ""
-            }}
+            }}<br />
+            <a
+              @click="goto('toBrowser', 'https://lin.ee/5gF3ojK')"
+              class="text-muted"
+              >聯繫我們</a
+            >
           </div>
         </div>
-        <div class="btn-container mt-5 text-center cursor-pointer">
-          <button
-            class="btn btn-next"
-            type="submit"
-            @click.prevent="handleArrowBtn"
-          >
-            <i class="icon icon-next"></i>
-          </button>
-        </div>
-      </form>
-      <!-- form end -->
-    </div>
-  </section>
+      </div>
+
+      <div class="btn-container mt-5 text-center cursor-pointer">
+        <button
+          class="btn btn-next"
+          type="submit"
+          @click.prevent="handleArrowBtn"
+        >
+          <i class="icon icon-next"></i>
+        </button>
+      </div>
+    </form>
+    <!-- form end -->
+  </div>
 </template>
 
 <style lang="scss" scoped></style>

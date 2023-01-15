@@ -9,21 +9,27 @@ import { orange } from "./mode/orange";
 import { green } from "./mode/green";
 import { Toast, ToastConfirm } from '@/components/global/swal'
 
-//orange green
-const mode = "green";
+//mode = orange | green
+const mode = process.env.VUE_APP_MODE || "green";
+const VUE_APP_USER_LOGIN_ROUTER = process.env.VUE_APP_USER_LOGIN_ROUTER;
+const VUE_APP_STORE_LOGIN_ROUTER = process.env.VUE_APP_STORE_LOGIN_ROUTER;
+
+const byPassLogin = false;
 const tokenKey = "accessToken";
 
-// user
+
 let routes = [];
+let loginPath = "/";
 if (mode === "green") {
   routes = green;
+  loginPath = VUE_APP_USER_LOGIN_ROUTER;
 } else {
-  // orange
   routes = orange;
+  loginPath = VUE_APP_STORE_LOGIN_ROUTER;
 }
 
 const router = createRouter({
-  history: createWebHashHistory(process.env.BASE_URL),
+  history: createWebHashHistory(),
   routes,
 });
 router.beforeEach(async (to, from, next) => {
@@ -33,26 +39,25 @@ router.beforeEach(async (to, from, next) => {
 
   if (isMatchAuth) {
     const token = useCookie.getItem(tokenKey) || useStorage.getItem(tokenKey);
-    // if (!token) {
-    //   // 沒有token踢回登入
-    //   Toast("請先登入");
-    //   localStorage.setItem("is_Login", 0);
-    //   next("/");
-    //   return true;
-    // }
 
     if (!token || loginStatus == "0") {
       // 沒有token踢回登入
-      localStorage.setItem("is_Login", 0)
-      const result = await ToastConfirm("請先登入")
-      if (result == true) {
-        // 這裡要改成登入 路由
-        next("/");
-        return true;
-      } else {
-        next(false)
-        return false;
+
+      if (byPassLogin === false) {
+
+        localStorage.setItem("is_Login", 0)
+        const result = await ToastConfirm("請先登入")
+        if (result == true) {
+          // 這裡要改成登入 路由
+          next(loginPath);
+          return true;
+        } else {
+          next(false)
+          return false;
+        }
+
       }
+
     }
 
     next();

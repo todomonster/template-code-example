@@ -1,32 +1,59 @@
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeMount, onUnmounted } from "vue";
 import { useGlobalStore } from "@/store/global";
 import { errorHandle } from "@/utils/errorHandle";
 // import NoData from "@/components/global/NoData.vue";
 import BackToTop from "@/components/global-user/BackToTop.vue";
 import SaveWindowY from "@/components/global-user/SaveWindowY.vue";
-import { ExtCall } from "@/utils/extCall";
+import StoreCards from "@/view/custom-user/store/components/StoreCard.vue";
+import SearchStore from "@/view/custom-user/store/components/SearchStore.vue";
+// import { ExtCall } from "@/utils/extCall";
+import { handleStoreProfile } from "@/utils/handleData";
+import { apiGetStoreList } from "@/api/myfree";
+import NoData from "@/components/global/NoData.vue";
 
 export default {
+  name: "StoreList",
   setup() {
-    const globalStore = useGlobalStore();
-    const goto = globalStore.goto;
+    const dataList = ref([]);
 
-    const showAdvancedSearch = ref(false);
-
-    const toGoogleMap = () => {
-      const url = "https://www.google.com/maps/dir//台中北屯大連路三段";
-      try {
-        ExtCall.toBrowser(url);
-      } catch (error) {
-        window.open(url, "_blank").focus();
-      }
+    const handleData = (arr = []) => {
+      arr.forEach((item) => {
+        item.images = handleStoreProfile.storeImages(item.images);
+      });
+      return arr;
     };
+    // onBeforeMount(() => {
+    //   document.body.classList.add("custom-ios");
+    // });
+    // onUnmounted((to, from, next) => {
+    //   document.body.classList.remove("custom-ios");
+    // });
+    // window.onscroll = function () {
+    //   let scrollTop =
+    //     document.documentElement.scrollTop || document.body.scrollTop; // 滾動條到最頂部的距離
+    //   if (scrollTop < 70) {
+    //     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    //   }
+    // };
 
-    return { goto, toGoogleMap, showAdvancedSearch };
+    onMounted(async () => {
+      //
+      const response = await apiGetStoreList({
+        row: 50,
+        data_count_on_page: 0,
+        // price_range:"$$$"
+        // category:"食"
+        // city:11
+        // area:119
+      });
+      dataList.value = handleData(response.data);
+    });
+
+    return { dataList };
   },
 
-  components: { BackToTop, SaveWindowY },
+  components: { NoData, BackToTop, SaveWindowY, StoreCards, SearchStore },
 };
 </script>
 
@@ -35,229 +62,12 @@ export default {
   <section class="c-main">
     <SaveWindowY />
     <div class="navbar-container">
-      <div class="form-container form-container-4 pb-0">
-        <form>
-          <div class="search-container">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="請輸入關鍵字"
-              value=""
-            />
-            <div class="btn-container">
-              <button class="btn btn-search" type="submit">
-                <i class="icon icon-search"></i>
-              </button>
-              <button
-                class="btn btn-analytics collapsed"
-                type="button"
-                @click="showAdvancedSearch = !showAdvancedSearch"
-              >
-                <i class="icon icon-analytics"></i>
-              </button>
-            </div>
-            <transition>
-              <div class="analytics-container" v-show="showAdvancedSearch">
-                <!-- advance -->
-                <div class="mb-3">
-                  <label class="form-label">搜尋範圍</label>
-                  <div class="row mb-3">
-                    <div class="col">
-                      <select class="form-control form-select">
-                        <option selected>縣市</option>
-                        <option>臺北市</option>
-                        <option>新北市</option>
-                        <option>桃園市</option>
-                        <option>臺中市</option>
-                        <option>臺南市</option>
-                        <option>高雄市</option>
-                      </select>
-                    </div>
-                    <div class="col">
-                      <select class="form-control form-select">
-                        <option selected>鄉鎮市區</option>
-                        <option>中區</option>
-                        <option>東區</option>
-                        <option>西區</option>
-                        <option>南區</option>
-                        <option>北區</option>
-                        <option>西屯區</option>
-                        <option>南屯區</option>
-                        <option>北屯區</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label">大分類</label>
-                  <div class="input-pill">
-                    <div class="row">
-                      <div class="col form-check">
-                        <input
-                          type="radio"
-                          class="form-check-input"
-                          name="kind"
-                          id="kind1"
-                          checked
-                        />
-                        <label class="form-check-label" for="kind1">食</label>
-                      </div>
-                      <div class="col form-check">
-                        <input
-                          type="radio"
-                          class="form-check-input"
-                          name="kind"
-                          id="kind2"
-                        />
-                        <label class="form-check-label" for="kind2">衣</label>
-                      </div>
-                      <div class="col form-check">
-                        <input
-                          type="radio"
-                          class="form-check-input"
-                          name="kind"
-                          id="kind3"
-                        />
-                        <label class="form-check-label" for="kind3">住</label>
-                      </div>
-                      <div class="col form-check">
-                        <input
-                          type="radio"
-                          class="form-check-input"
-                          name="kind"
-                          id="kind4"
-                        />
-                        <label class="form-check-label" for="kind4">行</label>
-                      </div>
-                      <div class="col form-check">
-                        <input
-                          type="radio"
-                          class="form-check-input"
-                          name="kind"
-                          id="kind4"
-                        />
-                        <label class="form-check-label" for="kind4">樂</label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label">價格範圍</label>
-                  <div class="input-pill">
-                    <div class="row">
-                      <div class="col form-check">
-                        <input
-                          type="radio"
-                          class="form-check-input"
-                          name="price"
-                          id="price1"
-                          checked
-                        />
-                        <label class="form-check-label" for="price1">$</label>
-                      </div>
-                      <div class="col form-check">
-                        <input
-                          type="radio"
-                          class="form-check-input"
-                          name="price"
-                          id="price2"
-                        />
-                        <label class="form-check-label" for="price2">$$</label>
-                      </div>
-                      <div class="col form-check">
-                        <input
-                          type="radio"
-                          class="form-check-input"
-                          name="price"
-                          id="price3"
-                        />
-                        <label class="form-check-label" for="price3">$$$</label>
-                      </div>
-                      <div class="col form-check">
-                        <input
-                          type="radio"
-                          class="form-check-input"
-                          name="price"
-                          id="price4"
-                        />
-                        <label class="form-check-label" for="price4"
-                          >$$$$</label
-                        >
-                      </div>
-                      <div class="col form-check">
-                        <input
-                          type="radio"
-                          class="form-check-input"
-                          name="price"
-                          id="price4"
-                        />
-                        <label class="form-check-label" for="price4"
-                          >$$$$$</label
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- end -->
-              </div>
-            </transition>
-          </div>
-        </form>
-      </div>
-      <div class="good-container pb-1">
-        <div class="card" v-for="(item, index) in 5" :key="index">
-          <div class="card-header">
-            <a
-              @click="
-                goto('routerQuery', '/store/1', {
-                  query: { mode: 'view', id: 1 },
-                })
-              "
-              class="card-link"
-            >
-              <img src="@/assets/images/img_shop.png" class="card-img" />
-            </a>
-          </div>
-          <div class="card-body">
-            <a
-              @click="
-                goto('routerQuery', '/store/1', {
-                  query: { mode: 'view', id: 1 },
-                })
-              "
-              class="card-link"
-            >
-              <div class="card-title">春日山 食事処</div>
-              <div class="card-text">$$・餐廳,日式料理,定食,丼飯</div>
-            </a>
-            <div class="row">
-              <div class="col">
-                <a class="btn btn-link active"
-                  ><i class="icon icon-favorite"></i>收藏</a
-                >
-              </div>
-              <div class="col">
-                <a @click="toGoogleMap" class="btn btn-link"
-                  ><i class="icon icon-navigation"></i>帶路</a
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <SearchStore />
+      <StoreCards :data="dataList" v-if="dataList?.length > 0" />
+      <NoData v-if="!(dataList?.length > 0)" />
     </div>
     <BackToTop />
   </section>
 </template>
 
-<style scoped lang="scss">
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-}
-</style>
+<style scoped lang="scss"></style>

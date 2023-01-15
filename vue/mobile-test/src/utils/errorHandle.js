@@ -7,6 +7,14 @@ export const errorHandle = (msg) => {
             Toast("Token過期")
             return;
         }
+        if (errorMessage.indexOf('500') > -1) {
+            Toast("例外錯誤")
+            return;
+        }
+        if (errorMessage.indexOf('400') > -1) {
+            Toast("請求錯誤")
+            return;
+        }
         if (errorMessage.indexOf('422') > -1 || errorMessage.indexOf('423') > -1) {
             Toast("例外錯誤")
             return;

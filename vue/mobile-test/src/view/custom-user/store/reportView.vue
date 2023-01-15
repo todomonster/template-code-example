@@ -1,13 +1,17 @@
 <script>
 import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 
 export default {
   setup() {
+    const { query } = useRoute();
     const form = ref(null);
     const inputData = ref({});
+
     const handleSubmit = async (e) => {
       e.preventDefault();
 
+      const id = Number(query.id);
       if (form.value.reportValidity()) {
         // 處理
       }

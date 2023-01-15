@@ -10,6 +10,7 @@ export default {
 
 <template>
   <!-- 內容 -->
+  
   <section class="c-main">
     <div class="notice-container">
       <div class="card">

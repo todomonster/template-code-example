@@ -6,6 +6,7 @@ import {
   ToastInputConfirm,
 } from "@/components/global/swal";
 import { useGlobalStore } from "@/store/global";
+import { errorHandle } from "@/utils/errorHandle";
 
 import img_06 from "@/assets/icon/member06.svg";
 import img_09 from "@/assets/icon/member09.png";
@@ -22,19 +23,6 @@ export default {
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
     const VUE_APP_VERSION = process.env.VUE_APP_VERSION;
-
-    const member = ref({
-      avatarUrl: "",
-      name: "",
-      gender: "male",
-      phoneNumber: "0912345688",
-      mail: "abc@gmail.com",
-    });
-    const avatarImgUrl = computed(() =>
-      member.value?.avatarUrl ? member.value?.avatarUrl : ""
-    );
-
-    onMounted(async () => {});
 
     const link = ["https://myfree.tako.life/privacy", "/setting/qrCode"];
     const handleWebView = (openUrl) => {
@@ -59,15 +47,19 @@ export default {
     };
     const logout = async () => {
       // 有做清除cookie和storage處理
-      const confirm = await ToastConfirm("是否要登出?");
-      if (confirm) {
-        const response = await apiStoreSaveFcmToken({
-          token: "null",
-          type: "store",
-        });
-        // console.log(JSON.stringify(response), "fcm");
-        await apiLogout();
-        goto("router", "/");
+      try {
+        const confirm = await ToastConfirm("是否要登出?");
+        if (confirm) {
+          const response = await apiStoreSaveFcmToken({
+            token: "null",
+            type: "store",
+          });
+          // console.log(JSON.stringify(response), "fcm");
+          await apiLogout();
+          goto("router", "/");
+        }
+      } catch (error) {
+        errorHandle(error);
       }
     };
     //
@@ -99,7 +91,7 @@ export default {
           let LineLogoutInput = "";
           window.lineLogout = (a, b, c) => {
             LineLogoutInput = a;
-            console.log(a, b, c);
+            alert(a, b, c);
           };
           ExtCallThirdPart.lineLogout(channel_id, "lineLogout");
         }
@@ -138,18 +130,16 @@ export default {
           setTimeout(() => alert(JSON.stringify(Input)), timeWait);
         }
       } catch (error) {
-        console.log(error, "QQQQQ");
+        alert(error, "QQQQQ");
       }
     };
 
     return {
-      member,
       link,
       goto,
       img_09,
       img_06,
       logout,
-      avatarImgUrl,
       handleWebView,
       removeAccount,
       VUE_APP_VERSION,

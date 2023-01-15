@@ -8,10 +8,11 @@ export default {
     // 處理menu顏色高亮
     const getUrlString = location.href;
     const menuTable = {
+      // 這邊要特別注意手機會取資料夾名稱可能包含 user，會影響判斷
       store: [1, 0, 0, 0],
       scan: [0, 1, 0, 0],
       wallet: [0, 0, 1, 0],
-      user: [0, 0, 0, 1],
+      setting: [0, 0, 0, 1],
     };
 
     const handleMenuColor = (url = "", menuTable = {}) => {
@@ -78,7 +79,7 @@ export default {
         </a>
       </div>
       <div class="col cursor-pointer">
-        <a :class="classList[3]" @click="goto('router', '/user/profile')">
+        <a :class="classList[3]" @click="goto('router', '/setting/profile')">
           <div class="tab-img"><i class="icon icon-member"></i></div>
           <div class="tab-title">會員資料</div>
         </a>

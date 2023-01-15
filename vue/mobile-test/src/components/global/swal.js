@@ -1,6 +1,10 @@
 import Swal from "sweetalert2";
 
-const confirmButtonColor = "#ff7300";
+
+let confirmButtonColor = "#ff7300";
+if(process.env.VUE_APP_MODE === "green"){
+    confirmButtonColor = "#6BB738"
+}
 
 export const Toast = (text) => {
     const result = Swal.mixin({

@@ -2,33 +2,15 @@ const basicRoute = [
   {
     path: "/",
     redirect: "/store",
-    // component: () => import("@/view/basic/login/loginPage.vue"),
   },
-  // {
-  //   path: "/home",
-  //   name: "home",
-  //   redirect: "/profile/view",
-  //   component: () => import("@/view/basic/home/homePage_.vue"),
-  // },
-  // {
-  //   path: "/login/forget",
-  //   name: "forget",
-  //   component: () => import("@/view/basic/login/forgetPage.vue"),
-  // },
-  // {
-  //   path: "/signup",
-  //   name: "signup",
-  //   component: () => import("@/view/basic/login/signupPage.vue"),
-  // },
-  // {
-  //   path: "/password",
-  //   name: "password",
-  //   component: () => import("@/view/basic/password/passwordPage.vue"),
-  //   meta: { requiresAuth: true },
-  // },
+  {
+    path: "/login",
+    name: "login",
+    component: () => import("@/view/basic-user/login/loginIndex.vue"),
+  },
   {
     path: "/:catchAll(.*)",
-    redirect: "/home",
+    redirect: "/",
   },
 ];
 
@@ -42,19 +24,22 @@ const customRoute = [
     },
     children: [
       {
+        name: "StoreList",
         path: "list",
         meta: {
           showHeader: true,
           showFooter: true,
           requiresAuth: false,
           hideHeaderArrow: true,
+          showBell: true,
         },
         components: {
           default: () => import("@/view/custom-user/store/listView.vue"),
         },
       },
       {
-        path: ":id",
+        name: "StoreDetail",
+        path: "detail",
         meta: {
           showHeader: true,
           showFooter: true,
@@ -65,10 +50,10 @@ const customRoute = [
         },
       },
       {
-        path: ":id/applyReward",
+        path: "applyReward",
         meta: {
           showHeader: true,
-          showFooter: true,
+          showFooter: false,
           requiresAuth: true,
         },
         components: {
@@ -76,14 +61,25 @@ const customRoute = [
         },
       },
       {
-        path: ":id/report",
+        path: "report",
         meta: {
           showHeader: true,
-          showFooter: true,
+          showFooter: false,
           requiresAuth: true,
         },
         components: {
           default: () => import("@/view/custom-user/store/reportView.vue"),
+        },
+      },
+      {
+        path: "favorite",
+        meta: {
+          showHeader: true,
+          showFooter: false,
+          requiresAuth: true,
+        },
+        components: {
+          default: () => import("@/view/custom-user/store/favoriteList.vue"),
         },
       },
     ],
@@ -124,7 +120,8 @@ const customRoute = [
           showHeader: true,
           showFooter: true,
           requiresAuth: true,
-          hideHeaderArrow: true
+          hideHeaderArrow: true,
+          showBell: true,
         },
         components: {
           default: () => import("@/view/custom-user/wallet/walletView.vue"),
@@ -144,9 +141,10 @@ const customRoute = [
     ],
   },
   {
-    path: "/user",
+    // setting /user
+    path: "/setting",
     component: () => import("@/view/custom-user/user/userIndex.vue"),
-    redirect: "/user/profile",
+    redirect: "/setting/profile",
     meta: {
       requiresAuth: false,
     },
@@ -157,7 +155,8 @@ const customRoute = [
           showHeader: true,
           showFooter: true,
           requiresAuth: false,
-          hideHeaderArrow: true
+          hideHeaderArrow: true,
+          showBell: true,
         },
         components: {
           default: () => import("@/view/custom-user/user/userView.vue"),

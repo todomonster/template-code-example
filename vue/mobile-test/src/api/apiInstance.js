@@ -6,6 +6,10 @@ const globalStore = useGlobalStore();
 
 //env
 const base = process.env.VUE_APP_API_BASE_URL;
+const MODE = process.env.VUE_APP_MODE;
+let LOGIN_ROUTER = MODE === "green" ? process.env.VUE_APP_OVERTIME_USER_PATH : process.env.VUE_APP_OVERTIME_STORE_PATH
+
+
 const publicWord = "Myfrees ";
 
 // 後端驗證token的關鍵字 = accessToken
@@ -61,7 +65,7 @@ apiInstance.interceptors.response.use(
     globalStore.globalLoading = false;
 
     if (error.code === "ERR_NETWORK") {
-      error.message = "網路出了點問題，請重新連線後重整網頁"
+      error.message = "網路出了點問題，請重新連線"
       return Promise.reject(error);
     }
     if (error.code === "ECONNABORTED") {
@@ -138,7 +142,8 @@ function toLogin() {
   //把驗證改0
   localStorage.setItem("is_Login", 0)
   Toast("請重新登入");
-  setTimeout(() => window.location.href = "./index.html", 1500);
+  // 路由模式
+  setTimeout(() => window.location.href = `./index.html#${LOGIN_ROUTER}`, 1500);
 }
 
 function saveToken(response) {

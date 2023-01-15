@@ -74,7 +74,6 @@ export default {
     });
 
     const handleClickBack = () => {
-      console.log();
       if (backPath.value) {
         goto("router", "/");
       } else {

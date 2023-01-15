@@ -3,6 +3,12 @@ import { parseUrlEncode } from "@/utils/helper"
 
 // 命名規則: 如果是 CRUD 動詞+名詞 ex:GetStore 
 // urlencoded form x
+
+
+/**
+ * store
+ */
+
 /** city_area/list a-0-0*/
 export const apiGetCityArea = () => apiInstance.get(`/city_area/list`);
 export const apiGetCityList = () => apiInstance.get(`/city/list`);
@@ -13,7 +19,7 @@ export const apiStoreSaveFcmToken = (data) => apiInstance.post(`/notify/token`, 
 export const apiGetRewardRange = () => apiInstance.get(`/rewardRange`);
 export const apiLogout = () => apiInstance.logout();
 // {{api_path}}/api/mobile/check/type/:type/:mobile
-export const apiCheckAccount = ({type,mobile}) => apiInstance.get(`/mobile/check/type/${type}/${mobile}`);
+export const apiCheckAccount = ({ type, mobile }) => apiInstance.get(`/mobile/check/type/${type}/${mobile}`);
 
 // =============================================簡訊
 /** /mobile/verify/push_sms 發送簡訊 form */
@@ -32,8 +38,9 @@ export const apiStoreRemove = () => apiInstance.post(`/store/remove`);
 
 /** store/regist a-1-3 form */
 export const apiStoreRegister = (data) => apiInstance.formDataPOST(`/store/regist`, (data));
-/** v2/store/login a-1-4 form */
-export const apiStoreLogin = (data) => apiInstance.formDataLogin(`/store/login`, (data));
+/** /v2/store/login a-1-4 form */
+// 先用v1就好 除非要 "change_password"
+export const apiStoreLogin = (data) => apiInstance.formDataLogin(`/v2/store/login`, (data));
 /** store a-1-5 x */
 export const apiGetStore = () => apiInstance.get(`/store`);
 
@@ -77,3 +84,44 @@ export const apiGetNotifyUnreadAmount = () => apiInstance.get(`/store/notify/unr
 
 // =============================================產生QRcode
 export const apiGenQrcode = (data) => apiInstance.formDataPOST(`/qr/generate`, data);
+
+
+/**
+ * user
+ */
+
+// ============================================= 店家
+/** GET /v2/store/list 取店家list query */
+export const apiGetStoreList = (queryData) => apiInstance.get(`/v2/store/list?${parseUrlEncode(queryData)}`);
+/** GET /store/:id 取店家detail */
+export const apiGetStoreDetail = (id) => apiInstance.get(`/store/${id}`);
+/** DELETE /store/favorite  移除最愛  url  */
+// 注意 刪除如果是urlencoded就普通傳參數就好
+export const apiUserRemoveFavorite = ({ store_id }) => apiInstance.delete(`/store/favorite?store_id=${store_id}`);
+/** POST /store/favorite  加到最愛  form */
+export const apiUserAddFavorite = (data) => apiInstance.formDataPOST(`/store/favorite`, data);
+
+/** GET /user/store/:id/product/list 取商品 query */
+/** POST /store/report 回報店家 form */
+
+/** /notify/token 存 推播token form */
+export const apiUserSaveFcmToken = (token) => apiInstance.post(`/notify/token`, parseUrlEncode({
+    token,
+    type: "user",
+}));
+/** v2/store/login a-1-4 form */
+export const apiUserLogin = (data) => apiInstance.formDataLogin(`/v2/user/login`, (data));
+
+
+/** GET /store/:id 取店家detail */
+export const apiRefreshPoint = () => apiInstance.get(`/user/point/refresh`);
+
+/** POST /user/deal/reward  索取回饋  form */
+export const apiUserApplyReward = (data) => apiInstance.formDataPOST(`/user/deal/reward`, data);
+/**
+POST /user/deal/withdraw 提領申請 form
+GET /user/deal/record/list 紀錄列表 query
+GET /user/deal/currency/list 數值紀錄 query
+GET /user/point/refresh 刷新點數
+GET /wallet/user 取點數
+ */

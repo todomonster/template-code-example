@@ -1,12 +1,14 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import { router } from "@/router/index";
-// import { ExtCall, initOS } from "@/utils/extCall";
+import { ExtCall } from "@/utils/extCall";
 import { useStorage, hashUrlRemoveQuery } from "@/utils/helper";
 
 export const useGlobalStore = defineStore('global', () => {
     const globalLoading = ref(false);
     const VUE_APP_ROUTER_TABLE = process.env.VUE_APP_ROUTER_TABLE;
+    const VUE_APP_USER_LOGIN_ROUTER = process.env.VUE_APP_USER_LOGIN_ROUTER;
+    const VUE_APP_STORE_LOGIN_ROUTER = process.env.VUE_APP_STORE_LOGIN_ROUTER;
 
 
     const goto = (mode, val, config) => {
@@ -16,10 +18,10 @@ export const useGlobalStore = defineStore('global', () => {
             // window.location.href = url;
             window.open(url, '_blank');
         }
-        if (mode === "router") {
+        else if (mode === "router") {
             router.push({ path: val });
         }
-        if (mode === "routerParams") {
+        else if (mode === "routerParams") {
 
             if (val.indexOf("/") > -1) {
                 throw new Error("請使用 component name");
@@ -31,7 +33,7 @@ export const useGlobalStore = defineStore('global', () => {
                 params
             });
         }
-        if (mode === "routerQuery") {
+        else if (mode === "routerQuery") {
             const { query } = config;
             router.push({
                 path: val,
@@ -39,7 +41,7 @@ export const useGlobalStore = defineStore('global', () => {
                 query
             });
         }
-        if (mode === "back") {
+        else if (mode === "back") {
             // 目前的路由資訊
             const routerData = { ...router.currentRoute.value };
             // get localStorage string
@@ -61,6 +63,28 @@ export const useGlobalStore = defineStore('global', () => {
             }
             router.push("/");
         }
+        else if (mode === "toBrowser") {
+            const url = val;
+            try {
+                ExtCall.toBrowser(url);
+            } catch (error) {
+                window.open(url, "_blank").focus();
+            }
+        }
+        else if (mode === "toGoogleMap") {
+            const url = "https://www.google.com/maps/dir//"+val;
+            try {
+                ExtCall.toBrowser(url);
+            } catch (error) {
+                window.open(url, "_blank").focus();
+            }
+        }
+        else if (mode === "storeGoLogin") {
+            router.push(VUE_APP_STORE_LOGIN_ROUTER);
+        }
+        else if (mode === "userGoLogin") {
+            router.push(VUE_APP_USER_LOGIN_ROUTER);
+        }
 
     };
     // 註冊時記住手機密碼
@@ -70,7 +94,6 @@ export const useGlobalStore = defineStore('global', () => {
         mobile: "",
     });
     const setStoreData = ({ status, password, mobile }) => {
-        console.log(status, password, mobile)
         if (status === true || status === false) isToAddStore.value.status = status;
         if (password || password === "") isToAddStore.value.password = password;
         if (mobile || mobile === "") isToAddStore.value.mobile = mobile;
