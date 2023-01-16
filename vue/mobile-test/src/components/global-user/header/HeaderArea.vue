@@ -2,6 +2,7 @@
 import { ref, onMounted, computed, onBeforeMount } from "vue";
 import { useGlobalStore } from "@/store/global";
 import { apiGetUserNotifyUnreadAmount } from "@/api/myfree";
+import { useRoute } from "vue-router";
 
 export default {
   props: {
@@ -12,6 +13,7 @@ export default {
     backToPath: String,
   },
   setup(props) {
+    const { meta } = useRoute();
     const backPath = ref(props.backToPath);
 
     const globalStore = useGlobalStore();
@@ -59,7 +61,8 @@ export default {
       setIcon(props.rightIcon);
       if (
         rightIconCode.value === "icon icon-notice" &&
-        localStorage.getItem("is_Login") == "1"
+        localStorage.getItem("is_Login") == "1" &&
+        meta.showBell
       ) {
         // 鈴鐺開啟才打API
         const response = await apiGetUserNotifyUnreadAmount();
