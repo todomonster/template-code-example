@@ -1,42 +1,104 @@
 <script>
-export default {
-  setup() {
-    return {};
-  },
+import { ref, onMounted, computed } from "vue";
+import { apiUserGetNotifyList, apiUserReadNotify } from "@/api/myfree";
+import { errorHandle } from "@/utils/errorHandle";
 
-  components: {},
+import { onBeforeRouteLeave } from "vue-router";
+import { isBetweenBottom, windowScrollTo } from "@/utils/helper";
+
+import NoData from "@/components/global/NoData.vue";
+
+export default {
+  name: "UserNotifyList",
+  setup() {
+    let windowScrollY = 0;
+    let getApiTimer = null;
+
+    const notifyList = ref([]);
+    const APIparams = ref({ page: 1, limit: 10 });
+    const total = ref(Infinity);
+
+    const handleScrollGetData = () => {
+      if (isBetweenBottom()) {
+        getListData();
+      }
+    };
+
+    const getListData = async () => {
+      const { page, limit } = APIparams.value;
+      // 預測下一頁，如果不超過資料上限才做GET
+      if (limit * page < total.value + limit) {
+        let response = await apiUserGetNotifyList(APIparams.value);
+        if (response.result) {
+          handleListData(response);
+        }
+      }
+    };
+
+    const handleListData = async (response) => {
+      const { data } = response;
+      // 處理空值
+      // if (response.total === 0) {
+      //   notifyList.value = [{ content: "暫時沒有通知!" }];
+      // }
+      // 處理有值
+      notifyList.value = notifyList.value.concat(data);
+      total.value = response.total;
+      APIparams.value.page++;
+
+      // 處理已讀
+      const readIdArray = data
+        .filter((item) => item.isRead == 0)
+        .map((item) => item.personalNotifyId);
+      if (readIdArray.length > 0) {
+        await apiUserReadNotify({
+          "id[]": readIdArray,
+        });
+      }
+    };
+
+    onMounted(async () => {
+      try {
+        // 位移到暫存的y
+        windowScrollTo({ top: windowScrollY });
+        await getListData("init");
+
+        getApiTimer = setInterval(handleScrollGetData, 500);
+      } catch (error) {
+        errorHandle(error);
+      }
+    });
+
+    onBeforeRouteLeave((to, from, next) => {
+      // 離開前紀錄滾動位置
+      windowScrollY = window.scrollY || 0;
+      clearInterval(getApiTimer);
+      next();
+    });
+    return { notifyList, APIparams, total };
+  },
+  components: { NoData },
 };
 </script>
 
 <template>
   <!-- 內容 -->
-  
+
   <section class="c-main">
     <div class="notice-container">
-      <div class="card">
+      <NoData v-if="notifyList.length == 0" />
+      <div class="card" v-for="item in notifyList" :key="item.createTime">
         <div class="card-header">
           <div class="card-link">
-            <img src="@/assets/images/img_shop.png" class="card-img" />
+            <img src="@/assets/images/img_myfree_s.png" class="card-img" />
           </div>
         </div>
         <div class="card-body">
-          <div class="card-title">【優惠活動通知】</div>
+          <div class="card-title">{{ item.notifyType }}</div>
           <div class="card-text">
-            錢包加值2020520，跟身邊的人說愛了嗎？myFrees祝福您幸福美滿！
+            {{ item.content }}
           </div>
-          <div class="card-date">2020/5/22 8:00</div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-link">
-            <img src="@/assets/images/img_shop.png" class="card-img" />
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="card-title">【優惠活動通知】</div>
-          <div class="card-text">myFrees祝福天下媽媽母親節快樂！</div>
-          <div class="card-date">2020/5/22 8:00</div>
+          <div class="card-date">{{ item.createTime }}</div>
         </div>
       </div>
     </div>
