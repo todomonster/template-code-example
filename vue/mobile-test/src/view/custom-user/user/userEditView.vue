@@ -204,7 +204,7 @@ export default {
           query: { signup: "1" },
         });
       } else {
-        goto("router", "/");
+        goto("back");
       }
     };
 
