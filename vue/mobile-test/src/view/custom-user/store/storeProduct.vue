@@ -79,7 +79,17 @@ export default {
             <div class="card" @click="handleClick(index, item.isActive)">
               <div class="card-header">
                 <a class="card-link">
-                  <img :src="item.image" class="card-img" />
+                  <img
+                    :src="item.image"
+                    v-if="item.image"
+                    class="card-img"
+                    onerror="this.onerror=null; this.src='https://fakeimg.pl/180x180/'"
+                  />
+                  <img
+                    src="https://fakeimg.pl/180x180/"
+                    v-if="!item.image"
+                    class="card-img"
+                  />
                   <div class="card-title">{{ item.name }}</div>
                   <div class="card-price">{{ item.price1 }}</div>
                 </a>

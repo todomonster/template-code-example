@@ -58,7 +58,17 @@ export default {
     <div class="navbar-container">
       <div class="gooddetail-container">
         <div class="image-container">
-          <div class="image"><img :src="storeImages" /></div>
+          <div class="image">
+            <img
+              :src="storeImages"
+              v-if="storeImages"
+              onerror="this.onerror=null; this.src='https://fakeimg.pl/340x200/'"
+            />
+            <img
+              src="https://fakeimg.pl/340x200/"
+              v-if="!storeImages"
+            />            
+          </div>
         </div>
         <div class="item-container">
           <div class="item-title mb-2">{{ `${storeName}` }}</div>

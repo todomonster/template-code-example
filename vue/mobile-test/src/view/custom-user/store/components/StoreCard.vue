@@ -69,7 +69,17 @@ export default {
     <div class="card" v-for="(item, index) in cardData" :key="item.id">
       <div class="card-header">
         <a @click="handleStoreClick(item.id)" class="card-link">
-          <img :src="item.images" class="card-img" />
+          <img
+            :src="item.images"
+            v-if="item.images"
+            class="card-img"
+            onerror="this.onerror=null; this.src='https://fakeimg.pl/340x200/'"
+          />
+          <img
+            src="https://fakeimg.pl/340x200/"
+            v-if="!item.images"
+            class="card-img"
+          />
         </a>
       </div>
       <div class="card-body">

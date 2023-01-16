@@ -159,7 +159,17 @@ export default {
         :key="item.id"
       >
         <div class="image-container">
-          <div class="image"><img :src="item.images" /></div>
+          <div class="image">
+            <img
+              :src="item.images"
+              v-if="item.images"
+              onerror="this.onerror=null; this.src='https://fakeimg.pl/340x200/'"
+            />
+            <img
+              src="https://fakeimg.pl/340x200/"
+              v-if="!item.images"
+            />             
+          </div>
           <div class="row">
             <div class="col">
               <a
