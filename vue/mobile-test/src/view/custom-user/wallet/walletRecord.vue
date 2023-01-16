@@ -4,6 +4,7 @@ import "@/utils/swiper/swiper-bundle.min.css";
 import { initSwiper } from "@/utils/swiper/index";
 import { apiGetUserRecordList, apiGetUserMoneyList } from "@/api/myfree";
 import { errorHandle } from "@/utils/errorHandle";
+import NoData from "@/components/global/NoData.vue";
 
 export default {
   setup() {
@@ -95,7 +96,7 @@ export default {
     return { recordListData, moneyListData, pointListData, observerTarget };
   },
 
-  components: {},
+  components: { NoData },
 };
 </script>
 
@@ -136,6 +137,7 @@ export default {
       <div class="swiper-wrapper">
         <div class="swiper-slide">
           <div class="item-container item-container-3" id="a">
+            <NoData v-if="recordListData.length <= 0" />
             <div v-for="data in recordListData" :key="data.createTime">
               <div class="d-flex">
                 <div class="col-left">
@@ -143,14 +145,14 @@ export default {
                     {{ data.storeName }} 福利金回饋 ${{ data.amount }}
                   </div>
                   <div class="date">{{ data.createTime }}</div>
-                  <div v-if="data.status === 2" class="note">
+                  <div v-if="data.status == 2" class="note">
                     {{ data.memo }}
                   </div>
                 </div>
                 <div class="col-right">
-                  <div v-if="data.status === 0" class="black">待確認</div>
-                  <div v-else-if="data.status === 1" class="green">核准</div>
-                  <div v-else-if="data.status === 2" class="red">取消</div>
+                  <div v-if="data.status == 0" class="black">待確認</div>
+                  <div v-else-if="data.status == 1" class="green">核准</div>
+                  <div v-else-if="data.status == 2" class="red">取消</div>
                 </div>
               </div>
             </div>
@@ -158,6 +160,7 @@ export default {
         </div>
         <div class="swiper-slide">
           <div class="item-container item-container-3" id="b">
+            <NoData v-if="pointListData.length <= 0" />
             <div v-for="data in pointListData" :key="data.id">
               <div class="d-flex">
                 <div class="col-left">
@@ -165,10 +168,10 @@ export default {
                   <div class="date">{{ data.createTime }}</div>
                 </div>
                 <div class="col-right">
-                  <div v-if="data.status === 1" class="green">
+                  <div v-if="data.status == 1" class="green">
                     {{ data.amount }}
                   </div>
-                  <div v-else-if="data.status === 0" class="red">
+                  <div v-else-if="data.status == 0" class="red">
                     {{ data.amount }}
                   </div>
                 </div>
@@ -178,6 +181,7 @@ export default {
         </div>
         <div class="swiper-slide">
           <div class="item-container item-container-3" id="c">
+            <NoData v-if="moneyListData.length <= 0" />
             <div v-for="data in moneyListData" :key="data.id">
               <div class="d-flex">
                 <div class="col-left">
@@ -185,10 +189,10 @@ export default {
                   <div class="date">{{ data.createTime }}</div>
                 </div>
                 <div class="col-right">
-                  <div v-if="data.status === 1" class="green">
+                  <div v-if="data.status == 1" class="green">
                     {{ data.amount }}
                   </div>
-                  <div v-else-if="data.status === 0" class="red">
+                  <div v-else-if="data.status == 0" class="red">
                     {{ data.amount }}
                   </div>
                 </div>

@@ -23,7 +23,11 @@ export default {
     };
 
     onMounted(async () => {
-      const response1 = await apiGetStoreList({ favorite: 1 });
+      const response1 = await apiGetStoreList({
+        favorite: 1,
+        row: 50,
+        data_count_on_page: 0,
+      });
       dataList.value = handleData(response1.data);
     });
 
