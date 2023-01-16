@@ -23,9 +23,10 @@ export default {
       document.body.classList.remove("c-login");
     });
 
-    const triggerBackDoor = ref(false);
+    const triggerBackDoor = ref('0');
     const handleBlack = () => {
-      triggerBackDoor.value = true;
+      triggerBackDoor.value = '1';
+      setTimeout(() => (triggerBackDoor.value = '2'), 1000);
     };
 
     return { mode, goto, handleModeChange, handleBlack, triggerBackDoor };

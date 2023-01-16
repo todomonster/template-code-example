@@ -14,7 +14,7 @@ const mode = process.env.VUE_APP_MODE || "green";
 const VUE_APP_USER_LOGIN_ROUTER = process.env.VUE_APP_USER_LOGIN_ROUTER;
 const VUE_APP_STORE_LOGIN_ROUTER = process.env.VUE_APP_STORE_LOGIN_ROUTER;
 
-const byPassLogin = true;
+const byPassLogin = false;
 const tokenKey = "accessToken";
 
 

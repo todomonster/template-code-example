@@ -12,8 +12,8 @@ export default {
   emits: ["mode"],
   props: {
     triggerBackDoor: {
-      type: Boolean,
-      default: false,
+      type: String,
+      default: "",
     },
   },
   setup(props) {
@@ -68,9 +68,13 @@ export default {
     watch(
       () => props.triggerBackDoor,
       (val) => {
-        val == true
-          ? handleBackDoorOpen(inputData.value)
-          : (isBackDoor.value = false);
+        if (val == "1") {
+          handleBackDoorOpen(inputData.value);
+        } else if (val == "2") {
+          handleBackDoorOpen(inputData.value);
+        } else {
+          isBackDoor.value = false;
+        }
       }
     );
 
