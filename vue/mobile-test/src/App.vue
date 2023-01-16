@@ -19,9 +19,14 @@ export default {
         ExtCall.setApplicationStatusCallback("setApplicationStatusCallback");
 
         window.getUrlSchemeInput = (val = "") => {
+          if (!val) {
+            return;
+          }
+
           let userId = "";
           let storeId = "";
           const searchParams = new URLSearchParams(val);
+          alert(val);
 
           for (let [key, value] of searchParams.entries()) {
             if (key === "userId") {
