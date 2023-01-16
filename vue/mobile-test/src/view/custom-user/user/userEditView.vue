@@ -23,6 +23,8 @@ export default {
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
 
+    const MODE = ref("edit");
+
     const form = ref(null);
     const ageList = [
       { id: "0", name: "0~9歲" },
@@ -100,7 +102,6 @@ export default {
     const apiEditUser = async () => {
       try {
         const response = await apiUpdateUser(editData.value);
-        console.log(response);
         if (response.result) {
           Toast("更新成功!");
         } else {
@@ -115,13 +116,16 @@ export default {
       const eventType = e.target.id;
       switch (eventType) {
         case "editBtn":
+        case "editText":
           apiEditUser();
           break;
         case "skipBtn":
-          console.log("skipBtn");
+        case "skipText":
+          // console.log("skipBtn");
           break;
         case "registerBtn":
-          console.log("registerBtn");
+        case "registerText":
+          // console.log("registerBtn");
           break;
       }
 
@@ -155,7 +159,7 @@ export default {
         errorHandle(error);
       }
     });
-    return { form, handleSubmit, editData, ageList, handleFileUpload };
+    return { form, handleSubmit, editData, ageList, handleFileUpload, MODE };
   },
 
   components: {},
@@ -268,24 +272,45 @@ export default {
             請填寫完整資料才能享有myFrees優惠喔
           </div>
         </div>
-        <div class="btn-container mt-5 d-flex justify-content-center">
+        <div
+          class="btn-container mt-5 d-flex justify-content-center"
+          v-if="MODE == 'edit'"
+        >
           <button
             class="btn btn-next-grey"
             type="submit"
-            @click="handleSubmit"
             id="editBtn"
+            @click="handleSubmit"
           >
-            <i class="icon icon-next"></i>
+            <i id="editText" class="icon icon-next" @click="handleSubmit"></i>
           </button>
         </div>
-        <!-- <div class="btn-container mt-5 d-flex justify-content-between">
-          <button class="btn btn-skip" type="button" @click="handleSubmit" id="skipBtn">
-            Skip
-          </button>
-          <button class="btn btn-next-grey" type="submit" @click="handleSubmit" id="registerBtn">
-            <i class="icon icon-next"></i>
-          </button>
-        </div> -->
+        <div
+          class="btn-container mt-5 d-flex justify-content-between"
+          v-if="MODE == 'register'"
+        >
+          <div>
+            <button
+              class="btn btn-skip"
+              type="button"
+              @click="handleSubmit"
+              id="skipBtn"
+            >
+              <span id="skipText">Skip</span>
+            </button>
+          </div>
+          <div>
+            <!-- btn-next-grey -->
+            <button
+              class="btn btn-next-grey"
+              type="submit"
+              @click="handleSubmit"
+              id="registerBtn"
+            >
+              <i id="registerText" class="icon icon-next"></i>
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   </section>
