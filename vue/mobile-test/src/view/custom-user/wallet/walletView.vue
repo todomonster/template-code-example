@@ -10,18 +10,25 @@ export default {
     const goto = globalStore.goto;
 
     const walletData = ref({});
-    const getData = async () => {
-      let response = await apiRefreshPoint();
-      if (response.result) {
-        walletData.value = response;
-        let tmp = walletData.value.balance;
-        walletData.value.balance = tmp.slice(0, tmp.indexOf("."));
-      }
+
+    const handleData = (wallet = {}) => {
+      let { balance, point } = wallet;
+
+      balance = balance ? balance.slice(0, balance.indexOf(".")) : "0";
+      point = point ? point : "0";
+
+      return {
+        balance,
+        point,
+      };
     };
 
     onMounted(async () => {
       try {
-        await getData();
+        const response = await apiRefreshPoint();
+        if (response.result) {
+          walletData.value = handleData(response);
+        }
       } catch (error) {
         errorHandle(error);
       }
@@ -50,7 +57,7 @@ export default {
               <br />
               福利金：{{ walletData.point }}元
             </div>
-            <div class="reset"><i class="icon icon-reset"></i></div>
+            <!-- <div class="reset"><i class="icon icon-reset"></i></div> -->
           </div>
           <!-- <a class="list-link">
                         <div class="image"><i class="icon icon-coupon"></i></div>
