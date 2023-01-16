@@ -79,6 +79,14 @@ export default {
       return false;
     });
 
+    const handleClickArrow = () => {
+      try {
+        goto("back");
+      } catch (error) {
+        alert(error);
+      }
+    };
+
     return {
       rightIconCode,
       titleText,
@@ -87,6 +95,7 @@ export default {
       countBell,
       leftIconCode,
       backPath,
+      handleClickArrow,
     };
   },
 };
@@ -101,7 +110,7 @@ export default {
           style="cursor: pointer"
           v-show="!$route.meta.hideHeaderArrow"
         >
-          <a @click="goto('back')" class="nav-link"
+          <a @click="handleClickArrow" class="nav-link"
             ><i :class="leftIconCode"></i
           ></a>
         </li>

@@ -213,6 +213,19 @@ function goBack() {
     executeExtCall(data);
 }
 
+// App 前景/背景 
+function setApplicationStatusCallback(windowFunctionName = "") {
+    const data = JSON.stringify({
+        "function": "setApplicationStatusCallback",
+        "callback": windowFunctionName
+    });
+
+    executeExtCall(data);
+}
+
+
+
+
 // 有需要可以持續擴充
 export const ExtCall = {
     openNewWebView,
@@ -226,16 +239,17 @@ export const ExtCall = {
     loadPDFURL,
     loadPDFURL2View,
     loadPDFURLWithKey,
-    toBrowser
+    toBrowser,
+    setApplicationStatusCallback
 }
 
 export const ExtCallThirdPart = {
-/**
-    let SchemeInput = "";
-    window.getUrlSchemeInput = (val) => SchemeInput = val;
-    ExtCall.getUrlSchemeInput("getUrlSchemeInput");
-    setTimeout(() => console.log(SchemeInput), 100);
- */    
+    /**
+        let SchemeInput = "";
+        window.getUrlSchemeInput = (val) => SchemeInput = val;
+        ExtCall.getUrlSchemeInput("getUrlSchemeInput");
+        setTimeout(() => console.log(SchemeInput), 100);
+     */
     lineLogout(channel_id = "", windowFunctionName = "") {
         const data = JSON.stringify({
             "function": "lineLogout",
@@ -244,14 +258,14 @@ export const ExtCallThirdPart = {
         });
         executeExtCall(data);
     },
-/**
-          const channel_id = "1655750341";
-          let LineLoginInput = "";
-          window.lineLogin = (a) => {
-            LineLoginInput = a;
-            alert(JSON.stringify(LineLoginInput));
-          };
- */    
+    /**
+              const channel_id = "1655750341";
+              let LineLoginInput = "";
+              window.lineLogin = (a) => {
+                LineLoginInput = a;
+                alert(JSON.stringify(LineLoginInput));
+              };
+     */
     lineLogin(channel_id = "", windowFunctionName = "") {
         const data = JSON.stringify({
             "function": "lineLogin",

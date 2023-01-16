@@ -60,6 +60,9 @@ export default {
         if (response.result == true) {
           // 測試機
           storeData.value = handleData(response.data);
+        } else if (response.result == false) {
+          Toast(response.errorInfo);
+          goto("back");
         } else {
           // 正式機
           // 正式還沒更新 這隻沒給result 也不是data模式
@@ -165,10 +168,7 @@ export default {
               v-if="item.images"
               onerror="this.onerror=null; this.src='https://fakeimg.pl/340x200/'"
             />
-            <img
-              src="https://fakeimg.pl/340x200/"
-              v-if="!item.images"
-            />             
+            <img src="https://fakeimg.pl/340x200/" v-if="!item.images" />
           </div>
           <div class="row">
             <div class="col">

@@ -50,17 +50,20 @@ export const useGlobalStore = defineStore('global', () => {
 
             //找上一頁的路由 
             const father = backPathObj?.findStart?.[routerData.path];
-            const { query, path } = father;
-            // 吃到 $back$=1 讓路由守衛知道是上一頁 不用儲存
-            if (path) {
-                if (query) {
-                    router.push({ path: father.path, query: { ...query, $back$: '1' } })
-                    return;
-                } else {
-                    router.push({ path: father.path, query: { $back$: '1' } })
-                    return;
+            if (father) {
+                const { query = {}, path = "" } = father;
+                // 吃到 $back$=1 讓路由守衛知道是上一頁 不用儲存
+                if (path) {
+                    if (query) {
+                        router.push({ path: father.path, query: { ...query, $back$: '1' } })
+                        return;
+                    } else {
+                        router.push({ path: father.path, query: { $back$: '1' } })
+                        return;
+                    }
                 }
             }
+
             router.push("/");
         }
         else if (mode === "toBrowser") {
@@ -72,7 +75,7 @@ export const useGlobalStore = defineStore('global', () => {
             }
         }
         else if (mode === "toGoogleMap") {
-            const url = "https://www.google.com/maps/dir//"+val;
+            const url = "https://www.google.com/maps/dir//" + val;
             try {
                 ExtCall.toBrowser(url);
             } catch (error) {

@@ -1,10 +1,59 @@
 <script>
-import { onMounted } from "vue";
+import { onMounted, onBeforeMount, onUpdated } from "vue";
 import Loading from "@/components/loading/apiLoading.vue";
+import { ExtCall } from "@/utils/extCall";
+import { useGlobalStore } from "@/store/global";
 
 export default {
   setup() {
-    onMounted(async () => {});
+    const globalStore = useGlobalStore();
+    const goto = globalStore.goto;
+
+    onMounted(() => {
+      try {
+        window.setApplicationStatusCallback = (val = "") => {
+          if (val === "foreground") {
+            ExtCall.getUrlSchemeInput("getUrlSchemeInput");
+          }
+        };
+        ExtCall.setApplicationStatusCallback("setApplicationStatusCallback");
+
+        window.getUrlSchemeInput = (val = "") => {
+          let userId = "";
+          let storeId = "";
+          const searchParams = new URLSearchParams(val);
+
+          for (let [key, value] of searchParams.entries()) {
+            if (key === "userId") {
+              userId = value;
+            }
+            if (key === "storeId") {
+              storeId = value;
+            }
+          }
+
+          // 存至pinia
+          // alert(`userId: ${userId}, storeId: ${storeId}`);
+
+          setTimeout(() => {
+            if (localStorage.getItem("is_Login") == "1") {
+              // 跳轉到該店 id
+              goto("routerQuery", "/store/detail", {
+                query: { id: storeId, $back$: 1 },
+              });
+            } else {
+              goto("routerQuery", "/login", {
+                query: { signup: "1" },
+              });
+            }
+          }, 500);
+        };
+        ExtCall.getUrlSchemeInput("getUrlSchemeInput");
+        //
+      } catch (error) {
+        console.log(`${error.message}不支援`);
+      }
+    });
 
     return {};
   },
