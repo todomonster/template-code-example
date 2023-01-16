@@ -43,7 +43,7 @@ export default {
               });
             } else {
               goto("routerQuery", "/login", {
-                query: { signup: "1" },
+                query: { signup: "1", userId, storeId },
               });
             }
           }, 500);

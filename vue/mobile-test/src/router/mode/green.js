@@ -177,9 +177,9 @@ const customRoute = [
       {
         path: "edit",
         meta: {
-          showHeader: true,
+          showHeader: false,
           showFooter: false,
-          requiresAuth: true,
+          requiresAuth: false,
         },
         components: {
           default: () => import("@/view/custom-user/user/userEditView.vue"),

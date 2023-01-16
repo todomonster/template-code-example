@@ -156,3 +156,6 @@ export const apiUserGetNotifyList = (queryData) => apiInstance.get(`/user/notify
 export const apiUserReadNotify = (data) => apiInstance.post(`/user/notify/read`, parseUrlEncode(data));
 /** /user/notify/unread S-1-14 x */
 export const apiGetUserNotifyUnreadAmount = () => apiInstance.get(`/user/notify/unread`);
+// =============================================QRcode
+export const apiParseQRcode = (data) => apiInstance.formDataPOST(`/qr/parse`, data);
+// {token:"url後面的token"}

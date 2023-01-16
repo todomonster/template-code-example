@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import { useGlobalStore } from "@/store/global";
 import { ExtCall } from "@/utils/extCall";
+import { apiParseQRcode } from "@/api/myfree";
 
 export default {
   setup() {
@@ -30,12 +31,34 @@ export default {
 
     const handleScanClick = () => {
       try {
-        window.openScanCode = (appScanCode) => {
-          alert(appScanCode);
+        let userId = "";
+        let storeId = "";
+        window.openScanCode = async (appScanCode = "") => {
+          const arr = appScanCode.split("?token=");
           // 收到QRode打解析API做跳轉
-
-          // a. 登入狀態 ->跳到該店App畫面
-          // b. 非登入 -> 跳到註冊App畫面
+          const token = arr?.[1];
+          if (token) {
+            const response = await apiParseQRcode({
+              token,
+            });
+            if (response.result) {
+              // userId = response?.data?.userId;
+              storeId = response?.data?.storeId;
+            }
+            setTimeout(() => {
+              if (localStorage.getItem("is_Login") == "1") {
+                // a. 登入狀態 ->跳到該店App畫面
+                goto("routerQuery", "/store/detail", {
+                  query: { id: storeId, $back$: 1 },
+                });
+              } else {
+                // b. 非登入 -> 跳到註冊App畫面
+                goto("routerQuery", "/login", {
+                  query: { signup: "1", userId, storeId },
+                });
+              }
+            }, 500);
+          }
         };
         ExtCall.openScanCode("openScanCode");
       } catch (error) {

@@ -53,7 +53,13 @@ export default {
     return { dataList };
   },
 
-  components: { NoData, BackToTop, SaveWindowY, StoreCards, SearchStore },
+  components: {
+    NoData,
+    BackToTop,
+    SaveWindowY,
+    StoreCards,
+    // SearchStore
+  },
 };
 </script>
 
@@ -62,7 +68,7 @@ export default {
   <section class="c-main">
     <SaveWindowY />
     <div class="navbar-container">
-      <SearchStore />
+      <!-- <SearchStore /> -->
       <StoreCards :data="dataList" v-if="dataList?.length > 0" />
       <NoData v-if="!(dataList?.length > 0)" />
     </div>

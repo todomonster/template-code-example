@@ -40,20 +40,12 @@ export default {
     ];
 
     const editData = ref({
-      mobile: "09xxxxxxxx",
+      mobile: "",
       nickname: "",
       gender: "", //female
       age: "",
       image: "",
     });
-
-    // const registerData = ref({
-    //   ...editData.value,
-    //   mobile: "",
-    //   password: "",
-    //   bindUserId: null,
-    //   bindStoreId: null,
-    // });
 
     // const handleGender = (inputGender = "") => {
     //   const currentGender = editData.value.gender;
@@ -111,6 +103,37 @@ export default {
         errorHandle(error);
       }
     };
+
+    const apiRegister = async (mode = "") => {
+      try {
+        const { password, mobile, userId, storeId } = addUserPinia.value;
+        let data = {
+          mobile,
+          password,
+          bindUserId: userId,
+          bindStoreId: storeId,
+        };
+        // 沒有skip
+        if (mode === "register") {
+          const newData = JSON.parse(JSON.stringify(data));
+          data = {
+            ...editData.value,
+            ...newData,
+          };
+        }
+
+        // alert(`${JSON.stringify(data)}`);
+        const response = await apiUserRegister(data);
+        if (response.result) {
+          Toast("註冊成功!");
+          goto("router", "/login");
+        } else {
+          errorHandle(response);
+        }
+      } catch (error) {
+        errorHandle(error);
+      }
+    };
     const handleSubmit = async (e) => {
       e.preventDefault();
       const eventType = e.target.id;
@@ -121,11 +144,14 @@ export default {
           break;
         case "skipBtn":
         case "skipText":
-          // console.log("skipBtn");
+          // 直接打API
+          apiRegister("skip");
           break;
         case "registerBtn":
         case "registerText":
-          // console.log("registerBtn");
+          // 更新使用者資料後 吃pinia資料
+          // 打API
+          apiRegister("register");
           break;
       }
 
@@ -150,16 +176,48 @@ export default {
       };
     };
 
+    const addUserPinia = ref({ test: 1 });
+
     onMounted(async () => {
-      //編輯流程
       try {
-        const response = await apiGetUserInfo();
-        editData.value = handleData(response);
+        // 取得 pinia 的 password 和 phone 判斷是否是註冊
+        const { password, mobile, status, userId, storeId } =
+          globalStore.isToAddUser;
+        if (status) {
+          // 註冊流程
+          MODE.value = "register";
+          addUserPinia.value = { password, mobile, status, userId, storeId };
+        } else {
+          //編輯流程
+          const response = await apiGetUserInfo();
+          editData.value = handleData(response);
+        }
       } catch (error) {
         errorHandle(error);
       }
     });
-    return { form, handleSubmit, editData, ageList, handleFileUpload, MODE };
+
+    const goback = () => {
+      if (addUserPinia.value.status) {
+        // 是註冊
+        goto("routerQuery", "/login", {
+          query: { signup: "1" },
+        });
+      } else {
+        goto("router", "/");
+      }
+    };
+
+    return {
+      form,
+      handleSubmit,
+      editData,
+      ageList,
+      handleFileUpload,
+      MODE,
+      addUserPinia,
+      goback,
+    };
   },
 
   components: {},
@@ -168,91 +226,103 @@ export default {
 
 <template>
   <!-- 內容 -->
-  <section class="c-main">
-    <div class="form-container">
-      <form ref="form">
-        <div class="avatar-container">
-          <div class="image">
-            <img
-              :src="editData.image"
-              onerror="this.onerror=null; this.src='https://fakeimg.pl/150x150/'"
-              v-if="editData.image"
-            />
-            <img src="@/assets/images/noavatar.png" v-if="!editData.image" />
+  <div>
+    <header class="c-header c-header-2">
+      <nav class="navbar ui-navbar">
+        <ul class="navbar-nav">
+          <li class="nav-item" v-if="MODE == 'edit'">
+            <a @click="goback" class="nav-link"
+              ><i class="icon icon-back-grey"></i
+            ></a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <section class="c-main">
+      <div class="form-container">
+        <form ref="form">
+          <div class="avatar-container">
+            <div class="image">
+              <img
+                :src="editData.image"
+                onerror="this.onerror=null; this.src='https://fakeimg.pl/150x150/'"
+                v-if="editData.image"
+              />
+              <img src="@/assets/images/noavatar.png" v-if="!editData.image" />
+            </div>
+            <div class="camera-container">
+              <label class="form-file-label">
+                <i class="icon icon-camera"></i>
+              </label>
+              <input
+                class="form-file-input"
+                type="file"
+                id="formFile"
+                accept="image/png, image/jpeg, image/jpg"
+                ref="myUploadFile"
+                @change="handleFileUpload"
+              />
+            </div>
           </div>
-          <div class="camera-container">
-            <label class="form-file-label">
-              <i class="icon icon-camera"></i>
-            </label>
+          <div class="mobile-container" v-if="editData.mobile">
+            <div class="title">
+              手機號碼<span>{{ editData.mobile }}</span>
+            </div>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">暱稱</label>
             <input
-              class="form-file-input"
-              type="file"
-              id="formFile"
-              accept="image/png, image/jpeg, image/jpg"
-              ref="myUploadFile"
-              @change="handleFileUpload"
+              type="text"
+              class="form-control"
+              placeholder="請輸入暱稱"
+              v-model="editData.nickname"
             />
           </div>
-        </div>
-        <div class="mobile-container">
-          <div class="title">
-            手機號碼<span>{{ editData.mobile }}</span>
-          </div>
-        </div>
-        <div class="mb-2">
-          <label class="form-label">暱稱</label>
-          <input
-            type="text"
-            class="form-control"
-            placeholder="請輸入暱稱"
-            v-model="editData.nickname"
-          />
-        </div>
-        <div class="mb-2">
-          <label class="form-label">性別</label>
-          <div class="input-pill-2">
-            <div class="row">
-              <div class="col form-check">
-                <input
-                  type="radio"
-                  class="form-check-input"
-                  name="gender"
-                  id="male"
-                  v-model="editData.gender"
-                  value="male"
-                />
-                <label class="form-check-label" for="male">
-                  <span class="custom-gender">男</span>
-                  <i class="icon icon-male"></i>
-                </label>
-              </div>
-              <div class="col form-check">
-                <input
-                  type="radio"
-                  class="form-check-input"
-                  name="gender"
-                  id="female"
-                  v-model="editData.gender"
-                  value="female"
-                />
-                <label class="form-check-label" for="female">
-                  <span class="custom-gender">女</span>
-                  <i class="icon icon-female"></i>
-                </label>
+          <div class="mb-2">
+            <label class="form-label">性別</label>
+            <div class="input-pill-2">
+              <div class="row">
+                <div class="col form-check">
+                  <input
+                    type="radio"
+                    class="form-check-input"
+                    name="gender"
+                    id="male"
+                    v-model="editData.gender"
+                    value="male"
+                  />
+                  <label class="form-check-label" for="male">
+                    <span class="custom-gender">男</span>
+                    <i class="icon icon-male"></i>
+                  </label>
+                </div>
+                <div class="col form-check">
+                  <input
+                    type="radio"
+                    class="form-check-input"
+                    name="gender"
+                    id="female"
+                    v-model="editData.gender"
+                    value="female"
+                  />
+                  <label class="form-check-label" for="female">
+                    <span class="custom-gender">女</span>
+                    <i class="icon icon-female"></i>
+                  </label>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="mb-2">
-          <label class="form-label">年齡層</label>
-          <select class="form-control form-select" v-model="editData.age">
-            <option selected value="">請選擇年齡層</option>
-            <option v-for="item in ageList" :value="item.id" :key="item.id">
-              {{ item.name }}
-            </option>
-          </select>
-        </div>
-        <!-- <div class="mb-2">
+          <div class="mb-2">
+            <label class="form-label">年齡層</label>
+            <select class="form-control form-select" v-model="editData.age">
+              <option selected value="">請選擇年齡層</option>
+              <option v-for="item in ageList" :value="item.id" :key="item.id">
+                {{ item.name }}
+              </option>
+            </select>
+          </div>
+          <!-- <div class="mb-2">
           <label class="form-label">預設好康店範圍</label>
           <div class="row">
             <div class="col">
@@ -267,53 +337,54 @@ export default {
             </div>
           </div>
         </div> -->
-        <div class="mt-4">
-          <div class="form-word-2 text-center">
-            請填寫完整資料才能享有myFrees優惠喔
+          <div class="mt-4">
+            <div class="form-word-2 text-center">
+              請填寫完整資料才能享有myFrees優惠喔
+            </div>
           </div>
-        </div>
-        <div
-          class="btn-container mt-5 d-flex justify-content-center"
-          v-if="MODE == 'edit'"
-        >
-          <button
-            class="btn btn-next-grey"
-            type="submit"
-            id="editBtn"
-            @click="handleSubmit"
+          <div
+            class="btn-container mt-5 d-flex justify-content-center"
+            v-if="MODE == 'edit'"
           >
-            <i id="editText" class="icon icon-next" @click="handleSubmit"></i>
-          </button>
-        </div>
-        <div
-          class="btn-container mt-5 d-flex justify-content-between"
-          v-if="MODE == 'register'"
-        >
-          <div>
-            <button
-              class="btn btn-skip"
-              type="button"
-              @click="handleSubmit"
-              id="skipBtn"
-            >
-              <span id="skipText">Skip</span>
-            </button>
-          </div>
-          <div>
-            <!-- btn-next-grey -->
             <button
               class="btn btn-next-grey"
               type="submit"
+              id="editBtn"
               @click="handleSubmit"
-              id="registerBtn"
             >
-              <i id="registerText" class="icon icon-next"></i>
+              <i id="editText" class="icon icon-next" @click="handleSubmit"></i>
             </button>
           </div>
-        </div>
-      </form>
-    </div>
-  </section>
+          <div
+            class="btn-container mt-5 d-flex justify-content-between"
+            v-if="MODE == 'register'"
+          >
+            <div>
+              <button
+                class="btn btn-skip"
+                type="button"
+                @click="handleSubmit"
+                id="skipBtn"
+              >
+                <span id="skipText">Skip</span>
+              </button>
+            </div>
+            <div>
+              <!-- btn-next-grey -->
+              <button
+                class="btn btn-next-grey"
+                type="submit"
+                @click="handleSubmit"
+                id="registerBtn"
+              >
+                <i id="registerText" class="icon icon-next"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
 </template>
 
 <style lang="scss" scoped>

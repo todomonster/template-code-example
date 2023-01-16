@@ -6,10 +6,13 @@ import LoginPage from "./loginPage.vue";
 import SignupPage from "./signupPage.vue";
 import { useGlobalStore } from "@/store/global";
 
+import { useRoute } from "vue-router";
+
 export default {
   name: "loginIndex",
   setup() {
     const mode = ref("login");
+    const { query } = useRoute();
 
     const globalStore = useGlobalStore();
     const { goto } = globalStore;
@@ -18,15 +21,18 @@ export default {
 
     onBeforeMount(() => {
       document.body.classList.add("c-login");
+      if (query.signup == "1") {
+        mode.value = "signup";
+      }
     });
     onUnmounted((to, from, next) => {
       document.body.classList.remove("c-login");
     });
 
-    const triggerBackDoor = ref('0');
+    const triggerBackDoor = ref("0");
     const handleBlack = () => {
-      triggerBackDoor.value = '1';
-      setTimeout(() => (triggerBackDoor.value = '2'), 1000);
+      triggerBackDoor.value = "1";
+      setTimeout(() => (triggerBackDoor.value = "2"), 1000);
     };
 
     return { mode, goto, handleModeChange, handleBlack, triggerBackDoor };
