@@ -15,7 +15,7 @@ export default {
     const observerTarget = ref('{"a":null,"b":null,"c":null}');
 
     const getDateMethod = async (inputData, api, query) => {
-      let response = await api(query);
+      const response = await api(query);
       if (response.result) {
         inputData.value = response.data;
       }
@@ -75,18 +75,18 @@ export default {
 
         getDateMethod(recordListData, apiGetUserRecordList, {
           page: 1,
-          limit: 10,
+          limit: 50,
           // startDate: "2022-11-01",
           // endDate: "2022-11-02",
         });
         getDateMethod(moneyListData, apiGetUserMoneyList, {
           page: 1,
-          limit: 10,
+          limit: 50,
           type: "balance",
         });
         getDateMethod(pointListData, apiGetUserMoneyList, {
           page: 1,
-          limit: 10,
+          limit: 50,
           type: "point",
         });
       } catch (error) {
