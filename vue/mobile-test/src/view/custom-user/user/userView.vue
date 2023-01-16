@@ -39,19 +39,34 @@ export default {
         errorHandle(error);
       }
     };
+
+    const handleData = (userInfo = {}) => {
+      let { mobile, gender, age, nickname } = userInfo;
+
+      nickname = nickname ? nickname : "-";
+      mobile = mobile ? mobile : "";
+      gender = gender ? (gender === "men" ? "男" : "女") : "-";
+      age = age
+        ? age == 9
+          ? "90以上"
+          : age == 0
+          ? "0~9"
+          : `${age}0~${age}9`
+        : "-";
+
+      return {
+        mobile,
+        gender,
+        age,
+        nickname,
+      };
+    };
     onMounted(async () => {
       try {
-        let response = await apiGetUserInfo();
-        let tmp = response;
-        tmp.gender = tmp.gender === "men" ? "男" : "女";
-
-        tmp.age =
-          tmp.age === 9
-            ? "90以上"
-            : tmp.age === 0
-            ? "0~9"
-            : `${tmp.age}0~${tmp.age}9`;
-        userData.value = tmp;
+        if (localStorage.getItem("is_Login") == "1") {
+          let response = await apiGetUserInfo();
+          userData.value = handleData(response);
+        }
       } catch (error) {
         errorHandle(error);
       }
@@ -77,8 +92,15 @@ export default {
           </div>
         </div>
         <div class="mobile-container">
-          <div class="title">
-            手機號碼<span @click="goto('router', '/login')">登入</span>
+          <div class="title" v-if="userData.mobile">
+            {{ userData.mobile }}
+          </div>
+          <div
+            class="title text-success"
+            @click="goto('router', '/login')"
+            v-if="!userData.mobile"
+          >
+            <a class="text-reset">登入</a>
           </div>
         </div>
         <div class="item-container item-container-2">
