@@ -36,6 +36,8 @@ export default {
           goto("storeGoLogin");
         }
       } catch (error) {
+        await apiLogout();
+        goto("storeGoLogin");
         errorHandle(error);
       }
     };
@@ -45,7 +47,7 @@ export default {
 
       nickname = nickname ? nickname : "-";
       mobile = mobile ? mobile : "";
-      gender = gender ? (gender === "men" ? "男" : "女") : "-";
+      gender = gender ? (gender === "male" ? "男" : "女") : "-";
       age = age
         ? age == 9
           ? "90以上"
@@ -64,7 +66,7 @@ export default {
     onMounted(async () => {
       try {
         if (localStorage.getItem("is_Login") == "1") {
-          let response = await apiGetUserInfo();
+          const response = await apiGetUserInfo();
           userData.value = handleData(response);
         }
       } catch (error) {

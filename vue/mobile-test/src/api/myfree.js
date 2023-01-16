@@ -90,24 +90,18 @@ export const apiGenQrcode = (data) => apiInstance.formDataPOST(`/qr/generate`, d
  * user
  */
 
-// ============================================= 店家
+
 /** GET /v2/store/list 取店家list query */
 export const apiGetStoreList = (queryData) => apiInstance.get(`/v2/store/list?${parseUrlEncode(queryData)}`);
 /** GET /store/:id 取店家detail */
 export const apiGetStoreDetail = (id) => apiInstance.get(`/store/${id}`);
-/** DELETE /store/favorite  移除最愛  url  */
-// 注意 刪除如果是urlencoded就普通傳參數就好
+/** DELETE /store/favorite  移除最愛  url  */ // 注意 刪除如果是urlencoded就普通傳參數就好
 export const apiUserRemoveFavorite = ({ store_id }) => apiInstance.delete(`/store/favorite?store_id=${store_id}`);
 /** POST /store/favorite  加到最愛  form */
 export const apiUserAddFavorite = (data) => apiInstance.formDataPOST(`/store/favorite`, data);
 
 /** POST /store/report 回報店家 form */
 export const apiUserReportStore = (data) => apiInstance.formDataPOST(`/store/favorite`, data);
-// {
-//     store_id:1,
-//     option:0, //回報種類, 0:其他 1:店家已停業 2:無法使用優惠 3:款項有爭議(必填,string),
-//     message:'',
-// }
 
 /** /user/forgotpwd urlencoded */
 export const apiUserForgetPwd = (data) => apiInstance.post(`/user/forgotpwd`, parseUrlEncode(data));
@@ -115,6 +109,8 @@ export const apiUserForgetPwd = (data) => apiInstance.post(`/user/forgotpwd`, pa
 export const apiUserChangePwd = (data) => apiInstance.post(`/user/changepwd`, parseUrlEncode(data));
 /** /user/upd urlencoded */
 export const apiUpdateUser = (data) => apiInstance.post(`/user/upd`, parseUrlEncode(data));
+/** /user/regist form */
+export const apiUserRegister = (data) => apiInstance.formDataPOST(`/user/regist`, data);
 
 /** image/user form 上傳檔案 用post就好*/
 export const apiUserUpload = (data) => apiInstance.post(`/image/user`, (data));
@@ -124,41 +120,27 @@ export const apiUserSaveFcmToken = (token) => apiInstance.post(`/notify/token`, 
     token,
     type: "user",
 }));
-/** v2/store/login a-1-4 form */
+/** /v2/user/login form */
 export const apiUserLogin = (data) => apiInstance.formDataLogin(`/v2/user/login`, (data));
 /** /user/remove 軟刪除 */
 export const apiRemoveUser = () => apiInstance.post(`/user/remove`);
 /** /user 取得使用者資料 */
 export const apiGetUserInfo = () => apiInstance.get(`/user`);
 
-
-/** GET /store/:id 取店家detail */
+/** GET /store/:id 取點數 */
 export const apiRefreshPoint = () => apiInstance.get(`/user/point/refresh`);
 
 /** POST /user/deal/reward  索取回饋  form */
 export const apiUserApplyReward = (data) => apiInstance.formDataPOST(`/user/deal/reward`, data);
+
 /** POST /user/deal/withdraw 提領申請 form */
 export const apiUserApplyWithdraw = (data) => apiInstance.formDataPOST(`/user/deal/withdraw`, data);
 
 /** GET /user/deal/record/list 申請紀錄列表 query */
 export const apiGetUserRecordList = (queryData) => apiInstance.get(`/user/deal/record/list?${parseUrlEncode(queryData)}`);
-// {
-//     page:1,
-//     limit:10,
-//     startDate:'2022-11-01',
-//     endDate:'2022-11-02'
-// }
 
 /** GET /user/deal/currency/list 福利金|超級點列表紀錄 query */
 export const apiGetUserMoneyList = (queryData) => apiInstance.get(`/user/deal/currency/list?${parseUrlEncode(queryData)}`);
-// {
-//     page:1,
-//     limit:10,
-//     type:'point|balance',
-//     startDate:'2022-11-01',
-//     endDate:'2022-11-02'
-// }
-
 
 /** GET /user/store/:id/product/list 產品list */
 export const apiUserGetProductList = (id) => apiInstance.get(`/user/store/${id}/product/list`);
