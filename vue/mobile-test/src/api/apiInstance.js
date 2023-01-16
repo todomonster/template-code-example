@@ -2,6 +2,7 @@ import axios from "axios";
 import { Toast } from "@/components/global/swal";
 import { useCookie, useStorage } from "@/utils/helper";
 import { useGlobalStore } from "@/store/global";
+import { initOS } from "@/utils/extCall";
 const globalStore = useGlobalStore();
 
 //env
@@ -143,7 +144,17 @@ function toLogin() {
   localStorage.setItem("is_Login", 0)
   Toast("請重新登入");
   // 路由模式
-  setTimeout(() => window.location.href = `./index.html#${LOGIN_ROUTER}`, 1500);
+
+  // 判斷作業系統
+  setTimeout(() => {
+    let os = initOS() || "";
+    if (os == "android" || os == "ios") {
+      // 有點
+      window.location.href = `.${LOGIN_ROUTER}`
+    } else {
+      window.location.href = `${LOGIN_ROUTER}`
+    }
+  }, 1200);
 }
 
 function saveToken(response) {
