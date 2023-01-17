@@ -33,6 +33,13 @@ const basicRoute = [
     ],
   },
   {
+    path: "/map",
+    component: () => import("@/view/custom-user/map/googleMap.vue"),
+    meta: {
+      requiresAuth: false,
+    },
+  },  
+  {
     path: "/:catchAll(.*)",
     redirect: "/",
   },
