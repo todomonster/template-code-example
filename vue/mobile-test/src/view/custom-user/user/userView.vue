@@ -19,6 +19,9 @@ export default {
     const VUE_APP_VERSION = process.env.VUE_APP_VERSION;
 
     const link = ["https://myfree.tako.life/privacy"];
+
+    const isLogin = ref(false);
+
     const handleWebView = (openUrl) => {
       try {
         ExtCall.openNewWebView(openUrl);
@@ -63,17 +66,29 @@ export default {
         nickname,
       };
     };
+
     onMounted(async () => {
       try {
         if (localStorage.getItem("is_Login") == "1") {
           const response = await apiGetUserInfo();
           userData.value = handleData(response);
+          isLogin.value = true;
+        } else {
+          isLogin.value = false;
         }
       } catch (error) {
         errorHandle(error);
       }
     });
-    return { goto, VUE_APP_VERSION, logout, handleWebView, link, userData };
+    return {
+      goto,
+      VUE_APP_VERSION,
+      logout,
+      handleWebView,
+      link,
+      userData,
+      isLogin,
+    };
   },
 
   components: {},
@@ -141,7 +156,7 @@ export default {
             <div class="image"><i class="icon icon-privacy"></i></div>
             <div class="title">隱私權條款</div>
           </a>
-          <a class="list-link border-0" @click="logout">
+          <a class="list-link border-0" @click="logout" v-if="isLogin">
             <div class="image"><i class="icon icon-signout"></i></div>
             <div class="title">登出</div>
           </a>
