@@ -75,12 +75,15 @@ export default {
       this.markers = [];
     },
     setMarker() {
+      const iconPath = "https://myfree.tako.life/app/icon/google_map_icon.png";
       // clear existing markers
       this.clearMarkers();
       this.pointList.forEach((location) => {
         const marker = new google.maps.Marker({
           position: { lat: location.lat, lng: location.lng },
           map: this.map,
+          draggable: false,
+          icon: iconPath,
         });
         // save markers
         this.markers.push(marker);
@@ -90,21 +93,20 @@ export default {
           //     <p id="firstHeading" class="firstHeading">${location.name}</p>
           //   </div>
           // `,
-          content: `
-                        <div id="content">
-                            <p class="infoHeader" style="color:#8F63CF ; font-size:1rem; font-weight:600;" >${location.name}</p>
-                            <p class="infoBody" style="margin:0;font-size:0.75rem; font-weight:400;" v-if="item.address" >${""}
-                                
-                            </p>
-                            
-                        </div>
-                        `,
+          content: 
+            `
+            <div id="content">
+                <p style="font-size:1rem; font-weight:600;" >${location.name}</p>
+            </div>
+            `,
           maxWidth: 200,
         });
         marker.addListener("click", () => {
           if (this.infowindow) this.infowindow.close();
           infowindow.open(this.map, marker);
           this.infowindow = infowindow;
+
+          //   拋出給外面
         });
       });
     },
