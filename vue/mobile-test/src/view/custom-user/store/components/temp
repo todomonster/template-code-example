@@ -1,0 +1,57 @@
+<!-- <div class="mb-3">
+                  <label class="form-label">價格範圍</label>
+                  <div class="input-pill">
+                    <div class="row">
+                      <div class="col form-check">
+                        <input
+                          type="radio"
+                          class="form-check-input"
+                          name="price"
+                          id="price1"
+                          checked
+                        />
+                        <label class="form-check-label" for="price1">$</label>
+                      </div>
+                      <div class="col form-check">
+                        <input
+                          type="radio"
+                          class="form-check-input"
+                          name="price"
+                          id="price2"
+                        />
+                        <label class="form-check-label" for="price2">$$</label>
+                      </div>
+                      <div class="col form-check">
+                        <input
+                          type="radio"
+                          class="form-check-input"
+                          name="price"
+                          id="price3"
+                        />
+                        <label class="form-check-label" for="price3">$$$</label>
+                      </div>
+                      <div class="col form-check">
+                        <input
+                          type="radio"
+                          class="form-check-input"
+                          name="price"
+                          id="price4"
+                        />
+                        <label class="form-check-label" for="price4"
+                          >$$$$</label
+                        >
+                      </div>
+                      <div class="col form-check">
+                        <input
+                          type="radio"
+                          class="form-check-input"
+                          name="price"
+                          id="price4"
+                        />
+                        <label class="form-check-label" for="price4"
+                          >$$$$$</label
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div> -->

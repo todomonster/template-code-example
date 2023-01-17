@@ -1,10 +1,13 @@
 <script>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { useGlobalStore } from "@/store/global";
 import { errorHandle } from "@/utils/errorHandle";
+import { apiGetCityList, apiGetAreaList } from "@/api/myfree";
+import { Toast } from "@/components/global/swal";
 
 export default {
-  setup() {
+  emits: ["queryData"],
+  setup(props, { emit }) {
     const showAdvancedSearch = ref(false);
 
     const form = ref(null);
@@ -17,14 +20,26 @@ export default {
       lang: null, //有 GPS 抓km
       search: "",
       category: "",
-      city: null,
-      area: null,
+      city: "",
+      area: "",
     });
     const handleSubmit = async (e) => {
       e.preventDefault();
       // 處理
+      let condition = 0;
+      const ans = {};
+      const entry = Object.entries(inputData.value);
+      entry.forEach((item) => {
+        const key = item[0];
+        const value = item[1];
+        if (value || value === 0) {
+          ans[key] = value;
+          condition++;
+        }
+      });
 
       // emit 物件 出去讓外面打API
+      emit("queryData", ans);
     };
 
     const categoryOption = ["食", "衣", "住", "行", "樂"];
@@ -36,6 +51,44 @@ export default {
       inputData.value.category = item;
     };
 
+    const cityAreaData = ref([]);
+    const areaList = ref([]);
+    let fullArea = ref({});
+
+    const apiCity = async () => {
+      const getCityList = await apiGetCityList();
+      cityAreaData.value = getCityList.data;
+    };
+    const apiArea = async () => {
+      const getAreaList = await apiGetAreaList();
+      fullArea.value = getAreaList.data;
+      areaList.value = getAreaList.data;
+    };
+
+    onMounted(async () => {
+      // //取會員資料
+      await apiCity();
+      await apiArea();
+    });
+    watch(
+      () => inputData.value?.city,
+      (val) => {
+        const area = JSON.parse(JSON.stringify(fullArea.value));
+        const ans = area.filter((area) => area.city_id === val);
+        areaList.value = ans;
+        // 沒有預設值才加上
+        inputData.value.area = areaList.value?.[0]?.id;
+      }
+    );
+    watch(
+      () => inputData.value?.area,
+      (val) => {
+        if (val == undefined) {
+          inputData.value.area = "";
+        }
+      }
+    );
+
     return {
       showAdvancedSearch,
       form,
@@ -45,6 +98,9 @@ export default {
       categoryOption,
       categoryClass,
       handleCategory,
+
+      cityAreaData,
+      areaList,
     };
   },
 
@@ -81,15 +137,35 @@ export default {
               <label class="form-label">搜尋範圍</label>
               <div class="row mb-3">
                 <div class="col">
-                  <select class="form-control form-select">
-                    <option selected>縣市</option>
-                    <option>臺北市</option>
+                  <select
+                    class="form-control form-select"
+                    v-model="inputData.city"
+                  >
+                    <!-- <option value="undefined" disabled>請選擇縣市</option> -->
+                    <option value="">全台</option>
+                    <option
+                      v-for="item in cityAreaData"
+                      :value="item.id"
+                      :key="item.id"
+                    >
+                      {{ item.city_name }}
+                    </option>
                   </select>
                 </div>
                 <div class="col">
-                  <select class="form-control form-select">
-                    <option selected>鄉鎮市區</option>
-                    <option>中區</option>
+                  <select
+                    class="form-control form-select"
+                    v-model="inputData.area"
+                  >
+                    <!-- <option value="undefined" disabled>請選擇鄉鎮區</option> -->
+                    <option value="">全區</option>
+                    <option
+                      v-for="item in areaList"
+                      :value="item.id"
+                      :key="item.id"
+                    >
+                      {{ item.area_name }}
+                    </option>
                   </select>
                 </div>
               </div>
