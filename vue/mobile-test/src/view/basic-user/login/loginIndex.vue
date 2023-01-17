@@ -4,6 +4,7 @@ import { onBeforeRouteLeave } from "vue-router";
 import "./style/login.scss";
 import LoginPage from "./loginPage.vue";
 import SignupPage from "./signupPage.vue";
+import ForgetPassword from "./forgetPassword.vue";
 import { useGlobalStore } from "@/store/global";
 
 import { useRoute } from "vue-router";
@@ -37,7 +38,7 @@ export default {
 
     return { mode, goto, handleModeChange, handleBlack, triggerBackDoor };
   },
-  components: { LoginPage, SignupPage },
+  components: { LoginPage, SignupPage, ForgetPassword },
 };
 </script>
 
@@ -65,11 +66,9 @@ export default {
       @mode="handleModeChange"
     />
 
-    <SignupPage
-      v-if="mode === 'signup'"
-      :triggerBackDoor="triggerBackDoor"
-      @mode="handleModeChange"
-    />
+    <SignupPage v-if="mode === 'signup'" @mode="handleModeChange" />
+
+    <ForgetPassword v-if="mode === 'forget'" @mode="handleModeChange" />
   </section>
 </template>
 

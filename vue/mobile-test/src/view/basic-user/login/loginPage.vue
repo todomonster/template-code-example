@@ -190,13 +190,19 @@ export default {
           <i :class="passwordEyeClass" id="togglePassword"></i>
         </div>
       </div>
-      <div class="row form-word text-end text-decoration-underline">
-        <div class="col-12 ml-4">
+      <div class="row form-word text-decoration-underline ">
+        <div class="col ml-4">
+          <span class="cursor-pointer" @click="$emit('mode', 'forget')"
+            >忘記密碼?</span
+          >
+        </div>
+        <div class="col ml-4 text-end">
           <span class="cursor-pointer" @click="$emit('mode', 'signup')"
             >去註冊</span
           >
         </div>
       </div>
+      
       <div class="btn-container mt-5 text-center d-flex justify-content-center">
         <button
           class="btn btn-next cursor-pointer"

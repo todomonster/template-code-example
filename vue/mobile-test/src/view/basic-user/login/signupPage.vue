@@ -1,5 +1,5 @@
 <script>
-import { ref, computed, onMounted, onActivated } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { Toast } from "@/components/global/swal";
 import { errorHandle } from "@/utils/errorHandle";
 import { apiPushOtp, apiVerifyOtp, apiCheckAccount } from "@/api/myfree";
@@ -73,7 +73,7 @@ export default {
         }
         // ========
         const response = await apiPushOtp({ mobile: inputData.value.mobile });
-        if (response.success === "OK") {
+        if (response.success === "OK" || response.result) {
           Toast("驗證碼已發送");
           if (currentStep.value !== 2) {
             currentStep.value = 1;
@@ -139,7 +139,6 @@ export default {
     };
     // ========
     onMounted(() => {
-      
       if (query.storeId) {
         inputData.value.storeId = query.storeId;
       }
@@ -268,11 +267,11 @@ export default {
         </div>
       </div>
       <div
-        class="row form-word text-end text-decoration-underline cursor-pointer"
+        class="row text-end form-word text-decoration-underline cursor-pointer"
       >
         <div class="col-12 ml-4">
           <span class="cursor-pointer" @click="$emit('mode', 'login')"
-            >去登入</span
+            >回登入</span
           >
         </div>
       </div>
