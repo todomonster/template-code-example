@@ -27,28 +27,9 @@ export default {
   },
   name: "StoreList",
   setup(props) {
-    const lat = 25.0325917;
-    const lng = 121.5624999;
-    const pointList = [
-      {
-        id: 1,
-        name: "餐廳一",
-        lat: 25.034,
-        lng: 121.5645,
-      },
-      {
-        id: 2,
-        name: "餐廳二",
-        lat: 25.036643,
-        lng: 121.567678,
-      },
-      {
-        id: 3,
-        name: "餐廳三",
-        lat: 25.033643,
-        lng: 121.566678,
-      },
-    ];
+    
+    const lng = 120.6780227;
+    const lat = 24.1465044;
 
     const dataList = ref([]);
     const searchQuery = ref({});
@@ -70,6 +51,8 @@ export default {
     const handleData = (arr = []) => {
       arr.forEach((item) => {
         item.images = handleStoreProfile.storeImages(item.images);
+        item.lat=item.lang
+        item.lng=item.long
       });
       return arr;
     };
@@ -100,7 +83,7 @@ export default {
       handleModeChange,
       lat,
       lng,
-      pointList,
+      // pointList,
     };
   },
 
@@ -133,11 +116,12 @@ export default {
       <!--使用 GMap 並帶入相關設定資訊-->
       <GMap
         :center="{ lat, lng }"
-        :pointList="pointList"
+        :pointList="dataList"
         :streetViewControl="false"
         :mapTypeControl="false"
-        :fullscreenControl="true"
+        :fullscreenControl="false"
         :zoomControl="true"
+        :zoom="13"
       ></GMap>
       <div class="edit-container edit-container-2">
         <button class="btn btn-edit" type="button">
