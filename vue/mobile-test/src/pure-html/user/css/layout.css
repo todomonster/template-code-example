@@ -624,6 +624,14 @@
   background-image: url(../images/icon_edit.png);
 }
 
+.btn-edit .icon-map {
+  background-image: url(../images/icon_map.png);
+}
+
+.btn-edit .icon-list {
+  background-image: url(../images/icon_list.png);
+}
+
 .btn-skip {
   padding: .8125rem .5625rem;
   width: 3.5rem;
@@ -785,6 +793,10 @@
   background-color: #E64950;
   border: 1px solid white;
   border-radius: 50%;
+}
+
+.ui-navbar .nav-link .icon-delete {
+  background-image: url(../images/icon_delete.png);
 }
 
 .ui-navbar .nav-link .icon-back {
