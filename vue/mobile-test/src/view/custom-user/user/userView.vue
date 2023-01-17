@@ -8,7 +8,12 @@ import {
 } from "@/components/global/swal";
 import { ref, onMounted } from "vue";
 import { errorHandle } from "@/utils/errorHandle";
-import { apiLogout, apiUserSaveFcmToken, apiGetUserInfo } from "@/api/myfree";
+import {
+  apiLogout,
+  apiUserSaveFcmToken,
+  apiGetUserInfo,
+  apiRemoveUser,
+} from "@/api/myfree";
 
 export default {
   setup() {
@@ -41,6 +46,23 @@ export default {
       } catch (error) {
         await apiLogout();
         goto("storeGoLogin");
+        errorHandle(error);
+      }
+    };
+    const removeAccount = async () => {
+      try {
+        const confirm = await ToastConfirm("🚨確定要刪除帳號?");
+        if (confirm) {
+          const response = await apiRemoveUser();
+          if (response.result) {
+            await apiLogout();
+            Toast("刪除成功");
+            setTimeout(() => goto("router", "/"), 800);
+          } else {
+            Toast("刪除失敗");
+          }
+        }
+      } catch (error) {
         errorHandle(error);
       }
     };
@@ -88,6 +110,7 @@ export default {
       link,
       userData,
       isLogin,
+      removeAccount,
     };
   },
 
@@ -156,15 +179,19 @@ export default {
             <div class="image"><i class="icon icon-privacy"></i></div>
             <div class="title">隱私權條款</div>
           </a>
-          <a class="list-link border-0" @click="logout" v-if="isLogin">
+          <a class="list-link border-0" @click="logout" v-show="isLogin">
             <div class="image"><i class="icon icon-signout"></i></div>
             <div class="title">登出</div>
           </a>
         </div>
       </div>
-      <!-- <div class="edit-container">
-        <div class="version">{{ VUE_APP_VERSION }}</div>
-      </div> -->
+      <div
+        class="mt-3 text-danger text-center text-decoration-underline"
+        v-show="isLogin"
+        @click="removeAccount"
+      >
+        刪除帳號
+      </div>
       <!-- {{VUE_APP_VERSION + '123'}} -->
     </div>
   </section>
