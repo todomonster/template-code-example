@@ -497,6 +497,12 @@
     .icon-edit {
         background-image: url(#{$img}icon_edit.png);
     }
+    .icon-map {
+        background-image: url(#{$img}icon_map.png);
+    }
+    .icon-list {
+        background-image: url(#{$img}icon_list.png);
+    }
 }
 .btn-skip {
     padding: .8125rem .5625rem;

@@ -24,38 +24,40 @@ export default {
     return {
       scTimer: 0,
       scY: 0,
-    }
+    };
   },
   mounted() {
-    window.addEventListener("scroll", this.handleScroll)
+    window.addEventListener("scroll", this.handleScroll);
   },
-  unmounted(){
-    window.removeEventListener("scroll", this.handleScroll)
+  unmounted() {
+    window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
     handleScroll() {
-      if (this.scTimer) return
+      if (this.scTimer) return;
       this.scTimer = setTimeout(() => {
-        this.scY = window.scrollY
-        clearTimeout(this.scTimer)
-        this.scTimer = 0
-      }, 100)
+        this.scY = window.scrollY;
+        clearTimeout(this.scTimer);
+        this.scTimer = 0;
+      }, 100);
     },
     toTop() {
       window.scrollTo({
         top: 0,
         behavior: "smooth",
-      })
+      });
     },
   },
-}
+};
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .back-to-top {
   z-index: 9999;
   position: fixed;
-  right: 0;
-  bottom: 45px;
+  /* right: 0;
+  bottom: 45px; */
+  right: 0rem;
+  bottom: calc(#{$footer-height});
 }
 </style>

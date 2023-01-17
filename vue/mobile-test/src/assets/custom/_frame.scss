@@ -53,6 +53,9 @@
 				border-radius: 50%;
 			}
 		}
+		.icon-delete {
+			background-image: url(#{$img}icon_delete.png);
+		}
 		.icon-back {
 			background-image: url(#{$img}icon_back.png);
 		}
