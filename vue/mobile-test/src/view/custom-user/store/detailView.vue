@@ -58,15 +58,10 @@ export default {
         const response = await apiGetStoreDetail(id.value);
 
         if (response.result == true) {
-          // 測試機
           storeData.value = handleData(response.data);
         } else if (response.result == false) {
           Toast(response.errorInfo);
           goto("back");
-        } else {
-          // 正式機
-          // 正式還沒更新 這隻沒給result 也不是data模式
-          storeData.value = handleData(response);
         }
       } catch (error) {
         errorHandle(error);
