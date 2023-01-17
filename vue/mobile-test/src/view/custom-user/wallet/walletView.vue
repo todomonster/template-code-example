@@ -53,9 +53,9 @@ export default {
             <div class="image"><i class="icon icon-money"></i></div>
             <div class="title">錢包餘額</div>
             <div class="cash">
-              超集點：{{ walletData.balance }} 點
+              超集點：{{ walletData.point }} 點
               <br />
-              福利金：{{ walletData.point }}元
+              福利金：{{ walletData.balance }}元
             </div>
             <!-- <div class="reset"><i class="icon icon-reset"></i></div> -->
           </div>
