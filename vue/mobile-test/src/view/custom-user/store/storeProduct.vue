@@ -1,14 +1,15 @@
 <script>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, onActivated } from "vue";
 import { useRoute } from "vue-router";
 import { errorHandle } from "@/utils/errorHandle";
 import { apiUserGetProductList } from "@/api/myfree";
 import { handleStoreProfile } from "@/utils/handleData";
+import NoData from "@/components/global/NoData.vue";
 
 export default {
   name: "StoreProduct",
   setup() {
-    const { query } = useRoute();
+    
     const id = ref(null);
     const productList = ref([]);
 
@@ -28,16 +29,22 @@ export default {
       return ans;
     };
 
-    onMounted(async () => {
+    onActivated(async () => {
       try {
+        const { query } = useRoute();
         if (id.value === Number(query.id)) {
           return;
         }
+        
         id.value = Number(query.id);
         const response = await apiUserGetProductList(id.value);
         if (response.result) {
           // const count = response?.data?.count
-          productList.value = handleData(response?.data?.products);
+          if (response?.data?.products) {
+            productList.value = handleData(response?.data?.products);
+          } else {
+            productList.value = [];
+          }
         }
       } catch (error) {
         errorHandle(error);
@@ -61,14 +68,15 @@ export default {
     return { cardBodyCss, productList, handleClick };
   },
 
-  components: {},
+  components: { NoData },
 };
 </script>
 
 <template>
   <!-- 內容 -->
   <section class="c-main">
-    <div class="navbar-container">
+    <NoData v-if="productList?.length <= 0" />
+    <div class="navbar-container" v-if="productList?.length > 0">
       <div class="product-container-2">
         <div class="row">
           <div
