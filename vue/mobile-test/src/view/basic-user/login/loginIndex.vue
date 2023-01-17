@@ -20,10 +20,21 @@ export default {
 
     const handleModeChange = (val) => (mode.value = val);
 
+    const breakData = ref({});
+
     onBeforeMount(() => {
       document.body.classList.add("c-login");
       if (query.signup == "1") {
         mode.value = "signup";
+      }
+
+      if (query.forget == "1") {
+        mode.value = "forget";
+        breakData.value = {
+          otp: query.otp,
+          mobile: query.mobile,
+          forget: "1",
+        };
       }
     });
     onUnmounted((to, from, next) => {
@@ -36,7 +47,14 @@ export default {
       setTimeout(() => (triggerBackDoor.value = "2"), 1000);
     };
 
-    return { mode, goto, handleModeChange, handleBlack, triggerBackDoor };
+    return {
+      mode,
+      goto,
+      handleModeChange,
+      handleBlack,
+      triggerBackDoor,
+      breakData,
+    };
   },
   components: { LoginPage, SignupPage, ForgetPassword },
 };
@@ -68,7 +86,11 @@ export default {
 
     <SignupPage v-if="mode === 'signup'" @mode="handleModeChange" />
 
-    <ForgetPassword v-if="mode === 'forget'" @mode="handleModeChange" />
+    <ForgetPassword
+      :breakData="breakData"
+      v-if="mode === 'forget'"
+      @mode="handleModeChange"
+    />
   </section>
 </template>
 

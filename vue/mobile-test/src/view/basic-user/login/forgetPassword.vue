@@ -17,6 +17,11 @@ import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
 
 export default {
+  props: {
+    breakData: {
+      type: Object,
+    },
+  },
   emits: ["mode"],
   setup(props, { emit }) {
     // ========
@@ -87,6 +92,7 @@ export default {
     });
 
     const form = ref(null);
+    const breakData = ref(props?.breakData);
 
     const handleSubmit = async (e) => {
       if (currentStep.value == 0) {
@@ -98,7 +104,7 @@ export default {
           if (response.success === "OK" || response.result) {
             Toast("修改成功");
             // 跳轉
-            emit("login");
+            emit("mode", "login");
           } else {
             errorHandle(response);
           }
@@ -106,7 +112,14 @@ export default {
       }
     };
 
-    onMounted(() => {});
+    onMounted(() => {
+      if (breakData.value?.forget == "1") {
+        Toast("進入接續流程");
+        currentStep.value = 1;
+        inputData.value.otp = breakData.value.otp || "";
+        inputData.value.mobile = breakData.value.mobile || "";
+      }
+    });
 
     return {
       inputData,
@@ -175,7 +188,7 @@ export default {
           class="form-control form-control-2"
           placeholder="請輸入驗證碼(一次性密碼)"
           v-model.trim="inputData.otp"
-          title="請輸入驗證碼一次性密碼"
+          title="請輸入驗證碼(一次性密碼)"
           required
         />
       </div>

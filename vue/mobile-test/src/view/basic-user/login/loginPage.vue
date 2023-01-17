@@ -3,8 +3,7 @@ import { ref, onMounted, watch } from "vue";
 import { Toast } from "@/components/global/swal.js";
 import { errorHandle } from "@/utils/errorHandle";
 import { apiUserLogin, apiUserSaveFcmToken } from "@/api/myfree";
-
-import { ExtCall } from "@/utils/extCall";
+import { ExtCall,initOS } from "@/utils/extCall";
 
 import { useGlobalStore } from "@/store/global";
 
@@ -19,23 +18,16 @@ export default {
   setup(props) {
     const VUE_APP_VERSION = process.env.VUE_APP_VERSION || "";
     const globalStore = useGlobalStore();
-    const { goto, setStoreData } = globalStore;
+    const { goto, setUserData } = globalStore;
 
     const inputData = ref({
       mobile: "",
       password: "",
       option: "",
     });
-    let msg = "";
+
     const form = ref(null);
     let fcmToken = "";
-
-    const isLoginSuccess = (msg) => {
-      if (msg.token) {
-        return true;
-      }
-      return false;
-    };
 
     const backDoor = process.env.VUE_APP_TEST_PASSWORD;
     const isBackDoor = ref(false);
@@ -83,24 +75,47 @@ export default {
 
       if (form.value.reportValidity()) {
         //post API
-        msg = await apiUserLogin(inputData.value);
-        if (isLoginSuccess(msg)) {
-          if (fcmToken) {
-            const response = await apiUserSaveFcmToken(fcmToken);
-            // if (response.result) {
-            //   alert("fcm token 更新成功");
-            // }
+        try {
+          const response = await apiUserLogin(inputData.value);
+          if (response.result && response.change_password == false) {
+            if (fcmToken) {
+              const response = await apiUserSaveFcmToken(fcmToken);
+              if (response.result) {
+                console.log("fcm token 更新成功");
+              }
+            }
+            setUserData({
+              status: false,
+              mobile: "",
+              password: "",
+              userId: "",
+              storeId: "",
+            });
+            localStorage.setItem("is_Login", 1);
+            Toast("登入成功");
+            goto("router", "/");
+          } else if (response.result && response.change_password == true) {
+            //跳轉 去完成變更密碼
+            let os = initOS() || "";
+            if (os == "android" || os == "ios") {
+              // 有點
+              window.location.href = `./index.html#/login?forget=1&otp=${inputData.value.password}&mobile=${inputData.value.mobile}`;
+            } else {
+              window.location.href = `/index.html#/login?forget=1&otp=${inputData.value.password}&mobile=${inputData.value.mobile}`;
+            }
+            
+            // goto("routerQuery", "/login", {
+            //   query: {
+            //     forget: "1",
+            //     otp: inputData.value.password,
+            //     mobile: inputData.value.mobile,
+            //   },
+            // });
+          } else {
+            errorHandle(response);
           }
-          setStoreData({
-            status: false,
-            mobile: "",
-            password: "",
-          });
-          localStorage.setItem("is_Login", 1);
-          Toast("登入成功");
-          goto("router", "/home");
-        } else {
-          errorHandle(msg);
+        } catch (error) {
+          errorHandle(error);
         }
       }
     };
@@ -182,7 +197,6 @@ export default {
           class="form-control form-control-2"
           placeholder="請輸入密碼"
           v-model.trim="inputData.password"
-          pattern="^(?=.*[A-Za-z])(?=.*[0-9]).{6,}$"
           title="最少6個字元，需有英文及數字"
           required
         />
@@ -190,7 +204,7 @@ export default {
           <i :class="passwordEyeClass" id="togglePassword"></i>
         </div>
       </div>
-      <div class="row form-word text-decoration-underline ">
+      <div class="row form-word text-decoration-underline">
         <div class="col ml-4">
           <span class="cursor-pointer" @click="$emit('mode', 'forget')"
             >忘記密碼?</span
@@ -202,7 +216,7 @@ export default {
           >
         </div>
       </div>
-      
+
       <div class="btn-container mt-5 text-center d-flex justify-content-center">
         <button
           class="btn btn-next cursor-pointer"
