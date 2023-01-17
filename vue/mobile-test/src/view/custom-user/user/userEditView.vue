@@ -1,13 +1,11 @@
 <script>
 import { ref, onMounted, onBeforeMount, computed, watch } from "vue";
-import { handleStoreProfile } from "@/utils/handleData";
 import { Toast } from "@/components/global/swal.js";
 import {
   apiGetUserInfo,
   apiUpdateUser,
   apiUserUpload,
   apiUserRegister,
-  apiRemoveUser,
 } from "@/api/myfree";
 
 import { useGlobalStore } from "@/store/global";
@@ -21,7 +19,7 @@ export default {
   name: "EditUserProfile",
   setup() {
     const globalStore = useGlobalStore();
-    const goto = globalStore.goto;
+    const { goto, setUserData } = globalStore;
 
     const MODE = ref("edit");
 
@@ -122,9 +120,15 @@ export default {
           };
         }
 
-        // alert(`${JSON.stringify(data)}`);
         const response = await apiUserRegister(data);
         if (response.result) {
+          setUserData({
+            status: false,
+            mobile: "",
+            password: "",
+            userId: "",
+            storeId: "",
+          });
           Toast("註冊成功!");
           goto("router", "/login");
         } else {
