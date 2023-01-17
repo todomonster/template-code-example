@@ -17,11 +17,7 @@ import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
 
 export default {
-  props: {
-    breakData: {
-      type: Object,
-    },
-  },
+  props: {},
   emits: ["mode"],
   setup(props, { emit }) {
     // ========
@@ -92,7 +88,6 @@ export default {
     });
 
     const form = ref(null);
-    const breakData = ref(props?.breakData);
 
     const handleSubmit = async (e) => {
       if (currentStep.value == 0) {
@@ -113,11 +108,17 @@ export default {
     };
 
     onMounted(() => {
-      if (breakData.value?.forget == "1") {
+      const { query } = useRoute();
+
+      if (query.forget == "1") {
         Toast("進入接續流程");
         currentStep.value = 1;
-        inputData.value.otp = breakData.value.otp || "";
-        inputData.value.mobile = breakData.value.mobile || "";
+        if (query.otp) {
+          inputData.value.otp = query.otp;
+        }
+        if (query.mobile) {
+          inputData.value.mobile = query.mobile;
+        }
       }
     });
 
@@ -194,7 +195,7 @@ export default {
       </div>
       <div class="row text-end form-word text-decoration-underline">
         <div class="col-12 ml-4">
-          <span class="cursor-pointer" @click="$emit('mode', 'login')"
+          <span class="cursor-pointer" @click="goto('router', '/login')"
             >回登入</span
           >
         </div>

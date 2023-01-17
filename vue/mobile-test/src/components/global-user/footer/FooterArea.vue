@@ -53,7 +53,7 @@ export default {
                 });
               } else {
                 // b. 非登入 -> 跳到註冊App畫面
-                goto("routerQuery", "/login", {
+                goto("routerQuery", "/login/signup", {
                   query: { signup: "1", userId, storeId },
                 });
               }

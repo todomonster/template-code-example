@@ -3,6 +3,8 @@ import { Toast } from "@/components/global/swal";
 import { useCookie, useStorage } from "@/utils/helper";
 import { useGlobalStore } from "@/store/global";
 import { initOS } from "@/utils/extCall";
+import { parseRootUrl } from "@/utils/url";
+
 const globalStore = useGlobalStore();
 
 //env
@@ -147,13 +149,14 @@ function toLogin() {
 
   // 判斷作業系統
   setTimeout(() => {
-    let os = initOS() || "";
-    if (os == "android" || os == "ios") {
-      // 有點
-      window.location.href = `.${LOGIN_ROUTER}`
-    } else {
-      window.location.href = `${LOGIN_ROUTER}`
-    }
+    // let os = initOS() || "";
+    // if (os == "android" || os == "ios") {
+    //   // 有點
+    //   window.location.href = `.${LOGIN_ROUTER}`
+    // } else {
+    //   window.location.href = `${LOGIN_ROUTER}`
+    // }
+    window.location.href = parseRootUrl(`${LOGIN_ROUTER}`);
   }, 1200);
 }
 

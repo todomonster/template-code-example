@@ -47,7 +47,7 @@ export default {
                 query: { id: storeId, $back$: 1 },
               });
             } else {
-              goto("routerQuery", "/login", {
+              goto("routerQuery", "/login/signup", {
                 query: { signup: "1", userId, storeId },
               });
             }

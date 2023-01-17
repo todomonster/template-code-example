@@ -204,7 +204,7 @@ export default {
     const goback = () => {
       if (addUserPinia.value.status) {
         // 是註冊
-        goto("routerQuery", "/login", {
+        goto("routerQuery", "/login/signup", {
           query: { signup: "1" },
         });
       } else {

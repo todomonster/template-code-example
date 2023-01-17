@@ -270,7 +270,7 @@ export default {
         class="row text-end form-word text-decoration-underline cursor-pointer"
       >
         <div class="col-12 ml-4">
-          <span class="cursor-pointer" @click="$emit('mode', 'login')"
+          <span class="cursor-pointer" @click="goto('router', '/login')"
             >回登入</span
           >
         </div>

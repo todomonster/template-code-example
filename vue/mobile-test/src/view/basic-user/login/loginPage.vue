@@ -3,17 +3,17 @@ import { ref, onMounted, watch } from "vue";
 import { Toast } from "@/components/global/swal.js";
 import { errorHandle } from "@/utils/errorHandle";
 import { apiUserLogin, apiUserSaveFcmToken } from "@/api/myfree";
-import { ExtCall,initOS } from "@/utils/extCall";
+import { ExtCall } from "@/utils/extCall";
 
 import { useGlobalStore } from "@/store/global";
 
 export default {
   emits: ["mode"],
   props: {
-    triggerBackDoor: {
-      type: String,
-      default: "",
-    },
+    // triggerBackDoor: {
+    //   type: String,
+    //   default: "",
+    // },
   },
   setup(props) {
     const VUE_APP_VERSION = process.env.VUE_APP_VERSION || "";
@@ -57,21 +57,23 @@ export default {
         Toast(`電腦版不能執行 ${error}`);
       }
     };
-    watch(
-      () => props.triggerBackDoor,
-      (val) => {
-        if (val == "1") {
-          handleBackDoorOpen(inputData.value);
-        } else if (val == "2") {
-          handleBackDoorOpen(inputData.value);
-        } else {
-          isBackDoor.value = false;
-        }
-      }
-    );
+
+    // watch(
+    //   () => props.triggerBackDoor,
+    //   (val) => {
+    //     if (val == "1") {
+    //       handleBackDoorOpen(inputData.value);
+    //     } else if (val == "2") {
+    //       handleBackDoorOpen(inputData.value);
+    //     } else {
+    //       isBackDoor.value = false;
+    //     }
+    //   }
+    // );
 
     const login = async (e) => {
       e.preventDefault();
+      handleBackDoorOpen(inputData.value);
 
       if (form.value.reportValidity()) {
         //post API
@@ -95,22 +97,13 @@ export default {
             Toast("登入成功");
             goto("router", "/");
           } else if (response.result && response.change_password == true) {
-            //跳轉 去完成變更密碼
-            let os = initOS() || "";
-            if (os == "android" || os == "ios") {
-              // 有點
-              window.location.href = `./index.html#/login?forget=1&otp=${inputData.value.password}&mobile=${inputData.value.mobile}`;
-            } else {
-              window.location.href = `/index.html#/login?forget=1&otp=${inputData.value.password}&mobile=${inputData.value.mobile}`;
-            }
-            
-            // goto("routerQuery", "/login", {
-            //   query: {
-            //     forget: "1",
-            //     otp: inputData.value.password,
-            //     mobile: inputData.value.mobile,
-            //   },
-            // });
+            goto("routerQuery", "/login/forget", {
+              query: {
+                forget: "1",
+                otp: inputData.value.password,
+                mobile: inputData.value.mobile,
+              },
+            });
           } else {
             errorHandle(response);
           }
@@ -152,6 +145,7 @@ export default {
       handleEyeClick,
       passwordType,
       VUE_APP_VERSION,
+      goto,
     };
   },
 };
@@ -206,12 +200,12 @@ export default {
       </div>
       <div class="row form-word text-decoration-underline">
         <div class="col ml-4">
-          <span class="cursor-pointer" @click="$emit('mode', 'forget')"
+          <span class="cursor-pointer" @click="goto('router', '/login/forget')"
             >忘記密碼?</span
           >
         </div>
         <div class="col ml-4 text-end">
-          <span class="cursor-pointer" @click="$emit('mode', 'signup')"
+          <span class="cursor-pointer" @click="goto('router', '/login/signup')"
             >去註冊</span
           >
         </div>

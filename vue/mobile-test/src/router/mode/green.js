@@ -6,7 +6,31 @@ const basicRoute = [
   {
     path: "/login",
     name: "login",
+    redirect: "/login/index",
     component: () => import("@/view/basic-user/login/loginIndex.vue"),
+    children: [
+      {
+        name: "loginPage",
+        path: "index",
+        components: {
+          default: () => import("@/view/basic-user/login/loginPage.vue"),
+        },
+      },
+      {
+        name: "SignupPage",
+        path: "signup",
+        components: {
+          default: () => import("@/view/basic-user/login/signupPage.vue"),
+        },
+      },
+      {
+        name: "ForgetPassword",
+        path: "forget",
+        components: {
+          default: () => import("@/view/basic-user/login/forgetPassword.vue"),
+        },
+      }
+    ],
   },
   {
     path: "/:catchAll(.*)",
@@ -117,7 +141,7 @@ const customRoute = [
         },
       },
     ],
-  },  
+  },
   {
     path: "/wallet",
     component: () => import("@/view/custom-user/wallet/walletIndex.vue"),

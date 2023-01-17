@@ -3,8 +3,8 @@ import { ref, onBeforeMount, onUnmounted } from "vue";
 import { onBeforeRouteLeave } from "vue-router";
 import "./style/login.scss";
 import LoginPage from "./loginPage.vue";
-import SignupPage from "./signupPage.vue";
-import ForgetPassword from "./forgetPassword.vue";
+// import SignupPage from "./signupPage.vue";
+// import ForgetPassword from "./forgetPassword.vue";
 import { useGlobalStore } from "@/store/global";
 
 import { useRoute } from "vue-router";
@@ -18,24 +18,37 @@ export default {
     const globalStore = useGlobalStore();
     const { goto } = globalStore;
 
-    const handleModeChange = (val) => (mode.value = val);
+    const handleModeChange = (val) => {
+      // if (val == "signup") {
+      //   mode.value = "signup";
+      //   goto("router", "/login/signup");
+      // }
+      // if (val == "forget") {
+      //   mode.value = "forget";
+      //   goto("router", "/login/forget");
+      // }
+      // if (val == "login") {
+      //   mode.value = "login";
+      //   goto("router", "/login");
+      // }
+    };
 
     const breakData = ref({});
 
     onBeforeMount(() => {
       document.body.classList.add("c-login");
-      if (query.signup == "1") {
-        mode.value = "signup";
-      }
+      // if (query.signup == "1") {
+      //   mode.value = "signup";
+      // }
 
-      if (query.forget == "1") {
-        mode.value = "forget";
-        breakData.value = {
-          otp: query.otp,
-          mobile: query.mobile,
-          forget: "1",
-        };
-      }
+      // if (query.forget == "1") {
+      //   mode.value = "forget";
+      //   breakData.value = {
+      //     otp: query.otp,
+      //     mobile: query.mobile,
+      //     forget: "1",
+      //   };
+      // }
     });
     onUnmounted((to, from, next) => {
       document.body.classList.remove("c-login");
@@ -43,8 +56,8 @@ export default {
 
     const triggerBackDoor = ref("0");
     const handleBlack = () => {
-      triggerBackDoor.value = "1";
-      setTimeout(() => (triggerBackDoor.value = "2"), 1000);
+      // triggerBackDoor.value = "1";
+      // setTimeout(() => (triggerBackDoor.value = "2"), 1000);
     };
 
     return {
@@ -56,7 +69,11 @@ export default {
       breakData,
     };
   },
-  components: { LoginPage, SignupPage, ForgetPassword },
+  components: {
+    // LoginPage,
+    // SignupPage,
+    // ForgetPassword
+  },
 };
 </script>
 
@@ -78,19 +95,22 @@ export default {
         <img src="@/assets/images/logo.png" @click="handleBlack" />
       </div>
     </div>
-    <LoginPage
+
+    <router-view />
+
+    <!-- <LoginPage
       v-if="mode === 'login'"
       :triggerBackDoor="triggerBackDoor"
       @mode="handleModeChange"
-    />
+    /> -->
 
-    <SignupPage v-if="mode === 'signup'" @mode="handleModeChange" />
+    <!-- <SignupPage v-if="mode === 'signup'" @mode="handleModeChange" />
 
     <ForgetPassword
       :breakData="breakData"
       v-if="mode === 'forget'"
       @mode="handleModeChange"
-    />
+    /> -->
   </section>
 </template>
 
