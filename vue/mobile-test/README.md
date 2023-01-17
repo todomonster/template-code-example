@@ -160,3 +160,6 @@ a tag 可能因為沒有加上 `display: block;` 導致圖片不見
 ## user和store 切換SOP
 config.scss + env
 記得正式機部署API也要調整
+
+## Google Map
+npm i @googlemaps/js-api-loader
