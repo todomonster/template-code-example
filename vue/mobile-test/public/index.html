@@ -5,25 +5,26 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <!-- 載入Maps JavaScript API -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoYLVGTanmAUWxCilYvAjIgenmRmtf7Js"></script>
+  <!-- 載入translate JavaScript API -->
+  <script type="text/javascript"
+    src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <link rel="icon" href="<%= BASE_URL %>favicon.ico">
   <!-- font-awesome -->
   <link rel="stylesheet" href="<%= BASE_URL %>font-awesome/css/all.min.css">
   <title>
     <%= htmlWebpackPlugin.options.title %>
   </title>
-
 </head>
 
 <body>
-  <!-- 載入Maps JavaScript API -->
-  
-
   <noscript>
     <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
         Please enable it to continue.</strong>
   </noscript>
   <div id="app"></div>
+
   <!-- <div style="position: fixed; display: flex; top:47px; z-index: 99999;">
     <p><input type="button" value="顯示" onclick="displayConsoleMessage(true)"></p>
     <p><input type="button" value="隱藏" onclick="displayConsoleMessage(false)"></p>
@@ -76,8 +77,6 @@
 
       return true;
     }
-
-
 
   </script> -->
 </body>
