@@ -32,7 +32,7 @@ export default {
       const amount =
         Math.floor(inputData.value.amountOfMoney * userRewardRange.value) *
         0.01;
-      return amount.toFixed(2);
+      return amount.toFixed(0);
     });
     const notAllow = computed(() => {
       return point.value - useAmount.value < 0;
@@ -160,8 +160,7 @@ export default {
                   }}
                 </div>
                 <div class="col-right pb-2">
-                  *小數點第二位後<br />
-                  無條件捨去
+                  <span class="text-danger">*</span>計算後捨去小數點
                 </div>
               </div>
               <div class="d-flex">
