@@ -223,6 +223,17 @@ function setApplicationStatusCallback(windowFunctionName = "") {
     executeExtCall(data);
 }
 
+// App Toast
+function AppToast(message = "", duration = 1000) {
+    const data = JSON.stringify({
+        "function": "toast",
+        "message": message,
+        "duration": duration //duration = int
+    });
+
+    executeExtCall(data);
+}
+
 
 
 
@@ -240,7 +251,8 @@ export const ExtCall = {
     loadPDFURL2View,
     loadPDFURLWithKey,
     toBrowser,
-    setApplicationStatusCallback
+    setApplicationStatusCallback,
+    AppToast
 }
 
 export const ExtCallThirdPart = {
@@ -328,18 +340,13 @@ export const ExtCallGPS = {
         executeExtCall(data);
     },
     /**
-        let Input = { time: "", lat: "", long: "" };
-        window.ExtCallGetCurrentLocation = (time, lat, long) => {
-        //傳回三個參數(日期、經度、緯度)
-        Input = { time, lat, long };
-        };
-        ExtCallGPS.getCurrentLocation("ExtCallGetCurrentLocation");
-        setTimeout(() => console.log(Input), 100);
+
     */
     getCurrentLocation(windowFunctionName = "") {
         const data = JSON.stringify({
             "function": "getCurrentLocation",
-            "callback": windowFunctionName
+            "callback": windowFunctionName,
+            "datatype": "json"
         });
 
         executeExtCall(data);

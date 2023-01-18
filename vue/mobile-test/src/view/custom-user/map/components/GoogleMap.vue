@@ -3,6 +3,8 @@
 </template>
 
 <script>
+import { reactive, ref, onMounted, watch, onActivated, computed } from "vue";
+
 export default {
   // 接收來自父元件的地圖設定資訊
   props: {
@@ -13,6 +15,9 @@ export default {
     zoom: {
       type: Number,
       default: 14,
+    },
+    clearMarkers: {
+      type: Number,
     },
     streetViewControl: {
       type: Boolean,
@@ -35,76 +40,99 @@ export default {
       default: () => [],
     },
   },
-  data() {
-    return {
-      map: null,
-      infowindow: null,
-      markers: [],
-      currentMarker: null,
-    };
-  },
-  // 當發現中心位置改變時，更新中心位置與地標
-  watch: {
-    center(val) {
-      this.resetCenter();
-      this.setMarker();
-    },
-  },
-  mounted() {
-    window.gotoDetail = () => {
-      // $router.push
-      alert(1);
-    };
-    this.initMap();
-    this.setMarker();
-  },
-  activated() {
-    if (this.infowindow) {
-      this.infowindow.open(this.map, this.currentMarker);
-    }
-  },
-  methods: {
-    initMap() {
-      this.map = new google.maps.Map(document.getElementById("map"), {
-        center: this.center,
-        zoom: this.zoom,
+  setup(props) {
+    const map = ref(null);
+    const currentInfowindow = ref(null);
+    const currentMarker = ref(null);
+    const markers = ref([]);
+
+    // const lat = ref(props.center.lat);
+    // const lng = ref(props.center.lng);
+
+    const pointListData = ref([]);
+    const centerData = ref({});
+
+    watch(
+      () => props.center,
+      (val) => {
+        centerData.value = val;
+        resetCenter(val);
+      }
+    );
+
+    watch(
+      () => props.clearMarkers,
+      (val) => {
+        clearMarkers();
+      }
+    );
+
+    watch(
+      () => props.pointList,
+      (val) => {
+        pointListData.value = val;
+        clearMarkers();
+        // 延遲生成 marker
+        setTimeout(() => {
+          setMarker();
+        }, 1000);
+      }
+    );
+
+    onMounted(() => {
+      // 延遲生成 map
+      setTimeout(() => {
+        initMap();
+      }, 500);
+    });
+
+    onActivated(() => {
+      // 維持視窗開啟
+      if (currentInfowindow.value) {
+        currentInfowindow.value.open(map, currentMarker);
+      }
+    });
+
+    const initMap = () => {
+      const {
+        center,
+        zoom,
+        streetViewControl,
+        mapTypeControl,
+        fullscreenControl,
+        zoomControl,
+      } = props;
+      map.value = new google.maps.Map(document.getElementById("map"), {
         maxZoom: 20,
         minZoom: 3,
-        streetViewControl: this.streetViewControl,
-        mapTypeControl: this.mapTypeControl,
-        fullscreenControl: this.fullscreenControl,
-        zoomControl: this.zoomControl,
+        center,
+        zoom,
+        streetViewControl,
+        mapTypeControl,
+        fullscreenControl,
+        zoomControl,
       });
-    },
-    resetCenter() {
-      // set center
-      this.map.panTo({ lat: this.center.lat, lng: this.center.lng });
-    },
-    clearMarkers() {
-      this.markers.forEach((marker) => marker.setMap(null));
-      this.markers = [];
-    },
-    setMarker() {
-      const iconPath = "https://myfree.tako.life/app/icon/google_map_icon.png";
-      // clear existing markers
-      this.clearMarkers();
-      this.pointList.forEach((location) => {
-        const marker = new google.maps.Marker({
-          position: { lat: location.lat, lng: location.lng },
-          map: this.map,
-          draggable: false,
-          icon: iconPath,
-        });
-        // save markers
-        this.markers.push(marker);
+    };
 
-        const infowindow = new google.maps.InfoWindow({
-          //   content: `
-          //   <div id="content">
-          //     <p id="firstHeading" class="firstHeading">${location.name}</p>
-          //   </div>
-          // `,
-          content: `
+    const resetCenter = (location) => {
+      if (map.value) {
+        map.value.panTo(location);
+        setSingleMarker(location, true);
+      }
+    };
+
+    const clearMarkers = () => {
+      markers.value.forEach((item) => {
+        item.setMap(null);
+        // 很重要!
+        item.setVisible(false);
+      });
+      markers.value = [];
+    };
+
+    const setInfoWindow = (location = { id: null, name: "", all_addr: "" }) => {
+      return new google.maps.InfoWindow({
+        content: `
             <div id="content">
                 <a style="text-decoration: underline black; color:black;"
                   href="${
@@ -118,16 +146,56 @@ export default {
                 <span>${location.all_addr ? location.all_addr : ""}</span>
             </div>
             `,
-          maxWidth: 250,
+        maxWidth: 250,
+      });
+    };
+
+    const setSingleMarker = (coordinate, useDefaultIcon = false) => {
+      if (!coordinate) {
+        return false;
+      }
+      const iconPath = "https://myfree.tako.life/app/icon/google_map_icon.png";
+      const config = {
+        position: coordinate,
+        map: map.value,
+        draggable: false,
+        icon: iconPath,
+      };
+      if (useDefaultIcon) {
+        delete config.icon;
+      }
+      const marker = new google.maps.Marker(config);
+      markers.value.push(marker);
+      return marker;
+    };
+
+    const setMarker = () => {
+      pointListData.value.forEach((location) => {
+        const marker = setSingleMarker({
+          lat: location.lat,
+          lng: location.lng,
         });
+        if (!marker) {
+          // marker生成錯誤離開
+          return;
+        }
+        const infowindow = setInfoWindow(location);
+
         marker.addListener("click", () => {
-          if (this.infowindow) this.infowindow.close();
-          infowindow.open(this.map, marker);
-          this.infowindow = infowindow;
-          this.currentMarker = marker;
+          // 先關閉目前的視窗
+          if (currentInfowindow.value) {
+            currentInfowindow.value.close();
+          }
+          // 開啟點的那個視窗
+          infowindow.open(map.value, marker);
+          // 刷新狀態
+          currentInfowindow.value = infowindow;
+          currentMarker.value = marker;
         });
       });
-    },
+    };
+
+    return { pointListData, centerData, markers };
   },
 };
 </script>
