@@ -27,7 +27,6 @@ export default {
   },
   name: "StoreList",
   setup(props) {
-    
     const lng = 120.6780227;
     const lat = 24.1465044;
 
@@ -51,8 +50,8 @@ export default {
     const handleData = (arr = []) => {
       arr.forEach((item) => {
         item.images = handleStoreProfile.storeImages(item.images);
-        item.lat=item.lang
-        item.lng=item.long
+        item.lat = item.lang;
+        item.lng = item.long;
       });
       return arr;
     };
@@ -73,7 +72,10 @@ export default {
         data_count_on_page: 0,
       });
       dataList.value = handleData(response.data);
+      setTimeout(() => (showMapBtn.value = true), 1000 * 3);
     });
+
+    const showMapBtn = ref(false);
 
     return {
       dataList,
@@ -84,6 +86,7 @@ export default {
       lat,
       lng,
       // pointList,
+      showMapBtn,
     };
   },
 
@@ -106,7 +109,7 @@ export default {
       <SearchStore @queryData="handleQuery" />
       <StoreCards :data="dataList" v-if="dataList?.length > 0" />
       <NoData v-if="!(dataList?.length > 0)" />
-      <div class="edit-container edit-container-2">
+      <div class="edit-container edit-container-2" v-if="showMapBtn">
         <button class="btn btn-edit" type="button">
           <i :class="iconClass" @click="handleModeChange"></i>
         </button>
@@ -140,6 +143,5 @@ export default {
   bottom: 0;
   width: 100%;
   height: 85vh;
-
 }
 </style>

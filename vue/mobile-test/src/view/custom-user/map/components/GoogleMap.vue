@@ -40,6 +40,7 @@ export default {
       map: null,
       infowindow: null,
       markers: [],
+      currentMarker: null,
     };
   },
   // 當發現中心位置改變時，更新中心位置與地標
@@ -50,8 +51,17 @@ export default {
     },
   },
   mounted() {
+    window.gotoDetail = () => {
+      // $router.push
+      alert(1);
+    };
     this.initMap();
     this.setMarker();
+  },
+  activated() {
+    if (this.infowindow) {
+      this.infowindow.open(this.map, this.currentMarker);
+    }
   },
   methods: {
     initMap() {
@@ -87,27 +97,35 @@ export default {
         });
         // save markers
         this.markers.push(marker);
+
         const infowindow = new google.maps.InfoWindow({
           //   content: `
           //   <div id="content">
           //     <p id="firstHeading" class="firstHeading">${location.name}</p>
           //   </div>
           // `,
-          content: 
-            `
+          content: `
             <div id="content">
-                <p style="font-size:1rem; font-weight:600;" >${location.name}</p>
+                <a style="text-decoration: underline black; color:black;"
+                  href='${window.location.origin}/#/store/detail?id=${location.id}'"
+                >
+                  <p style="font-size:1.25rem; font-weight:600;">${
+                    location.name
+                  }</p>
+                </a>
+                <span>${location.all_addr ? location.all_addr : ""}</span>
             </div>
             `,
-          maxWidth: 200,
+          maxWidth: 250,
         });
         marker.addListener("click", () => {
           if (this.infowindow) this.infowindow.close();
           infowindow.open(this.map, marker);
           this.infowindow = infowindow;
-
-          //   拋出給外面
+          this.currentMarker = marker;
         });
+
+        
       });
     },
   },
