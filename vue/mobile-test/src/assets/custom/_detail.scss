@@ -434,6 +434,11 @@
     left: 1rem;
     right: auto;
 }  
+.edit-container-3 {
+    bottom: calc(#{$footer-height} + 8.125rem);
+    left: auto;
+    right: 0.5rem;
+}  
 .add-container {
     position: fixed;
     left: 0;
