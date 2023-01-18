@@ -107,7 +107,9 @@ export default {
           content: `
             <div id="content">
                 <a style="text-decoration: underline black; color:black;"
-                  href='${window.location.origin}/#/store/detail?id=${location.id}'"
+                  href="${
+                    window.location.href?.split("#/")?.[0]
+                  }#/store/detail?id=${location.id}"
                 >
                   <p style="font-size:1.25rem; font-weight:600;">${
                     location.name
@@ -124,8 +126,6 @@ export default {
           this.infowindow = infowindow;
           this.currentMarker = marker;
         });
-
-        
       });
     },
   },
