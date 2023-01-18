@@ -73,13 +73,41 @@ export default {
       nickname = nickname ? nickname : "-";
       mobile = mobile ? mobile : "";
       gender = gender ? (gender === "male" ? "男" : "女") : "-";
-      age = age
-        ? age == 9
-          ? "90以上"
-          : age == 0
-          ? "0~9"
-          : `${age}0~${age}9`
-        : "-";
+
+      switch (age) {
+        case 0:
+          age = "0~9歲";
+          break;
+        case 1:
+          age = "10~19歲";
+          break;
+        case 2:
+          age = "20~29歲";
+          break;
+        case 3:
+          age = "30~39歲";
+          break;
+        case 4:
+          age = "40~49歲";
+          break;
+        case 5:
+          age = "50~59歲";
+          break;
+        case 6:
+          age = "60~69歲";
+          break;
+        case 7:
+          age = "70~79歲";
+          break;
+        case 8:
+          age = "80~89歲";
+          break;
+        case 9:
+          age = "90歲以上";
+          break;
+        default:
+          age = "-";
+      }
 
       return {
         mobile,
@@ -124,7 +152,14 @@ export default {
     <div class="navbar-container">
       <div class="member-container">
         <div class="avatar-container" @click="goto('router', '/setting/edit')">
-          <div class="image"><img src="@/assets/images/noavatar.png" /></div>
+          <div class="image">
+            <img
+              :src="userData.image"
+              onerror="this.onerror=null; this.src='https://fakeimg.pl/150x150/'"
+              v-if="userData.image"
+            />
+            <img src="@/assets/images/noavatar.png" v-if="!userData.image" />
+          </div>
           <div class="camera-container">
             <button class="btn btn-edit" type="button">
               <i class="icon icon-edit"></i>
@@ -146,15 +181,19 @@ export default {
         <div class="item-container item-container-2">
           <div class="d-flex">
             <div class="col-left">暱稱</div>
-            <div class="col-right">{{ userData.nickname }}</div>
+            <div class="col-right">
+              {{ userData.nickname ? userData.nickname : "-" }}
+            </div>
           </div>
           <div class="d-flex">
             <div class="col-left">性別</div>
-            <div class="col-right">{{ userData.gender }}</div>
+            <div class="col-right">
+              {{ userData.gender ? userData.gender : "-" }}
+            </div>
           </div>
           <div class="d-flex">
             <div class="col-left">年齡層</div>
-            <div class="col-right">{{ userData.age }}</div>
+            <div class="col-right">{{ userData.age ? userData.age : "-" }}</div>
           </div>
           <!-- <div class="d-flex">
             <div class="col-left">預設好康店範圍</div>

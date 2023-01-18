@@ -91,7 +91,11 @@ export default {
     };
     const apiEditUser = async () => {
       try {
-        const response = await apiUpdateUser(editData.value);
+        const data = { ...editData.value };
+        if (data.nickname === "") {
+          data.nickname = " ";
+        }
+        const response = await apiUpdateUser(data);
         if (response.result) {
           Toast("更新成功!");
         } else {
@@ -221,6 +225,7 @@ export default {
       MODE,
       addUserPinia,
       goback,
+      myUploadFile,
     };
   },
 
@@ -356,7 +361,7 @@ export default {
               id="editBtn"
               @click="handleSubmit"
             >
-              <i id="editText" class="icon icon-next" @click="handleSubmit"></i>
+              <i id="editText" class="icon icon-next"></i>
             </button>
           </div>
           <div
