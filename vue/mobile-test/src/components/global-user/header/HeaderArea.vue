@@ -83,7 +83,7 @@ export default {
       try {
         goto("back");
       } catch (error) {
-        alert(error);
+        // console.log(error);
       }
     };
 

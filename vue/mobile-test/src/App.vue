@@ -26,7 +26,6 @@ export default {
           let userId = "";
           let storeId = "";
           const searchParams = new URLSearchParams(val);
-          alert(val);
 
           for (let [key, value] of searchParams.entries()) {
             if (key === "userId") {
