@@ -57,6 +57,9 @@ export default {
       (val) => {
         centerData.value = val;
         resetCenter(val);
+        if (val.setCenterMarker == true) {
+          setSingleMarker(val, true);
+        }
       }
     );
 
@@ -117,7 +120,6 @@ export default {
     const resetCenter = (location) => {
       if (map.value) {
         map.value.panTo(location);
-        setSingleMarker(location, true);
       }
     };
 

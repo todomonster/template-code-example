@@ -24,35 +24,14 @@ export default {
   setup(props) {
     const lng = ref(120.6780227);
     const lat = ref(24.1465044);
-    // const centerData = ref([120.6780227, 24.1465044]);
     const centerData = ref({});
 
     const dataList = ref([]);
     const searchQuery = ref({});
 
-    const handleQuery = async (val) => {
-      const newValue = JSON.stringify(val);
-      const oldValue = JSON.stringify(searchQuery.value);
-
-      if (newValue === oldValue) {
-        Toast("請變更條件");
-        return;
-      }
-
-      searchQuery.value = JSON.parse(newValue);
-      const response = await apiGetStoreList(JSON.parse(newValue));
-      dataList.value = handleData(response.data);
-    };
-
-    const handleData = (arr = []) => {
-      arr.forEach((item) => {
-        item.images = handleStoreProfile.storeImages(item.images);
-        item.lat = item.lang;
-        item.lng = item.long;
-      });
-      return arr;
-    };
-
+    const clearMarkers = ref(0);
+    const showMapBtn = ref(false);
+    const iconClass = ref("icon icon-map"); //
     const handleModeChange = () => {
       if (iconClass.value == "icon icon-map") {
         iconClass.value = "icon icon-list";
@@ -60,22 +39,33 @@ export default {
         iconClass.value = "icon icon-map";
       }
     };
-    const clearMarkers = ref(0);
+
 
     const getCurrentLocation = (GPSstatus) => {
       try {
         window.ExtCallGetCurrentLocation = async (val) => {
-          // alert(`aaa:${JSON.stringify(val)}`);
           if (val.status) {
+
+            //GET API 刷新search條件
+            const config = {
+              row: 50,
+              data_count_on_page: 0,
+              lang: Number(val.latitude),
+              long: Number(val.longitude),
+            };
+            dataList.value = await getStoreList(config);
+
+            //順序是最後觸發否則會被刷新 移動並設置標籤
             centerData.value = {
               lat: Number(val.latitude),
               lng: Number(val.longitude),
-            };
+              setCenterMarker: true,
+            };            
           }
         };
         ExtCallGPS.getCurrentLocation("ExtCallGetCurrentLocation");
       } catch (error) {
-        alert(error.message);
+        errorHandle(error);
       }
     };
     const handleGPS = () => {
@@ -88,20 +78,58 @@ export default {
       }
     };
 
-    const iconClass = ref("icon icon-map"); //
+    const handleData = (arr = []) => {
+      arr.forEach((item) => {
+        item.images = handleStoreProfile.storeImages(item.images);
+        item.lat = item.lang;
+        item.lng = item.long;
+      });
+      return arr;
+    };
+    const getStoreList = async (config) => {
+      const response = await apiGetStoreList(config);
+      return handleData(response.data);
+    };
+
+    // search 傳來的參數 打API
+    const handleQuery = async (val) => {
+      const newValue = JSON.stringify(val);
+      const oldValue = JSON.stringify(searchQuery.value);
+
+      if (newValue === oldValue) {
+        Toast("請變更條件");
+        return false;
+      }
+
+      searchQuery.value = JSON.parse(newValue);
+      dataList.value = await getStoreList(JSON.parse(newValue));
+
+      // 取第一間店的經緯度
+      if (dataList.value?.length > 0) {
+        const stores = dataList.value?.filter((item) => item.lat && item.lng);
+        if (stores?.length > 0) {
+          const { lat, lng } = stores[0];
+          centerData.value = {
+            lat: Number(lat),
+            lng: Number(lng),
+            setCenterMarker: false,
+          };
+        }
+      }
+
+      return true;
+    };
 
     onMounted(async () => {
       centerData.value = { lng: 120.6780227, lat: 24.1465044 };
-      const response = await apiGetStoreList({
+
+      dataList.value = await getStoreList({
         row: 50,
         data_count_on_page: 0,
       });
-      dataList.value = handleData(response.data);
 
-      setTimeout(() => (showMapBtn.value = true), 1000 * 3);
+      setTimeout(() => (showMapBtn.value = true), 1000 * 2);
     });
-
-    const showMapBtn = ref(true);
 
     return {
       dataList,
