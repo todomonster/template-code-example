@@ -1,5 +1,5 @@
 <script>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, onUnmounted } from "vue";
 import { apiUserGetNotifyList, apiUserReadNotify } from "@/api/myfree";
 import { errorHandle } from "@/utils/errorHandle";
 
@@ -11,7 +11,6 @@ import NoData from "@/components/global/NoData.vue";
 export default {
   name: "UserNotifyList",
   setup() {
-    let windowScrollY = 0;
     let getApiTimer = null;
 
     const notifyList = ref([]);
@@ -37,10 +36,6 @@ export default {
 
     const handleListData = async (response) => {
       const { data } = response;
-      // 處理空值
-      // if (response.total === 0) {
-      //   notifyList.value = [{ content: "暫時沒有通知!" }];
-      // }
       // 處理有值
       notifyList.value = notifyList.value.concat(data);
       total.value = response.total;
@@ -59,22 +54,16 @@ export default {
 
     onMounted(async () => {
       try {
-        // 位移到暫存的y
-        windowScrollTo({ top: windowScrollY });
         await getListData("init");
-
         getApiTimer = setInterval(handleScrollGetData, 500);
       } catch (error) {
         errorHandle(error);
       }
     });
-
-    onBeforeRouteLeave((to, from, next) => {
-      // 離開前紀錄滾動位置
-      windowScrollY = window.scrollY || 0;
+    onUnmounted(() => {
       clearInterval(getApiTimer);
-      next();
     });
+
     return { notifyList, APIparams, total };
   },
   components: { NoData },
@@ -83,7 +72,6 @@ export default {
 
 <template>
   <!-- 內容 -->
-
   <section class="c-main">
     <div class="notice-container">
       <NoData v-if="notifyList.length == 0" />

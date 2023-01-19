@@ -1,28 +1,36 @@
 <script>
-import { ref, onActivated } from "vue"
-import { onBeforeRouteLeave } from "vue-router"
+import { ref, onActivated, onMounted } from "vue";
+import { onBeforeRouteLeave } from "vue-router";
 
 export default {
   setup() {
-    //取消監控
-
-    let homeTop = ref(0)
+    const homeTop = ref(0);
     onBeforeRouteLeave((to, from, next) => {
-      homeTop.value = window.scrollY || 0
-      next()
-    })
+      homeTop.value = window.scrollY || 0;
+      next();
+    });
     onActivated(() => {
-      window.scrollTo({
-        top: homeTop.value,
-        left: 0,
-        behavior: "instant",
-      })
-    })
-
-    return {}
+      if (window.scrollY !== 0) {
+        window.scrollTo({
+          top: homeTop.value,
+          left: 0,
+          behavior: "instant",
+        });
+      }
+    });
+    onMounted(() => {
+      if (window.scrollY !== 0) {
+        window.scrollTo({
+          top: homeTop.value,
+          left: 0,
+          behavior: "instant",
+        });
+      }
+    });
+    return {};
   },
   components: {},
-}
+};
 </script>
 
 <template>
