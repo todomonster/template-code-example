@@ -7,10 +7,27 @@ import { Toast } from "@/components/global/swal";
 
 export default {
   emits: ["queryData"],
+  props: {
+    searchQuery: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
   setup(props, { emit }) {
     const showAdvancedSearch = ref(false);
 
     const form = ref(null);
+
+    watch(
+      () => props.searchQuery,
+      (val) => {
+        if (val.lang || val.long) {
+          // 如果props有經緯度要清除縣市和區域
+          inputData.value.city = "";
+          inputData.value.area = "";
+        }
+      }
+    );
 
     // 要記得跑回圈如果是空值移除掉
     const inputData = ref({

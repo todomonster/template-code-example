@@ -60,7 +60,10 @@ export default {
               lat: Number(val.latitude),
               lng: Number(val.longitude),
               setCenterMarker: true,
-            };            
+            };
+            
+            // 記註條件
+            searchQuery.value = config;
           }
         };
         ExtCallGPS.getCurrentLocation("ExtCallGetCurrentLocation");
@@ -163,7 +166,7 @@ export default {
   <section class="c-main">
     <SaveWindowY />
     <div class="navbar-container" v-show="iconClass == 'icon icon-map'">
-      <SearchStore @queryData="handleQuery" />
+      <SearchStore @queryData="handleQuery" :searchQuery="searchQuery"/>
       <StoreCards :data="dataList" v-if="dataList?.length > 0" />
       <NoData v-if="!(dataList?.length > 0)" />
       <div class="edit-container edit-container-2" v-if="showMapBtn">
