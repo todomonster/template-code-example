@@ -40,12 +40,10 @@ export default {
       }
     };
 
-
     const getCurrentLocation = (GPSstatus) => {
       try {
         window.ExtCallGetCurrentLocation = async (val) => {
           if (val.status) {
-
             //GET API 刷新search條件
             const config = {
               row: 50,
@@ -61,7 +59,7 @@ export default {
               lng: Number(val.longitude),
               setCenterMarker: true,
             };
-            
+
             // 記註條件
             searchQuery.value = config;
           }
@@ -90,8 +88,12 @@ export default {
       return arr;
     };
     const getStoreList = async (config) => {
-      const response = await apiGetStoreList(config);
-      return handleData(response.data);
+      try {
+        const response = await apiGetStoreList(config);
+        return handleData(response.data);
+      } catch (error) {
+        errorHandle(error);
+      }
     };
 
     // search 傳來的參數 打API
@@ -166,7 +168,7 @@ export default {
   <section class="c-main">
     <SaveWindowY />
     <div class="navbar-container" v-show="iconClass == 'icon icon-map'">
-      <SearchStore @queryData="handleQuery" :searchQuery="searchQuery"/>
+      <SearchStore @queryData="handleQuery" :searchQuery="searchQuery" />
       <StoreCards :data="dataList" v-if="dataList?.length > 0" />
       <NoData v-if="!(dataList?.length > 0)" />
       <div class="edit-container edit-container-2" v-if="showMapBtn">

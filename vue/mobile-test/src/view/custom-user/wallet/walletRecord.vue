@@ -66,6 +66,7 @@ export default {
     );
 
     onMounted(async () => {
+      const limit = 100;
       initSwiper(3);
       try {
         // 開始監聽 如果有改變swiper位置的話滾動到最上方
@@ -75,18 +76,18 @@ export default {
 
         getDateMethod(recordListData, apiGetUserRecordList, {
           page: 1,
-          limit: 50,
+          limit,
           // startDate: "2022-11-01",
           // endDate: "2022-11-02",
         });
         getDateMethod(moneyListData, apiGetUserMoneyList, {
           page: 1,
-          limit: 50,
+          limit,
           type: "balance",
         });
         getDateMethod(pointListData, apiGetUserMoneyList, {
           page: 1,
-          limit: 50,
+          limit,
           type: "point",
         });
       } catch (error) {
