@@ -68,11 +68,12 @@ export default {
     };
 
     const handleData = (userInfo = {}) => {
-      let { mobile, gender, age, nickname } = userInfo;
+      let { mobile, gender, age, nickname, image } = userInfo;
 
       nickname = nickname ? nickname : "-";
       mobile = mobile ? mobile : "";
       gender = gender ? (gender === "male" ? "男" : "女") : "-";
+      image = image ? image : "";
 
       switch (age) {
         case 0:
@@ -114,6 +115,7 @@ export default {
         gender,
         age,
         nickname,
+        image
       };
     };
 

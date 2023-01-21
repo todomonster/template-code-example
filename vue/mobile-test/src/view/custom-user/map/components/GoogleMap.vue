@@ -92,7 +92,7 @@ export default {
     onActivated(() => {
       // 維持視窗開啟
       if (currentInfowindow.value) {
-        currentInfowindow.value.open(map, currentMarker);
+        currentInfowindow.value.open(map.value, currentMarker.value);
       }
     });
 
