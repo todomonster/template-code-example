@@ -15,6 +15,8 @@ import { errorHandle } from "@/utils/errorHandle";
 // post => 去pinia取資料
 // edit => 正常打API
 
+import TestCrop from "@/view/testCrop.vue";
+
 export default {
   name: "EditUserProfile",
   setup() {
@@ -58,6 +60,12 @@ export default {
     //     editData.value.gender = inputGender;
     //   }
     // };
+
+    const handleImgChange = (val) => {
+      if (val) {
+        editData.value.image = val;
+      }
+    };
 
     //檔案上傳
     const myUploadFile = ref(null);
@@ -226,10 +234,12 @@ export default {
       addUserPinia,
       goback,
       myUploadFile,
+      TestCrop,
+      handleImgChange,
     };
   },
 
-  components: {},
+  components: { TestCrop },
 };
 </script>
 
@@ -250,7 +260,7 @@ export default {
     <section class="c-main">
       <div class="form-container">
         <form ref="form">
-          <div class="avatar-container">
+          <!-- <div class="avatar-container">
             <div class="image">
               <img
                 :src="editData.image"
@@ -272,7 +282,13 @@ export default {
                 @change="handleFileUpload"
               />
             </div>
-          </div>
+          </div> -->
+          <TestCrop
+            :openPreview="false"
+            :fixedNumber="[1, 1]"
+            :originImg="editData.image"
+            @handleImgChange="handleImgChange"
+          />
           <div class="mobile-container" v-if="editData.mobile">
             <div class="title">
               手機號碼<span>{{ editData.mobile }}</span>
@@ -393,6 +409,10 @@ export default {
         </form>
       </div>
     </section>
+    <!--  -->
+    <!-- <div class="row d-flex justify-content-center align-items-center m-2px">
+
+    </div> -->
   </div>
 </template>
 

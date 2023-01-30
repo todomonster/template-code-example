@@ -12,11 +12,13 @@ import "./assets/layout.scss"
 // import "./assets/into.js"
 import VueQrcode from '@chenfengyuan/vue-qrcode';
 
+import VueCropper from 'vue-cropper'; 
+
 const app = createApp(App)
 app.component(VueQrcode.name, VueQrcode);
+app.use(VueCropper)
 app.use(createPinia())
 app.use(router)
 
 app.mount('#app')
-
 
