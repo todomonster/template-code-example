@@ -20,6 +20,8 @@ import { errorHandle } from "@/utils/errorHandle";
 // edit => 正常打API
 
 import ChooseDate from "./component/DatePicker.vue";
+import TestCrop from "@/view/testCrop.vue";
+
 export default {
   name: "EditProfile",
   setup() {
@@ -154,11 +156,9 @@ export default {
               storeData.value.images = `["${response.path}"]` || "";
             }
           }
-
-        }else{
+        } else {
           Toast(`圖片上傳失敗`);
         }
-
       } catch (error) {
         errorHandle(error);
       }
@@ -207,6 +207,13 @@ export default {
         goto("router", "/profile/view");
       }
     };
+
+    const handleImgChange = (val) => {
+      if (val) {
+        storeData.value.images = val;
+      }
+    };
+
     return {
       storeData,
       save,
@@ -230,10 +237,12 @@ export default {
       showReward,
       handleEmit,
       goback,
+      handleImgChange,
     };
   },
   components: {
     ChooseDate,
+    TestCrop,
   },
 };
 </script>
@@ -255,7 +264,7 @@ export default {
       <section class="c-main">
         <div class="form-container">
           <form ref="form1">
-            <div class="image-container">
+            <!-- <div class="image-container">
               <div class="image">
                 <img
                   :src="handleImg(storeData.images)"
@@ -271,7 +280,6 @@ export default {
                 <label class="form-file-label">
                   <i class="icon icon-camera"></i>
                 </label>
-                <!-- form-file-input 才行; form-control 無法-->
                 <input
                   class="form-file-input"
                   type="file"
@@ -281,7 +289,16 @@ export default {
                   @change="handleFileUpload"
                 />
               </div>
-            </div>         
+            </div> -->
+            <TestCrop
+              imgClass="image-container"
+              defaultBgImg="https://fakeimg.pl/340x200/?text=商店&font=noto"
+              onErrorBgImg="this.onerror=null; this.src='https://fakeimg.pl/340x200/?text=商店&font=noto'"
+              :originImg="handleImg(storeData.images)"
+              :openPreview="false"
+              :fixedNumber="[16, 9]"
+              @handleImgChange="handleImgChange"
+            />
             <div class="mb-2">
               <label class="form-label">
                 商店名稱
@@ -386,6 +403,7 @@ export default {
               />
             </div>
             <ChooseDate :data="storeData" @business_hours="handleEmit" />
+            <div class="mb-2"></div>
             <div class="mb-2">
               <label class="form-label"
                 >大分類<span class="must">必填</span></label
@@ -469,7 +487,7 @@ export default {
                   checked
                 />
               </div>
-            </div>   
+            </div>
             <div
               class="btn-container mt-4 d-flex justify-content-center cursor-pointer"
             >

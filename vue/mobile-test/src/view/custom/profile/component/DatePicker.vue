@@ -1,6 +1,11 @@
 <template>
   <div class="mb-2">
     <label class="form-label">營業時間</label>
+    <!-- <h6 class="form-label form-check">
+      <span class="form-label"
+        >打勾後顧客才能看見該日,點加號新增,點減號移除,下拉時間為<span class="must">必填</span></span
+      >
+    </h6> -->
     <div class="input-list">
       <div
         class="form-check mb-2 row"
@@ -158,5 +163,8 @@ export default {
 }
 .m-2px {
   margin: 2px;
+}
+h6{
+  font-size: 12px;
 }
 </style>

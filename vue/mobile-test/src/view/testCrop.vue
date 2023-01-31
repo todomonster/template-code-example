@@ -15,12 +15,8 @@
   </div> -->
   <div :class="imgClass">
     <div class="image">
-      <img
-        :src="newImg"
-        onerror="this.onerror=null; this.src='https://fakeimg.pl/150x150/?text=使用者&font=noto'"
-        v-if="newImg"
-      />
-      <img src="@/assets/images/noavatar.png" v-if="!newImg" />
+      <img :src="newImg" :onerror="onErrorBgImg" v-if="newImg" />
+      <img :src="defaultBgImg" v-if="!newImg" />
     </div>
     <div class="camera-container">
       <label class="form-file-label">
@@ -38,9 +34,9 @@
   </div>
 
   <!-- Modal -->
-  <div class="custom-modal" ref="myModalRef" id="MyModal" v-show="showCropper">
-    <div class="modal-dialog">
-      <div class="modal-content">
+  <div class="custom-modal disable-touch" ref="myModalRef" id="MyModal" v-show="showCropper">
+    <div class="modal-dialog d-flex justify-content-center">
+      <div class="modal-content custom-modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="MyModalLabel"></h5>
           <button
@@ -51,9 +47,9 @@
             @click="closeModal"
           ></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="padding: 0px">
           <!--  -->
-          <div class="content" style="">
+          <div class="crop-content" style="">
             <VueCropper
               ref="cropper"
               :autoCrop="options.autoCrop"
@@ -64,6 +60,7 @@
               :fixedNumber="fixedNumber"
               :canMove="options.canMove"
               @real-time="realTime"
+              :info="false"
             />
           </div>
           <!--  -->
@@ -98,6 +95,7 @@ import { reactive, ref, defineProps, defineEmits, watch, onMounted } from "vue";
 import { apiUserUpload } from "@/api/myfree";
 import { Toast } from "@/components/global/swal.js";
 import { errorHandle } from "@/utils/errorHandle";
+import noavatar from "@/assets/images/noavatar.png";
 
 const props = defineProps({
   openPreview: {
@@ -118,6 +116,17 @@ const props = defineProps({
     required: false,
     default: "avatar-container",
   },
+  defaultBgImg: {
+    type: String,
+    required: false,
+    default: noavatar,
+  },
+  onErrorBgImg: {
+    type: String,
+    required: false,
+    default:
+      "this.onerror=null; this.src='https://fakeimg.pl/150x150/?text=使用者&font=noto'",
+  },
 });
 const emit = defineEmits(["handleImgChange"]);
 onMounted(() => {});
@@ -133,15 +142,7 @@ const showCropper = ref(false);
 
 /* vue-cropper DOM */
 const cropper = ref(null);
-// watch(
-//   () => props.fixedNumber,
-//   (val) => {
-//     // console.log(val);
-//     if (val) {
-//       options.fixedNumber = val;
-//     }
-//   }
-// );
+
 watch(
   () => props.originImg,
   (val) => {
@@ -155,11 +156,11 @@ watch(
 /* vue-cropper 配置项 */
 /* https://blog.csdn.net/qq_32067561/article/details/123455956 */
 const options = reactive({
-  img: "",
-  fixedBox: false,
   // fixedNumber: [1, 1],
-  autoCrop: true,
-  canMove: false,
+  img: "",
+  fixedBox: false, //是否鎖定藍色截圖框
+  autoCrop: true, //啟動藍色截圖框
+  canMove: true, //圖片是否能移動
 });
 
 //檔案上傳
@@ -202,6 +203,7 @@ const uploadImg = (e) => {
 
     //   reader.readAsArrayBuffer(file); // to blob
   } catch (error) {
+    // console.log(error.message)
     Toast(`圖片上傳失敗`);
   }
 };
@@ -219,40 +221,66 @@ function dataURLtoFile(dataurl, filename) {
 }
 
 const confirmImg = () => {
-  cropper.value.getCropData(async (data) => {
-    newImg.value = data;
-    //Usage example:
-    const file = dataURLtoFile(data, "a.png");
-    // 打API 拿圖片網址拋給外面 讓外面打PUT
-    let requestData = new FormData();
-    requestData.append("images", file);
-    const response = await apiUserUpload(requestData);
+  try {
+    cropper.value.getCropData(async (data) => {
+      newImg.value = data;
+      //Usage example:
+      const file = dataURLtoFile(data, "a.png");
+      // 打API 拿圖片網址拋給外面 讓外面打PUT
+      let requestData = new FormData();
+      requestData.append("images", file);
+      const response = await apiUserUpload(requestData);
 
-    if (response.result) {
-      const imgUrl = `${response.path}` || "";
-      emit("handleImgChange", imgUrl);
-      closeModal();
-    }
-    // closeModal();
-  });
+      if (response.result) {
+        const imgUrl = `${response.path}` || "";
+        emit("handleImgChange", imgUrl);
+        closeModal();
+      }
+      // closeModal();
+    });
+  } catch (error) {
+    console.log(error.message);
+    Toast(`圖片上傳失敗`);
+  }
 };
+
 const cancelImg = () => {
   newImg.value = "";
   closeModal();
 };
+
 const closeModal = () => {
+  // 要記得清除 input
+  const fileInput = document.getElementById("formFile");
+  fileInput.value = "";
   showCropper.value = false;
 };
+
 </script>
 
 <style lang="scss" scoped>
-.content {
-  width: 80vw;
-  height: 70vh;
+.crop-content {
+  width: 100%;
+  height: 100%;
+  min-width: 320px;
+  margin: 0px;
+  padding: 0px;
 }
 .custom-modal {
   position: fixed;
-  top: 0px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   z-index: 999999;
+
+  .custom-modal-content {
+    width: 90vw !important;
+    height: 98vh !important;
+    min-width: 320px;
+  }
+}
+
+.disable-touch{
+  touch-action: none;
 }
 </style>
