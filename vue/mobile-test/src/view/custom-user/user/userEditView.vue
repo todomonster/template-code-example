@@ -1,5 +1,12 @@
 <script>
-import { ref, onMounted, onBeforeMount, computed, watch } from "vue";
+import {
+  ref,
+  onMounted,
+  onBeforeMount,
+  computed,
+  watch,
+  onActivated,
+} from "vue";
 import { Toast } from "@/components/global/swal.js";
 import {
   apiGetUserInfo,
@@ -216,6 +223,14 @@ export default {
         }
       } catch (error) {
         errorHandle(error);
+      }
+    });
+
+    onActivated(() => {
+      // 先檢查登入狀態
+      if (localStorage.getItem("is_Login") != "1") {
+        goto("back");
+        Toast("請先登入");
       }
     });
 
