@@ -14,13 +14,13 @@
             border-radius: .5rem;
             box-shadow: none;
 			transition: all .5s;
-            z-index: 11;
+            z-index: 10;
 		}
 		span {
             position: relative;
 			color: #737373;
             font-size: .9375rem;
-            z-index: 12;
+            z-index: 11;
 		}
 	}
 	.swiper-slide-thumb-active {
