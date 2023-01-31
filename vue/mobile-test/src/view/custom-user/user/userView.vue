@@ -157,7 +157,7 @@ export default {
           <div class="image">
             <img
               :src="userData.image"
-              onerror="this.onerror=null; this.src='https://fakeimg.pl/150x150/'"
+              onerror="this.onerror=null; this.src='https://fakeimg.pl/150x150/?text=使用者&font=noto'"
               v-if="userData.image"
             />
             <img src="@/assets/images/noavatar.png" v-if="!userData.image" />

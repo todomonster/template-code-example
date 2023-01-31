@@ -259,11 +259,11 @@ export default {
               <div class="image">
                 <img
                   :src="handleImg(storeData.images)"
-                  onerror="this.onerror=null; this.src='https://fakeimg.pl/340x200/'"
+                  onerror="this.onerror=null; this.src='https://fakeimg.pl/340x200/?text=商店&font=noto'"
                   v-if="storeData.images"
                 />
                 <img
-                  src="https://fakeimg.pl/340x200/"
+                  src="https://fakeimg.pl/340x200/?text=商店&font=noto"
                   v-if="!storeData.images"
                 />
               </div>

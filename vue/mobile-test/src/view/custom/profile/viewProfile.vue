@@ -86,10 +86,10 @@ export default {
               :src="data.images"
               alt="myfreeCard"
               v-if="data.images"
-              onerror="this.onerror=null; this.src='https://fakeimg.pl/340x200/'"
+              onerror="this.onerror=null; this.src='https://fakeimg.pl/340x200/?text=商店&font=noto'"
             />
             <img
-              src="https://fakeimg.pl/340x200/"
+              src="https://fakeimg.pl/340x200/?text=商店&font=noto"
               alt="myfreeCard"
               v-if="!data.images"
             />

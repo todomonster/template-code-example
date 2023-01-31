@@ -91,10 +91,10 @@ export default {
                     :src="item.image"
                     v-if="item.image"
                     class="card-img"
-                    onerror="this.onerror=null; this.src='https://fakeimg.pl/180x180/'"
+                    onerror="this.onerror=null; this.src='https://fakeimg.pl/180x180/?text=商品圖&font=noto'"
                   />
                   <img
-                    src="https://fakeimg.pl/180x180/"
+                    src="https://fakeimg.pl/180x180/?text=商品圖&font=noto"
                     v-if="!item.image"
                     class="card-img"
                   />

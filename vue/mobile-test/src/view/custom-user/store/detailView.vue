@@ -161,9 +161,9 @@ export default {
             <img
               :src="item.images"
               v-if="item.images"
-              onerror="this.onerror=null; this.src='https://fakeimg.pl/340x200/'"
+              onerror="this.onerror=null; this.src='https://fakeimg.pl/340x200/?text=商店&font=noto'"
             />
-            <img src="https://fakeimg.pl/340x200/" v-if="!item.images" />
+            <img src="https://fakeimg.pl/340x200/?text=商店&font=noto" v-if="!item.images" />
           </div>
           <div class="row">
             <div class="col">

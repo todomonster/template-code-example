@@ -264,7 +264,7 @@ export default {
             <div class="image">
               <img
                 :src="editData.image"
-                onerror="this.onerror=null; this.src='https://fakeimg.pl/150x150/'"
+                onerror="this.onerror=null; this.src='https://fakeimg.pl/150x150/?text=使用者&font=noto'"
                 v-if="editData.image"
               />
               <img src="@/assets/images/noavatar.png" v-if="!editData.image" />
