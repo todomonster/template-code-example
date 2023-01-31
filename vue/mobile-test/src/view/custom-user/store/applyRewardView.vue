@@ -61,7 +61,7 @@ export default {
             // 踢回上一頁
             goto("back");
           } else {
-            Toast(`${response.message} 請確認最低回饋金額!`);
+            Toast(`${response.message}`);
           }
         }
       } catch (error) {
