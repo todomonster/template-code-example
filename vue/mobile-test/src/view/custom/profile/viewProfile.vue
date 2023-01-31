@@ -5,6 +5,8 @@ import { handleStoreProfile } from "@/utils/handleData";
 import { errorHandle } from "@/utils/errorHandle";
 import { useGlobalStore } from "@/store/global";
 
+import { Toast } from "@/components/global/swal";
+
 export default {
   name: "ViewProfile",
   setup() {
@@ -21,6 +23,7 @@ export default {
       { key: "分類標籤: ", value: "category" },
       { key: "回饋%數: ", value: "rewardRangeName" },
       { key: "開店狀態: ", value: "is_open" },
+      // { key: "審核狀態: ", value: "isEnabled" },
     ];
     const data = ref({});
     onMounted(async () => {
@@ -39,6 +42,7 @@ export default {
         } = response;
         let business_hours = response.business_hours || "[]";
         let images = response.images || "[]";
+        let isEnabled = response.isEnabled == 1 ? "啟用中" : "停用中";
         data.value = {
           name,
           contact,
@@ -50,16 +54,22 @@ export default {
           rewardRangeName,
           is_open: handleStoreProfile.isOpen(is_open),
           images: handleStoreProfile.storeImages(images),
+          isEnabled,
         };
       } catch (error) {
         errorHandle(error);
       }
     });
-
+    const handleReport = () => {
+      Toast(
+        "若為停用中需聯繫客服人員，否則消費者無法索取回饋!"
+      );
+    };
     return {
       goto,
       data,
       storeText,
+      handleReport,
     };
   },
   components: {},
@@ -92,6 +102,20 @@ export default {
               {{ data[item.value] }}
             </div>
           </div>
+          <div class="d-flex">
+            <div class="col-left">審核狀態:</div>
+            <div class="col-right" style="white-space: pre-wrap">
+              {{ data.isEnabled }}
+              <a class="item-link" @click="handleReport">
+                <i class="icon icon-info"></i>
+              </a>
+            </div>
+          </div>
+          <!-- <div class="item-title">
+            <a class="item-link">
+              <i class="icon icon-info" @click="handleReport(item.id)"></i>
+            </a>
+          </div>           -->
         </div>
       </div>
       <div class="edit-container">
@@ -112,5 +136,25 @@ export default {
   margin-top: $header-height;
   margin-bottom: calc($footer-height + 15px);
   padding: 0.25rem;
+}
+
+.item-link {
+  display: inline-block;
+  margin-left: 0.75rem;
+  line-height: 1;
+  i {
+    display: inline-block;
+    width: 1.125rem;
+    height: 1.125rem;
+    vertical-align: -0.125rem;
+    font-style: normal;
+    line-height: 1;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+  }
+  .icon-info {
+    background-image: url(#{$img}icon_info.png);
+  }
 }
 </style>
