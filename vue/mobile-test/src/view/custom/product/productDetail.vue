@@ -26,7 +26,7 @@ export default {
       price: "100",
       stock: 0,
     };
-    const isStoreOpen = ref(true);
+    const isStoreOpen = ref(false);
     const productData = ref({ ...defaultData });
 
     const form1 = ref({});
@@ -185,7 +185,7 @@ export default {
       <div class="form-container form-container-3">
         <form ref="form1">
           <div class="mb-2">
-            <label class="form-label">上架<span class="must">必填</span></label>
+            <label class="form-label">商品是否上架<span class="must"></span></label>
             <div class="form-check form-switch">
               <input
                 class="form-check-input"
@@ -223,12 +223,12 @@ export default {
           </div>
           <div class="mb-2">
             <label class="form-label"
-              >商店名稱<span class="must">必填</span></label
+              >商品名稱<span class="must">必填</span></label
             >
             <input
               type="text"
               class="form-control"
-              placeholder="請輸入商店名稱"
+              placeholder="請輸入商品名稱"
               v-model="productData.name"
               required
             />
