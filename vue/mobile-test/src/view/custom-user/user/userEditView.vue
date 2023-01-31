@@ -182,13 +182,14 @@ export default {
     };
 
     const handleData = (userInfo = {}) => {
-      let {
-        mobile = "",
-        gender = "",
-        age = "",
-        nickname = "",
-        image = "",
-      } = userInfo;
+      let { mobile = "", gender = "", age = "", image = "" } = userInfo;
+      
+      let nickname = "";
+      if (userInfo.nickname == "null" || !userInfo.nickname) {
+        nickname = "";
+      } else {
+        nickname = userInfo.nickname;
+      }
 
       return {
         mobile,
@@ -305,6 +306,7 @@ export default {
             </div>
           </div> -->
           <TestCrop
+            imgClass="avatar-container"
             :openPreview="false"
             :fixedNumber="[1, 1]"
             :originImg="editData.image"

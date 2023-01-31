@@ -13,11 +13,11 @@
       <img :src="previews.url" :style="previews.img" />
     </div>
   </div> -->
-  <div class="avatar-container">
+  <div :class="imgClass">
     <div class="image">
       <img
         :src="newImg"
-        onerror="this.onerror=null; this.src='https://fakeimg.pl/150x150/'"
+        onerror="this.onerror=null; this.src='https://fakeimg.pl/150x150/?text=使用者&font=noto'"
         v-if="newImg"
       />
       <img src="@/assets/images/noavatar.png" v-if="!newImg" />
@@ -61,7 +61,7 @@
               centerBox
               fixed
               :fixedBox="options.fixedBox"
-              :fixedNumber="options.fixedNumber"
+              :fixedNumber="fixedNumber"
               :canMove="options.canMove"
               @real-time="realTime"
             />
@@ -107,17 +107,23 @@ const props = defineProps({
   originImg: {
     type: String,
     required: false,
+    default: "",
   },
   fixedNumber: {
     type: Array,
     required: true,
+  },
+  imgClass: {
+    type: String,
+    required: false,
+    default: "avatar-container",
   },
 });
 const emit = defineEmits(["handleImgChange"]);
 onMounted(() => {});
 
 const previews = ref({});
-const newImg = ref({});
+const newImg = ref("");
 const realTime = (data) => {
   previews.value = data;
   //   console.log(data);
@@ -127,15 +133,15 @@ const showCropper = ref(false);
 
 /* vue-cropper DOM */
 const cropper = ref(null);
-watch(
-  () => props.fixedNumber,
-  (val) => {
-    // console.log(val);
-    if (val) {
-      options.fixedNumber = val;
-    }
-  }
-);
+// watch(
+//   () => props.fixedNumber,
+//   (val) => {
+//     // console.log(val);
+//     if (val) {
+//       options.fixedNumber = val;
+//     }
+//   }
+// );
 watch(
   () => props.originImg,
   (val) => {
@@ -145,12 +151,13 @@ watch(
     }
   }
 );
+
 /* vue-cropper 配置项 */
 /* https://blog.csdn.net/qq_32067561/article/details/123455956 */
 const options = reactive({
   img: "",
   fixedBox: false,
-  fixedNumber: [16, 9],
+  // fixedNumber: [1, 1],
   autoCrop: true,
   canMove: false,
 });

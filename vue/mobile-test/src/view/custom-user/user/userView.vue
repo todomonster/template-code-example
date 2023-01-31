@@ -68,9 +68,15 @@ export default {
     };
 
     const handleData = (userInfo = {}) => {
-      let { mobile, gender, age, nickname, image } = userInfo;
+      let { mobile, gender, age, image } = userInfo;
 
-      nickname = nickname ? nickname : "-";
+      let nickname = "-";
+      if (userInfo.nickname == "null" || !userInfo.nickname) {
+        nickname = "-";
+      } else {
+        nickname = userInfo.nickname;
+      }
+
       mobile = mobile ? mobile : "";
       gender = gender ? (gender === "male" ? "男" : "女") : "-";
       image = image ? image : "";
@@ -115,7 +121,7 @@ export default {
         gender,
         age,
         nickname,
-        image
+        image,
       };
     };
 
