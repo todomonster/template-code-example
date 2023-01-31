@@ -311,6 +311,7 @@ export default {
             :fixedNumber="[1, 1]"
             :originImg="editData.image"
             @handleImgChange="handleImgChange"
+            role="user"
           />
           <div class="mobile-container" v-if="editData.mobile">
             <div class="title">

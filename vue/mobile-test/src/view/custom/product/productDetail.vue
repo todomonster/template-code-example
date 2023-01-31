@@ -2,7 +2,7 @@
 import { ref, onMounted, computed, watch } from "vue";
 import { useGlobalStore } from "@/store/global";
 import { errorHandle } from "@/utils/errorHandle";
-
+import { handleStoreProfile } from "@/utils/handleData";
 import { useRoute } from "vue-router";
 
 import {
@@ -14,6 +14,8 @@ import {
 } from "@/api/myfree";
 import { Toast, ToastConfirm } from "@/components/global/swal";
 import { focusInput } from "@/utils/helper";
+
+import TestCrop from "@/view/testCrop.vue";
 
 export default {
   name: "ProductDetail",
@@ -39,18 +41,19 @@ export default {
 
     const imgUrl = computed(() => {
       const data = productData.value.image;
-      if (typeof data === "string") {
-        //
-        const url = JSON.parse(data);
-        return url.length > 0 ? url[0] : "";
-      } else {
-        if (productData.value.image.length > 0) {
-          const url = productData.value.image[0] || "";
-          return url;
-        }
-      }
+      return handleStoreProfile.storeImages(data);
+      // if (typeof data === "string") {
+      //   //
+      //   const url = JSON.parse(data);
+      //   return url.length > 0 ? url[0] : "";
+      // } else {
+      //   if (productData.value.image.length > 0) {
+      //     const url = productData.value.image[0] || "";
+      //     return url;
+      //   }
+      // }
 
-      return "";
+      // return "";
     });
     const handleAdd = async (e) => {
       try {
@@ -160,6 +163,13 @@ export default {
         productData.value.status = val ? "1" : "0";
       }
     );
+
+    const handleImgChange = (val) => {
+      if (val) {
+        productData.value.image = val;
+      }
+    };
+
     return {
       goto,
       productData,
@@ -172,10 +182,11 @@ export default {
       handleAdd,
       handleEdit,
       isStoreOpen,
+      handleImgChange,
     };
   },
 
-  components: {},
+  components: { TestCrop },
 };
 </script>
 
@@ -185,7 +196,9 @@ export default {
       <div class="form-container form-container-3">
         <form ref="form1">
           <div class="mb-2">
-            <label class="form-label">商品是否上架<span class="must"></span></label>
+            <label class="form-label"
+              >商品是否上架<span class="must"></span
+            ></label>
             <div class="form-check form-switch">
               <input
                 class="form-check-input"
@@ -198,7 +211,7 @@ export default {
           </div>
           <div class="mb-2">
             <label class="form-label">圖片</label>
-            <div class="plus-container">
+            <!-- <div class="plus-container">
               <label class="form-file-label" v-if="!imgUrl">
                 <i class="icon icon-plus-grey"></i>
               </label>
@@ -219,7 +232,14 @@ export default {
                 ref="myUploadFile"
                 @change="handleFileUpload"
               />
-            </div>
+            </div> -->
+            <TestCrop
+              :originImg="imgUrl"
+              styleMode="product"
+              :openPreview="false"
+              :fixedNumber="[1, 1]"
+              @handleImgChange="handleImgChange"
+            />
           </div>
           <div class="mb-2">
             <label class="form-label"

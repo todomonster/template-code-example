@@ -13,7 +13,8 @@
       <img :src="previews.url" :style="previews.img" />
     </div>
   </div> -->
-  <div :class="imgClass">
+  <!-- 普通模式 start -->
+  <div :class="imgClass" v-if="styleMode != 'product'">
     <div class="image">
       <img :src="newImg" :onerror="onErrorBgImg" v-if="newImg" />
       <img :src="defaultBgImg" v-if="!newImg" />
@@ -32,9 +33,39 @@
       />
     </div>
   </div>
+  <!-- 普通模式 end -->
+  <!-- 商品模式 start -->
+  <div class="plus-container" v-if="styleMode == 'product'">
+    <label class="form-file-label" v-if="!newImg">
+      <i class="icon icon-plus-grey"></i>
+    </label>
+    <label
+      class="form-file-label product-img"
+      :style="{
+        backgroundImage: `url(${newImg})`,
+      }"
+      v-if="newImg"
+    >
+      <i class="icon"></i>
+    </label>
+    <input
+      class="form-file-input"
+      type="file"
+      id="formFile"
+      accept="image/png, image/jpeg, image/jpg"
+      ref="myUploadFile"
+      @change="uploadImg"
+    />
+  </div>
+  <!-- 商品模式 end -->
 
   <!-- Modal -->
-  <div class="custom-modal disable-touch" ref="myModalRef" id="MyModal" v-show="showCropper">
+  <div
+    class="custom-modal disable-touch"
+    ref="myModalRef"
+    id="MyModal"
+    v-show="showCropper"
+  >
     <div class="modal-dialog d-flex justify-content-center">
       <div class="modal-content custom-modal-content">
         <div class="modal-header">
@@ -92,7 +123,7 @@
 import { VueCropper } from "vue-cropper";
 import "vue-cropper/dist/index.css";
 import { reactive, ref, defineProps, defineEmits, watch, onMounted } from "vue";
-import { apiUserUpload } from "@/api/myfree";
+import { apiUserUpload, apiStoreUpload } from "@/api/myfree";
 import { Toast } from "@/components/global/swal.js";
 import { errorHandle } from "@/utils/errorHandle";
 import noavatar from "@/assets/images/noavatar.png";
@@ -121,11 +152,21 @@ const props = defineProps({
     required: false,
     default: noavatar,
   },
+  styleMode: {
+    type: String,
+    required: false,
+    default: "onlyImg",
+  },
   onErrorBgImg: {
     type: String,
     required: false,
     default:
       "this.onerror=null; this.src='https://fakeimg.pl/150x150/?text=使用者&font=noto'",
+  },
+  role: {
+    type: String,
+    required: false,
+    default: "store",
   },
 });
 const emit = defineEmits(["handleImgChange"]);
@@ -135,7 +176,6 @@ const previews = ref({});
 const newImg = ref("");
 const realTime = (data) => {
   previews.value = data;
-  //   console.log(data);
 };
 
 const showCropper = ref(false);
@@ -146,7 +186,6 @@ const cropper = ref(null);
 watch(
   () => props.originImg,
   (val) => {
-    // console.log(val);
     if (val) {
       newImg.value = val;
     }
@@ -166,9 +205,14 @@ const options = reactive({
 //檔案上傳
 const myUploadFile = ref(null);
 
+let fileName = "";
+
 const uploadImg = (e) => {
   try {
     const file = e.target.files[0];
+    if (file) {
+      fileName = file?.name;
+    }
     if (!/\.(jpg|jpeg|png|JPG|PNG)$/.test(e.target.value)) {
       Toast(`僅支援jpg, png`);
       closeModal();
@@ -203,7 +247,6 @@ const uploadImg = (e) => {
 
     //   reader.readAsArrayBuffer(file); // to blob
   } catch (error) {
-    // console.log(error.message)
     Toast(`圖片上傳失敗`);
   }
 };
@@ -224,22 +267,28 @@ const confirmImg = () => {
   try {
     cropper.value.getCropData(async (data) => {
       newImg.value = data;
-      //Usage example:
-      const file = dataURLtoFile(data, "a.png");
+      // get file name
+
+      const file = dataURLtoFile(data, fileName);
       // 打API 拿圖片網址拋給外面 讓外面打PUT
       let requestData = new FormData();
       requestData.append("images", file);
-      const response = await apiUserUpload(requestData);
+
+      let response = null;
+      if (props.role == "store") {
+        response = await apiUserUpload(requestData);
+      } else if (props.role == "user") {
+        response = await apiStoreUpload(requestData);
+      }
 
       if (response.result) {
         const imgUrl = `${response.path}` || "";
         emit("handleImgChange", imgUrl);
         closeModal();
       }
-      // closeModal();
+      closeModal();
     });
   } catch (error) {
-    console.log(error.message);
     Toast(`圖片上傳失敗`);
   }
 };
@@ -255,7 +304,6 @@ const closeModal = () => {
   fileInput.value = "";
   showCropper.value = false;
 };
-
 </script>
 
 <style lang="scss" scoped>
@@ -280,7 +328,7 @@ const closeModal = () => {
   }
 }
 
-.disable-touch{
+.disable-touch {
   touch-action: none;
 }
 </style>
