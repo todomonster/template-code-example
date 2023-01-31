@@ -154,9 +154,20 @@ $img: '@/assets/images/';
   - Update login 文字和圖片
 - v2.4.0 對應 {file: store_settings.txt , "version": x}
   - 01/31
-  - Add 顯示店家的審核狀態
-  - Fix 文字錯誤商品名稱
-  - Fix 預設isStoreOpen變數錯誤
+    - store
+      - Add 顯示店家的審核狀態
+      - Fix 文字錯誤商品名稱
+      - Fix 預設isStoreOpen變數錯誤
+      - 預設嵌入一鍵刪除的垃圾桶icon
+      - Update fakeimg 改文字
+      - Update 完成 裁切圖片 模組
+    - user
+      - Add 顯示店家的審核狀態
+      - Update fakeimg 改文字
+      - Update 收合營業時間
+      - Fix 編輯時要檢查登入狀態
+      - Update 完成 裁切圖片 模組
+
 
 ---
 a tag 可能因為沒有加上 `display: block;` 導致圖片不見
