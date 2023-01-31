@@ -205,8 +205,14 @@ export default {
           addUserPinia.value = { password, mobile, status, userId, storeId };
         } else {
           //編輯流程
-          const response = await apiGetUserInfo();
-          editData.value = handleData(response);
+          // 先檢查登入狀態
+          if (localStorage.getItem("is_Login") == "1") {
+            const response = await apiGetUserInfo();
+            editData.value = handleData(response);
+          } else {
+            goto("back");
+            Toast("請先登入");
+          }
         }
       } catch (error) {
         errorHandle(error);
