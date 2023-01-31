@@ -187,7 +187,7 @@ const myfreeRouter = [
       {
         path: "rewardApply",
         meta: {
-          showHeader: true,
+          showHeader: false,
           showFooter: false,
           requiresAuth: true,
         },

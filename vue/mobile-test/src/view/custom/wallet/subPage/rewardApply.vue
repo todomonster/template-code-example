@@ -11,11 +11,15 @@ import {
 import { onBeforeRouteLeave } from "vue-router";
 import { isBetweenBottom, windowScrollTo } from "@/utils/helper";
 import NoData from "@/components/global/NoData.vue";
+import { useGlobalStore } from "@/store/global";
 
 export default {
   // 回饋申請列表
   name: "RewardApply",
   setup() {
+    const globalStore = useGlobalStore();
+    const goto = globalStore.goto;
+
     let windowScrollY = 0;
     let getApiTimer = null;
 
@@ -119,11 +123,18 @@ export default {
       clearInterval(getApiTimer);
       next();
     });
+
+    const handleDeleteAll = () => {
+      // console.log('打刪除過期的資料 API')
+    };
+
     return {
       walletList,
       APIparams,
       total,
       handleApply,
+      goto,
+      handleDeleteAll,
     };
   },
   components: { NoData },
@@ -131,6 +142,28 @@ export default {
 </script>
 
 <template>
+  <header class="c-header">
+    <nav class="navbar ui-navbar">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" @click="goto('back')"
+            ><i class="icon icon-back"></i
+          ></a>
+        </li>
+      </ul>
+      <h1 class="navbar-brand">
+        <img src="@/assets/images/logo_s.png" />
+        <!-- <span>會員回饋確認</span> -->
+      </h1>
+      <ul class="navbar-nav">
+        <!-- <li class="nav-item">
+          <a class="nav-link" @click="handleDeleteAll"
+            ><i class="icon icon-delete"></i
+          ></a>
+        </li> -->
+      </ul>
+    </nav>
+  </header>
   <div class="main-content c-product">
     <div>
       <br />

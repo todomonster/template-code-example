@@ -2,6 +2,7 @@
 import { ref, onMounted, computed, onBeforeMount } from "vue";
 import { useGlobalStore } from "@/store/global";
 import { apiGetNotifyUnreadAmount } from "@/api/myfree";
+import { useRoute } from "vue-router";
 
 export default {
   props: {
@@ -12,6 +13,7 @@ export default {
     backToPath: String,
   },
   setup(props) {
+    const { meta } = useRoute();
     const backPath = ref(props.backToPath);
 
     const globalStore = useGlobalStore();
@@ -42,6 +44,9 @@ export default {
         case "search":
           setValue("far fa-search", " 搜尋");
           break;
+        case "trashcan":
+          setValue("icon icon-delete", " ");
+          break;
         case "bell":
           setValue("icon icon-notice", " ");
           execute.value = handleBellClick;
@@ -57,7 +62,7 @@ export default {
     });
     onMounted(async () => {
       setIcon(props.rightIcon);
-      if (rightIconCode.value === "icon icon-notice") {
+      if (rightIconCode.value === "icon icon-notice" && meta.showBell) {
         // 鈴鐺開啟才打API
         const response = await apiGetNotifyUnreadAmount();
         if (response.result && response.unread > 0) {
@@ -114,7 +119,11 @@ export default {
         <span>{{ title }}</span>
       </h1>
       <ul class="navbar-nav">
-        <li class="nav-item" style="cursor: pointer" v-show="$route.meta.showBell">
+        <li
+          class="nav-item"
+          style="cursor: pointer"
+          v-show="$route.meta.showBell"
+        >
           <a class="nav-link" @click="execute()">
             <i :class="rightIconCode">
               <span class="count" v-show="countBell">{{ titleText }}</span>

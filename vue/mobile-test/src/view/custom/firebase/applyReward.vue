@@ -11,11 +11,14 @@ import {
 import { onBeforeRouteLeave } from "vue-router";
 import { isBetweenBottom, windowScrollTo } from "@/utils/helper";
 import NoData from "@/components/global/NoData.vue";
-import Header from "@/components/global/header/HeaderArea.vue";
+import { useGlobalStore } from "@/store/global";
 
 export default {
   // 回饋申請列表
   setup() {
+    const globalStore = useGlobalStore();
+    const goto = globalStore.goto;
+
     let windowScrollY = 0;
     let getApiTimer = null;
 
@@ -119,19 +122,47 @@ export default {
       clearInterval(getApiTimer);
       next();
     });
+
+    const handleDeleteAll = () => {
+      // console.log('打刪除過期的資料 API')
+    };
+
     return {
       walletList,
       APIparams,
       total,
       handleApply,
+      goto,
+      handleDeleteAll,
     };
   },
-  components: { NoData, Header },
+  components: { NoData },
 };
 </script>
 
 <template>
-  <Header title="" rightIcon="" backToPath="/" />
+  <header class="c-header">
+    <nav class="navbar ui-navbar">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" @click="goto('router', '/')"
+            ><i class="icon icon-back"></i
+          ></a>
+        </li>
+      </ul>
+      <h1 class="navbar-brand">
+        <img src="@/assets/images/logo_s.png" />
+        <!-- <span>會員回饋確認</span> -->
+      </h1>
+      <ul class="navbar-nav">
+        <!-- <li class="nav-item">
+          <a class="nav-link" @click="handleDeleteAll"
+            ><i class="icon icon-delete"></i
+          ></a>
+        </li> -->
+      </ul>
+    </nav>
+  </header>
   <div class="main-content c-product">
     <div>
       <br />
@@ -180,17 +211,17 @@ button {
 }
 
 .bg-white {
-    background-color: white;
-    padding: 0.75rem;
-  }
-  .money {
-    color: #fca647;
-    padding: 0.5rem;
-    font-size: 1.5rem;
-    font-weight: 900 !important;
-  }
-  .custom-primary {
-    background-color: nth($camera-color, $style);
-    border: 0;
-  }
+  background-color: white;
+  padding: 0.75rem;
+}
+.money {
+  color: #fca647;
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 900 !important;
+}
+.custom-primary {
+  background-color: nth($camera-color, $style);
+  border: 0;
+}
 </style>
