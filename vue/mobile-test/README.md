@@ -152,14 +152,21 @@ $img: '@/assets/images/';
 - v2.3.8.x 對應 {file: store_settings.txt , "version": x}
   - 01/13
   - Update login 文字和圖片
-  - 之後要補忘記密碼功能
+- v2.4.0 對應 {file: store_settings.txt , "version": x}
+  - 01/31
+  - Add 顯示店家的審核狀態
+  - Fix 文字錯誤商品名稱
+  - Fix 預設isStoreOpen變數錯誤
 
 ---
 a tag 可能因為沒有加上 `display: block;` 導致圖片不見
 
 ## user和store 切換SOP
+
 config.scss + env
 記得正式機部署API也要調整
 
 ## Google Map
+
 npm i @googlemaps/js-api-loader
+npm i vue-cropper@1.0.5
