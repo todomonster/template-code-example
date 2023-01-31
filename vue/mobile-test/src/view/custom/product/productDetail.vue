@@ -21,14 +21,14 @@ export default {
   name: "ProductDetail",
   setup() {
     const defaultData = {
-      status: "0",
+      status: false,
       image: `[""]`,
       name: "",
       description: "",
       price: "100",
       stock: 0,
     };
-    const isStoreOpen = ref(false);
+    // const isStoreOpen = ref(false);
     const productData = ref({ ...defaultData });
 
     const form1 = ref({});
@@ -59,7 +59,9 @@ export default {
       try {
         e.preventDefault();
         if (form1.value.reportValidity()) {
-          const response = await apiAddProduct(productData.value);
+          const response = await apiAddProduct(
+            handleApiData(productData.value)
+          );
           if (response.result) {
             productData.value = { ...defaultData };
             Toast("新增完成");
@@ -70,14 +72,28 @@ export default {
         errorHandle(error);
       }
     };
+
+    const handleApiData = (productData) => {
+      const copyData = JSON.parse(JSON.stringify(productData));
+      if (copyData.status === true) {
+        copyData.status = "1";
+      } else if (copyData.status === false) {
+        copyData.status = "0";
+      }
+      return copyData;
+    };
+
     const handleEdit = async (e) => {
       try {
         e.preventDefault();
         if (form1.value.reportValidity()) {
-          if (productData.value?.status === true) {
-            productData.value.status = "1";
-          }
-          const response = await apiUpdateProduct(id.value, productData.value);
+          // if (productData.value?.status === true) {
+          //   productData.value.status = "1";
+          // }
+          const response = await apiUpdateProduct(
+            id.value,
+            handleApiData(productData.value)
+          );
           if (response.result) {
             Toast("已儲存");
             // goto("back");
@@ -145,11 +161,27 @@ export default {
             if (Array.isArray(imgUrlParse)) {
               response.data.image = JSON.stringify(imgUrlParse);
             }
+
+            // 處理 status
+            const status = response?.data?.status;
+            if (status === "1" || status === 1 || status === true) {
+              response.data.status = true;
+            } else if (status === "0" || status === 0 || status === false) {
+              response.data.status = false;
+            }
+
+            // 處理 description
+            const description = response?.data?.description;
+            if (description === "null" || !description) {
+              response.data.description = "";
+            }       
+
+            // isStoreOpen.value =
+            //   response.data.status === "1" || response.data.status == true
+            //     ? true
+            //     : false;
+
             productData.value = response.data;
-            isStoreOpen.value =
-              response.data.status === "1" || response.data.status == true
-                ? true
-                : false;
           }
         }
       } catch (error) {
@@ -157,12 +189,12 @@ export default {
       }
     });
 
-    watch(
-      () => isStoreOpen.value,
-      (val) => {
-        productData.value.status = val ? "1" : "0";
-      }
-    );
+    // watch(
+    //   () => isStoreOpen.value,
+    //   (val) => {
+    //     productData.value.status = val ? "1" : "0";
+    //   }
+    // );
 
     const handleImgChange = (val) => {
       if (val) {
@@ -181,7 +213,7 @@ export default {
       myUploadFile,
       handleAdd,
       handleEdit,
-      isStoreOpen,
+      // isStoreOpen,
       handleImgChange,
     };
   },
@@ -204,9 +236,16 @@ export default {
                 class="form-check-input"
                 type="checkbox"
                 role="switch"
-                v-model="isStoreOpen"
+                v-model="productData.status"
                 checked
               />
+              <!-- <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                v-model="isStoreOpen"
+                checked
+              /> -->
             </div>
           </div>
           <div class="mb-2">
