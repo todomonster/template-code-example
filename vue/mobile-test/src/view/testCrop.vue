@@ -308,8 +308,10 @@ const closeModal = () => {
 
 <style lang="scss" scoped>
 .crop-content {
-  width: 100%;
-  height: 100%;
+  // width: 100%; ios不支援
+  // height: 100%; ios不支援
+  width: 90vw !important;
+  height: 75vh !important;
   min-width: 320px;
   margin: 0px;
   padding: 0px;

@@ -166,7 +166,7 @@ export default {
 
     const handleImgChange = (val) => {
       if (val) {
-        productData.value.image = val;
+        productData.value.image = `["${val}"]` || "";
       }
     };
 

@@ -210,7 +210,7 @@ export default {
 
     const handleImgChange = (val) => {
       if (val) {
-        storeData.value.images = val;
+        storeData.value.images = `["${val}"]` || "";
       }
     };
 
