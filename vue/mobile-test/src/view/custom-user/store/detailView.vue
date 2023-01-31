@@ -130,6 +130,8 @@ export default {
       return isFavorite ? "btn btn-link active" : "btn btn-link";
     };
 
+    const showSimpleHours = ref(true);
+
     return {
       goto,
       handleReport,
@@ -140,6 +142,7 @@ export default {
       handleFavorite,
       id,
       handleToProduct,
+      showSimpleHours,
     };
   },
 
@@ -163,7 +166,10 @@ export default {
               v-if="item.images"
               onerror="this.onerror=null; this.src='https://fakeimg.pl/340x200/?text=商店&font=noto'"
             />
-            <img src="https://fakeimg.pl/340x200/?text=商店&font=noto" v-if="!item.images" />
+            <img
+              src="https://fakeimg.pl/340x200/?text=商店&font=noto"
+              v-if="!item.images"
+            />
           </div>
           <div class="row">
             <div class="col">
@@ -206,7 +212,49 @@ export default {
           <div class="d-flex" v-if="item.business_hours">
             <div class="col-left">營業時間</div>
             <div class="col-right" style="white-space: pre-wrap">
-              {{ item.business_hours ? item.business_hours : "" }}
+              <span v-show="showSimpleHours">
+                <!-- <svg
+                  width="10"
+                  height="8"
+                  viewBox="0 0 10 8"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M5 0L9.33013 7.5H0.669873L5 0Z" fill="#6E6E6E" />
+                </svg> -->
+                <svg
+                  @click="showSimpleHours = !showSimpleHours"
+                  width="14"
+                  height="12"
+                  viewBox="0 0 14 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13.5801 0.665082L7.08489 11.9151L0.589697 0.665081L13.5801 0.665082Z"
+                    fill="#6E6E6E"
+                  />
+                </svg>
+                {{ "... " }}
+                {{ "\n" }}
+              </span>
+              <span v-show="!showSimpleHours">
+                <svg
+                  @click="showSimpleHours = !showSimpleHours"
+                  width="14"
+                  height="12"
+                  viewBox="0 0 14 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13.5801 0.665082L7.08489 11.9151L0.589697 0.665081L13.5801 0.665082Z"
+                    fill="#6E6E6E"
+                  />
+                </svg>
+                {{ "\n" }}
+                {{ item.business_hours ? item.business_hours : "" }}
+              </span>
             </div>
           </div>
         </div>
