@@ -19,7 +19,6 @@ export default {
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
 
-    let windowScrollY = 0;
     let getApiTimer = null;
 
     const walletList = ref([]);
@@ -65,7 +64,7 @@ export default {
 
     const handleApply = async (id, isApplyConfirm, targetIndex) => {
       let swal = null;
-      let response = null;
+      let response = {};
       if (isApplyConfirm) {
         // 確認回饋
         swal = await ToastConfirm("確認回饋?");
@@ -106,7 +105,6 @@ export default {
       try {
         // 位移到暫存的y
         document.body.style = "background-color: #EEEEEE;";
-        windowScrollTo({ top: windowScrollY });
         await getListData();
 
         getApiTimer = setInterval(handleScrollGetData, 500);
@@ -118,7 +116,6 @@ export default {
     onBeforeRouteLeave((to, from, next) => {
       // 離開前紀錄滾動位置
       setTimeout(() => (document.body.style = ""), 500);
-      windowScrollY = window.scrollY || 0;
       clearInterval(getApiTimer);
       next();
     });
