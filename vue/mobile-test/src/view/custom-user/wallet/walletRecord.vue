@@ -106,8 +106,8 @@ export default {
       clearInterval(getApiTimer1);
     });
 
-    const APIparams1 = ref({ page: 1, limit: 1 });
-    const APIparams2 = ref({ page: 1, limit: 1, type: "point" });
+    const APIparams1 = ref({ page: 1, limit: 10 });
+    const APIparams2 = ref({ page: 1, limit: 10, type: "point" });
     const APIparams3 = ref({ page: 1, limit: 10, type: "balance" });
     const total1 = ref(Infinity);
     const total2 = ref(Infinity);
@@ -271,6 +271,6 @@ export default {
 </template>
 <style lang="scss" scoped>
 .ui-page {
-  height: calc(100vh - $header-height - 15px);
+  height: calc(70vh - $header-height - 15px);
 }
 </style>
