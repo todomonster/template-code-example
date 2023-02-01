@@ -43,7 +43,7 @@ export default {
 
     const failListData = ref({});
     const successListData = ref({});
-    const getDateMethod = async (inputData, api, query, total) => {
+    const getDataMethod = async (inputData, api, query, total) => {
       const response = await api(query.value);
       if (response.result) {
         inputData.value = response.data;
@@ -55,14 +55,14 @@ export default {
     let getApiTimer2 = null;
     onMounted(async () => {
       try {
-        await getDateMethod(
+        await getDataMethod(
           successListData,
           apiGetRewardApplyList,
           APIparams1,
           total1
         );
 
-        await getDateMethod(
+        await getDataMethod(
           failListData,
           apiGetRewardApplyList,
           APIparams2,
