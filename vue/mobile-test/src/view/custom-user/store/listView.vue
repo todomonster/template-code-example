@@ -32,6 +32,17 @@ export default {
     const clearMarkers = ref(0);
     const showMapBtn = ref(false);
     const iconClass = ref("icon icon-map"); //
+
+    // 無限滾動
+    // const data_count_on_page = ref(null);
+    // let APIparams = ref({
+    //   favorite: 1,
+    //   row: 50,
+    //   data_count_on_page: 0,
+    // });
+    // let getApiTimer = null;
+    // const canGetData = ref(true);
+
     const handleModeChange = () => {
       if (iconClass.value == "icon icon-map") {
         iconClass.value = "icon icon-list";
