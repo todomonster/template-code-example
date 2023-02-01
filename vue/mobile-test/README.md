@@ -149,10 +149,10 @@ $img: '@/assets/images/';
   - Fix 登入沒清除 pinia 狀態 (註冊流程沒跑完，登入後可以編輯%數)
 - v2.3.7.2 對應 {file: store_settings.txt , "version": 25}
   - Fix 離線版本錯誤提示
-- v2.3.8.x 對應 {file: store_settings.txt , "version": x}
+- v2.3.8.x 對應 {file: store_settings.txt , "version": 26}
   - 01/13
   - Update login 文字和圖片
-- v2.4.0 對應 {file: store_settings.txt , "version": x}
+- v2.4.0 對應 {file: store_settings.txt , "version": 27}
   - 01/31
     - store
       - Add 顯示店家的審核狀態
@@ -161,13 +161,23 @@ $img: '@/assets/images/';
       - 預設嵌入一鍵刪除的垃圾桶icon
       - Update fakeimg 改文字
       - Update 完成 裁切圖片 模組
+      - Fix bug 商品狀態
+      - Fix 回饋異常
     - user
       - Add 顯示店家的審核狀態
       - Update fakeimg 改文字
       - Update 收合營業時間
       - Fix 編輯時要檢查登入狀態
       - Update 完成 裁切圖片 模組
-
+- v2.4.1 對應 {file: store_settings.txt , "version": x}
+  - 02/01
+    - store
+      - 索取回饋
+        - 無限滾動
+        - 分類功能
+    - user
+      - 無限滾動
+        - 錢包
 
 ---
 a tag 可能因為沒有加上 `display: block;` 導致圖片不見
