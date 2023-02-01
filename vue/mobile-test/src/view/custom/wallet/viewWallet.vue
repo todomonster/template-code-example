@@ -56,7 +56,7 @@ export default {
     <ul class="list-group list-group-flush">
       <div class="money">
         NT$<span>{{
-          ` ${walletData.balance ? walletData.balance : "$$$$$"} `
+          ` ${walletData.balance ? walletData.balance.slice(0, -2) : "$$$$$"} `
         }}</span
         >可用餘額
       </div>
@@ -156,5 +156,4 @@ export default {
     font-weight: 900 !important;
   }
 }
-
 </style>
