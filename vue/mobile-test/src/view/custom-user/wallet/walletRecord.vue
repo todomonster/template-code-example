@@ -1,25 +1,29 @@
 <script>
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, computed, watch, onUnmounted } from "vue";
 import "@/utils/swiper/swiper-bundle.min.css";
 import { initSwiper } from "@/utils/swiper/index";
 import { apiGetUserRecordList, apiGetUserMoneyList } from "@/api/myfree";
 import { errorHandle } from "@/utils/errorHandle";
 import NoData from "@/components/global/NoData.vue";
+import { isBetweenBottom } from "@/utils/helper";
 
 export default {
   setup() {
-    const recordListData = ref({});
-    const pointListData = ref({});
-    const moneyListData = ref({});
+    const recordListData = ref([]);
+    const pointListData = ref([]);
+    const moneyListData = ref([]);
 
     const observerTarget = ref('{"a":null,"b":null,"c":null}');
 
-    const getDateMethod = async (inputData, api, query) => {
-      const response = await api(query);
+    const getDataMethod = async (inputData, api, query, total) => {
+      const response = await api(query.value);
       if (response.result) {
         inputData.value = response.data;
+        total.value = response.total;
+        query.value.page++;
       }
     };
+    let getApiTimer1 = null;
 
     const observer = (DOMid) => {
       // https://thatcatinsomnia.medium.com/%E6%AA%A2%E6%9F%A5element%E6%98%AF%E5%90%A6%E5%87%BA%E7%8F%BE%E5%9C%A8%E7%95%AB%E9%9D%A2%E4%B9%8B%E4%B8%AD-check-if-an-element-gets-visible-in-the-screen-during-scrolling-57a9230ea843
@@ -66,34 +70,94 @@ export default {
     );
 
     onMounted(async () => {
-      const limit = 100;
       initSwiper(3);
       try {
         // 開始監聽 如果有改變swiper位置的話滾動到最上方
-        observer("a");
-        observer("b");
-        observer("c");
+        observer("ida");
+        observer("idb");
+        observer("idc");
 
-        getDateMethod(recordListData, apiGetUserRecordList, {
-          page: 1,
-          limit,
-          // startDate: "2022-11-01",
-          // endDate: "2022-11-02",
-        });
-        getDateMethod(moneyListData, apiGetUserMoneyList, {
-          page: 1,
-          limit,
-          type: "balance",
-        });
-        getDateMethod(pointListData, apiGetUserMoneyList, {
-          page: 1,
-          limit,
-          type: "point",
-        });
+        await getDataMethod(
+          recordListData,
+          apiGetUserRecordList,
+          APIparams1,
+          total1
+        );
+        await getDataMethod(
+          pointListData,
+          apiGetUserMoneyList,
+          APIparams2,
+          total2
+        );
+        await getDataMethod(
+          moneyListData,
+          apiGetUserMoneyList,
+          APIparams3,
+          total3
+        );
+
+        getApiTimer1 = setInterval(handleScrollGetData1, 500);
       } catch (error) {
         errorHandle(error);
       }
     });
+
+    onUnmounted(() => {
+      clearInterval(getApiTimer1);
+    });
+
+    const APIparams1 = ref({ page: 1, limit: 1 });
+    const APIparams2 = ref({ page: 1, limit: 1, type: "point" });
+    const APIparams3 = ref({ page: 1, limit: 10, type: "balance" });
+    const total1 = ref(Infinity);
+    const total2 = ref(Infinity);
+    const total3 = ref(Infinity);
+    const handleScrollGetData1 = () => {
+      if (isBetweenBottom()) {
+        getListData();
+      }
+    };
+
+    const handleData = async (query, data, total, apiFunction) => {
+      let response = {};
+      response = await apiFunction(query.value);
+
+      if (response.result) {
+        // 處理有值
+        data.value = data.value.concat(response.data);
+        total.value = response.total;
+        query.value.page++;
+      }
+    };
+
+    const getListData = async () => {
+      // 預測下一頁，如果不超過資料上限才做GET
+      if (total1.value > recordListData.value.length) {
+        await handleData(
+          APIparams1,
+          recordListData,
+          total1,
+          apiGetUserRecordList
+        );
+      }
+      if (total2.value > pointListData.value.length) {
+        await handleData(
+          APIparams2,
+          pointListData,
+          total2,
+          apiGetUserMoneyList
+        );
+      }
+      if (total3.value > moneyListData.value.length) {
+        await handleData(
+          APIparams3,
+          moneyListData,
+          total3,
+          apiGetUserMoneyList
+        );
+      }
+    };
+
     return { recordListData, moneyListData, pointListData, observerTarget };
   },
 
@@ -116,28 +180,28 @@ export default {
         <!-- 先不做此功能 -->
         <!-- <div class="row">
           <div class="col">
-            <a href="javascript:void(0);" class="filter-link active">今日</a>
+            <a class="filter-link active">今日</a>
           </div>
           <div class="col">
-            <a href="javascript:void(0);" class="filter-link">3日</a>
+            <a class="filter-link">3日</a>
           </div>
           <div class="col">
-            <a href="javascript:void(0);" class="filter-link">7日</a>
+            <a class="filter-link">7日</a>
           </div>
           <div class="col">
-            <a href="javascript:void(0);" class="filter-link">1個月</a>
+            <a class="filter-link">1個月</a>
           </div>
           <div class="col">
-            <a href="javascript:void(0);" class="filter-link">3個月</a>
+            <a class="filter-link">3個月</a>
           </div>
           <div class="col">
-            <a href="javascript:void(0);" class="filter-link">1年</a>
+            <a class="filter-link">1年</a>
           </div>
         </div> -->
       </div>
       <div class="swiper-wrapper">
         <div class="swiper-slide">
-          <div class="item-container item-container-3" id="a">
+          <div class="item-container item-container-3" id="ida">
             <NoData v-if="recordListData.length <= 0" />
             <div v-for="data in recordListData" :key="data.createTime">
               <div class="d-flex">
@@ -160,7 +224,7 @@ export default {
           </div>
         </div>
         <div class="swiper-slide">
-          <div class="item-container item-container-3" id="b">
+          <div class="item-container item-container-3" id="idb">
             <NoData v-if="pointListData.length <= 0" />
             <div v-for="data in pointListData" :key="data.id">
               <div class="d-flex">
@@ -181,7 +245,7 @@ export default {
           </div>
         </div>
         <div class="swiper-slide">
-          <div class="item-container item-container-3" id="c">
+          <div class="item-container item-container-3" id="idc">
             <NoData v-if="moneyListData.length <= 0" />
             <div v-for="data in moneyListData" :key="data.id">
               <div class="d-flex">
