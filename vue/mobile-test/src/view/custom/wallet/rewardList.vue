@@ -1,12 +1,13 @@
 <script>
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, computed, watch, onUnmounted } from "vue";
 import "@/utils/swiper/swiper-bundle.min.css";
 import { initSwiper } from "@/utils/swiper/index";
-import { apiResponseRewardApply, apiGetRewardApplyList } from "@/api/myfree";
+import { apiGetRewardApplyList } from "@/api/myfree";
 import { errorHandle } from "@/utils/errorHandle";
 import NoData from "@/components/global/NoData.vue";
 import RewardApplyList from "./subPage/rewardApply.vue";
 import { useGlobalStore } from "@/store/global";
+import { isBetweenBottom } from "@/utils/helper";
 
 export default {
   setup() {
@@ -33,42 +34,86 @@ export default {
         behavior: "instant",
       });
     };
-
-    const failListData = ref({});
-    const successListData = ref({});
-
     const handlePhoneMask = (phone) =>
       phone.slice(0, 2) + "xxxxx" + phone.slice(-3);
-
-    const getDateMethod = async (inputData, api, query) => {
-      const response = await api(query);
-      if (response.result) {
-        inputData.value = response.data;
-      }
-    };
-
     const showTrashcan = computed(() => {
       return false;
       // return tabMode.value === 0 ? true : false;
     });
 
+    const failListData = ref({});
+    const successListData = ref({});
+    const getDateMethod = async (inputData, api, query, total) => {
+      const response = await api(query.value);
+      if (response.result) {
+        inputData.value = response.data;
+        total.value = response.total;
+        query.value.page++;
+      }
+    };
+    let getApiTimer1 = null;
+    let getApiTimer2 = null;
     onMounted(async () => {
-      const limit = 100;
       try {
-        getDateMethod(successListData, apiGetRewardApplyList, {
-          page: 1,
-          limit,
-          status: 1,
-        });
-        getDateMethod(failListData, apiGetRewardApplyList, {
-          page: 1,
-          limit,
-          status: 2,
-        });
+        await getDateMethod(
+          successListData,
+          apiGetRewardApplyList,
+          APIparams1,
+          total1
+        );
+
+        await getDateMethod(
+          failListData,
+          apiGetRewardApplyList,
+          APIparams2,
+          total2
+        );
+
+        getApiTimer1 = setInterval(handleScrollGetData1, 500);
+        getApiTimer2 = setInterval(handleScrollGetData2, 500);
       } catch (error) {
         errorHandle(error);
       }
     });
+
+    onUnmounted(() => {
+      clearInterval(getApiTimer1);
+      clearInterval(getApiTimer2);
+    });
+
+    const APIparams1 = ref({ page: 1, limit: 10, status: 1 });
+    const APIparams2 = ref({ page: 1, limit: 10, status: 2 });
+    const total1 = ref(Infinity);
+    const total2 = ref(Infinity);
+
+    const handleScrollGetData1 = () => {
+      if (isBetweenBottom()) {
+        getListData(APIparams1, successListData, total1, 1);
+      }
+    };
+    const handleScrollGetData2 = () => {
+      if (isBetweenBottom()) {
+        getListData(APIparams2, failListData, total2, 2);
+      }
+    };
+
+    const getListData = async (query, data, total, targetMode) => {
+      if (targetMode !== tabMode.value) return;
+      const { page, limit } = query.value;
+      let response = {};
+      // 預測下一頁，如果不超過資料上限才做GET
+      if (limit * page < total.value + limit) {
+        response = await apiGetRewardApplyList(query.value);
+
+        if (response.result) {
+          // 處理有值
+          data.value = data.value.concat(response.data);
+          total.value = response.total;
+          query.value.page++;
+        }
+      }
+    };
+
     return {
       successListData,
       failListData,
@@ -78,6 +123,8 @@ export default {
       tabClass,
       tabMode,
       handlePhoneMask,
+      APIparams1,
+      APIparams2,
     };
   },
 
@@ -130,22 +177,22 @@ export default {
       <!-- <div class="filter-containter">
         <div class="row">
           <div class="col">
-            <a href="javascript:void(0);" class="filter-link active">今日</a>
+            <a  class="filter-link active">今日</a>
           </div>
           <div class="col">
-            <a href="javascript:void(0);" class="filter-link">3日</a>
+            <a  class="filter-link">3日</a>
           </div>
           <div class="col">
-            <a href="javascript:void(0);" class="filter-link">7日</a>
+            <a  class="filter-link">7日</a>
           </div>
           <div class="col">
-            <a href="javascript:void(0);" class="filter-link">1個月</a>
+            <a  class="filter-link">1個月</a>
           </div>
           <div class="col">
-            <a href="javascript:void(0);" class="filter-link">3個月</a>
+            <a  class="filter-link">3個月</a>
           </div>
           <div class="col">
-            <a href="javascript:void(0);" class="filter-link">1年</a>
+            <a  class="filter-link">1年</a>
           </div>
         </div>
       </div> -->
