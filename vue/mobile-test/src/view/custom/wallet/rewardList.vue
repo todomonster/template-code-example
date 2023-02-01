@@ -13,11 +13,32 @@ export default {
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
 
-    const applyListData = ref({});
+    const tabMode = ref(0); //0:回饋列表; 1:成功; 2:失敗;
+    const tabClass = ref(["filter-link active", "filter-link", "filter-link"]);
+    const changeMode = (val = 0) => {
+      const index = Number(val);
+      if (index === 0 || index) {
+        const targetIndex = tabClass.value.findIndex(
+          (el) => el === "filter-link active"
+        );
+        tabClass.value[targetIndex] = "filter-link";
+
+        tabClass.value[index] = "filter-link active";
+      }
+
+      tabMode.value = val;
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "instant",
+      });
+    };
+
     const failListData = ref({});
     const successListData = ref({});
 
-    const observerTarget = ref('{"a":null,"b":null,"c":null}');
+    const handlePhoneMask = (phone) =>
+      phone.slice(0, 2) + "xxxxx" + phone.slice(-3);
 
     const getDateMethod = async (inputData, api, query) => {
       const response = await api(query);
@@ -26,72 +47,14 @@ export default {
       }
     };
 
-    const observer = (DOMid) => {
-      // https://thatcatinsomnia.medium.com/%E6%AA%A2%E6%9F%A5element%E6%98%AF%E5%90%A6%E5%87%BA%E7%8F%BE%E5%9C%A8%E7%95%AB%E9%9D%A2%E4%B9%8B%E4%B8%AD-check-if-an-element-gets-visible-in-the-screen-during-scrolling-57a9230ea843
-      const target = document.getElementById(DOMid);
-      const options = {
-        // 四個數值分別表示上、右、下、左
-        rootMargin: "0px 0px 0px 0px",
-      };
-
-      const onIntersection = (entries) => {
-        const target = JSON.parse(observerTarget.value);
-        entries.forEach((entry) => {
-          target[DOMid] = entry.isIntersecting ? 1 : 0;
-          observerTarget.value = JSON.stringify(target);
-        });
-      };
-
-      const observer = new IntersectionObserver(onIntersection, options);
-
-      observer.observe(target);
-    };
-
-    watch(
-      () => observerTarget.value,
-      (newQuestion, oldQuestion) => {
-        // console.log(newQuestion);
-        if (newQuestion.indexOf("null") > -1) {
-          return;
-        }
-        const falg =
-          (newQuestion == '{"a":1,"b":1,"c":0}' &&
-            oldQuestion == '{"a":1,"b":1,"c":1}') ||
-          newQuestion == '{"a":1,"b":1,"c":1}' ||
-          (newQuestion == '{"a":0,"b":1,"c":1}' &&
-            oldQuestion == '{"a":1,"b":1,"c":1}');
-
-        if (falg) {
-          window.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: "instant",
-          });
-        }
-      }
-    );
-
     const showTrashcan = computed(() => {
-      return (
-        observerTarget.value === '{"a":1,"b":1,"c":0}' ||
-        observerTarget.value === '{"a":1,"b":0,"c":0}'
-      );
+      return false;
+      // return tabMode.value === 0 ? true : false;
     });
 
     onMounted(async () => {
       const limit = 100;
-      initSwiper(3);
       try {
-        // 開始監聽 如果有改變swiper位置的話滾動到最上方
-        observer("a");
-        observer("b");
-        observer("c");
-
-        // getDateMethod(applyListData, apiGetRewardApplyList, {
-        //   page: 1,
-        //   limit,
-        //   status: 0,
-        // });
         getDateMethod(successListData, apiGetRewardApplyList, {
           page: 1,
           limit,
@@ -107,16 +70,21 @@ export default {
       }
     });
     return {
-      applyListData,
       successListData,
       failListData,
-      observerTarget,
+      changeMode,
       showTrashcan,
-      goto
+      goto,
+      tabClass,
+      tabMode,
+      handlePhoneMask,
     };
   },
 
-  components: { NoData, RewardApplyList },
+  components: {
+    NoData,
+    RewardApplyList,
+  },
 };
 </script>
 
@@ -132,7 +100,6 @@ export default {
       </ul>
       <h1 class="navbar-brand">
         <img src="@/assets/images/logo_s.png" />
-        <!-- <span>會員回饋確認</span> -->
       </h1>
       <ul class="navbar-nav">
         <li class="nav-item" v-if="showTrashcan">
@@ -143,17 +110,25 @@ export default {
   </header>
   <!-- 內容 -->
   <section class="c-main main">
-    <div class="swiper-container ui-tab">
-      <div class="swiper-wrapper">
-        <div class="swiper-slide" @click="toTop"><span>申請列表</span></div>
-        <div class="swiper-slide" @click="toTop"><span>同意</span></div>
-        <div class="swiper-slide" @click="toTop"><span>拒絕</span></div>
-      </div>
-    </div>
     <div class="swiper-container ui-page">
       <div class="filter-containter">
-        <!-- 先不做此功能 -->
-        <!-- <div class="row">
+        <div class="row">
+          <div class="col">
+            <a @click="changeMode(0)" :class="tabClass[0]">申請中</a>
+          </div>
+          <div class="col">
+            <a @click="changeMode(1)" :class="tabClass[1]">已同意</a>
+          </div>
+          <div class="col">
+            <a @click="changeMode(2)" :class="tabClass[2]">已拒絕</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="swiper-container ui-page">
+      <!-- <div class="filter-containter">
+        <div class="row">
           <div class="col">
             <a href="javascript:void(0);" class="filter-link active">今日</a>
           </div>
@@ -172,71 +147,42 @@ export default {
           <div class="col">
             <a href="javascript:void(0);" class="filter-link">1年</a>
           </div>
-        </div> -->
-      </div>
-      <div class="swiper-wrapper">
-        <div class="swiper-slide">
-          <div class="item-container item-container-3" id="a">
-            <RewardApplyList />
-            <!-- <NoData v-if="applyListData.length <= 0" />
-            <div v-for="data in applyListData" :key="data.createTime">
-              <div class="d-flex">
-                <div class="col-left">
-                  <div class="title">
-                    {{ data.storeName }} 福利金回饋 ${{ data.amount }}
-                  </div>
-                  <div class="date">{{ data.createTime }}</div>
-                  <div v-if="data.status == 2" class="note">
-                    {{ data.memo }}
-                  </div>
-                </div>
-                <div class="col-right">
-                  <div v-if="data.status == 0" class="black">待確認</div>
-                  <div v-else-if="data.status == 1" class="green">核准</div>
-                  <div v-else-if="data.status == 2" class="red">取消</div>
-                </div>
-              </div>
-            </div> -->
-          </div>
         </div>
-        <div class="swiper-slide">
-          <div class="item-container item-container-3" id="b">
-            <NoData v-if="failListData.length <= 0" />
-            <div v-for="data in failListData" :key="data.id">
-              <div class="d-flex">
-                <div class="col-left">
-                  <div class="title">{{ data.name }}</div>
-                  <div class="date">{{ data.createTime }}</div>
-                </div>
-                <div class="col-right">
-                  <div v-if="data.status == 1" class="green">
-                    {{ data.amount }}
-                  </div>
-                  <div v-else-if="data.status == 0" class="red">
-                    {{ data.amount }}
-                  </div>
-                </div>
+      </div> -->
+      <div class="custom-list-wrapper">
+        <div v-show="tabMode === 0"><RewardApplyList :tabMode="tabMode" /></div>
+        <div v-show="tabMode === 1">
+          <NoData v-if="successListData.length == 0" />
+          <div v-for="item in successListData" :key="item.createTime">
+            <div class="d-flex justify-content-between m-2 bg-white">
+              <div class="col-8 m-1">
+                <span>{{
+                  `${item.phone ? handlePhoneMask(item.phone) : "無"} - ${
+                    item.userName ? item.userName : "無"
+                  }`
+                }}</span>
+                <div>{{ item.createTime }}</div>
+              </div>
+              <div class="col m-1 text-end money">
+                <span>{{ item.amount ? `$ -${item.amount}` : "" }}</span>
               </div>
             </div>
           </div>
         </div>
-        <div class="swiper-slide">
-          <div class="item-container item-container-3" id="c">
-            <NoData v-if="successListData.length <= 0" />
-            <div v-for="data in successListData" :key="data.id">
-              <div class="d-flex">
-                <div class="col-left">
-                  <div class="title">{{ data.name }}</div>
-                  <div class="date">{{ data.createTime }}</div>
-                </div>
-                <div class="col-right">
-                  <div v-if="data.status == 1" class="green">
-                    {{ data.amount }}
-                  </div>
-                  <div v-else-if="data.status == 0" class="red">
-                    {{ data.amount }}
-                  </div>
-                </div>
+        <div v-if="tabMode === 2">
+          <NoData v-if="failListData.length == 0" />
+          <div v-for="item in failListData" :key="item.createTime">
+            <div class="d-flex justify-content-between m-2 bg-white">
+              <div class="col-8 m-1">
+                <span>{{
+                  `${item.phone ? handlePhoneMask(item.phone) : "無"} - ${
+                    item.userName ? item.userName : "無"
+                  }`
+                }}</span>
+                <div>{{ item.createTime }}</div>
+              </div>
+              <div class="col m-1 text-end money">
+                <span>{{ item.amount ? `$ ${item.amount}` : "" }}</span>
               </div>
             </div>
           </div>
@@ -246,11 +192,9 @@ export default {
   </section>
 </template>
 <style lang="scss" scoped>
+@import "./subPage/style/index";
 .main {
   margin-top: $header-height;
   margin-bottom: calc($footer-height + 15px);
-}
-.ui-page {
-  height: calc(100vh - $header-height - 15px);
 }
 </style>

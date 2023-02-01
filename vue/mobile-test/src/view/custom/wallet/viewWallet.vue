@@ -22,7 +22,7 @@ export default {
       }
     };
 
-    const name = ["會員回饋確認", "回饋紀錄", "交易紀錄", "回饋相關"];
+    const name = ["會員回饋確認", "回饋紀錄", "交易紀錄", "顧客索取回饋"];
     const link = [
       "/wallet/rewardApply",
       "/wallet/rewardRecord",
@@ -60,7 +60,7 @@ export default {
         }}</span
         >可用餘額
       </div>
-      <div class="listItem">
+      <!-- <div class="listItem">
         <button
           type="button"
           class="list-group-item list-group-item-action"
@@ -89,8 +89,22 @@ export default {
             <ArrowIcon />
           </div>
         </button>
+      </div> -->
+      <div class="listItem">
+        <button
+          type="button"
+          class="list-group-item list-group-item-action"
+          @click="goto('router', link[3])"
+        >
+          <div class="d-flex justify-content-between grey">
+            <div>
+              <i class="fa fa-file mx-1" aria-hidden="true"></i>
+              {{ name[3] }}
+            </div>
+            <ArrowIcon />
+          </div>
+        </button>
       </div>
-
       <div class="listItem">
         <button
           type="button"
@@ -106,21 +120,6 @@ export default {
           </div>
         </button>
       </div>
-      <!-- <div class="listItem">
-        <button
-          type="button"
-          class="list-group-item list-group-item-action"
-          @click="goto('router', link[3])"
-        >
-          <div class="d-flex justify-content-between grey">
-            <div>
-              <i class="fa fa-file mx-1" aria-hidden="true"></i>
-              {{ name[3] }}
-            </div>
-            <ArrowIcon />
-          </div>
-        </button>
-      </div> -->
     </ul>
   </div>
 </template>

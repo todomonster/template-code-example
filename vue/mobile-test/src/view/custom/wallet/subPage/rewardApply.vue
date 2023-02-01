@@ -16,11 +16,13 @@ import { useGlobalStore } from "@/store/global";
 export default {
   // 回饋申請列表
   name: "RewardApply",
-  setup() {
+  props: {
+    tabMode: Number,
+  },
+  setup(props) {
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
 
-    let windowScrollY = 0;
     let getApiTimer = null;
 
     const walletList = ref([]);
@@ -28,6 +30,7 @@ export default {
     const total = ref(Infinity);
 
     const handleScrollGetData = () => {
+      if (props?.tabMode !== 0) return;
       if (isBetweenBottom()) {
         getListData();
       }
@@ -66,7 +69,7 @@ export default {
 
     const handleApply = async (id, isApplyConfirm, targetIndex) => {
       let swal = null;
-      let response = null;
+      let response = {};
       if (isApplyConfirm) {
         // 確認回饋
         swal = await ToastConfirm("確認回饋?");
@@ -107,9 +110,7 @@ export default {
       try {
         // 位移到暫存的y
         document.body.style = "background-color: #EEEEEE;";
-        windowScrollTo({ top: windowScrollY });
         await getListData();
-
         getApiTimer = setInterval(handleScrollGetData, 500);
       } catch (error) {
         errorHandle(error);
@@ -119,7 +120,6 @@ export default {
     onBeforeRouteLeave((to, from, next) => {
       // 離開前紀錄滾動位置
       setTimeout(() => (document.body.style = ""), 500);
-      windowScrollY = window.scrollY || 0;
       clearInterval(getApiTimer);
       next();
     });
@@ -142,7 +142,7 @@ export default {
 </script>
 
 <template>
-  <header class="c-header">
+  <!-- <header class="c-header">
     <nav class="navbar ui-navbar">
       <ul class="navbar-nav">
         <li class="nav-item">
@@ -154,16 +154,16 @@ export default {
       <h1 class="navbar-brand">
         <img src="@/assets/images/logo_s.png" />
       </h1>
-      <!-- <ul class="navbar-nav">
+      <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" @click="handleDeleteAll"
             ><i class="icon icon-delete"></i
           ></a>
         </li>
-      </ul> -->
+      </ul>
     </nav>
-  </header>
-  <div class="c-product main-content">
+  </header> -->
+  <div class="c-product">
     <div>
       <br />
       <NoData v-if="walletList.length == 0" />
