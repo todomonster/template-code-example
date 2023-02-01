@@ -218,6 +218,17 @@ const myfreeRouter = [
           default: () => import("@/view/custom/wallet/subPage/moneyRecord.vue"),
         },
       },
+      {
+        path: "rewardList",
+        meta: {
+          showHeader: true,
+          showFooter: false,
+          requiresAuth: true,
+        },
+        components: {
+          default: () => import("@/view/custom/wallet/rewardList.vue"),
+        },
+      },
     ],
   },
 ];
