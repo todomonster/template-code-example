@@ -10,7 +10,7 @@ export default {
       next();
     });
     onActivated(() => {
-      if (window.scrollY !== 0) {
+      if (homeTop.value) {
         window.scrollTo({
           top: homeTop.value,
           left: 0,
@@ -18,16 +18,16 @@ export default {
         });
       }
     });
-    onMounted(() => {
-      if (window.scrollY !== 0) {
-        window.scrollTo({
-          top: homeTop.value,
-          left: 0,
-          behavior: "instant",
-        });
-      }
-    });
-    return {};
+    // onMounted(() => {
+    //   if (window.scrollY !== 0) {
+    //     window.scrollTo({
+    //       top: homeTop.value,
+    //       left: 0,
+    //       behavior: "instant",
+    //     });
+    //   }
+    // });
+    return { homeTop };
   },
   components: {},
 };
