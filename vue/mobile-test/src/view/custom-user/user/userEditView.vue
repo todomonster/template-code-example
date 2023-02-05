@@ -183,7 +183,7 @@ export default {
 
     const handleData = (userInfo = {}) => {
       let { mobile = "", gender = "", age = "", image = "" } = userInfo;
-      
+
       let nickname = "";
       if (userInfo.nickname == "null" || !userInfo.nickname) {
         nickname = "";
@@ -217,9 +217,6 @@ export default {
           if (localStorage.getItem("is_Login") == "1") {
             const response = await apiGetUserInfo();
             editData.value = handleData(response);
-          } else {
-            goto("back");
-            Toast("請先登入");
           }
         }
       } catch (error) {
@@ -228,10 +225,22 @@ export default {
     });
 
     onActivated(() => {
-      // 先檢查登入狀態
-      if (localStorage.getItem("is_Login") != "1") {
-        goto("back");
-        Toast("請先登入");
+      // 先檢查登入狀態 並且是編輯流程
+      try {
+        // 取得 pinia 的 password 和 phone 判斷是否是註冊
+        const { password, mobile, status, userId, storeId } =
+          globalStore.isToAddUser;
+        if (status) {
+          // 註冊流程
+        } else {
+          //編輯流程
+          if (localStorage.getItem("is_Login") != "1") {
+            goto("back");
+            Toast("請先登入才能編輯");
+          }
+        }
+      } catch (error) {
+        errorHandle(error);
       }
     });
 
