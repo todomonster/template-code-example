@@ -64,23 +64,27 @@ function replaceSetting(id = "", download_url = "") {
 }
 
 // 呼叫App原生分享
-function shareFile({ subject = "", title = "", message = null, imageUrl = null, base64 = null }) {
+function shareFile({ subject = "", title = "", message = "", imageUrl = "", base64 = "" }) {
 
     const config = {
         "function": "share",
         "subject": subject,
         "title": title,
     }
-    if (message) {
+    // 文字
+    if (message && typeof (message) === 'string') {
         config.message = message;
-    } else if (imageUrl) {
+    }else{
+        config.message = "share"
+    }
+
+    // 圖片
+    if (imageUrl) {
         config.imageUrl = imageUrl;
     } else if (base64 && typeof (base64) === 'string') {
         const realBase64 = base64.split(',')[1];
         base64 = realBase64;
         config.base64 = base64;
-    } else {
-        config.message = "share"
     }
 
     const data = JSON.stringify(config);
