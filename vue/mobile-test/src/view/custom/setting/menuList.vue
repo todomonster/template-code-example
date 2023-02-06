@@ -105,7 +105,7 @@ export default {
           <div class="d-flex justify-content-between grey">
             <div>
               <i class="fa fa-file mx-1" aria-hidden="true"></i>
-              綁定的使用者
+              所屬會員列表
             </div>
             <ArrowIcon />
           </div>
