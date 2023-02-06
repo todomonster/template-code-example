@@ -169,15 +169,27 @@ $img: '@/assets/images/';
       - Update 收合營業時間
       - Fix 編輯時要檢查登入狀態
       - Update 完成 裁切圖片 模組
-- v2.4.1 對應 {file: store_settings.txt , "version": x}
+- v2.4.1系列
   - 02/01
     - store
       - 索取回饋
-        - 無限滾動
-        - 分類功能
+        - Update 無限滾動
+        - Update 分類功能
     - user
       - 無限滾動
-        - 錢包
+        - Update 錢包
+  - 02/06
+    - store
+      - Update QRcode 列印串接link
+      - Update QRcode 分享加上文字和連結 呼叫Extcall
+      - Update 裁切大小 620x620 1120x620
+      - Add 所屬會員列表(剩下API)
+    - user
+      - Fix 無法正確註冊問題
+      - Fix 打上傳圖片API弄反
+
+預計2/7做
+user商店無限滾動，user推user
 
 ---
 a tag 可能因為沒有加上 `display: block;` 導致圖片不見
