@@ -1,5 +1,5 @@
 <script>
-import { ref, onMounted, computed, onUnmounted } from "vue";
+import { ref, onMounted, onActivated } from "vue";
 import { useGlobalStore } from "@/store/global";
 import { errorHandle } from "@/utils/errorHandle";
 // import NoData from "@/components/global/NoData.vue";
@@ -11,20 +11,22 @@ import { handleStoreProfile } from "@/utils/handleData";
 import { apiGetStoreList } from "@/api/myfree";
 import NoData from "@/components/global/NoData.vue";
 import { isBetweenBottom } from "@/utils/helper";
+import { onBeforeRouteLeave } from "vue-router";
 
 export default {
+  name: "FavoriteStoreList",
   setup() {
     const dataList = ref([]);
     const data_count_on_page = ref(null);
     let APIparams = ref({
       favorite: 1,
-      row: 50,
+      row: 25,
       data_count_on_page: 0,
     });
     let getApiTimer = null;
     const canGetData = ref(true);
 
-    onMounted(async () => {
+    onActivated(async () => {
       getApiTimer = setInterval(async () => {
         if (!isBetweenBottom()) return;
         if (canGetData.value == false) {
@@ -85,7 +87,10 @@ export default {
         errorHandle(error);
       }
     };
-    onUnmounted(() => clearInterval(getApiTimer));
+    onBeforeRouteLeave((to, from, next) => {
+      clearInterval(getApiTimer);
+      next();
+    });
 
     return { dataList };
   },

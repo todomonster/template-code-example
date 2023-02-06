@@ -23,7 +23,14 @@ export default {
   <div class="main">
     <!-- <router-view /> -->
     <router-view v-slot="{ Component }">
-      <keep-alive :include="['StoreList', 'StoreDetail', 'StoreProduct']">
+      <keep-alive
+        :include="[
+          'StoreList',
+          'StoreDetail',
+          'StoreProduct',
+          'FavoriteStoreList',
+        ]"
+      >
         <component :is="Component" />
       </keep-alive>
     </router-view>
