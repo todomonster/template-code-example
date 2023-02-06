@@ -107,6 +107,17 @@ const myfreeRouter = [
           default: () => import("@/view/custom/setting/qrCode.vue"),
         },
       },
+      {
+        path: "recommender",
+        meta: {
+          showHeader: true,
+          showFooter: false,
+          requiresAuth: true,
+        },
+        components: {
+          default: () => import("@/view/custom/setting/recommenderList.vue"),
+        },
+      },
     ],
   },
   {

@@ -24,7 +24,7 @@ export default {
     const goto = globalStore.goto;
     const VUE_APP_VERSION = process.env.VUE_APP_VERSION;
 
-    const link = ["https://myfree.tako.life/privacy", "/setting/qrCode"];
+    const link = ["https://myfree.tako.life/privacy", "/setting/qrCode", "/setting/recommender"];
     const handleWebView = (openUrl) => {
       try {
         ExtCall.openNewWebView(openUrl);
@@ -100,6 +100,21 @@ export default {
         <button
           type="button"
           class="list-group-item list-group-item-action"
+          @click="goto('router', link[2])"
+        >
+          <div class="d-flex justify-content-between grey">
+            <div>
+              <i class="fa fa-file mx-1" aria-hidden="true"></i>
+              綁定的使用者
+            </div>
+            <ArrowIcon />
+          </div>
+        </button>
+      </div>
+      <div class="listItem">
+        <button
+          type="button"
+          class="list-group-item list-group-item-action"
           @click="goto('router', link[1])"
         >
           <div class="d-flex justify-content-between grey">
@@ -111,7 +126,6 @@ export default {
           </div>
         </button>
       </div>
-
       <div class="listItem">
         <button
           type="button"
