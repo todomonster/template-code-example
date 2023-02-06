@@ -296,7 +296,8 @@ export default {
               onErrorBgImg="this.onerror=null; this.src='https://fakeimg.pl/340x200/?text=商店&font=noto'"
               :originImg="handleImg(storeData.images)"
               :openPreview="false"
-              :fixedNumber="[16, 9]"
+              :fixedNumber="[112, 62]"
+              :maxImgSize="1120"
               @handleImgChange="handleImgChange"
             />
             <div class="mb-2">

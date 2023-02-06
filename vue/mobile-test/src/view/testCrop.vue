@@ -92,6 +92,8 @@
               :canMove="options.canMove"
               @real-time="realTime"
               :info="false"
+              :full="options.full"
+              :maxImgSize="maxImgSize"
             />
           </div>
           <!--  -->
@@ -141,6 +143,11 @@ const props = defineProps({
   fixedNumber: {
     type: Array,
     required: true,
+  },
+  maxImgSize: {
+    type: Number,
+    required: false,
+    default: 620,
   },
   imgClass: {
     type: String,
@@ -200,6 +207,8 @@ const options = reactive({
   fixedBox: false, //是否鎖定藍色截圖框
   autoCrop: true, //啟動藍色截圖框
   canMove: true, //圖片是否能移動
+  full: true, //原圖比例
+  // maxImgSize: 620
 });
 
 //檔案上傳
@@ -274,14 +283,14 @@ const confirmImg = () => {
       let requestData = new FormData();
       requestData.append("images", file);
 
-      let response = null;
+      let response = {};
       if (props.role == "store") {
-        response = await apiUserUpload(requestData);
-      } else if (props.role == "user") {
         response = await apiStoreUpload(requestData);
+      } else if (props.role == "user") {
+        response = await apiUserUpload(requestData);
       }
 
-      if (response.result) {
+      if (response?.result) {
         const imgUrl = `${response.path}` || "";
         emit("handleImgChange", imgUrl);
         closeModal();
