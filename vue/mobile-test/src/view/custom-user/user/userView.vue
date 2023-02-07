@@ -13,6 +13,7 @@ import {
   apiUserSaveFcmToken,
   apiGetUserInfo,
   apiRemoveUser,
+  apiGenQrcode,
 } from "@/api/myfree";
 
 export default {
@@ -68,7 +69,7 @@ export default {
     };
 
     const handleData = (userInfo = {}) => {
-      let { mobile, gender, age, image } = userInfo;
+      let { mobile, gender, age, image, bindStoreId, bindUserId } = userInfo;
 
       let nickname = "-";
       if (userInfo.nickname == "null" || !userInfo.nickname) {
@@ -122,15 +123,45 @@ export default {
         age,
         nickname,
         image,
+        bindStoreId,
+        bindUserId,
       };
     };
+    const qrcodeUrl = ref("因為意外無法正確轉換");
+    const recommendMember = async (type) => {
+      try {
+        let message = `邀請您加入myFrees會員，立即加入得300點，消費立即索取福利金，點數換現金。`;
+        if (qrcodeUrl.value != "因為意外無法正確轉換") {
+          message += ` 連結: ${qrcodeUrl.value}`;
+        }
 
+        // 手機版是呼叫分享
+        ExtCall.shareFile({
+          subject: "share",
+          title: "store_qr_code",
+          message,
+        });
+      } catch (error) {
+        Toast("僅支援手機分享");
+      }
+    };
     onMounted(async () => {
       try {
         if (localStorage.getItem("is_Login") == "1") {
           const response = await apiGetUserInfo();
           userData.value = handleData(response);
           isLogin.value = true;
+
+          // 處理 推薦人
+          const { bindStoreId = null, bindUserId = null } = userData.value;
+          const responseUrl = await apiGenQrcode({
+            storeId: bindStoreId,
+            userId: bindUserId,
+          });
+
+          if (responseUrl) {
+            qrcodeUrl.value = responseUrl;
+          }
         } else {
           isLogin.value = false;
         }
@@ -147,6 +178,7 @@ export default {
       userData,
       isLogin,
       removeAccount,
+      recommendMember,
     };
   },
 
@@ -217,6 +249,10 @@ export default {
           <a class="list-link" @click="goto('router', '/store/favorite')">
             <div class="image"><i class="icon icon-favorite"></i></div>
             <div class="title">收藏店家</div>
+          </a>
+          <a class="list-link" @click="recommendMember">
+            <div class="image"><i class="icon icon-member"></i></div>
+            <div class="title">推薦會員</div>
           </a>
           <!-- <a  class="list-link">
             <div class="image"><i class="icon icon-feedback"></i></div>
