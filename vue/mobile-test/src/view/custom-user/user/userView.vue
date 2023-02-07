@@ -250,7 +250,7 @@ export default {
             <div class="image"><i class="icon icon-favorite"></i></div>
             <div class="title">收藏店家</div>
           </a>
-          <a class="list-link" @click="recommendMember">
+          <a class="list-link" @click="recommendMember" v-show="isLogin">
             <div class="image"><i class="icon icon-member"></i></div>
             <div class="title">推薦會員</div>
           </a>
