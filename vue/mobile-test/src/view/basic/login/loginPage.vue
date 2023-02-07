@@ -15,7 +15,6 @@ export default {
     const globalStore = useGlobalStore();
     const { goto, setStoreData } = globalStore;
 
-    const router = useRouter();
     const inputData = ref({
       mobile: "",
       password: "",
@@ -26,7 +25,7 @@ export default {
     let fcmToken = "";
 
     const isLoginSuccess = (msg) => {
-      if (msg.token) {
+      if (msg.result) {
         return true;
       }
       return false;
@@ -70,6 +69,20 @@ export default {
         //post API
         msg = await apiStoreLogin(inputData.value);
         if (isLoginSuccess(msg)) {
+          const change_password = msg?.change_password;
+
+          // 跑修改密碼流程
+          if (change_password) {
+            goto("routerQuery", "/forgetPassword", {
+              query: {
+                forget: "1",
+                otp: inputData.value.password,
+                mobile: inputData.value.mobile,
+              },
+            });
+            return;
+          }
+          // 正常流程
           if (fcmToken) {
             const response = await apiStoreSaveFcmToken({
               token: fcmToken,
@@ -203,8 +216,15 @@ export default {
             <i :class="passwordEyeClass" id="togglePassword"></i>
           </div>
         </div>
-        <div class="row form-word text-end text-decoration-underline">
-          <div class="col-12 ml-4">
+        <div class="row form-word text-decoration-underline">
+          <div class="col ml-4">
+            <span
+              class="cursor-pointer"
+              @click="goto('router', '/forgetPassword')"
+              >忘記密碼?</span
+            >
+          </div>
+          <div class="col ml-4 text-end">
             <span class="cursor-pointer" @click="goto('router', '/signup')"
               >去註冊</span
             >
