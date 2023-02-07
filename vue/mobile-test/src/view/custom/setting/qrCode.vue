@@ -58,13 +58,14 @@ export default {
           subject: "share",
           title: "store_qr_code",
           message,
-          base64: aTag.href,
+          // base64: aTag.href,
         });
       } catch (error) {
         // 電腦版是下載
-        document.body.appendChild(aTag);
-        aTag.click();
-        document.body.removeChild(aTag);
+        // document.body.appendChild(aTag);
+        // aTag.click();
+        // document.body.removeChild(aTag);
+        Toast("僅支援手機")
       }
     };
 
