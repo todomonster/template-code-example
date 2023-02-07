@@ -104,7 +104,7 @@ export default {
         >
           <div class="d-flex justify-content-between grey">
             <div>
-              <i class="fa fa-file mx-1" aria-hidden="true"></i>
+              <i class="fa fa-user mx-1" aria-hidden="true"></i>
               所屬會員列表
             </div>
             <ArrowIcon />

@@ -159,3 +159,7 @@ export const apiGetUserNotifyUnreadAmount = () => apiInstance.get(`/user/notify/
 // =============================================QRcode
 export const apiParseQRcode = (data) => apiInstance.formDataPOST(`/qr/parse`, data);
 // {token:"url後面的token"}
+
+
+/** /api/store/fBind/user?page=1&limit=10  x ?*/
+export const apiGetRecommenderList = (queryData) => apiInstance.get(`/store/fBind/user?${parseUrlEncode(queryData)}`);

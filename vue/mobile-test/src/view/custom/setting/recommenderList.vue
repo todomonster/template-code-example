@@ -2,37 +2,13 @@
 import { ref, onMounted } from "vue";
 import { Toast } from "@/components/global/swal";
 import { errorHandle } from "@/utils/errorHandle";
-import { apiGetNotifyList } from "@/api/myfree";
+import { apiGetRecommenderList } from "@/api/myfree";
 import { onBeforeRouteLeave } from "vue-router";
 import { isBetweenBottom } from "@/utils/helper";
 import NoData from "@/components/global/NoData.vue";
 
 export default {
   setup() {
-    const apiData = {
-      result: true,
-      data: [
-        {
-          id: 1,
-          phone: "0912345678",
-          nickname: "richard",
-          createDate: "2022/01/01",
-          memberType: 0,
-        },
-        {
-          id: 2,
-          phone: "0912345678",
-          nickname: "richard",
-          createDate: "2022/01/01",
-          memberType: 1,
-        },
-      ],
-      total: 100,
-      memberTypeTotal: {
-        0: 15,
-        1: 11,
-      },
-    };
     const dataList = ref([]);
     const blueTotal = ref(0); //直推會員
     const greenTotal = ref(0); //分享會員
@@ -56,32 +32,36 @@ export default {
       const { page, limit } = APIparams.value;
       // 預測下一頁，如果不超過資料上限才做GET
       if (limit * page < total.value + limit) {
-        let response = await apiGetNotifyList(APIparams.value);
+        let response = await apiGetRecommenderList(APIparams.value);
         if (response.result) {
           handleListData(response);
         }
       }
     };
     const handleListData = async (response) => {
-      const { data } = response;
-
+      const handleData = (arr = []) => {
+        // console.log(arr);
+        arr.forEach((item) => {
+          if (item.created_at && typeof item.created_at === "string") {
+            item.created_at = item.created_at.slice(0, 10);
+          }
+        });
+        return arr;
+      };
+      const { data, memberTypeTotal } = response;
       // 處理有值
-      dataList.value = dataList.value.concat(data);
+
+      dataList.value = dataList.value.concat(handleData(data));
+      blueTotal.value = memberTypeTotal?.[0] || 0;
+      greenTotal.value = memberTypeTotal?.[1] || 0;
       total.value = response.total;
       APIparams.value.page++;
     };
 
     onMounted(async () => {
       try {
-        const response = apiData;
-        if (response.result) {
-          const { data = [], memberTypeTotal = { 0: 0, 1: 0 } } = response;
-          dataList.value = response.data;
-          blueTotal.value = memberTypeTotal[0];
-          greenTotal.value = memberTypeTotal[1];
-        }
-        // await getListData("init");
-        // getApiTimer = setInterval(handleScrollGetData, 500);
+        await getListData("init");
+        getApiTimer = setInterval(handleScrollGetData, 1000);
       } catch (error) {
         errorHandle(error);
       }
@@ -138,6 +118,7 @@ export default {
                     cy="6"
                     r="6"
                     fill="#A4C2F4"
+                    class="c-blue"
                     v-if="item.memberType === 0"
                   />
                   <circle
@@ -145,14 +126,19 @@ export default {
                     cy="6"
                     r="6"
                     fill="#B6D7A8"
+                    class="c-green"
                     v-if="item.memberType === 1"
                   />
                 </svg>
-                <span class="ms-3">{{ item.nickname }}</span>
+                <span class="ms-3">{{
+                  item.nickname ? item.nickname : "-"
+                }}</span>
               </span>
 
-              <span class="ms-1">{{ item.phone }}</span>
-              <span class="ms-1">{{ item.createDate }}</span>
+              <span class="ms-1">{{ item.mobile ? item.mobile : "-" }}</span>
+              <span class="ms-1">{{
+                item.created_at ? item.created_at : "-"
+              }}</span>
             </li>
           </ul>
         </div>
