@@ -173,15 +173,22 @@ export default {
 
     const setMarker = () => {
       pointListData.value.forEach((location) => {
+        const point = JSON.parse(JSON.stringify(location));
+        if (!point?.lat) {
+          point.lat = point.lang;
+        }
+        if (!point?.lng) {
+          point.lng = point.long;
+        }
         const marker = setSingleMarker({
-          lat: location.lat,
-          lng: location.lng,
+          lat: point.lat,
+          lng: point.lng,
         });
         if (!marker) {
           // marker生成錯誤離開
           return;
         }
-        const infowindow = setInfoWindow(location);
+        const infowindow = setInfoWindow(point);
 
         marker.addListener("click", () => {
           // 先關閉目前的視窗
