@@ -1,8 +1,13 @@
 <script>
 import { ref, computed, onMounted, onBeforeMount } from "vue";
-import { Toast } from "@/components/global/swal";
+import { Toast, ToastConfirm } from "@/components/global/swal";
 import { errorHandle } from "@/utils/errorHandle";
-import { apiPushOtp, apiVerifyOtp, apiCheckAccount } from "@/api/myfree";
+import {
+  apiPushOtp,
+  apiVerifyOtp,
+  apiCheckAccount,
+  apiRestoreStore,
+} from "@/api/myfree";
 import { useGlobalStore } from "@/store/global";
 
 import { useCoolDownStore } from "@/store/smsCoolDown2";
@@ -38,6 +43,41 @@ export default {
 
     const currentStep = ref(0); //0沒發送&沒驗證簡訊//1已發送&沒驗證//2已發送&已驗證//
 
+    const handleCheckAccount = async () => {
+      const checkResponse = await apiCheckAccount({
+        type: "store",
+        mobile: inputData.value.mobile,
+      });
+      // registerStatus:1
+      if (checkResponse.is_regist === true) {
+        Toast("此帳號已存在!");
+        return false;
+      }
+      // registerStatus:2
+      if (checkResponse.registerStatus === 2) {
+        let swal = await ToastConfirm("檢查到帳號已刪除，是否復原帳號?");
+        let restoreResponse = {};
+        if (swal) {
+          restoreResponse = await apiRestoreStore({
+            mobile: inputData.value.mobile,
+          });
+        }
+        if (restoreResponse.result) {
+          errorHandle(restoreResponse);
+          // 成功啟用 跳轉
+          goto("router", "/");
+        }
+        return false;
+      }
+      // registerStatus:3
+      if (checkResponse.registerStatus === 3) {
+        errorHandle(checkResponse);
+        return false;
+      }
+
+      return true;
+    };
+
     const sendOtp = async ($event) => {
       $event.preventDefault();
       if (byPassOtp === true) {
@@ -50,14 +90,10 @@ export default {
 
       if (form1.value.reportValidity()) {
         // 先檢查是否存在
-        const checkStatus = await apiCheckAccount({
-          type: "store",
-          mobile: inputData.value.mobile,
-        });
-        if(checkStatus.is_regist === true){
-          Toast("此帳號已存在!");
-          return
-        }
+
+        const checkFlag = await handleCheckAccount();
+        if (!checkFlag) return;
+
         //發送簡訊
         // ========
         if (isSmsCoolDownOk.value === false) {
@@ -82,8 +118,8 @@ export default {
 
     const handleOtpVerify = async ($event) => {
       $event.preventDefault();
-      if(!inputData.value.verifyCode.trim()){
-        Toast("請輸入驗證碼")
+      if (!inputData.value.verifyCode.trim()) {
+        Toast("請輸入驗證碼");
         return;
       }
       if (form1.value.reportValidity()) {
@@ -128,7 +164,7 @@ export default {
     // ========
     onBeforeMount(() => {
       document.body.className = "c-login";
-    });     
+    });
     onMounted(() => {
       // 計時器初始化
       init();
@@ -267,9 +303,11 @@ export default {
         <div
           class="row form-word text-end text-decoration-underline cursor-pointer"
         >
-          <div class="col-12 ml-4 ">
-            <span class="cursor-pointer"  @click="$router.push({ path: '/' })">回登入</span>
-          </div>          
+          <div class="col-12 ml-4">
+            <span class="cursor-pointer" @click="$router.push({ path: '/' })"
+              >回登入</span
+            >
+          </div>
         </div>
         <div class="row form-word text-center">
           <div class="col-12 ml-4">

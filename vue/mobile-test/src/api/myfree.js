@@ -35,6 +35,8 @@ export const apiStoreForgetPwd = (data) => apiInstance.post(`/store/forgotpwd`, 
 export const apiStoreChangePwd = (data) => apiInstance.post(`/store/changepwd`, parseUrlEncode(data));
 /** /api/store/remove */
 export const apiStoreRemove = () => apiInstance.post(`/store/remove`);
+/** /api/store/restore 恢復帳號 form*/
+export const apiRestoreStore = (data) => apiInstance.formDataPOST(`/store/enabled`, data);
 
 /** store/regist a-1-3 form */
 export const apiStoreRegister = (data) => apiInstance.formDataPOST(`/store/regist`, (data));
@@ -124,6 +126,8 @@ export const apiUserSaveFcmToken = (token) => apiInstance.post(`/notify/token`, 
 export const apiUserLogin = (data) => apiInstance.formDataLogin(`/v2/user/login`, (data));
 /** /user/remove 軟刪除 */
 export const apiRemoveUser = () => apiInstance.post(`/user/remove`);
+/**  /user/restore 恢復帳號 form */
+export const apiRestoreUser = (data) => apiInstance.formDataPOST(`/user/enabled`, data);
 /** /user 取得使用者資料 */
 export const apiGetUserInfo = () => apiInstance.get(`/user`);
 

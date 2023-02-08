@@ -1,8 +1,13 @@
 <script>
 import { ref, computed, onMounted } from "vue";
-import { Toast } from "@/components/global/swal";
+import { Toast,ToastConfirm } from "@/components/global/swal";
 import { errorHandle } from "@/utils/errorHandle";
-import { apiPushOtp, apiVerifyOtp, apiCheckAccount } from "@/api/myfree";
+import {
+  apiPushOtp,
+  apiVerifyOtp,
+  apiCheckAccount,
+  apiRestoreUser,
+} from "@/api/myfree";
 import { useGlobalStore } from "@/store/global";
 
 import { useCoolDownStore } from "@/store/smsCoolDown2";
@@ -42,6 +47,41 @@ export default {
 
     const currentStep = ref(0); //0沒發送&沒驗證簡訊//1已發送&沒驗證//2已發送&已驗證//
 
+    const handleCheckAccount = async () => {
+      const checkResponse = await apiCheckAccount({
+        type: "user",
+        mobile: inputData.value.mobile,
+      });
+      // registerStatus:1
+      if (checkResponse.is_regist === true) {
+        Toast("此帳號已存在!");
+        return false;
+      }
+      // registerStatus:2
+      if (checkResponse.registerStatus === 2) {
+        let swal = await ToastConfirm("檢查到帳號已刪除，是否復原帳號?");
+        let restoreResponse = {};
+        if (swal) {
+          restoreResponse = await apiRestoreUser({
+            mobile: inputData.value.mobile,
+          });
+        }
+        if (restoreResponse.result) {
+          errorHandle(restoreResponse);
+          // 成功啟用 跳轉
+          goto("router", "/login/index");
+        }
+        return false;
+      }
+      // registerStatus:3
+      if (checkResponse.registerStatus === 3) {
+        errorHandle(checkResponse);
+        return false;
+      }
+
+      return true;
+    };
+
     const sendOtp = async ($event) => {
       $event.preventDefault();
       if (byPassOtp === true) {
@@ -54,14 +94,17 @@ export default {
 
       if (form1.value.reportValidity()) {
         // 先檢查是否存在
-        const checkStatus = await apiCheckAccount({
-          type: "user",
-          mobile: inputData.value.mobile,
-        });
-        if (checkStatus.is_regist === true) {
-          Toast("此帳號已存在!");
-          return;
-        }
+        // const checkStatus = await apiCheckAccount({
+        //   type: "user",
+        //   mobile: inputData.value.mobile,
+        // });
+        // if (checkStatus.is_regist === true) {
+        //   Toast("此帳號已存在!");
+        //   return;
+        // }
+                const checkFlag = await handleCheckAccount();
+        if (!checkFlag) return;
+
         //發送簡訊
         // ========
         if (isSmsCoolDownOk.value === false) {
