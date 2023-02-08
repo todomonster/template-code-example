@@ -36,16 +36,17 @@ export default {
             }
           }
 
-          // 存至pinia
           // alert(`userId: ${userId}, storeId: ${storeId}`);
 
+          // 存至pinia
           setTimeout(() => {
             if (localStorage.getItem("is_Login") == "1") {
               // 跳轉到該店 id
               goto("routerQuery", "/store/detail", {
-                query: { id: storeId, $back$: 1 },
+                query: { id: storeId },
               });
             } else {
+              // 跳到註冊
               goto("routerQuery", "/login/signup", {
                 query: { signup: "1", userId, storeId },
               });

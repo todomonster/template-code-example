@@ -29,6 +29,9 @@ export default {
         price_range,
         rewardRange = null,
         tel = "",
+        is_open,
+        isEnabled,
+        isRemoved,
       } = response;
       let business_hours = response.business_hours || [];
       let images = response.images || "[]";
@@ -44,6 +47,9 @@ export default {
         price_range,
         category,
         images: handleStoreProfile.storeImages(images),
+        is_open,
+        isEnabled,
+        isRemoved,
       };
     };
 
@@ -58,7 +64,33 @@ export default {
         const response = await apiGetStoreDetail(id.value);
 
         if (response.result == true) {
+          // 成功
           storeData.value = handleData(response.data);
+          if (
+            storeData.value.isEnabled === 0 ||
+            storeData.value.isRemoved === 1
+          ) {
+            // 不合規定踢回首頁 如果停業或停用
+            Toast("此商店為無效店家！");
+            goto("back");
+            return;
+          }
+
+          // 如果query有isRewardApply=1 & is_open=1 要跳進索取畫面
+          if (
+            query.isRewardApply == 1 &&
+            query.$back$ != 1 &&
+            storeData.value.is_open === 1
+          ) {
+            const { name = "", images = "", rewardRange = 0 } = storeData.value;
+            setTimeout(
+              () =>
+                goto("routerQuery", `/store/applyReward`, {
+                  query: { id, name, images, rewardRange },
+                }),
+              500
+            );
+          }
         } else if (response.result == false) {
           Toast(response.errorInfo);
           goto("back");
@@ -152,6 +184,7 @@ export default {
 
 <template>
   <!-- 內容 -->
+  <!-- {{ id }} -->
   <section class="c-main">
     <div class="navbar-container">
       <div

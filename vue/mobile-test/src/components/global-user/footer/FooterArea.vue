@@ -31,6 +31,8 @@ export default {
 
     const handleScanClick = () => {
       try {
+        // 點了路由先跳到首頁
+        goto("router", "/");
         let userId = "";
         let storeId = "";
         window.openScanCode = async (appScanCode = "") => {
@@ -49,7 +51,7 @@ export default {
               if (localStorage.getItem("is_Login") == "1") {
                 // a. 登入狀態 ->跳到該店App畫面
                 goto("routerQuery", "/store/detail", {
-                  query: { id: storeId, $back$: 1 },
+                  query: { id: storeId, isRewardApply: 1 },
                 });
               } else {
                 // b. 非登入 -> 跳到註冊App畫面
