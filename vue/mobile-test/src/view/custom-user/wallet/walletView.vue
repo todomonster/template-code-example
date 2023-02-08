@@ -67,10 +67,14 @@ export default {
             <div class="image"><i class="icon icon-record"></i></div>
             <div class="title">交易紀錄</div>
           </a>
+          <!-- <a @click="goto('router', '/wallet/withdrawApply')" class="list-link">
+            <div class="image"><i class="icon icon-money"></i></div>
+            <div class="title">提領功能</div>
+          </a> -->
           <a class="list-link list-no">
             <div class="image"><i class="icon icon-money"></i></div>
             <div class="title">提領功能(目前正在準備中...)</div>
-          </a>
+          </a>          
           
         </div>
       </div>
