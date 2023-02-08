@@ -38,7 +38,7 @@ export default {
         message: message.value,
       });
       if (response.result) {
-        Toast("回報成功!")
+        Toast("回報成功!");
         goto("back");
       } else {
         errorHandle(response);
@@ -67,11 +67,13 @@ export default {
             <img
               src="https://fakeimg.pl/340x200/?text=商店&font=noto"
               v-if="!storeImages"
-            />            
+            />
           </div>
         </div>
         <div class="item-container">
-          <div class="item-title mb-2">{{ `${storeName}` }}</div>
+          <div class="item-title mb-2">
+            {{ `${storeName ? storeName : "-"}` }}
+          </div>
         </div>
         <div class="form-container">
           <form ref="form">

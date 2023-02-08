@@ -181,6 +181,17 @@ const customRoute = [
           default: () => import("@/view/custom-user/wallet/walletRecord.vue"),
         },
       },
+      {
+        path: "withdrawApply",
+        meta: {
+          showHeader: true,
+          showFooter: false,
+          requiresAuth: true,
+        },
+        components: {
+          default: () => import("@/view/custom-user/wallet/withdrawApply.vue"),
+        },
+      },
     ],
   },
   {
