@@ -271,6 +271,7 @@ export default {
 </template>
 <style lang="scss" scoped>
 .ui-page {
-  height: calc(70vh - $header-height - 15px);
+  // height: calc(70vh - $header-height - 15px);
+  height: 100%;
 }
 </style>
