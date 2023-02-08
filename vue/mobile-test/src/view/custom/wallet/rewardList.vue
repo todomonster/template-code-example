@@ -2,12 +2,16 @@
 import { ref, onMounted, computed, watch, onUnmounted } from "vue";
 import "@/utils/swiper/swiper-bundle.min.css";
 import { initSwiper } from "@/utils/swiper/index";
-import { apiGetRewardApplyList } from "@/api/myfree";
+import {
+  apiGetRewardApplyList,
+  apiClearExpiredRewardApply,
+} from "@/api/myfree";
 import { errorHandle } from "@/utils/errorHandle";
 import NoData from "@/components/global/NoData.vue";
 import RewardApplyList from "./subPage/rewardApply.vue";
 import { useGlobalStore } from "@/store/global";
 import { isBetweenBottom } from "@/utils/helper";
+import { Toast } from "@/components/global/swal";
 
 export default {
   setup() {
@@ -37,9 +41,27 @@ export default {
     const handlePhoneMask = (phone) =>
       phone.slice(0, 2) + "xxxxx" + phone.slice(-3);
     const showTrashcan = computed(() => {
-      return false;
-      // return tabMode.value === 0 ? true : false;
+      // return false;
+      return tabMode.value === 0 ? true : false;
     });
+
+    const triggerClear = ref(1);
+    const handleClearExpiredApply = async () => {
+      try {
+        const response = await apiClearExpiredRewardApply();
+        console.log(response);
+        if (response.result) {
+          // 透過v-if重新reload
+          triggerClear.value = 0;
+          setTimeout(() => (triggerClear.value = 1), 300);
+          Toast("已清除");
+        } else {
+          errorHandle(response);
+        }
+      } catch (error) {
+        errorHandle(error);
+      }
+    };
 
     const failListData = ref({});
     const successListData = ref({});
@@ -125,6 +147,8 @@ export default {
       handlePhoneMask,
       APIparams1,
       APIparams2,
+      handleClearExpiredApply,
+      triggerClear,
     };
   },
 
@@ -149,7 +173,11 @@ export default {
         <img src="@/assets/images/logo_s.png" />
       </h1>
       <ul class="navbar-nav">
-        <li class="nav-item" v-if="showTrashcan">
+        <li
+          class="nav-item"
+          v-if="showTrashcan"
+          @click="handleClearExpiredApply"
+        >
           <a class="nav-link"><i class="icon icon-delete"></i></a>
         </li>
       </ul>
@@ -197,7 +225,11 @@ export default {
         </div>
       </div> -->
       <div class="custom-list-wrapper">
-        <div v-show="tabMode === 0"><RewardApplyList :tabMode="tabMode" /></div>
+        <div v-show="tabMode === 0">
+          <div v-if="triggerClear">
+            <RewardApplyList :tabMode="tabMode" />
+          </div>
+        </div>
         <div v-show="tabMode === 1">
           <NoData v-if="successListData.length == 0" />
           <div v-for="item in successListData" :key="item.createTime">

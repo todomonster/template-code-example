@@ -74,6 +74,9 @@ export const apiResponseRewardApply = (rewardId, data) => apiInstance.post(`/sto
 export const apiGetRewardApplyList = (queryData) => apiInstance.get(`/store/deal/reward/list?${parseUrlEncode(queryData)}`);
 /** /store/deal/money/list 取得錢包列表 操作log S-1-7 x ?*/
 export const apiGetMoneyLogList = (queryData) => apiInstance.get(`/store/deal/money/list?${parseUrlEncode(queryData)}`);
+/** /store/deal/reward/deleteExpired 一鍵刪除過期的索取回饋列表 */
+export const apiClearExpiredRewardApply = () => apiInstance.post(`/store/deal/reward/deleteExpired`);
+
 
 // =============================================小鈴鐺
 /** /store/notify/list S-1-15 x ?*/
