@@ -22,7 +22,7 @@ export default {
       }
     };
 
-    const name = ["會員回饋確認", "回饋紀錄", "交易紀錄", "顧客索取回饋"];
+    const name = ["會員回饋確認", "回饋紀錄", "交易紀錄", "顧客索取回饋", "提領功能(目前正在準備中...)"];
     const link = [
       "/wallet/rewardApply",
       "/wallet/rewardRecord",
@@ -117,6 +117,19 @@ export default {
               {{ name[2] }}
             </div>
             <ArrowIcon />
+          </div>
+        </button>
+      </div>
+      <div class="listItem">
+        <button
+          type="button"
+          class="list-group-item list-group-item-action"
+        >
+          <div class="d-flex justify-content-between grey">
+            <div>
+              <i class="fa fa-coins mx-1" aria-hidden="true"></i>
+              {{ name[4] }}
+            </div>
           </div>
         </button>
       </div>
