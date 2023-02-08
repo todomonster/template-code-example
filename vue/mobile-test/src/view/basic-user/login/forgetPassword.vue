@@ -141,6 +141,7 @@ export default {
 
 <template>
   <div class="form-container form-container-2">
+    <span class="text-muted">忘記密碼</span>
     <form ref="form">
       <div class="position-relative mb-3">
         <label class="form-label form-label-2"

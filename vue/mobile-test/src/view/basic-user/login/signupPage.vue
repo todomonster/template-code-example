@@ -1,6 +1,6 @@
 <script>
 import { ref, computed, onMounted } from "vue";
-import { Toast,ToastConfirm } from "@/components/global/swal";
+import { Toast, ToastConfirm } from "@/components/global/swal";
 import { errorHandle } from "@/utils/errorHandle";
 import {
   apiPushOtp,
@@ -102,7 +102,7 @@ export default {
         //   Toast("此帳號已存在!");
         //   return;
         // }
-                const checkFlag = await handleCheckAccount();
+        const checkFlag = await handleCheckAccount();
         if (!checkFlag) return;
 
         //發送簡訊
@@ -238,6 +238,7 @@ export default {
 
 <template>
   <div class="form-container form-container-2">
+    <span class="text-muted">註冊</span>
     <form ref="form1">
       <div class="position-relative mb-3">
         <label class="form-label form-label-2"
