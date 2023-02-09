@@ -182,10 +182,10 @@ $img: '@/assets/images/';
         - Update 錢包
   - 02/06
     - store
-      - Update QRcode `列印`串接link
+      - Update QRcode 列印串接link
       - Update QRcode 分享加上文字和連結 呼叫Extcall
       - Update 裁切大小 620x620 1120x620
-      - Add `所屬會員列表`(剩下API)
+      - Add 所屬會員列表(剩下API)
     - user
       - Fix 無法正確註冊問題
       - Fix 打上傳圖片API弄反
@@ -204,9 +204,10 @@ $img: '@/assets/images/';
     - user
       - Add 復原帳號流程
 - v2.4.3  對應 {file: store_settings.txt , "version": xx}
-  - 02/08
+  - 02/08, 02/09
     - user
-      - Add `提領申請`
+      - Add `提領申請` 功能+UI+API
+      - Add `一鍵刪除` 功能+API
 
 ---
 a tag 可能因為沒有加上 `display: block;` 導致圖片不見
