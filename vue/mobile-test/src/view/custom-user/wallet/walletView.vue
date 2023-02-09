@@ -75,9 +75,10 @@ export default {
             <div class="image"><i class="icon icon-money"></i></div>
             <div class="title">提領功能(目前正在準備中...)</div>
           </a>          
-          
         </div>
       </div>
     </div>
   </section>
 </template>
+
+

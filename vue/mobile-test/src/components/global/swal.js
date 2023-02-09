@@ -2,7 +2,7 @@ import Swal from "sweetalert2";
 
 
 let confirmButtonColor = "#ff7300";
-if(process.env.VUE_APP_MODE === "green"){
+if (process.env.VUE_APP_MODE === "green") {
     confirmButtonColor = "#6BB738"
 }
 
@@ -50,4 +50,18 @@ export const ToastInputConfirm = (text = "", placeHolder = "") => {
             'aria-label': 'Type your message here'
         },
     })
+}
+
+export const ToastHtml = (title = "", bodyHtml = "") => {
+    return Swal.fire({
+        title,
+        icon: "info",
+        html: bodyHtml,
+        // showCloseButton: false,
+        // showCancelButton: true,
+        // focusConfirm: false,
+        // confirmButtonText: '確認',
+        // cancelButtonText: '取消',
+        ...confirmConfig
+    });
 }
