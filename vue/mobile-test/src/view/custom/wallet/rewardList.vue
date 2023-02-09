@@ -11,7 +11,7 @@ import NoData from "@/components/global/NoData.vue";
 import RewardApplyList from "./subPage/rewardApply.vue";
 import { useGlobalStore } from "@/store/global";
 import { isBetweenBottom } from "@/utils/helper";
-import { Toast } from "@/components/global/swal";
+import { Toast, ToastConfirm } from "@/components/global/swal";
 
 export default {
   setup() {
@@ -48,15 +48,17 @@ export default {
     const triggerClear = ref(1);
     const handleClearExpiredApply = async () => {
       try {
-        const response = await apiClearExpiredRewardApply();
-        console.log(response);
-        if (response.result) {
-          // 透過v-if重新reload
-          triggerClear.value = 0;
-          setTimeout(() => (triggerClear.value = 1), 300);
-          Toast("已清除");
-        } else {
-          errorHandle(response);
+        let swal = await ToastConfirm("確認清除過期之申請?");
+        if (swal) {
+          const response = await apiClearExpiredRewardApply();
+          if (response.result) {
+            // 透過v-if重新reload
+            triggerClear.value = 0;
+            setTimeout(() => (triggerClear.value = 1), 300);
+            Toast("已清除");
+          } else {
+            errorHandle(response);
+          }
         }
       } catch (error) {
         errorHandle(error);
