@@ -29,10 +29,14 @@ export default {
 
           for (let [key, value] of searchParams.entries()) {
             if (key === "userId") {
-              userId = value;
+              if (value !== "null" && value) {
+                userId = value;
+              }
             }
             if (key === "storeId") {
-              storeId = value;
+              if (value !== "null" && value) {
+                storeId = value;
+              }
             }
           }
 

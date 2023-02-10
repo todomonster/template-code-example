@@ -44,9 +44,18 @@ export default {
               token,
             });
             if (response.result) {
+              // storeId = response?.data?.storeId;
               // userId = response?.data?.userId;
-              storeId = response?.data?.storeId;
+              let getStoreId = response?.data?.storeId;
+              let getUserId = response?.data?.userId;
+              if (getStoreId !== "null" && getStoreId) {
+                storeId = getStoreId;
+              }
+              if (getUserId !== "null" && getUserId) {
+                userId = getUserId;
+              }
             }
+
             setTimeout(() => {
               if (localStorage.getItem("is_Login") == "1") {
                 // a. 登入狀態 ->跳到該店App畫面
