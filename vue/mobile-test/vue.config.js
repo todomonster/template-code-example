@@ -10,6 +10,7 @@ if (MODE === "green") {
 }
 
 module.exports = {
+  productionSourceMap: false,
   publicPath: './',
   outputDir,
   pages: {
