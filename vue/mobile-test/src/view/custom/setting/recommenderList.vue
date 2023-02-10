@@ -57,7 +57,8 @@ export default {
       total.value = response.total;
       APIparams.value.page++;
     };
-
+    const handlePhoneMask = (phone) =>
+      phone.slice(0, 2) + "xxxxx" + phone.slice(-3);
     onMounted(async () => {
       try {
         await getListData("init");
@@ -71,7 +72,7 @@ export default {
       clearInterval(getApiTimer);
       next();
     });
-    return { dataList, blueTotal, greenTotal, handleHintClick };
+    return { dataList, blueTotal, greenTotal, handleHintClick,handlePhoneMask };
   },
   components: { NoData },
 };
@@ -135,7 +136,7 @@ export default {
                 }}</span>
               </span>
 
-              <span class="ms-1">{{ item.mobile ? item.mobile : "-" }}</span>
+              <span class="ms-1">{{ `${item.mobile ? handlePhoneMask(item.mobile) : "-"}` }}</span>
               <span class="ms-1">{{
                 item.created_at ? item.created_at : "-"
               }}</span>
