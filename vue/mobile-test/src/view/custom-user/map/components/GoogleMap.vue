@@ -4,6 +4,7 @@
 
 <script>
 import { reactive, ref, onMounted, watch, onActivated, computed } from "vue";
+import { useGlobalStore } from "@/store/global";
 
 export default {
   // 接收來自父元件的地圖設定資訊
@@ -41,6 +42,9 @@ export default {
     },
   },
   setup(props) {
+    const globalStore = useGlobalStore();
+    const goto = globalStore.goto;
+
     const map = ref(null);
     const currentInfowindow = ref(null);
     const currentMarker = ref(null);
@@ -51,6 +55,10 @@ export default {
 
     const pointListData = ref([]);
     const centerData = ref({});
+
+    window.vueGoto = (mode = "", val = "", config = {}) => {
+      goto(mode, val, config);
+    };
 
     watch(
       () => props.center,
@@ -90,10 +98,10 @@ export default {
     });
 
     onActivated(() => {
-      // 維持視窗開啟
-      if (currentInfowindow.value) {
-        currentInfowindow.value.open(map.value, currentMarker.value);
-      }
+      // 維持視窗開啟，後來發現不需要 keep-alive會幫忙快取
+      // if (currentInfowindow.value) {
+      //   currentInfowindow.value.open(map.value, currentMarker.value);
+      // }
     });
 
     const initMap = () => {
@@ -136,10 +144,10 @@ export default {
       return new google.maps.InfoWindow({
         content: `
             <div id="content">
-                <a style="text-decoration: underline black; color:black;"
-                  href="${
-                    window.location.href?.split("#/")?.[0]
-                  }#/store/detail?id=${location.id}"
+                <a class="map-infowindow-title"
+                  onclick="vueGoto('routerQuery','/store/detail',{
+                    query: { id: ${location.id} },
+                  })"
                 >
                   <p style="font-size:1.25rem; font-weight:600;">${
                     location.name
@@ -151,6 +159,25 @@ export default {
         maxWidth: 250,
       });
     };
+    // const setInfoWindow = (location = { id: null, name: "", all_addr: "" }) => {
+    //   return new google.maps.InfoWindow({
+    //     content: `
+    //         <div id="content">
+    //             <a style="text-decoration: underline black; color:black;"
+    //               href="${
+    //                 window.location.href?.split("#/")?.[0]
+    //               }#/store/detail?id=${location.id}"
+    //             >
+    //               <p style="font-size:1.25rem; font-weight:600;">${
+    //                 location.name
+    //               }</p>
+    //             </a>
+    //             <span>${location.all_addr ? location.all_addr : ""}</span>
+    //         </div>
+    //         `,
+    //     maxWidth: 250,
+    //   });
+    // };
 
     const setSingleMarker = (coordinate, useDefaultIcon = false) => {
       if (!coordinate) {

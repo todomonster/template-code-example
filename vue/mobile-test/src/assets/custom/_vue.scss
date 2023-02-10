@@ -4,16 +4,21 @@
   padding: 0.25rem;
 }
 
+.map-infowindow-title {
+  text-decoration: underline black;
+  color: black;
+}
+
 .product-img {
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center center; /* optional, center the image */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center; /* optional, center the image */
 }
 
 .custom-no-scroll {
-	margin: 0;
-	height: 100%;
-	overflow: hidden;
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
 .cursor-pointer {
@@ -39,33 +44,31 @@
 }
 
 .custom-word {
-	font-size: 0.875rem;
-	color: white;
-	text-decoration: underline white;
-  }
+  font-size: 0.875rem;
+  color: white;
+  text-decoration: underline white;
+}
 
 .fixfixed {
-	// #c-header {
-	//   position: absolute;
-	// }
-	// #c-main {
-	//   padding-bottom: 0 !important;
-	// }
-	#c-footer {
-	  display: none;
-	}
-	// .c-header {
-	//   position: absolute;
-	// }
-	// .c-main {
-	//   padding-bottom: 0 !important;
-	// }
-	// .c-footer {
-	//   position: static;
-	// }
-  
-  
+  // #c-header {
+  //   position: absolute;
+  // }
+  // #c-main {
+  //   padding-bottom: 0 !important;
+  // }
+  #c-footer {
+    display: none;
   }
+  // .c-header {
+  //   position: absolute;
+  // }
+  // .c-main {
+  //   padding-bottom: 0 !important;
+  // }
+  // .c-footer {
+  //   position: static;
+  // }
+}
 //   @-webkit-keyframes fadeIn { from { position: fixed; } to { position: static; } }
 //   @-moz-keyframes fadeIn { from { position: fixed; } to { position: static; } }
 //   @keyframes fadeIn { from { position: fixed; } to { position: static; } }

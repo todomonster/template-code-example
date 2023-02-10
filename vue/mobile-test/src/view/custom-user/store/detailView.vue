@@ -56,11 +56,19 @@ export default {
     onActivated(async () => {
       try {
         const { query } = useRoute();
-        if (id.value === Number(query.id)) {
-          return;
+
+        if (query.id) {
+          // 相同跳過
+          if (id.value === Number(query.id)) {
+            return;
+          }
+          // 不同 賦值後面打API
+          id.value = Number(query.id);
+        } else {
+          Toast("id錯誤");
+          goto("back");
         }
 
-        id.value = Number(query.id);
         const response = await apiGetStoreDetail(id.value);
 
         if (response.result == true) {
