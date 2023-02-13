@@ -171,7 +171,7 @@ $img: '@/assets/images/';
       - Update 收合營業時間
       - Fix 編輯時要檢查登入狀態
       - Update 完成 裁切圖片 模組
-- v2.4.1+v2.4.2系列 對應 {file: store_settings.txt , "version": 28}
+- v2.4.1+v2.4.2系列 對應 {file: store_settings.txt , "version": 28,29}
   - 02/01
     - store
       - 索取回饋
@@ -203,11 +203,20 @@ $img: '@/assets/images/';
       - Add 復原帳號流程
     - user
       - Add 復原帳號流程
-- v2.4.3  對應 {file: store_settings.txt , "version": xx}
-  - 02/08, 02/09
+- v2.4.3
+  - 02/08, 02/09, 02/10
     - user
       - Add `提領申請` 功能+UI+API
-      - Add `一鍵刪除` 功能+API
+      - Fix 阻擋掃描QRcode或網址呼叫URL Scheme時吃到字串null
+      - Fix ios infowindow 顯示破圖
+    - store
+      - Add 一鍵刪除 功能+API
+      - Update 店家所屬會員加上手機號碼遮罩
+- v2.4.4,5
+  - 02/13
+    - user
+      - Fix 掃描索取回饋無法取得storeId
+      - Add 註冊時沒有token要提示可以透過連結
 
 ---
 a tag 可能因為沒有加上 `display: block;` 導致圖片不見
