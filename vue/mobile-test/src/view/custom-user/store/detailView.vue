@@ -94,7 +94,7 @@ export default {
             setTimeout(
               () =>
                 goto("routerQuery", `/store/applyReward`, {
-                  query: { id, name, images, rewardRange },
+                  query: { id: id.value, name, images, rewardRange },
                 }),
               500
             );
