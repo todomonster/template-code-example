@@ -70,11 +70,11 @@ router.beforeEach(async (to, from, next) => {
 const customTable = {
   // 小孩end : 爸爸start
   findStart: {
-    "/profile/view": { path: "/" },
+    "/wallet": { path: "/" },
   },
   // 爸爸start : 小孩end
   findEnd: {
-    "/": { path: "/profile/view" },
+    "/": { path: "/wallet" },
   },
 };
 const setCustomRouter = (fromPath, toPath, fromPathQuery, toPathQuery) => {

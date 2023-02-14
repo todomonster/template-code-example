@@ -7,7 +7,7 @@ const basicRoute = [
   {
     path: "/home",
     name: "home",
-    redirect: "/profile/view",
+    redirect: "/wallet",
     component: () => import("@/view/basic/home/homePage_.vue"),
   },
   {

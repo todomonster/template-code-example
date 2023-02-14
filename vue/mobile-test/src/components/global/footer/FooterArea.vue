@@ -6,9 +6,9 @@ export default {
     // 處理menu顏色高亮
     const getUrlString = location.href;
     const menuTable = {
-      profile: [1, 0, 0, 0],
+      wallet: [1, 0, 0, 0],
       product: [0, 1, 0, 0],
-      wallet: [0, 0, 1, 0],
+      profile: [0, 0, 1, 0],
       setting: [0, 0, 0, 1],
     };
     const handleMenuColor = (url = "", menuTable = {}) => {
@@ -41,10 +41,10 @@ export default {
       <div class="col cursor-pointer">
         <a
           :class="classList[0]"
-          @click="$router.push({ path: '/profile/view' })"
+          @click="$router.push({ path: '/wallet/list' })"
         >
-          <div class="tab-img"><i class="icon icon-shop"></i></div>
-          <div class="tab-title">商店資訊</div>
+          <div class="tab-img"><i class="icon icon-cash"></i></div>
+          <div class="tab-title">錢包</div>
         </a>
       </div>
       <div class="col cursor-pointer">
@@ -59,12 +59,12 @@ export default {
       <div class="col cursor-pointer">
         <a
           :class="classList[2]"
-          @click="$router.push({ path: '/wallet/list' })"
+          @click="$router.push({ path: '/profile/view' })"
         >
-          <div class="tab-img"><i class="icon icon-cash"></i></div>
-          <div class="tab-title">錢包</div>
+          <div class="tab-img"><i class="icon icon-shop"></i></div>
+          <div class="tab-title">商店資訊</div>
         </a>
-      </div>
+      </div>      
       <div class="col cursor-pointer">
         <a
           :class="classList[3]"
