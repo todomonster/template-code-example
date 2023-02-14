@@ -217,6 +217,9 @@ $img: '@/assets/images/';
     - user
       - Fix 掃描索取回饋無法取得storeId
       - Add 註冊時沒有token要提示可以透過連結
+  - 02/14
+    - store
+      - 首頁變成錢包
 
 ---
 a tag 可能因為沒有加上 `display: block;` 導致圖片不見
