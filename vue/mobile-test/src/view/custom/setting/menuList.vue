@@ -54,7 +54,6 @@ export default {
             token: "null",
             type: "store",
           });
-          // console.log(JSON.stringify(response), "fcm");
           await apiLogout();
           goto("router", "/");
         }
