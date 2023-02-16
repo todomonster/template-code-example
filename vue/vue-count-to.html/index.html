@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<!-- 參考: https://github.com/dpes8693/vue-countTo -->
+
+<head>
+    <!-- 以下全部要保留 start-->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- https://v2.vuejs.org/v2/guide/installation.html -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14"></script>
+    <script src="./js/vue-count-to.min.js"></script>
+    <!-- end -->
+    <style>
+        .count-to-number {
+            font-size: 6rem;
+            color: #ffa42d;
+            display: block;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 以下全部要保留 start-->
+    <!-- 可以改底下 <script> data的參數 -->
+    <div id="app">
+        <div @click="$refs.countToExample.start()">
+            <count-to ref='countToExample' :start-val='起始數字' :end-val='結束數字' :duration='跑多少毫秒' :decimals='到小數點第幾位'
+                separator='' prefix='$ ' suffix='' :autoplay=true class="count-to-number">
+            </count-to>
+        </div>
+    </div>
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    起始數字: 0,
+                    結束數字: 200 * 10000,
+                    跑多少毫秒: 2 * 1000,
+                    到小數點第幾位: 0
+                    // separator 分隔符號 ex:','
+                    // prefix 前墜符號 ex:'$'
+                    // suffix 後墜符號 ex:'NTD'
+                }
+            },
+            mounted() {
+                console.log(this.$refs.countToExample)
+            }
+        });
+    </script>
+    <!-- end -->
+</body>
+
+</html>
