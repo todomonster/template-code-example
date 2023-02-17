@@ -52,16 +52,16 @@ export const ToastInputConfirm = (text = "", placeHolder = "") => {
     })
 }
 
-export const ToastHtml = (title = "", bodyHtml = "", showCancelButton = true) => {
+export const ToastHtml = (title = "", bodyHtml = "", showCancelButton = true, confirmButtonText = "確認") => {
     return Swal.fire({
         title,
         icon: "info",
         html: bodyHtml,
+        ...confirmConfig,
         // showCloseButton: false,
         // focusConfirm: false,
-        // confirmButtonText: '確認',
         // cancelButtonText: '取消',
-        ...confirmConfig,
+        confirmButtonText,
         showCancelButton,
     });
 }

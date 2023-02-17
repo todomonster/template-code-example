@@ -214,17 +214,23 @@ export default {
       passwordType.value = className === "icon-eye-slash" ? "password" : "";
     };
 
+    let openToast = true;
     const handlePhoneFocus = async () => {
       const { storeId, userId } = inputData.value;
-      if (!storeId && !userId) {
+      if (!storeId && !userId && openToast) {
         const swal = await ToastHtml(
           "注意!",
           `
 <span>
 目前您不是透過推薦連結進行註冊，您可以重新點選分享的連結或是再次掃描店家QRCode，若您無推薦連結，也可以略過繼續註冊。
 </span>`,
-          false
+          false,
+          "我知道了"
         );
+
+        if (swal.isConfirmed) {
+          openToast = false;
+        }
       }
     };
 
