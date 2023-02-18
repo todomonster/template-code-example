@@ -11,6 +11,7 @@ import ArrowIcon from "@/components/global/ArrowIcon.vue";
 export default {
   name: "ViewWallet",
   setup() {
+    const activityBaseUrl = process.env.VUE_APP_API_BASE_URL;
     const walletData = ref({});
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
@@ -22,7 +23,13 @@ export default {
       }
     };
 
-    const name = ["會員回饋確認", "回饋紀錄", "交易紀錄", "顧客索取回饋", "提領功能(目前正在準備中...)"];
+    const name = [
+      "會員回饋確認",
+      "回饋紀錄",
+      "交易紀錄",
+      "顧客索取回饋",
+      "提領功能(目前正在準備中...)",
+    ];
     const link = [
       "/wallet/rewardApply",
       "/wallet/rewardRecord",
@@ -44,6 +51,7 @@ export default {
       goto,
       img_06,
       walletData,
+      activityBaseUrl,
     };
   },
 
@@ -121,10 +129,7 @@ export default {
         </button>
       </div>
       <div class="listItem">
-        <button
-          type="button"
-          class="list-group-item list-group-item-action"
-        >
+        <button type="button" class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between grey">
             <div>
               <i class="fa fa-coins mx-1" aria-hidden="true"></i>
@@ -134,6 +139,14 @@ export default {
         </button>
       </div>
     </ul>
+    <div class="image-container m-4">
+      <div class="image">
+        <img
+          src="@/assets/images/img_bonus.png"
+          @click="goto('toBrowser', `${activityBaseUrl}/activity`)"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
