@@ -6,6 +6,8 @@ import { errorHandle } from "@/utils/errorHandle";
 import { Toast, ToastHtml } from "@/components/global/swal";
 import { useGlobalStore } from "@/store/global";
 
+import { ExtCallAppStorage } from "@/utils/extCall";
+
 export default {
   setup() {
     const globalStore = useGlobalStore();
@@ -16,11 +18,15 @@ export default {
       bankPrefix: "",
       bankAccount: "",
       name: "",
-      amount: 0,
+      amount: 1000,
       password: "",
+      saveToPhone: false,
     });
 
-    onMounted(async () => {});
+    onMounted(async () => {
+      // 取值
+      ExtGetDataByKey();
+    });
 
     const handleSubmit = async (e) => {
       e.preventDefault();
@@ -41,6 +47,8 @@ export default {
           if (swal.isConfirmed) {
             const response = await apiUserApplyWithdraw(inputData.value);
             if (response.result) {
+              // 將表單資料存到手機
+              ExtSaveDataByKey();
               Toast("申請成功");
               goto("back");
             } else {
@@ -53,11 +61,58 @@ export default {
       }
     };
 
+    const ExtSaveDataByKey = () => {
+      try {
+        const value = JSON.stringify(inputData.value);
+        window.ExtCallSaveDataByKey = (val) => console.log(`${val}`);
+        ExtCallAppStorage.saveDataByKey({
+          keyword: "bankAccountInfo",
+          value,
+          windowFunctionName: "ExtCallSaveDataByKey",
+        });
+      } catch (error) {
+        errorHandle(error);
+      }
+    };
+
+    const ExtGetDataByKey = () => {
+      try {
+        window.ExtCallGetDataByKey = (val) => {
+          if (val && typeof val === "string") {
+            const formData = JSON.parse(val);
+            // 自動載入
+            if (formData.saveToPhone) {
+              inputData.value = formData;
+            }
+          }
+        };
+        ExtCallAppStorage.getDataByKey({
+          keyword: "bankAccountInfo",
+          windowFunctionName: "ExtCallGetDataByKey",
+        });
+      } catch (error) {
+        errorHandle(error);
+      }
+    };
+    // const ExtGetEncryptDataByKey = () => {
+    //   try {
+    //     window.ExtCallGetEncryptDataByKey = (val) => Toast(val);
+    //     ExtCallAppStorage.getEncryptDataByKey({
+    //       keyword: "bankAccountInfo",
+    //       windowFunctionName: "ExtCallGetEncryptDataByKey",
+    //     });
+    //   } catch (error) {
+    //     errorHandle(error);
+    //   }
+    // };
+
     return {
       form,
       handleSubmit,
-
       inputData,
+      // ExtSaveDataByKey,
+      // ExtGetDataByKey,
+      // ExtGetEncryptDataByKey,
     };
   },
 
@@ -116,7 +171,7 @@ export default {
                 required
               />
             </div>
-            <div class="mb-2">
+            <div class="mb-3">
               <label class="form-label"
                 >提領額度(NTD)<span class="must">必填</span></label
               >
@@ -127,6 +182,21 @@ export default {
                 v-model="inputData.amount"
                 required
               />
+            </div>
+            <div class="d-flex justify-content-center align-item-center">
+              <div class="form-check">
+                <input
+                  v-model="inputData.saveToPhone"
+                  class="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="flexCheckChecked"
+                  :checked="inputData.saveToPhone"
+                />
+                <label class="form-check-label" for="flexCheckChecked">
+                  儲存帳戶資訊
+                </label>
+              </div>
             </div>
             <!-- <div class="mb-2">
               <label class="form-label"
@@ -151,6 +221,9 @@ export default {
             </div>
           </form>
         </div>
+        <!-- <button @click="ExtSaveDataByKey">存到App</button> -->
+        <!-- <button @click="ExtGetDataByKey">取值</button> -->
+        <!-- <button @click="ExtGetEncryptDataByKey">取值 加密</button> -->
       </div>
     </div>
   </section>

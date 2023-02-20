@@ -74,7 +74,7 @@ function shareFile({ subject = "", title = "", message = "", imageUrl = "", base
     // 文字
     if (message && typeof (message) === 'string') {
         config.message = message;
-    }else{
+    } else {
         config.message = "share"
     }
 
@@ -320,6 +320,7 @@ export const ExtCallThirdPart = {
     }
 
 }
+
 export const ExtCallGPS = {
     /**
         let Input = "";
@@ -370,6 +371,59 @@ export const ExtCallGPS = {
         executeExtCall(data);
     },
 
+}
+
+export const ExtCallAppStorage = {
+    /**
+        let Input = "";
+        window.ExtCallSaveDataByKey = (val) => (Input = val);
+        ExtCallAppStorage.saveDataByKey({ keyword:"", value:"", windowFunctionName:"ExtCallSaveDataByKey" });
+        setTimeout(() => console.log(Input), 500);
+    */
+    // 存
+    saveDataByKey({ keyword = "", value = "", windowFunctionName = "" }) {
+        const data = JSON.stringify({
+            "function": "saveDataByKey",
+            "key": keyword,
+            "value": value,
+            "mode": "encrypt",
+            "callback": windowFunctionName
+        });
+
+        executeExtCall(data);
+    },
+    // 取
+    /**
+    const testGetDataByKey = () => {
+      let Input = "";
+      window.ExtCallGetDataByKey = (val) => (Input=val);
+      ExtCallAppStorage.getDataByKey({
+        keyword: "test",
+        windowFunctionName: "ExtCallGetDataByKey",
+      });
+      setTimeout(() => alert(JSON.stringify(Input)), 500);
+    };
+     */
+    getDataByKey({ keyword = "", windowFunctionName = "" }) {
+        const data = JSON.stringify({
+            "function": "getDataByKey",
+            "callback": windowFunctionName,
+            "mode": "decrypt",
+            "key": keyword
+        });
+
+        executeExtCall(data);
+    },
+    
+    getEncryptDataByKey({ keyword = "", windowFunctionName = "" }) {
+        const data = JSON.stringify({
+            "function": "getDataByKey",
+            "callback": windowFunctionName,
+            "key": keyword
+        });
+
+        executeExtCall(data);
+    },
 }
 
 
