@@ -15,7 +15,7 @@ export default {
     let getApiTimer = null;
 
     const walletList = ref([]);
-    const APIparams = ref({ page: 1, limit: 10 });
+    const APIparams = ref({ page: 1, limit: 50 });
     const total = ref(Infinity);
 
     const handleScrollGetData = () => {
@@ -42,8 +42,16 @@ export default {
         // walletList.value = [{ content: "暫時沒有通知!" }];
       }
 
+      let newData = data?.filter(
+        (x) =>
+          x?.statusCode !== 500 &&
+          x?.statusCode !== 501 &&
+          x?.statusCode !== 502 &&
+          x?.statusCode !== 601
+      );
+
       // 處理有值
-      walletList.value = walletList.value.concat(data);
+      walletList.value = walletList.value.concat(newData);
       total.value = response.total;
       APIparams.value.page++;
     };

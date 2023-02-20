@@ -33,12 +33,9 @@ export default {
         }
       }
     };
+    //
     const handleListData = async (response) => {
       const { data } = response;
-      // 處理空值
-      if (response.total === 0) {
-        // walletList.value = [{ content: "暫時沒有通知!" }];
-      }
 
       let newData = data.map((item) => {
         let { amount, status, phone } = item;
@@ -56,6 +53,18 @@ export default {
         }
 
         item.phone = phone.slice(0, 2) + "xxxxx" + phone.slice(-3) + "申請";
+
+        switch (status) {
+          case 2:
+            item.status = "拒絕❌";
+            break;
+          case 1:
+            item.status = "同意✔️";
+            break;
+          default:
+            item.status = "待審↪";
+        }
+
         return item;
       });
 
