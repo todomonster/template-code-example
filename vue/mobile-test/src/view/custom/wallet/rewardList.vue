@@ -138,6 +138,31 @@ export default {
       }
     };
 
+    watch(
+      () => tabMode.value,
+      async (val) => {
+        if (val === 1) {
+          // api refresh
+          console.log("1");
+          await getDataMethod(
+            successListData,
+            apiGetRewardApplyList,
+            { value: { page: 1, limit: 10, status: 1 } },
+            { value: Infinity }
+          );
+        } else if (val === 2) {
+          // api refresh
+          console.log("2");
+          await getDataMethod(
+            failListData,
+            apiGetRewardApplyList,
+            { value: { page: 1, limit: 10, status: 2 } },
+            { value: Infinity }
+          );
+        }
+      }
+    );
+
     return {
       successListData,
       failListData,
@@ -227,12 +252,12 @@ export default {
         </div>
       </div> -->
       <div class="custom-list-wrapper">
-        <div v-show="tabMode === 0">
+        <div v-if="tabMode === 0">
           <div v-if="triggerClear">
             <RewardApplyList :tabMode="tabMode" />
           </div>
         </div>
-        <div v-show="tabMode === 1">
+        <div v-if="tabMode === 1">
           <NoData v-if="successListData.length == 0" />
           <div v-for="item in successListData" :key="item.createTime">
             <div class="d-flex justify-content-between m-2 bg-white">
