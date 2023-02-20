@@ -19,7 +19,7 @@ export default {
     v-show="$route.meta.showHeader"
   />
   <router-view v-slot="{ Component }">
-    <keep-alive include="QrCode">
+    <keep-alive include="test1">
       <component :is="Component" />
     </keep-alive>
   </router-view>

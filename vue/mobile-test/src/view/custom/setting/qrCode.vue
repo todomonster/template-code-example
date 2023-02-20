@@ -15,7 +15,7 @@ export default {
     const goto = globalStore.goto;
     const qrcodeUrl = ref("因為意外無法正確轉換");
 
-    let storeName = "";
+    let storeName = ref("-");
     let id = null;
     const btnDisable = ref(false);
 
@@ -29,7 +29,7 @@ export default {
           Toast("取得店家id失敗");
           return;
         }
-        storeName = store?.name;
+        storeName.value = store?.name;
         const responseUrl = await apiGenQrcode({ storeId: id });
         if (responseUrl) {
           qrcodeUrl.value = responseUrl;
@@ -48,7 +48,7 @@ export default {
         aTag.href = canvasToDataUrl("qrCanvas");
         aTag.download = "myfrees_store_qrcode.png";
 
-        let message = `${storeName}邀請您加入myFrees會員，立即加入得300點，消費立即索取福利金，點數換現金。`;
+        let message = `${storeName.value}邀請您加入myFrees會員，立即加入得300點，消費立即索取福利金，點數換現金。`;
         if (qrcodeUrl.value != "因為意外無法正確轉換") {
           message += ` 連結: ${qrcodeUrl.value}`;
         }
@@ -65,7 +65,7 @@ export default {
         // document.body.appendChild(aTag);
         // aTag.click();
         // document.body.removeChild(aTag);
-        Toast("僅支援手機")
+        Toast("僅支援手機");
       }
     };
 
@@ -76,7 +76,7 @@ export default {
       goto("toBrowser", QR_DOWNLOAD_URL);
     };
 
-    return { qrcodeUrl, download, btnDisable, handlePrint };
+    return { qrcodeUrl, download, btnDisable, handlePrint, storeName };
   },
   components: {},
 };
@@ -85,12 +85,20 @@ export default {
 <template>
   <div class="main-content">
     <div class="row text-center">
-      <div class="col">
+      <div class="col" v-show="storeName !== '-'">
         <vue-qrcode
           :value="qrcodeUrl"
           :options="{ width: 325 }"
           id="qrCanvas"
         ></vue-qrcode>
+      </div>
+      <div class="col m-2" v-show="storeName === '-'">
+        <img src="https://fakeimg.pl/300/?text=QR&font=noto" />
+      </div>
+    </div>
+    <div class="row text-center mb-4">
+      <div class="col">
+        {{ storeName }}
       </div>
     </div>
     <div class="row text-center mb-3">
