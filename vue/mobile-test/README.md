@@ -220,6 +220,21 @@ $img: '@/assets/images/';
   - 02/14
     - store
       - 首頁變成錢包
+- `v2.4.4.6`
+  - 02/20
+    - user
+      - Update 提領申請
+      - Fix 數字計算錯誤問題
+      - Fix CSS跑板問題
+  - 02/20,21
+    - store
+      - Update 顯示店家名稱
+      - Add 活動圖片
+      - Remove QRcode快取
+      - Update 交易紀錄過濾申請類別 500 501 502 601
+      - Fix 回饋畫面沒刷新資料問題
+
+`注意` ExtCall存信用卡資料到手機，還沒寫指定key值，應該用手機+前綴當key值
 
 ---
 a tag 可能因為沒有加上 `display: block;` 導致圖片不見
