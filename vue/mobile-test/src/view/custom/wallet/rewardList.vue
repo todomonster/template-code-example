@@ -79,22 +79,7 @@ export default {
     let getApiTimer2 = null;
     onMounted(async () => {
       try {
-        await getDataMethod(
-          successListData,
-          apiGetRewardApplyList,
-          APIparams1,
-          total1
-        );
-
-        await getDataMethod(
-          failListData,
-          apiGetRewardApplyList,
-          APIparams2,
-          total2
-        );
-
-        getApiTimer1 = setInterval(handleScrollGetData1, 500);
-        getApiTimer2 = setInterval(handleScrollGetData2, 500);
+        //
       } catch (error) {
         errorHandle(error);
       }
@@ -142,23 +127,24 @@ export default {
       () => tabMode.value,
       async (val) => {
         if (val === 1) {
-          // api refresh
-          console.log("1");
+          // api
           await getDataMethod(
             successListData,
             apiGetRewardApplyList,
-            { value: { page: 1, limit: 10, status: 1 } },
-            { value: Infinity }
+            APIparams1,
+            total1
           );
+
+          getApiTimer1 = setInterval(handleScrollGetData1, 500);
         } else if (val === 2) {
-          // api refresh
-          console.log("2");
+          // api
           await getDataMethod(
             failListData,
             apiGetRewardApplyList,
-            { value: { page: 1, limit: 10, status: 2 } },
-            { value: Infinity }
+            APIparams2,
+            total2
           );
+          getApiTimer2 = setInterval(handleScrollGetData2, 500);
         }
       }
     );
