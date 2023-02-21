@@ -62,6 +62,7 @@ export default {
             ...addStorePinia.value,
             all_addr: all_addr.value,
             is_open: "1",
+            category: "食",
           };
           const response = await apiStoreRegister(newPostData);
           if (response.result || response.success === "OK") {
@@ -405,7 +406,7 @@ export default {
             </div>
             <ChooseDate :data="storeData" @business_hours="handleEmit" />
             <div class="mb-2"></div>
-            <div class="mb-2">
+            <!-- <div class="mb-2">
               <label class="form-label"
                 >大分類<span class="must">必填</span></label
               >
@@ -433,7 +434,7 @@ export default {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div class="mb-2">
               <label class="form-label"
                 >價格範圍<span class="must">必填</span></label

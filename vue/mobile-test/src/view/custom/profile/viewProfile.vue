@@ -20,7 +20,7 @@ export default {
       { key: "電話: ", value: "tel" },
       { key: "營業時間: ", value: "business_hours" },
       { key: "價格: ", value: "price_range" },
-      { key: "分類標籤: ", value: "category" },
+      // { key: "分類標籤: ", value: "category" },
       { key: "回饋%數: ", value: "rewardRangeName" },
       { key: "開店狀態: ", value: "is_open" },
       // { key: "審核狀態: ", value: "isEnabled" },
