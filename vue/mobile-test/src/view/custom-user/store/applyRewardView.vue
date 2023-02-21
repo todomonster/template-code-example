@@ -28,12 +28,12 @@ export default {
         inputData.value.amountOfMoney * userRewardRange.value * 0.01
       );
     });
-    const amountCrossPercent = computed(() => {
-      const amount =
-        Math.floor(inputData.value.amountOfMoney * userRewardRange.value) *
-        0.01;
-      return amount.toFixed(0);
-    });
+    // const amountCrossPercent = computed(() => {
+    //   const amount =
+    //     Math.floor(inputData.value.amountOfMoney * userRewardRange.value) *
+    //     0.01;
+    //   return amount.toFixed(0);
+    // });
     const notAllow = computed(() => {
       return point.value - useAmount.value < 0;
     });
@@ -99,7 +99,6 @@ export default {
       inputData,
       userRewardRange,
       useAmount,
-      amountCrossPercent,
       notAllow,
       max,
       handleChange,
@@ -156,7 +155,7 @@ export default {
                   {{
                     `${
                       inputData.amountOfMoney ? inputData.amountOfMoney : 0
-                    } * ${userRewardRange}% = ${amountCrossPercent}`
+                    } * ${userRewardRange}% = ${useAmount}`
                   }}
                 </div>
                 <div class="col-right pb-2">
