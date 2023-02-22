@@ -23,6 +23,7 @@ export default {
     const userData = ref({});
 
     const VUE_APP_VERSION = process.env.VUE_APP_VERSION;
+    const LINE_OA_URL = process.env.VUE_APP_LINE_OA_URL;
 
     const link = ["https://myfree.tako.life/privacy"];
 
@@ -32,7 +33,7 @@ export default {
       try {
         ExtCall.openNewWebView(openUrl);
       } catch (error) {
-        goto("href", link[0]);
+        goto("href", openUrl);
       }
     };
     const logout = async () => {
@@ -179,6 +180,7 @@ export default {
       isLogin,
       removeAccount,
       recommendMember,
+      LINE_OA_URL,
     };
   },
 
@@ -254,10 +256,10 @@ export default {
             <div class="image"><i class="icon icon-member"></i></div>
             <div class="title">推薦會員</div>
           </a>
-          <!-- <a  class="list-link">
+          <a class="list-link" @click="goto('toBrowser', LINE_OA_URL)">
             <div class="image"><i class="icon icon-feedback"></i></div>
-            <div class="title">意見反饋</div>
-          </a> -->
+            <div class="title">聯繫我們</div>
+          </a>
           <a class="list-link" @click="handleWebView(link[0])">
             <div class="image"><i class="icon icon-privacy"></i></div>
             <div class="title">隱私權條款</div>
