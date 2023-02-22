@@ -18,6 +18,7 @@ import { storeToRefs } from "pinia";
 export default {
   setup() {
     const byPassOtp = false;
+    const LINE_OA_URL = process.env.VUE_APP_LINE_OA_URL;
     // ========
     const smsCoolDown = useCoolDownStore();
     const { isSmsCoolDownOk } = storeToRefs(smsCoolDown);
@@ -208,6 +209,9 @@ export default {
       passwordEyeClass,
       passwordType,
       handleEyeClick,
+
+      LINE_OA_URL,
+      goto
     };
   },
 };
@@ -309,6 +313,7 @@ export default {
             >
           </div>
         </div>
+        <!-- 聯繫我們 -->
         <div class="row form-word text-center">
           <div class="col-12 ml-4">
             {{
@@ -316,6 +321,10 @@ export default {
                 ? `還沒有收到驗證碼嗎？請等候${showText()}s後再重新發送`
                 : ""
             }}
+            <br />
+            <a @click="goto('toBrowser', LINE_OA_URL)" class="text-muted"
+              >聯繫我們</a
+            >
           </div>
         </div>
         <div class="btn-container mt-5 text-center cursor-pointer">

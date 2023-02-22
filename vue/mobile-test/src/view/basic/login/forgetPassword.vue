@@ -20,6 +20,7 @@ export default {
   props: {},
   emits: ["mode"],
   setup(props, { emit }) {
+    const LINE_OA_URL = process.env.VUE_APP_LINE_OA_URL;
     // ========
     const smsCoolDown = useCoolDownStore();
     const { isSmsCoolDownOk } = storeToRefs(smsCoolDown);
@@ -138,6 +139,8 @@ export default {
       passwordEyeClass,
       passwordType,
       handleEyeClick,
+
+      LINE_OA_URL
     };
   },
 };
@@ -228,7 +231,7 @@ export default {
                   : ""
               }}<br />
               <a
-                @click="goto('toBrowser', 'https://lin.ee/5gF3ojK')"
+                @click="goto('toBrowser', LINE_OA_URL)"
                 class="text-muted"
                 >聯繫我們</a
               >

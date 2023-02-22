@@ -23,8 +23,13 @@ export default {
     const globalStore = useGlobalStore();
     const goto = globalStore.goto;
     const VUE_APP_VERSION = process.env.VUE_APP_VERSION;
+    const LINE_OA_URL = process.env.VUE_APP_LINE_OA_URL;
 
-    const link = ["https://myfree.tako.life/privacy", "/setting/qrCode", "/setting/recommender"];
+    const link = [
+      "https://myfree.tako.life/privacy",
+      "/setting/qrCode",
+      "/setting/recommender",
+    ];
     const handleWebView = (openUrl) => {
       try {
         ExtCall.openNewWebView(openUrl);
@@ -71,6 +76,7 @@ export default {
       handleWebView,
       removeAccount,
       VUE_APP_VERSION,
+      LINE_OA_URL,
     };
   },
   components: { ArrowIcon },
@@ -80,6 +86,21 @@ export default {
 <template>
   <div class="main">
     <ul class="list-group list-group-flush">
+      <div class="listItem">
+        <button
+          type="button"
+          class="list-group-item list-group-item-action"
+          @click="goto('toBrowser', LINE_OA_URL)"
+        >
+          <div class="d-flex justify-content-between grey">
+            <div>
+              <i class="fa fa-file mx-1" aria-hidden="true"></i>
+              聯繫我們
+            </div>
+            <ArrowIcon />
+          </div>
+        </button>
+      </div>
       <div class="listItem">
         <button
           type="button"
