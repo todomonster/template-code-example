@@ -187,7 +187,8 @@ export default {
                 </div>
               </div>
             </div>
-            <div class="mb-2">
+            <!-- 大分類隱藏 -->
+            <!-- <div class="mb-2">
               <label class="form-label"
                 >大分類<span class="must" @click="inputData.category = ''"
                   >清除分類</span
@@ -216,7 +217,7 @@ export default {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
             <!-- end -->
           </div>
         </transition>
