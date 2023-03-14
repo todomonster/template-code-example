@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<!-- https://vuetifyjs.com/en/components/data-tables/#usage -->
+<html>
+  <head>
+    <link
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
+      rel="stylesheet"
+    />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+  </head>
+
+  <body>
+    <div id="app">
+      <v-app>
+        <v-app-bar app color="primary" dense dark>
+          <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
+          <v-toolbar-title>{{webTitle}}</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-menu transition="scale-transition">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on">
+                <v-icon>mdi-dots-vertical</v-icon>
+                <!-- mdi-magnify 放大鏡 -->
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item v-for="n in menuList" :key="n" @click="() => {}">
+                <v-list-item-title>{{ n }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-app-bar>
+        <!-- main start -->
+        <v-main>
+          <v-container fluid>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  label="請輸入陣列"
+                  suffix=""
+                  v-model="arr"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  :rules="rules"
+                  label="請輸入戰力(千萬)"
+                  suffix="萬"
+                  v-model="power"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12"> {{ ans.alg1 }}</v-col>
+              <v-col cols="12"> {{ ans.total1 }}</v-col>
+              <v-col cols="12"> {{ ans.alg2 }}</v-col>
+              <v-col cols="12"> {{ ans.total2 }}</v-col>
+            </v-row>
+            <v-row>
+              <v-btn variant="outlined" color="primary" @click="main()">
+                計算
+              </v-btn>
+            </v-row>
+          </v-container>
+        </v-main>
+        <!-- main end -->
+      </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>
+      new Vue({
+        el: "#app",
+        vuetify: new Vuetify(),
+
+        data: () => ({
+          //i18n
+          webTitle: "簡易計算機",
+          menuList: [],
+          //data
+          rules: [
+            (value) => !!value || "Required.",
+            (value) => (value || "").length <= 4 || "最多4位數",
+          ],
+          power: 1,
+          arr: `[{"value":100,"name":"a"},{"value":300,"name":"a"},{"value":400,"name":"a"},{"value":322,"name":"a"},{"value":221,"name":"a"},{"value":178,"name":"a"},{"value":30,"name":"a"}]`,
+          ans: {},
+        }),
+
+        computed: {},
+        mounted() {
+          this.main();
+        },
+
+        watch: {},
+
+        methods: {
+          main() {
+            try {
+              let result1 = this.alg1(JSON.parse(this.arr), this.power);
+              let ans1 = {
+                alg1: result1,
+                total1: result1
+                  .map((x) => x.value)
+                  ?.reduce(
+                    (accumulator, currentValue) => accumulator + currentValue,
+                    0
+                  ),
+              };
+              let result2 = this.alg2(JSON.parse(this.arr), this.power);
+              let ans2 = {};
+              if (result2) {
+                ans2 = {
+                  alg2: result2,
+                  total2: result2
+                    .map((x) => x.value)
+                    ?.reduce(
+                      (accumulator, currentValue) => accumulator + currentValue,
+                      0
+                    ),
+                };
+              }
+              // console.log(result);
+              this.ans = { ...ans1, ...ans2 };
+            } catch (error) {
+              console.log(error);
+            }
+          },
+          powerComparator(arr, opponent) {
+            function powerComparator1(objectArr, opponent) {
+              // 將 objectArr 中的 value 屬性取出來，並排序
+              const arr = objectArr
+                .map((obj) => obj.value)
+                .sort((a, b) => a - b);
+
+              // 初始化最小差距和結果陣列
+              let minDiff = Infinity;
+              let result = [];
+
+              // 遍歷陣列
+              for (let i = 0; i < arr.length; i++) {
+                // 從當前位置開始取出一個數字
+                let subArr = [{ ...objectArr[i] }];
+
+                // 計算目前數字組合的總和
+                let sum = subArr[0].value;
+
+                // 從當前位置往右擴展數字組合，直到總和超過目標值
+                let j = i + 1;
+                while (sum < opponent && j < arr.length) {
+                  subArr.push({ ...objectArr[j] });
+                  sum += objectArr[j].value;
+                  j++;
+                }
+
+                // 如果數字組合的總和超過目標值，就從右側刪除一個數字，直到總和小於或等於目標值
+                while (sum > opponent && subArr.length > 1) {
+                  sum -= subArr.pop().value;
+                }
+
+                // 計算數字組合和目標值的差距
+                const diff = Math.abs(opponent - sum);
+
+                // 如果找到了一組最小差距的解，就將它加入結果陣列
+                if (diff <= minDiff) {
+                  if (diff < minDiff) {
+                    result = [subArr];
+                    minDiff = diff;
+                  } else if (
+                    !result.some((r) => r.toString() === subArr.toString())
+                  ) {
+                    result.push(subArr);
+                  }
+                }
+              }
+
+              // 回傳結果陣列
+              return result;
+            }
+            function sumAndSortObjects(arr) {
+              const sumArr = arr.map((subArr) =>
+                subArr.reduce((acc, curr) => acc + curr.value, 0)
+              ); // 將每個子陣列的value加總
+              const sortedArr = arr.map((subArr) =>
+                subArr.sort((a, b) => b.value - a.value)
+              ); // 將每個子陣列的value大到小排序
+              const topFiveArr = sortedArr.map((subArr) => subArr.slice(0, 5)); // 取每個子陣列的前五個物件
+              const topFiveSumArr = topFiveArr.map((subArr) =>
+                subArr.reduce((acc, curr) => acc + curr.value, 0)
+              ); // 將每個子陣列前五個物件的value加總
+              const sortedSumArr = topFiveSumArr.sort((a, b) => b - a); // 將加總後的陣列大到小排序
+              const resultArr = [];
+              for (let i = 0; i < sortedSumArr.length; i++) {
+                const index = topFiveSumArr.indexOf(sortedSumArr[i]); // 找到加總後大到小排序的值在原陣列中的位置
+                resultArr.push({ origin: arr[index], total: sortedSumArr[i] }); // 將對應的原陣列物件與加總後的值組成新物件，放入結果陣列中
+              }
+              return resultArr;
+            }
+
+            const 雙重陣列 = powerComparator1(arr, opponent);
+
+            return sumAndSortObjects(雙重陣列);
+          },
+          alg1(arr, opponent) {
+            function comparePower(arr, opponent) {
+              arr.sort((a, b) => b.value - a.value); // 將 arr 按照 value 降序排列
+              let sum = 0;
+              let result = [];
+
+              for (let i = 0; i < arr.length && result.length < 5; i++) {
+                if (sum + arr[i].value <= opponent) {
+                  // 如果加上 arr[i] 的 value 不會超過 opponent
+                  result.push(arr[i]);
+                  sum += arr[i].value;
+                }
+              }
+
+              if (sum < opponent && arr[result.length]) {
+                // 如果 result 中的物件數量不到 5 個，且還有剩餘的物件可用，則從剩餘的物件中選取最大的幾個加入 result 中
+                let remaining = 5 - result.length;
+                for (let i = 0; i < remaining; i++) {
+                  if (sum + arr[result.length + i].value <= opponent) {
+                    result.push(arr[result.length + i]);
+                    sum += arr[result.length + i].value;
+                  } else {
+                    break;
+                  }
+                }
+              }
+
+              return result;
+            }
+            return comparePower(arr, opponent);
+          },
+          alg2(arr, opponent) {
+            try {
+              function compare_power(arr, opponent) {
+                arr = arr.sort(function (a, b) {
+                  return b.value - a.value;
+                });
+                var result = [];
+                var total = 0;
+                //   console.log(typeof(arr[0]), arr[0])
+                for (var i = 0; i < arr.length; i++) {
+                  //   console.log(arr[i]?.value > opponent);
+                  //   console.log(i);
+                  total += arr[i].value;
+                  result.push(arr[i]);
+                  if (total > opponent) {
+                    return result;
+                  }
+                }
+                return false;
+              }
+              return compare_power(arr, opponent);
+            } catch (error) {
+              console.log(error);
+            }
+          },
+        },
+      }).$mount("#app");
+      // new Vue()
+    </script>
+  </body>
+</html>
