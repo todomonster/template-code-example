@@ -8,6 +8,7 @@
 <https://www.python.org/downloads/>
 2. `pip install Pillow`
 3. cd 到該資料夾 執行`python3 books.py`
+
 ===
 
 ## 使用exe版本
@@ -16,7 +17,7 @@
 把要的圖片放入 `input`
 點exe後會將處理過的圖片放在 `output`
 
-## 打包成exe
+## 打包成exe (power by ChatGPT)
 
 將Python程式碼轉換成獨立的可執行文件（.exe）需要使用第三方工具，例如PyInstaller或py2exe。以下是使用PyInstaller的示例步骤：
 
