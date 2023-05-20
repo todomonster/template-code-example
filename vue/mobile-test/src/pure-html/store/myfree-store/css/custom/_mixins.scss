@@ -1,0 +1,30 @@
+@mixin transform($transform) {
+	-webkit-transform: $transform;
+	-moz-transform: $transform;
+	-ms-transform: $transform;
+	transform: $transform;
+}
+
+@mixin translate($x, $y){
+	@include transform(translate($x, $y));
+}
+
+@mixin rotate($deg){
+	@include transform(rotate($deg));
+}
+
+@mixin scale($scale){
+	@include transform(scale($scale));
+}
+
+@mixin placeholder($color) {
+	&::-webkit-input-placeholder {
+		color: $color;
+	}
+	&::-moz-placeholder {
+		color: $color;
+	}
+	&:-ms-input-placeholder {
+		color: $color;
+	}
+}

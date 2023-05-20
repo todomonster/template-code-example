@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!-- https://vuetifyjs.com/en/components/data-tables/#usage -->
+<html>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/@mdi/font@6.x/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/@vuetify/nightly@3.2.0-master-20230214.0/dist/vuetify.css"
+      rel="stylesheet"
+    />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+  </head>
+
+  <body>
+    <script type="text/x-template" id="app-template">
+      <v-app>
+        <div>
+          <v-alert
+            density="compact"
+            type="info"
+          >
+            I'm a compact alert with a <strong>type</strong> of info
+          </v-alert>
+        </div>
+      </v-app>
+    </script>
+
+    <div id="app"></div>
+
+    <script src="https://unpkg.com/vue@next/dist/vue.global.prod.js"></script>
+    <!-- <script src="https://unpkg.com/vue@next/dist/vue.global.js"></script> -->
+    <script src="https://unpkg.com/@vuetify/nightly@3.2.0-master-20230214.0/dist/vuetify.js"></script>
+    <script>
+      const { createApp } = Vue;
+      const { createVuetify } = Vuetify;
+
+      const vuetify = createVuetify();
+
+      const app = createApp({
+        template: "#app-template",
+      })
+        .use(vuetify)
+        .mount("#app");
+    </script>
+  </body>
+</html>

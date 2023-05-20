@@ -1,0 +1,49 @@
+$img: '../images/';
+
+$header-height: 3.5rem;
+$footer-height: 3.5rem;
+
+$sites: green, orange;
+$style: index($sites, orange);
+
+$bg-image: 'bg.png', 'bg_02.png';
+$bg-login-image: 'bg_login.png', 'bg_login_02.png';
+$icon-clear-image: 'icon_clear_grey.png', 'icon_clear.png';
+$icon-member-s-image: 'icon_member_s.png', 'icon_member_s_02.png';
+$icon-lock-image: 'icon_lock.png', 'icon_lock_02.png';
+$icon-notice-image: 'icon_notice_grey.png', 'icon_notice.png';
+$icon-cash-select-image: 'icon_cash_select.png', 'icon_cash_select_02.png';
+$icon-member-select-image: 'icon_member_select.png', 'icon_member_select_02.png';
+$primary-color: #6BB738, #FB7B1A;
+$form-icon-color: #3DC45D, #FB7B1A;
+$form-word-color: #6BB738, white;
+$btn-next-color: #FCA647, #6BB738;
+$camera-color: #5DCE78, #FB7B1A;
+
+.c-login {
+	background: url(#{$img}#{nth($bg-login-image, $style)}) no-repeat center top/cover;
+}
+.c-product {
+	background-color: #eee;
+}
+
+@media (max-width: 360px) {
+	html, body {
+		font-size: .96rem;
+	}
+}
+@media (max-width: 320px) {
+	html, body {
+		font-size: .85rem;
+	}
+}
+@media (min-width: 411px) {
+	html, body {
+		font-size: 1.1rem;
+	}
+}
+@media (min-width: 768px) {
+	html, body {
+		font-size: 1.25rem;
+	}
+}

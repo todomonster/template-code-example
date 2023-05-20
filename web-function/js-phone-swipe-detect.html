@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="box" style="width: 500px; height: 500px; background-color: #eee;">
+        請看console.log
+    </div>
+    <script>
+        let box = document.getElementById("box"); //監聽要滑動的DOM
+
+		// 觸摸開始
+        let startTime = '' //時間
+        let startDistanceX = '' // 位置X
+        let startDistanceY = '' // 位置Y
+		
+		// 觸摸結束
+        let endTime = '' // 時間
+        let endDistanceX = '' // 位置X
+        let endDistanceY = '' // 位置Y
+
+		// 移動時間
+        let moveTime = ''
+        let moveDistanceX = '' // 移動距離X
+        let moveDistanceY = '' // 移動距離Y
+
+        box.addEventListener("touchstart", (e) => {
+            startTime = new Date().getTime()
+            startDistanceX = e.touches[0].screenX
+            startDistanceY = e.touches[0].screenY
+        })
+        box.addEventListener("touchend", (e) => {
+            endTime = new Date().getTime()
+            endDistanceX = e.changedTouches[0].screenX
+            endDistanceY = e.changedTouches[0].screenY
+
+            moveTime = endTime - startTime
+            moveDistanceX = startDistanceX - endDistanceX
+            moveDistanceY = startDistanceY - endDistanceY
+            
+            console.log(moveDistanceX, moveDistanceY)
+			
+            // 滑動距離超過40px  && 時間<500毫秒觸發
+            if ((Math.abs(moveDistanceX) > 40 || Math.abs(moveDistanceY) > 40) && moveTime < 500) {
+                if (Math.abs(moveDistanceX) > Math.abs(moveDistanceY)) {
+                    console.log(moveDistanceX > 0 ? '左' : '右')
+                } else {
+                    console.log(moveDistanceY > 0 ? '上' : '下')
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

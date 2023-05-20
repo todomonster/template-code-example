@@ -1,0 +1,14 @@
+.bg-white {
+    background-color: white;
+    padding: 0.75rem;
+  }
+  .money {
+    color: #fca647;
+    padding: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 900 !important;
+  }
+  .custom-primary {
+    background-color: nth($camera-color, $style);
+    border: 0;
+  }
