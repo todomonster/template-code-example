@@ -1,0 +1,11 @@
+{
+    "image_setting": {
+      "target_img_path": "./input2/3.jpg",
+      "image_input_folder": "./input2",
+      "image_output_folder": "./output"
+    },
+    "pdf_setting": {
+      "pdf_input_folder": "./output",
+      "pdf_output_path": "./output/output.pdf"
+    }
+}
