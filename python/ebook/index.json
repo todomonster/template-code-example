@@ -1,0 +1,24 @@
+{
+    "注意": "資料夾路徑 不能用 反斜線\\ 要正斜線//; 產PDF是按照圖片名稱由小到大排序; 目前只支援單一的資料夾轉換;",
+    "套件": {
+        "from PIL import Image": "pip install Pillow",
+        "from fpdf import FPDF": "pip install fpdf",
+        "pyinstaller --onefile 轉換成exe的檔案名稱.py": "pip install pyinstaller"
+    },
+    "資訊":{
+        "作者": "Richard",
+        "版本": "v1.0.0",
+        "最後更新時間": "2023/05/20",
+        "exe_name": "裁切圖片&產PDF小工具"
+    },
+    "可調整之變數": "target_img_path = 指定的圖檔為範例，抓取上方的裁切區域，然後上下一起裁; 如果路徑錯誤會錯誤;",
+    "image_setting": {
+      "target_img_path": "./input2/3.jpg",
+      "image_input_folder": "./input2",
+      "image_output_folder": "./output"
+    },
+    "pdf_setting": {
+      "pdf_input_folder": "./output",
+      "pdf_output_path": "./output/output.pdf"
+    }
+}

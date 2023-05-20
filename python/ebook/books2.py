@@ -3,21 +3,25 @@ from PIL import Image
 # pip install fpdf
 from fpdf import FPDF
 import os
+import json
+
+with open('index.json', encoding='utf-8') as file:
+    data = json.load(file)
 
 # 支援圖片格式 'tuple'
 support_file_format = ('.png', '.jpg', '.jpeg')
 
 # 指定檔案路徑
-target_img_path = './input2/3.jpg'
+target_img_path = data['image_setting']['target_img_path'] or ""
 # 輸入&輸出文件路徑
-image_input_folder = './input2'
-image_output_folder = './output'
+image_input_folder = data['image_setting']['image_input_folder'] or ""
+image_output_folder = data['image_setting']['image_output_folder'] or ""
 # 底部間隔(pixel)
 bottom_gap = -5
 
 # 記得不能用 \ 要 /
-pdf_folder_path = './output'  # 替换为您的图像文件夹路径
-pdf_output_path = './output/output.pdf'  # 替换为您要保存的PDF文件路径
+pdf_input_folder = data['pdf_setting']['pdf_input_folder'] or ""
+pdf_output_path = data['pdf_setting']['pdf_output_path'] or ""
 
 
 def folder_image_cropper():
@@ -59,16 +63,16 @@ def folder_image_cropper():
             crop_border(image_path, output_path, image_border)
 
 def image2pdf():
-    def convert_images_to_pdf(pdf_folder_path, pdf_output_path):
+    def convert_images_to_pdf(pdf_input_folder, pdf_output_path):
         # 获取文件夹中的所有图像文件
-        image_files = [f for f in os.listdir(pdf_folder_path) if f.endswith(support_file_format)]
+        image_files = [f for f in os.listdir(pdf_input_folder) if f.endswith(support_file_format)]
         image_files.sort()  # 按名称排序（请确保文件名能够正确反映图像的顺序）
 
         pdf = FPDF()
 
         # 逐个添加图像到PDF
         for image_file in image_files:
-            image_path = os.path.join(pdf_folder_path, image_file)
+            image_path = os.path.join(pdf_input_folder, image_file)
             pdf.add_page()
             pdf.image(image_path, x=10, y=10, w=190)  # 调整图像位置和大小
 
@@ -76,4 +80,4 @@ def image2pdf():
         pdf.output(pdf_output_path)
         print("成功", pdf_output_path)
 
-    convert_images_to_pdf(pdf_folder_path, pdf_output_path)
+    convert_images_to_pdf(pdf_input_folder, pdf_output_path)
