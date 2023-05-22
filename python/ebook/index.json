@@ -7,7 +7,7 @@
     },
     "資訊":{
         "作者": "Richard",
-        "版本": "v1.0.0",
+        "版本": "v1.0.1",
         "最後更新時間": "2023/05/20",
         "exe_name": "裁切圖片&產PDF小工具",
         "main_file": "books2UI"
@@ -20,6 +20,8 @@
     },
     "pdf_setting": {
       "pdf_input_folder": "./output",
-      "pdf_output_path": "./output/output.pdf"
+      "pdf_output_path": "./output/output.pdf",
+      "pdf_parse_mode": "2",
+      "mode 說明": "'1': 將圖片塞入A4大小盡量撐滿並且置中; '2': 不留邊，全部佔滿; "
     }
 }
