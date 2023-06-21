@@ -1,10 +1,6 @@
 <!--
- * @Description: Description
- * @Author: 艾欢欢<ahh666@qq.com>
- * @Date: 2021-03-09 11:02:59
- * @LastEditTime: 2021-03-09 15:03:00
- * @LastEditors: 艾欢欢<ahh666@qq.com>
- * @FilePath: \js-essays\draggable\index.html
+src = https://github.com/ahh666/code-essays/blob/main/draggable/index.js
+fix power by gpt
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -39,67 +35,69 @@
     </div>
   </body>
   <script>
-    /*
-     * @Description: 拖拽实现代码及思路
-     * @Author: 艾欢欢<ahh666@qq.com>
-     * @Date: 2021-03-09 11:02:22
-     * @LastEditTime: 2021-03-09 15:45:09
-     * @LastEditors: 艾欢欢<ahh666@qq.com>
-     * @FilePath: \js-essays\draggable\index.js
-     */
-
     function dragHandler() {
-      // 用来存取被拖拽的节点
+      const dragBox = document.getElementById("drag-box");
       let draggedNode = null;
-      // 存放被拖拽节点的背景
       let draggedNodeBg = null;
-      // 存放被拖拽节点进入的容器（节点） 的旧背景
       let dragEnterNodeBg = null;
-      // 获取可拖拽节点
-      const dragNodes = document.querySelectorAll('div[draggable="true"]');
-      // 给可拖拽节点绑定事件
-      dragNodes.forEach((item) => {
-        item.ondragstart = () => {
-          draggedNode = item;
-          // 拖拽开始，设置背景
-          draggedNodeBg = getComputedStyle(item).background;
-          item.style.background = "#bbb";
-        };
-        // 默认情况下,数据/元素不能在其他元素中被拖放,也就是会阻止你做drop操作，所以取消其默认行为
-        item.ondragover = (e) => {
-          e.preventDefault();
-        };
-        // 被拖拽的节点，被释放后进行节点替换
-        item.ondrop = (e) => {
-          if (dragEnterNodeBg) {
-            // 拖拽被释放，恢复目标节点背景
-            e.target.style.background = dragEnterNodeBg;
-          }
-          if (draggedNode !== null && draggedNode !== item) {
-            const temp = document.createElement("div");
-            const dragBox = document.getElementById("drag-box");
-            dragBox.replaceChild(temp, e.target);
-            dragBox.replaceChild(e.target, draggedNode);
-            dragBox.replaceChild(draggedNode, temp);
-          }
-        };
-        // 样式交互
-        item.ondragend = () => {
-          item.style.background = draggedNodeBg;
-        };
-        item.ondragenter = () => {
-          if (item !== draggedNode) {
-            dragEnterNodeBg = getComputedStyle(item).background;
-            item.style.background = "darkcyan";
-          }
-        };
-        item.ondragleave = () => {
-          if (dragEnterNodeBg && item !== draggedNode) {
-            item.style.background = dragEnterNodeBg;
-          }
-        };
+
+      dragBox.addEventListener("dragstart", (e) => {
+        if (e.target.matches('div[draggable="true"]')) {
+          draggedNode = e.target;
+          draggedNodeBg = getComputedStyle(draggedNode).background;
+          draggedNode.style.background = "#bbb";
+        }
+      });
+
+      dragBox.addEventListener("dragover", (e) => {
+        e.preventDefault();
+      });
+
+      dragBox.addEventListener("drop", (e) => {
+        e.preventDefault();
+        if (dragEnterNodeBg) {
+          e.target.style.background = dragEnterNodeBg;
+        }
+        if (
+          draggedNode &&
+          draggedNode !== e.target &&
+          draggedNode.parentElement === dragBox && // 檢查被拖拽節點的父節點是不是 dragBox
+          e.target.parentElement === dragBox // 檢查目標節點的父節點是不是 dragBox
+        ) {
+          const temp = document.createElement("div");
+          dragBox.replaceChild(temp, e.target);
+          dragBox.replaceChild(e.target, draggedNode);
+          dragBox.replaceChild(draggedNode, temp);
+        }
+      });
+
+      dragBox.addEventListener("dragend", (e) => {
+        if (e.target.matches('div[draggable="true"]')) {
+          e.target.style.background = draggedNodeBg;
+        }
+      });
+
+      dragBox.addEventListener("dragenter", (e) => {
+        if (
+          e.target.matches('div[draggable="true"]') &&
+          e.target !== draggedNode
+        ) {
+          dragEnterNodeBg = getComputedStyle(e.target).background;
+          e.target.style.background = "darkcyan";
+        }
+      });
+
+      dragBox.addEventListener("dragleave", (e) => {
+        if (
+          e.target.matches('div[draggable="true"]') &&
+          dragEnterNodeBg &&
+          e.target !== draggedNode
+        ) {
+          e.target.style.background = dragEnterNodeBg;
+        }
       });
     }
+
     dragHandler();
   </script>
 </html>
