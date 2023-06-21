@@ -1,70 +1,45 @@
 <script>
-import { onMounted, onBeforeMount, onUpdated } from "vue";
+import { onMounted, onBeforeMount, onUpdated, ref, watch, reactive } from "vue";
 import Loading from "@/components/loading/apiLoading.vue";
 import { ExtCall } from "@/utils/extCall";
 import { useGlobalStore } from "@/store/global";
 
 export default {
   setup() {
-    const globalStore = useGlobalStore();
-    const goto = globalStore.goto;
-
-    onMounted(() => {
-      try {
-        window.setApplicationStatusCallback = (val = "") => {
-          if (val === "foreground") {
-            ExtCall.getUrlSchemeInput("getUrlSchemeInput");
-          }
-        };
-        ExtCall.setApplicationStatusCallback("setApplicationStatusCallback");
-
-        window.getUrlSchemeInput = (val = "") => {
-          if (!val) {
-            return;
-          }
-
-          let userId = "";
-          let storeId = "";
-          const searchParams = new URLSearchParams(val);
-
-          for (let [key, value] of searchParams.entries()) {
-            if (key === "userId") {
-              if (value !== "null" && value) {
-                userId = value;
-              }
-            }
-            if (key === "storeId") {
-              if (value !== "null" && value) {
-                storeId = value;
-              }
-            }
-          }
-
-          // alert(`userId: ${userId}, storeId: ${storeId}`);
-
-          // 存至pinia
-          setTimeout(() => {
-            if (localStorage.getItem("is_Login") == "1") {
-              // 跳轉到該店 id
-              goto("routerQuery", "/store/detail", {
-                query: { id: storeId },
-              });
-            } else {
-              // 跳到註冊
-              goto("routerQuery", "/login/signup", {
-                query: { signup: "1", userId, storeId },
-              });
-            }
-          }, 500);
-        };
-        ExtCall.getUrlSchemeInput("getUrlSchemeInput");
-        //
-      } catch (error) {
-        console.log(`${error.message}不支援`);
-      }
+    // const globalStore = useGlobalStore();
+    // const goto = globalStore.goto;
+    const john = ref({
+      name: "John",
+      age: 30,
     });
 
-    return {};
+    watch(
+      john.value.age, //這樣會監聽不到。
+      // () => john.value.age, //要改這樣
+      () => {
+        console.log("john one year older");
+      }
+    );
+
+    setInterval(() => {
+      john.value.age++;
+    }, 1000);
+
+    function Resurrection() {
+      john.value = {
+        name: "New John",
+        age: 0,
+      };
+    }
+
+    onMounted(() => {
+      setTimeout(() => {
+        Resurrection();
+        console.log(john.value);
+      }, 4000);
+    });
+
+    return { john };
   },
   components: {
     Loading,
