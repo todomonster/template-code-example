@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>demo-tool-tips-mouse-follow</title>
+    <style>
+      .c-img {
+        display: none;
+        position: fixed;
+      }
+      .inline {
+        display: inline;
+      }
+      .w-100 {
+        width: 100%;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>https://codepen.io/Venomzzz/pen/BMJBEN</h1>
+    <div id="app">
+      <button class="inline w-100" @mousemove="handleMouseMove" @mouseout="handleMouseOut">Hover Me</button>
+      <div class="c-img" :style="{ top: imgTop, left: imgLeft, display: imgDisplay }">
+        <img src="https://fakeimg.pl/300/" />
+        <p>Image caption</p>
+      </div>
+    </div>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            imgTop: "",
+            imgLeft: "",
+            imgDisplay: "none",
+          };
+        },
+        methods: {
+          handleMouseMove(event) {
+            this.imgTop = event.clientY + 30 + "px";
+            this.imgLeft = event.clientX + 30 + "px";
+            this.imgDisplay = "inline";
+          },
+          handleMouseOut() {
+            this.imgDisplay = "none";
+          },
+        },
+      });
+
+      app.mount("#app");
+    </script>
+  </body>
+</html>

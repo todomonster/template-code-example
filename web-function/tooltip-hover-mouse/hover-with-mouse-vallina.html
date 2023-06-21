@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>demo-tool-tips-mouse-follow</title>
+    <style>
+      .c-img {
+        display: none;
+        position: fixed;
+      }
+      .inline {
+        display: inline;
+      }
+      .w-100{
+        width: 100%;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>https://codepen.io/Venomzzz/pen/BMJBEN</h1>
+    <div id="IamRow">
+      <button class="inline w-100">Hover Me</button>
+      <div class="c-img">
+        <img src="https://fakeimg.pl/300/" />
+        <p>Image caption</p>
+      </div>
+    </div>
+    <script>
+      (() => {
+        const row = document.getElementById("IamRow");
+        const img = row.querySelector(".c-img");
+        const btn = row.querySelector("button");
+
+        btn.addEventListener("mousemove", (e) => {
+          console.log(e.clientY, e.clientX);
+          img.classList.remove("hidden");
+          img.classList.add("inline");
+          img.style.top = `${e.clientY + 30}px`;
+          img.style.left = `${e.clientX + 30}px`;
+        });
+
+        btn.addEventListener("mouseout", () => {
+          img.classList.remove("inline");
+          img.classList.add("hidden");
+        });
+      })();
+    </script>
+  </body>
+</html>

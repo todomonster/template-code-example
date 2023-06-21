@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>demo-tool-tips-mouse-follow</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/0.7.4/tailwind.min.css"
+    />
+  </head>
+  <body>
+    <h1>https://codepen.io/Venomzzz/pen/BMJBEN</h1>
+    <div id="IamRow" class="hover:bg-grey">
+      <button class="p-4 inline border">Hover Me</button>
+      <div class="c-img hidden fixed">
+        <img src="https://fakeimg.pl/300/" />
+        <p>Image caption</p>
+      </div>
+    </div>
+    <script>
+      (() => {
+        const row = document.getElementById("IamRow");
+        const img = row.querySelector(".c-img");
+        const btn = row.querySelector("button");
+
+        btn.addEventListener("mousemove", (e) => {
+          console.log(e.clientY, e.clientX);
+          //  - hidden
+          img.classList.remove("hidden");
+          //  + inline
+          img.classList.add("inline");
+          //  mouse-follow
+          img.style.top = `${e.clientY + 30}px`;
+          img.style.left = `${e.clientX + 30}px`;
+        });
+
+        btn.addEventListener("mouseout", (e) => {
+          //  - inline
+          img.classList.remove("inline");
+          //  + hidden
+          img.classList.add("hidden");
+        });
+      })();
+    </script>
+  </body>
+</html>
