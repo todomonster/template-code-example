@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue 3 Audio Example</title>
+  </head>
+  <body>
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    <div id="app">
+      <!-- Vue component -->
+      <audio-player></audio-player>
+    </div>
+
+    <script src="https://unpkg.com/vue@3.2.0/dist/vue.global.js"></script>
+    <script>
+      // Define the AudioPlayer component
+      const AudioPlayer = {
+        template: `
+        <video width="400" controls ref="targetPlayer">
+          <source :src="audioSource">
+        </video>        
+        <button @click="changeAudio" v-show="showBtn">Change Audio</button>
+      `,
+        setup() {
+          const audioSource = Vue.ref(
+            "https://www.w3schools.com/html/mov_bbb.mp4"
+          );
+
+          const targetPlayer = Vue.ref(null);
+
+          const showBtn = Vue.ref(true);
+
+          const changeAudio = () => {
+            // Change the audio source URL
+            audioSource.value =
+              "http://61.221.15.119:8088/file/0/20230809134207014.mp4"; // Replace with the new audio URL
+            // console.log(targetPlayer.value);
+            targetPlayer.value.load();
+            showBtn.value = false;
+          };
+
+          return { audioSource, targetPlayer, changeAudio, showBtn };
+        },
+      };
+
+      // Create a Vue app
+      const app = Vue.createApp({});
+      app.component("AudioPlayer", AudioPlayer);
+      app.mount("#app");
+      
+    </script>
+    <script>
+      /* mp3 也能更換
+          <audio :id="audioId" controls ref="targetPlayer">
+            <source :src="audioSource" type="audio/mp3" />
+            Your browser does not support the audio element.
+          </audio>      
+      */
+    </script>
+  </body>
+</html>
