@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+window.addEventListener("DOMContentLoaded", function() {
+  var paragraph = document.querySelector("p"); // 选择 <p> 元素
+  var searchText = "sed";
+
+  // 创建正则表达式，以进行不区分大小写的搜索
+  var searchRegex = new RegExp(searchText, "i");
+
+  // 获取 <p> 元素的文本内容
+  var text = paragraph.textContent;
+
+  // 使用正则表达式搜索文本
+  var match = searchRegex.exec(text);
+
+  if (match) {
+    // 创建一个范围对象
+    var range = document.createRange();
+
+    // 找到匹配文本的文本节点
+    var textNode = paragraph.firstChild;
+    while (textNode !== null && (textNode.nodeType !== Node.TEXT_NODE || textNode.textContent.indexOf(match[0]) !== match.index)) {
+      textNode = textNode.nextSibling;
+    }
+
+    if (textNode !== null) {
+      // 设置范围的起始和结束位置
+      range.setStart(textNode, match.index);
+      range.setEnd(textNode, match.index + match[0].length);
+
+      // 创建一个选区对象并将范围添加到选区中
+      var selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  }
+});
+</script>
+</head>
+<body>
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+    luctus malesuada sagittis. Morbi purus odio, blandit ac urna <b>sed</b>,
+    <b>interdum pharetra</b> leo. Cras congue id est sit amet mattis.
+    Sed in metus et orci eleifend commodo. Phasellus at odio imperdiet,
+    efficitur augue in, pulvinar sapien. Pellentesque leo nulla, porta
+    non lectus eu, ullamcorper semper est. Nunc <i>convallis</i> risus
+    vel mauris accumsan, in rutrum odio sodales. Vestibulum
+    <b>ante ipsum</b> primis in faucibus orci luctus et ultrices posuere
+    cubilia Curae; Sed at tempus mauris. Fusce blandit felis sit amet
+    magna lacinia blandit.
+  </p>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      // 重點
+      /*
+        window.addEventListener("DOMContentLoaded", ...
+        DOM.textContent.indexOf(VALUE)
+
+        window.getSelection();
+        removeAllRanges
+        addRange
+
+        document.createRange();
+        setStart
+        setEnd
+      */
+      window.addEventListener("DOMContentLoaded", function () {
+        selectTextByQuerySelector("p", "Lorem");
+        function selectTextByQuerySelector(query = "", value = "") {
+          const paragraph = document.querySelector("p"); // 选择 <p> 元素
+          if (!paragraph) return;
+          const text = paragraph.textContent; // 获取元素的文本内容
+          const index = text.indexOf(value); // 查找 "Lorem" 的位置
+
+          if (index !== -1) {
+            const selection = window.getSelection();
+            const range = document.createRange();
+            range.setStart(paragraph.firstChild, index);
+            range.setEnd(paragraph.firstChild, index + 5);
+            selection.removeAllRanges();
+            selection.addRange(range);
+          }
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
+      malesuada sagittis. Morbi purus odio, blandit ac urna sed,
+      <b>interdum pharetra</b> leo. Cras congue id est sit amet mattis. Sed in
+      metus et orci eleifend commodo. Phasellus at odio imperdiet, efficitur
+      augue in, pulvinar sapien. Pellentesque leo nulla, porta non lectus eu,
+      ullamcorper semper est. Nunc <i>convallis</i> risus vel mauris accumsan,
+      in rutrum odio sodales. Vestibulum <b>ante ipsum</b> primis in faucibus
+      orci luctus et ultrices posuere cubilia Curae; Sed at tempus mauris. Fusce
+      blandit felis sit amet magna lacinia blandit.
+    </p>
+  </body>
+</html>
