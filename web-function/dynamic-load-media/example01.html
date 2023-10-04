@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- start -->
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <style>
+          .ctest-audio {
+            margin-top: 20px;
+          }
+        </style>
+      </head>
+      <body>
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <div class="ctest-audio">
+          <audio id="audioPlayer" controls>
+            <source
+              id="audioSource"
+              src="https://www.w3schools.com/html/horse.mp3"
+              type="audio/mp3"
+            />
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+
+        <button id="changeAudioButton">Change Audio</button>
+
+        <!--  -->
+        <button id="loadIframe">load iframe</button>
+        <div class="ctest-video" id="dynamicIframe"></div>
+
+        <script>
+          var audioPlayer = document.getElementById("audioPlayer");
+          var audioSource = document.getElementById("audioSource");
+          var changeAudioButton = document.getElementById("changeAudioButton");
+
+          var loadIframe = document.getElementById("loadIframe");
+          var dynamicIframe = document.getElementById("dynamicIframe");
+
+          changeAudioButton.addEventListener("click", function () {
+            audioSource.src =
+              "./20230809133413208.mp3"; // Replace with the new audio URL
+            audioPlayer.load(); // Reload the audio player to use the new source
+          });
+
+          loadIframe.addEventListener("click", function () {
+            var iframe = document.createElement("iframe");
+            iframe.width = "560";
+            iframe.height = "315";
+            iframe.src = "https://www.youtube.com/embed/yI44K_w_G_U";
+            iframe.title = "YouTube video player";
+            iframe.frameBorder = "0";
+            iframe.allow =
+              "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+            iframe.allowFullscreen = true;
+            dynamicIframe.appendChild(iframe);
+          });
+        </script>
+      </body>
+    </html>
+
+    <!-- end -->
+  </body>
+</html>

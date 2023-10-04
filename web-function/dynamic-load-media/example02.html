@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- start -->
+    <!DOCTYPE html>
+    <html>
+      <head> </head>
+      <body>
+        <br /><br />
+        <!--  -->
+        <button id="RENDER">RENDER</button>
+        <button id="RENDER2">RENDER2</button>
+
+        <div class="我是iframe" id="dynamicIframe"></div>
+        <div class="我是聲音" id="dynamicVoice"></div>
+        <div class="我是影片" id="dynamicVideo"></div>
+
+        <script>
+          var RENDER = document.getElementById("RENDER");
+          var RENDER2 = document.getElementById("RENDER2");
+          var dynamicIframe = document.getElementById("dynamicIframe");
+          var dynamicVoice = document.getElementById("dynamicVoice");
+          var dynamicVideo = document.getElementById("dynamicVideo");
+
+          RENDER.addEventListener("click", function () {
+            console.log("cc");
+            dynamicIframe.innerHTML = `<iframe
+                    width="560"
+                    height="315"
+                    src="https://www.youtube.com/embed/yI44K_w_G_U"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen
+                />`;
+
+            dynamicVoice.innerHTML = `
+                <audio id="audioPlayer" controls>
+                    <source
+                    id="audioSource"
+                    src="https://www.w3schools.com/html/horse.mp3"
+                    type="audio/mp3"
+                    />
+                    Your browser does not support the audio element.
+                </audio> `;
+
+            dynamicVideo.innerHTML = `
+                <video width="400" controls ref="targetPlayer">
+                <source src="https://www.w3schools.com/html/mov_bbb.mp4">
+                </video>        
+            `;
+          });
+          RENDER2.addEventListener("click", function () {
+            try {
+              dynamicIframe.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/7jlqhnlFR8Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+
+              dynamicVoice.innerHTML = `
+                <audio id="audioPlayer" controls>
+                    <source
+                    id="audioSource"
+                    src="./20230809133413208.mp3"
+                    />
+                    Your browser does not support the audio element.
+                </audio> `;
+
+              dynamicVideo.innerHTML = `
+                <video width="400" controls ref="targetPlayer">
+                <source src="./20230809134207014.mp4">
+                </video>        
+            `;
+
+            } catch (error) {
+              console.log(error);
+            }
+          });
+        </script>
+      </body>
+    </html>
+  </body>
+</html>
