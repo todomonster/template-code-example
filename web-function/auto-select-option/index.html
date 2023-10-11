@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <select name="cars" id="cars">
+      <option value="volvo">Volvo</option>
+      <option value="saab">Saab</option>
+      <option value="opel">Opel</option>
+      <option value="audi">Audi</option>
+    </select>
+    <script>
+      // index 選擇
+      document.querySelector("#cars").selectedIndex = 2;
+      //   value 選擇
+      document.querySelector("#cars").value = "audi";
+    </script>
+  </body>
+</html>
