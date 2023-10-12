@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>progress-bar</title>
+  </head>
+  <body>
+    <h1>要開啟3G慢速模式才能體會出來</h1>
+    <div
+      id="progress-bar"
+      style="background-color: blanchedalmond; min-height: 100px"
+    ></div>
+
+    <script>
+      /*
+      createObjectURL 不适用于非Blob类型的数据。
+      */
+      fetch("./temp.pdf")
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+            return;
+          }
+          const contentLength = response.headers.get("Content-Length");
+          const progressBar = document.getElementById("progress-bar");
+
+          const total = parseInt(contentLength, 10);
+          let loaded = 0;
+          const reader = response.body.getReader();
+
+          function pump() {
+            reader.read().then(({ done, value }) => {
+              if (done) {
+                console.log("Download complete");
+              } else {
+                loaded += value.byteLength;
+                console.log(loaded);
+                progressBar.style.width = `${(loaded / total) * 100}%`;
+                progressBar.textContent = `${Math.floor(
+                  (loaded * 100) / total
+                )}%`;
+                pump();
+              }
+            });
+          }
+
+          pump();
+        })
+        .catch(error => {
+          console.error("Fetch error:", error);
+        });
+    </script>
+  </body>
+</html>

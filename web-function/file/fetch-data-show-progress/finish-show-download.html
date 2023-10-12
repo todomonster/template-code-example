@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>progress-bar</title>
+  </head>
+  <body>
+    <div
+      id="progress-bar"
+      style="background-color: blanchedalmond; min-height: 10px"
+    ></div>
+    <button id="download-button" style="display: none">Download</button>
+    <script>
+      fetch("./temp.pdf")
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const contentLength = response.headers.get("Content-Length");
+          const progressBar = document.getElementById("progress-bar");
+          const downloadButton = document.getElementById("download-button");
+
+          const total = parseInt(contentLength, 10);
+          let loaded = 0;
+          const chunks = [];
+
+          const reader = response.body.getReader();
+
+          function pump() {
+            reader.read().then(({ done, value }) => {
+              if (done) {
+                console.log("Download complete");
+                const blob = new Blob(chunks);
+                const url = URL.createObjectURL(blob);
+
+                downloadButton.style.display = "block";
+                downloadButton.addEventListener("click", () => {
+                  // 创建一个虚拟链接
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = "temp.pdf";
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  // URL.revokeObjectURL(url);
+                });
+              } else {
+                console.log("value", value);
+                loaded += value.byteLength;
+                progressBar.style.width = `${(loaded / total) * 100}%`;
+                progressBar.textContent = `${Math.floor(
+                  (loaded * 100) / total
+                )}%`;
+                chunks.push(value);
+                pump();
+              }
+            });
+          }
+
+          pump();
+        })
+        .catch(error => {
+          console.error("Fetch error:", error);
+        });
+    </script>
+  </body>
+</html>
