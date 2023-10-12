@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scalable Vector Graphics - <use> <defs></title>
+  </head>
+  <body>
+    <!-- 1 -->
+    <svg
+      width="100%"
+      height="100%"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+    >
+      <style>
+        .classA {
+          fill: red;
+        }
+      </style>
+      <defs>
+        <!-- <g> 是一个分组元素，用于包含一个或多个形状。 -->
+        <g id="Port">
+          <circle style="fill: inherit" r="10" />
+        </g>
+      </defs>
+
+      <!-- 預設值 use 抓 defs id-->
+      <text y="15">black</text>
+      <use x="50" y="10" xlink:href="#Port" />
+      <!-- 加上 class -->
+      <text y="35">red</text>
+      <use x="50" y="30" xlink:href="#Port" class="classA" />
+      <!-- 使用 style -->
+      <text y="55">blue</text>
+      <use x="50" y="50" xlink:href="#Port" style="fill: blue" />
+    </svg>
+
+    <!--  
+
+      xmlns
+      xml naming space 命名空間
+      xmlns:xlink="http://www.w3.org/1999/xlink" 避免衝突
+    -->
+    <!-- SVG tag -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="120">
+      <!-- 矩行 tag -->
+      <rect
+        x="2"
+        y="2"
+        width="100"
+        height="100"
+        style="stroke: #333; stroke-width: 3; fill: MediumTurquoise"
+      />
+    </svg>
+  </body>
+</html>
