@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>文件上传示例</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <input type="file" id="fileInput" />
+    <button onclick="uploadFile()">上传文件</button>
+    <div id="progressDiv" style="display: none">
+      <div id="progressBar">0%</div>
+    </div>
+    <div id="responseDiv"></div>
+
+    <script>
+      function uploadFile() {
+        const fileInput = document.getElementById("fileInput");
+        const file = fileInput.files[0];
+
+        if (file) {
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("path", "xxx");
+
+          const progressBar = document.getElementById("progressBar");
+          const progressDiv = document.getElementById("progressDiv");
+          const responseDiv = document.getElementById("responseDiv");
+
+          const axiosConfig = {
+            onUploadProgress: progressEvent => {
+              // 重點在此
+              console.log(progressEvent);
+              if (progressEvent.progress) {
+                progressBar.innerText =
+                  Math.floor(progressEvent.progress * 100) + "%";
+              }
+            }
+          };
+
+          axios
+            .post(
+              "YOUR_UPLOAD_URL",
+              formData,
+              axiosConfig
+            )
+            .then(response => {
+              responseDiv.innerText = "上传完成: " + response.data.msg;
+            })
+            .catch(error => {
+              responseDiv.innerText = "上传失败: " + error.message;
+            })
+            .finally(() => {
+              progressDiv.style.display = "none";
+            });
+
+          progressDiv.style.display = "block";
+        }
+      }
+    </script>
+  </body>
+</html>
