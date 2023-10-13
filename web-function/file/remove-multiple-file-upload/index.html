@@ -1,0 +1,143 @@
+<!-- https://stackoverflow.com/questions/16943605/remove-a-filelist-item-from-a-multiple-inputfile -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>多檔案上傳範例</title>
+    <style>
+      fieldset {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      legend {
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      input[type="file"] {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      button {
+        /* width: 100%; */
+        padding: 10px;
+        background-color: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      #uploadBtn {
+        float: right;
+      }
+
+      ol {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      li {
+        padding: 10px 0;
+        border-bottom: 1px solid #ccc;
+      }
+
+      button.remove {
+        float: right;
+        margin-top: 5px;
+        padding: 5px 10px;
+        background-color: #ccc;
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <fieldset>
+      <legend>Multiple File upload</legend>
+      <input type="file" hidden multiple />
+      <br />
+      <ol id="myFiles">
+        please choose files
+      </ol>
+      <br />
+      <button onclick="fileInput.click()">Browse</button>
+      <button id="uploadBtn" onclick="initUpload()">Start upload</button>
+    </fieldset>
+    <script>
+      var filesToUpload = []; // Array to store files
+      const fileInput = document.querySelector('input[type="file"]');
+
+      fileInput.addEventListener("change", e => {
+        for (let i = 0; i < e.target.files.length; i++) {
+          let myFile = e.target.files[i];
+          let myFileID = "FID" + (1000 + Math.random() * 9000).toFixed(0);
+
+          filesToUpload.push({
+            file: myFile,
+            FID: myFileID
+          });
+        }
+        display();
+        //reset the input to null - nice little chrome bug!
+        e.target.value = null;
+      });
+
+      const removeFile = x => {
+        for (let i = 0; i < filesToUpload.length; i++) {
+          if (filesToUpload[i].FID === x) filesToUpload.splice(i, 1);
+        }
+        display();
+      };
+
+      const display = () => {
+        const myFiles = document.getElementById("myFiles");
+        myFiles.innerHTML = "";
+        for (let i = 0; i < filesToUpload.length; i++) {
+          myFiles.innerHTML += `<li>
+            ${filesToUpload[i].file.name}
+            <button onclick="removeFile('${filesToUpload[i].FID}')">Remove</button>
+            </li>`;
+        }
+        if (filesToUpload.length === 0) {
+          myFiles.textContent = "please choose files";
+        }
+      };
+
+      const initUpload = () => {
+        console.log(filesToUpload);
+
+        let formData = new FormData();
+
+        for (let i = 0; i < filesToUpload.length; i++) {
+          formData.append("files", filesToUpload[i].file);
+        }
+        /*
+    fetch("https://server_upload_route/", {
+            method: 'POST',
+            body: formData
+        }).then(response => response.json())
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            alert("POST Failed");
+            console.log(error);
+        });
+    */
+      };
+    </script>
+  </body>
+</html>
