@@ -1,88 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>拖拽上传图片</title>
-    <style>
-      #drop-area {
-        width: 300px;
-        height: 200px;
-        border: 2px dashed #ccc;
-        text-align: center;
-        line-height: 200px;
-        font-size: 18px;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="drop-area">拖拽文件到此区域上传</div>
-    <!-- 注意 type=file multiple 開啟多選檔案 -->
-    <input type="file" id="file-input" multiple style="display: none" />
 
-    <ul id="file-list"></ul>
+<head>
+  <meta charset="UTF-8" />
+  <title>拖拽上传图片</title>
+  <style>
+    #drop-area {
+      width: 300px;
+      height: 200px;
+      border: 2px dashed #ccc;
+      text-align: center;
+      line-height: 200px;
+      font-size: 18px;
+    }
+  </style>
+</head>
 
-    <script>
-      const dropArea = document.getElementById("drop-area");
-      const fileList = document.getElementById("file-list");
+<body>
+  <div id="drop-area">拖拽文件到此区域上传</div>
+  <!-- 注意 type=file multiple 開啟多選檔案 -->
+  <input type="file" id="file-input" multiple style="display: none" />
 
-      // 阻止浏览器默认行为
-      ["dragenter", "dragover", "dragleave", "drop"].forEach(eventName => {
-        dropArea.addEventListener(eventName, e => {
-          e.preventDefault();
-          //阻止冒泡
-          e.stopPropagation();
-        });
+  <ul id="file-list"></ul>
+
+  <script>
+    const dropArea = document.getElementById("drop-area");
+    const fileList = document.getElementById("file-list");
+
+    // 阻止浏览器默认行为
+    ["dragenter", "dragover", "dragleave", "drop"].forEach(eventName => {
+      dropArea.addEventListener(eventName, e => {
+        e.preventDefault();
+        //阻止冒泡
+        e.stopPropagation();
       });
+    });
 
-      // 高亮拖拽区域
-      ["dragenter", "dragover"].forEach(eventName => {
-        dropArea.addEventListener(eventName, () => {
-          dropArea.style.border = "2px solid #007bff";
-        });
+    // 高亮拖拽区域
+    ["dragenter", "dragover"].forEach(eventName => {
+      dropArea.addEventListener(eventName, () => {
+        dropArea.style.border = "2px solid #007bff";
       });
+    });
 
-      // 取消高亮拖拽区域
-      ["dragleave", "drop"].forEach(eventName => {
-        dropArea.addEventListener(eventName, () => {
-          dropArea.style.border = "2px dashed #ccc";
-        });
+    // 取消高亮拖拽区域
+    ["dragleave", "drop"].forEach(eventName => {
+      dropArea.addEventListener(eventName, () => {
+        dropArea.style.border = "2px dashed #ccc";
       });
+    });
 
-      const globalFile = [];
-      function handleFileLoad(files) {
-        for (let i = 0; i < files.length; i++) {
-          const file = files[i];
-          const { type, name, size } = file;
-          //阻止冒泡
-          if (type.startsWith("image/")) {
-            const listItem = document.createElement("li");
-            listItem.textContent = name;
-            fileList.appendChild(listItem);
-            globalFile.push(file);
-            console.log(globalFile);
+    const globalFile = [];
+    function handleFileLoad(files) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const { type, name, size } = file;
+        //阻止冒泡
+        if (type.startsWith("image/")) {
+
+          if (globalFile.length >= 3) {
+            alert('max 3')
+            console.log(globalFile.length);
+            return;
           }
+
+          const listItem = document.createElement("li");
+          listItem.textContent = name;
+          fileList.appendChild(listItem);
+          globalFile.push(file);
+
         }
       }
-      // 处理拖拽和上传
-      dropArea.addEventListener("drop", e => {
-        // 拖拽操作才有
-        const files = e.dataTransfer.files;
-        // if (files.length > 3) {
-        //   alert(">3");
-        // }
-        handleFileLoad(files);
-      });
-      // 打开文件选择对话框
-      const fileInput = document.getElementById("file-input");
-      fileInput.addEventListener("change", () => {
-        // const file = e.target.files[0];
-        const files = fileInput.files;
-        handleFileLoad(files);
-      });
+    }
+    // 处理拖拽和上传
+    dropArea.addEventListener("drop", e => {
+      // 拖拽操作才有
+      const files = e.dataTransfer.files;
+      handleFileLoad(files);
+    });
+    // 打开文件选择对话框
+    const fileInput = document.getElementById("file-input");
+    fileInput.addEventListener("change", () => {
+      // const file = e.target.files[0];
+      const files = fileInput.files;
+      handleFileLoad(files);
+    });
 
-      dropArea.addEventListener("click", () => {
-        fileInput.click();
-      });
-    </script>
-  </body>
+    dropArea.addEventListener("click", () => {
+      fileInput.click();
+    });
+  </script>
+</body>
+
 </html>
