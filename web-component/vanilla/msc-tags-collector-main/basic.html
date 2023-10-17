@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- 核心 -->
+    <script type="module" src="mjs/wc-msc-tags-collector.js"></script>
+    <!--  -->
+  </head>
+  <body>
+    <h1>超精簡使用範例(只要核心)</h1>
+    <!-- 核心 -->
+    <msc-tags-collector>
+      <script type="application/json">
+        {
+          "placeholder": [
+            "我是 web component",
+            "開源專案 msc-tags-collector",
+            "可以拖曳😺",
+            "可以刪除😺",
+            "按下鍵盤Enter可以新增😺",
+            "可以伸縮長度😺",
+            "程式碼很短"
+          ],
+          "l10n": {
+            "placeholder": "請輸入標籤"
+          },
+          "limitation": {
+            "maxcount": 10,
+            "maxlength": 30
+          }
+        }
+      </script>
+    </msc-tags-collector>
+    <!--  -->
+  </body>
+</html>

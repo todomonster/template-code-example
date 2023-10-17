@@ -1,0 +1,86 @@
+<!-- https://github.com/meistudioli/msc-image-uploader -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Web Component: &lt;msc-image-uploader /&gt; - web components based image uploader</title>
+<meta name="description" content="<msc-image-uploader /> is a web component based image uploader. Users could pick & upload images by 「file picker」、「drag & drop」and even direct「paste」image content. Besides that, users could also change images sorting through 「drag & drop」or 「keyboard arrow keys」. With rich config setting, developers can set up placeholder and limitation for different scenarios." />
+<script type="module" src="mjs/wc-msc-image-uploader.js"></script>  
+</head>
+
+<body>
+
+<div class="wrap">
+</div>
+
+<div class="msc-image-uploader-wrap">
+  <msc-image-uploader>
+    <script type="application/json">
+      {
+        "multiple": true,
+        "limitation": {
+          "size": 52428800,
+          "accept": ".jpg,.jpeg,.png,.gif,.webp,.avif",
+          "width": 400,
+          "height": 400,
+          "maxcount": 15
+        },
+        "placeholder": [
+          {
+            "src": "https://picsum.photos/id/111/200/200"
+          },
+          {
+            "src": "https://picsum.photos/id/146/200/200"
+          },
+          {
+            "src": "https://picsum.photos/id/183/200/200"
+          },
+          {
+            "src": "https://picsum.photos/id/212/200/200"
+          },
+          {
+            "src": "https://picsum.photos/id/41/200/200"
+          },
+          {
+            "src": "https://picsum.photos/id/56/200/200"
+          },
+          {
+            "src": "https://picsum.photos/id/57/200/200"
+          },
+          {
+            "src": "https://picsum.photos/id/78/200/200"
+          },
+          {
+            "src": "https://picsum.photos/id/106/200/200"
+          },
+          {
+            "src": "https://picsum.photos/id/107/200/200"
+          },
+          {
+            "src": "https://picsum.photos/id/110/200/200"
+          },
+          {
+            "src": "https://picsum.photos/id/167/200/200"
+          },
+          {
+            "src": "https://picsum.photos/id/175/200/200"
+          },
+          {
+            "src": "https://picsum.photos/id/195/200/200"
+          }
+        ],
+        "webservice": {
+          "url": "https://blog.lalacube.com/mei/WS_msc-image-uploader.php",
+          "params": {},
+          "header": {},
+          "withCredentials": false,
+          "timeout": 30000
+        }
+      }
+    </script>
+  </msc-image-uploader>
+</div>
+
+</body>
+
+</html>
