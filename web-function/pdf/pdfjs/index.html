@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>PDF.js Example</title>
+  </head>
+  <body>
+    <div>
+        <button id="prev_page">上一頁</button>
+        <button id="next_page">下一頁</button>
+      <span>
+        頁數:
+        <span id="page_num"></span>
+        /
+        <span id="page_count"></span>
+      </span>
+    </div>
+    <canvas id="canvas"></canvas>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.min.js"></script>
+    <script>
+      var pdfDoc = null;
+      var pageNum = 1;
+      var pageRendering = false;
+      var pageNumPending = null;
+
+      var pdfjsLib = window["pdfjs-dist/build/pdf"];
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.worker.min.js";
+
+      var canvas = document.getElementById("canvas");
+      var context = canvas.getContext("2d");
+
+    //   改成自己的
+      var loadingTask = pdfjsLib.getDocument("your_pdf_file.pdf");
+
+      loadingTask.promise.then(function (pdf) {
+        pdfDoc = pdf;
+        document.getElementById("page_count").textContent = pdf.numPages;
+
+        renderPage(pageNum);
+
+        document.getElementById("next_page").addEventListener("click", function () {
+          if (pageNum >= pdf.numPages) {
+            return;
+          }
+          pageNum++;
+          renderPage(pageNum);
+        });
+
+        document.getElementById("prev_page").addEventListener("click", function () {
+          if (pageNum <= 1) {
+            return;
+          }
+          pageNum--;
+          renderPage(pageNum);
+        });
+      });
+
+      function renderPage(num) {
+        if (pageRendering) {
+          pageNumPending = num;
+        } else {
+          pageRendering = true;
+          pdfDoc.getPage(num).then(function (page) {
+            var viewport = page.getViewport({ scale: 1.5 });
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            var renderContext = {
+              canvasContext: context,
+              viewport: viewport
+            };
+
+            page.render(renderContext).promise.then(function () {
+              pageRendering = false;
+              if (pageNumPending !== null) {
+                renderPage(pageNumPending);
+                pageNumPending = null;
+              }
+              document.getElementById("page_num").textContent = num;
+            });
+          });
+        }
+      }
+    </script>
+  </body>
+</html>
