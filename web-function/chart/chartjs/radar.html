@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>雷達圖範例 </title>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+    <canvas id="chart"></canvas>
+    10<br />
+    80<br />
+    60<br />
+    30<br />
+    <script>
+      const blue = "#ADD8E6";
+      const color = Chart.helpers.color;
+      const config = {
+        type: "radar",
+        data: {
+          labels: [
+            ["ATK", "attack"],
+            ["V", "vital"],
+            "Z",
+            ["DEF", "defend"],
+          ],
+          datasets: [
+            {
+              label: "My dataset",
+              backgroundColor: color(blue).alpha(0.2).rgbString(),
+              borderColor: blue,
+              pointBackgroundColor: blue,
+              data: [100 - 10, 100 - 80, 100 - 60, 100 - 30], // 要反向同 callback
+            },
+          ],
+        },
+        options: {
+          scale: {
+            gridLines: {
+              circular: true, //圓形外框
+            },
+            ticks: {
+              beginAtZero: true,
+              min: 0,
+              max: 100,
+              // 內部框和點回傳值
+              callback: (value, index, values) => {
+                return 100 - value;
+              },
+            },
+          },
+        },
+      };
+
+      window.onload = function () {
+        window.myRadar = new Chart(document.getElementById("chart"), config);
+      };
+    </script>
+  </body>
+</html>
