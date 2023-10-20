@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas 文字範例</title>
+</head>
+<body>
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+
+    <script>
+        // 獲取 Canvas 元素
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 設置文字樣式
+        ctx.font = '10px Arial';
+        ctx.fillStyle = 'blue';
+
+        // 在 x=100,y=100 新增文字
+        ctx.fillText('test', 200, 200);
+    </script>
+</body>
+</html>
