@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <!-- 這邊要改 -->
+    <title>A4</title>
+
+    <!-- Normalize or reset CSS with your favorite library -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"
+    />
+
+    <!-- Load paper.css for happy printing -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.4.1/paper.css"
+    />
+
+    <!-- Set page size here: A5, A4 or A3 -->
+    <!-- Set also "landscape" if you need -->
+    <style>
+      @page {
+        size: A4;
+      }
+      /* 這邊要改  */
+      @media print {
+        button {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+
+  <!-- Set "A5", "A4" or "A3" for class name -->
+  <!-- Set also "landscape" if you need -->
+  <body class="A4">
+    <!-- Each sheet element should have the class "sheet" -->
+    <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
+    <section class="sheet padding-0mm">
+      <!-- Write HTML just like a web page -->
+      <!-- 這邊要改 -->
+      <img src="./5.png" alt="" style="max-width: 100%" />
+    </section>
+  </body>
+  <script>
+    function genBtn(btnText, style, id, fn) {
+      var btnHtml = `<button style="${style || ""}" id="${id || ""}">
+        ${btnText || "P"}
+      </button>`;
+      //   插入元素
+      document.body.insertAdjacentHTML("afterend", btnHtml);
+      setTimeout(() => {
+        if (fn) {
+          fn();
+        }
+      }, 500);
+    }
+
+    var style1 = `position:fixed; top:0; right:0; background-color:black; color:white; padding:5px; border-radius: 5px; max-width:30px;`;
+    const printFn = () => {
+      var btn = document.getElementById("windowPrint");
+      btn.onclick = () => {
+        window.print();
+      };
+    };
+    genBtn("P", style1, "windowPrint", printFn);
+
+    var style2 = `position:fixed; top:40px; right:0; background-color:black; color:white; padding:5px; border-radius: 5px; max-width:30px;`;
+    genBtn("T", style2);
+  </script>
+</html>
