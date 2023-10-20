@@ -8,13 +8,15 @@
   <body>
     <!-- 4.4 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <div>
+    <!-- 最大高度限制a -->
+    <div class="chart" style="height: 500px">
       <canvas id="chart"></canvas>
     </div>
     10<br />
     80<br />
     60<br />
     30<br />
+
     <script>
       const blue = "#ADD8E6";
       const color = Chart.helpers.color;
@@ -36,7 +38,16 @@
             },
           ],
         },
+
         options: {
+          // <!-- 最大高度限制b -->
+          maintainAspectRatio: false,
+          // 隱藏 "legend" 或 "圖例"
+          plugins: {
+            legend: {
+              display: false,
+            },
+          },
           // events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
           // 移除"mousemove" "click"就不會出現hover
           events: ["mouseout", "touchstart", "touchmove", "touchend"],
