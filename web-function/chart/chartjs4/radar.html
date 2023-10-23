@@ -12,10 +12,10 @@
     <div class="chart" style="height: 500px">
       <canvas id="chart"></canvas>
     </div>
-    10<br />
+    50<br />
     80<br />
     60<br />
-    30<br />
+    50<br />
 
     <script>
       const blue = "#ADD8E6";
@@ -30,11 +30,14 @@
               backgroundColor: color(blue).alpha(0.2).rgbString(),
               borderColor: blue,
               pointBackgroundColor: blue,
-              data: [100 - 10, 100 - 80, 100 - 60, 100 - 30], // 要反向同 callback
+              data: [100 - 50, 100 - 80, 100 - 60, 100 - 50], // 要反向同 callback
             },
             {
               label: "",
-              data: [0, 0, 0, 0], // 要反向同 callback
+              backgroundColor: color(blue).alpha(0).rgbString(),
+              pointBackgroundColor: color(blue).alpha(0).rgbString(),
+              borderColor: color(blue).alpha(0).rgbString(),
+              data: [100, 100, 100, 100], // 要反向同 callback
             },
           ],
         },
