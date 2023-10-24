@@ -1,0 +1,82 @@
+html, body {
+	height: 100%;
+}
+.page {
+	padding: 25px 15px 60px;
+	/* height: 100%; */
+	background-color: #fbf9fe;
+	-webkit-tap-highlight-color: transparent;
+}
+.page_title {
+	color: #225fba;
+	text-align: center;
+	font-size: 30px;
+	font-weight: 400;
+	margin: 0 15%;
+}
+
+.weui_toptips.weui_notice {
+	background-color: #FFBE00;
+}
+
+.footer {
+	margin: 15px 0 25px;
+	padding: 0 20px;
+	text-align: center;
+	font-size: 14px;
+}
+.footer a {
+	color: #61749B;
+}
+
+.weui_text_area {
+	margin: 15px 0 25px;
+	padding: 0 20px;
+	text-align: center;
+}
+.weui_msg_desc {
+	font-size: 14px;
+	color: #888;
+}
+
+.weui_extra_area {
+	margin-bottom: 15px;
+	font-size: 14px;
+	color: #888;
+}
+.weui_extra_area a {
+	color: #61749B;
+}
+
+.weui-footer {
+	font-size: 14px;
+  line-height: 1.4;
+  text-align: center;
+	color: rgba(0,0,0,0.3);
+
+  padding-top: 16px;
+  padding-bottom: 16px;
+  padding-bottom: calc(16px + constant(safe-area-inset-bottom));
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
+}
+.weui-footer__text {
+	padding: 0 16px;
+	font-size: 12px;
+}
+
+.line {
+	height: 1px;
+	width: 100%;
+	margin: 26px 0;
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+.section {
+  padding: 0 0 12px;
+}
+.section .hd {
+  text-align: center;
+  font-size: 18px;
+  line-height: 2;
+  color: #225fba;
+}
