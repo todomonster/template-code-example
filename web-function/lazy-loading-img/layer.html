@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>等待图片加载示例</title>
+    <style>
+      .loading {
+        display: block;
+        text-align: center;
+        font-size: 24px;
+        margin-top: 20%;
+      }
+      .content {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loading" id="loading">Loading...</div>
+    <div class="content" id="content">
+      <!-- 在这里放置你的网页内容 -->
+      <img src="https://demosite.71box.app/images/bg_learning.png" alt="Image 1" />
+      <img src="https://demosite.71box.app/images/slider_02.png" alt="Image 2" />
+      <!-- 添加更多图片和内容 -->
+    </div>
+
+    <script>
+      window.addEventListener("load", function () {
+        // 当整个页面加载完成后执行
+        const loading = document.getElementById("loading");
+        const content = document.getElementById("content");
+
+        // 隐藏加载消息，显示内容
+        loading.style.display = "none";
+        content.style.display = "block";
+      });
+
+      // 如果你有图像，你可以使用以下代码来确保所有图像加载完成
+      const images = document.querySelectorAll("img");
+      let imagesLoaded = 0;
+
+      for (const img of images) {
+        img.addEventListener("load", function () {
+          imagesLoaded++;
+
+          if (imagesLoaded === images.length) {
+            // 所有图片都已加载
+            const loading = document.getElementById("loading");
+            const content = document.getElementById("content");
+
+            // 隐藏加载消息，显示内容
+            loading.style.display = "none";
+            content.style.display = "block";
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
