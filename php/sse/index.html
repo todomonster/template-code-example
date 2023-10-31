@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <a
+      href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events"
+      >SSE 參考來源</a
+    >
+    <img src="./SSE.png" alt="">
+    <br />
+    <ul id="list"></ul>
+    <script>
+      const evtSource = new EventSource("//172.16.70.171/sse-test/index.php", {
+        withCredentials: true,
+      });
+      //   message event
+      evtSource.onmessage = (event) => {
+        const newElement = document.createElement("li");
+        const eventList = document.getElementById("list");
+
+        newElement.textContent = `message: ${event.data}`;
+        eventList.appendChild(newElement);
+      };
+      //   ping event
+      evtSource.addEventListener("ping", (event) => {
+        const newElement = document.createElement("li");
+        const eventList = document.getElementById("list");
+        const time = JSON.parse(event.data).time;
+        newElement.textContent = `ping at ${time}`;
+        eventList.appendChild(newElement);
+      });
+    </script>
+  </body>
+</html>
