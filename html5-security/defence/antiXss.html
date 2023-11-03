@@ -1,0 +1,31 @@
+<!-- https://github.com/leizongmin/js-xss/blob/master/dist/xss.min.js -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XSS attack</title>
+    <script src="https://rawgit.com/leizongmin/js-xss/master/dist/xss.js"></script>
+  </head>
+  <body>
+    <input type="text" name="" id="xss" />
+    <button id="btn">render</button>
+    <div id="output"></div>
+    <pre>
+        無效
+        <!-- <script> window.alert(1) </script> -->
+        有效
+        <!-- <img src=x onerror="alert(/xss/)"> -->
+        參考:
+        https://blog.csdn.net/weixin_43825028/article/details/119112234
+    </pre>
+    <script>
+      const xssInput = document.getElementById("xss");
+      const outputDic = document.getElementById("output");
+      const btn = document.getElementById("btn");
+      btn.onclick = (event) => {
+        outputDic.innerHTML = filterXSS(xssInput.value);
+      };
+    </script>
+  </body>
+</html>
