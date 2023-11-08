@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+      }
+
+      #area-render {
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        right: 4px;
+        bottom: 4px;
+        border: dashed 1px #ccc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="area-render">
+      <a href="https://github.com/hustcc/canvas-nest.js/tree/master">
+        https://github.com/hustcc/canvas-nest.js/tree/master</a
+      >
+    </div>
+    <script src="./canvas.net.js"></script>
+    <script>
+      var cn = new CanvasNest(document.getElementById("area-render"), {
+        count: 450,
+      });
+      console.log(cn);
+    </script>
+  </body>
+</html>
