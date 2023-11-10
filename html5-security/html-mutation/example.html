@@ -1,0 +1,33 @@
+<!-- https://ithelp.ithome.com.tw/articles/10316778 -->
+<!DOCTYPE html>
+<html>
+  <body>
+    <!-- 1. start -->
+    <pre id="a1"></pre>
+    <style>
+      <a id="test"></a>
+    </style>
+    <!-- 1. end -->
+    <!-- 2. start -->
+    <pre id="a2"></pre>
+    <style>
+        <a id="</style><img src=x onerror=alert(1)>"></a>
+    </style>
+    <!-- 2. end -->
+    
+  </body>
+  <script>
+    document.getElementById("a1").textContent = `
+         是個神奇的標籤，因為在這標籤裡面的東西都會被解讀為文字，例如說：
+        <style>
+            <a id="test"></a>
+        </style> 
+    `;
+    document.getElementById("a2").textContent = `
+         仔細看他會觸發 mXSS:
+        <style>
+            <a id="</style><img src=x onerror=alert(1)>"></a>
+        </style>
+    `;
+  </script>
+</html>

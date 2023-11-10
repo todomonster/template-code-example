@@ -1,0 +1,19 @@
+<!-- https://ithelp.ithome.com.tw/articles/10330578 -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    如果使用者有登入的話，就會跳轉到網站的 logo
+    網址，因為這真的是張圖片所以會執行到 onload，
+    反之，則會被導到登入頁面，而這不是圖片所以會到 onerror。
+    <img
+      src="https://medium.com/m/login-redirect?redirectUrl=https%3A%2F%2Fmedium.com%2Ffavicon.ico"
+      onerror="alert('medium Not logged in')"
+      onload="alert('medium logged in')"
+    />
+  </body>
+</html>

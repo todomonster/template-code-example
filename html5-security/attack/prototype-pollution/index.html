@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function merge(a, b) {
+        for (let prop in b) {
+          if (typeof a[prop] === "object") {
+            merge(a[prop], b[prop]);
+          } else {
+            a[prop] = b[prop];
+          }
+        }
+      }
+      var config = {
+        a: 100,
+        b: {
+          c: 2,
+        },
+      };
+
+      var customConfig = { a: 1 };
+      // var customConfig = JSON.parse('{"__proto__": {"a": 1}}');
+      merge(config, customConfig);
+
+      var obj = {};
+      console.log(obj.a);//undefined
+      // ==========
+      var config2 = {
+        a: 100,
+        b: {
+          c: 2,
+        },
+      };
+
+      var customConfig2 = JSON.parse('{"__proto__": {"a": 1}}');
+      merge(config2, customConfig2);
+
+      var obj = {};
+      console.log(obj.a);//undefined
+    </script>
+  </body>
+</html>
