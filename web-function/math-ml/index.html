@@ -1,0 +1,53 @@
+<!-- tool -->
+<!-- https://webdemo.myscript.com/views/math/index.html# -->
+<!-- https://katex.org/ -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MathML</title>
+    <style>
+      math {
+        font-size: larger;
+        color: blue;
+        margin-left: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <pre></pre>
+    <div>
+      <math xmlns="http://www.w3.org/1998/Math/MathML">
+        <msubsup>
+          <mrow>
+            <mi> C </mi>
+          </mrow>
+          <mrow>
+            <mn> 2 </mn>
+          </mrow>
+          <mrow>
+            <mn> 9 </mn>
+          </mrow>
+        </msubsup>
+      </math>
+    </div>
+    <script>
+      document.querySelector("pre").textContent = `
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <msubsup>
+              <mrow>
+                <mi> C </mi>
+              </mrow>
+              <mrow>
+                <mn> 2 </mn>
+              </mrow>
+              <mrow>
+                <mn> 9 </mn>
+              </mrow>
+            </msubsup>
+          </math>        
+        `;
+    </script>
+  </body>
+</html>
