@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loading...</title>
+    <!-- meta start-->
+    <title>特酷生活 | TAKO Life</title>
+    <meta property="og:locale" content="zh_TW" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="特酷生活 | TAKO Life" />
+    <meta
+      property="og:description"
+      content="TAKO Life 提供了使用者生活上的便利性服務"
+    />
+    <meta property="og:site_name" content="特酷生活 | TAKO Life" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:description"
+      content="TAKO Life 提供了使用者生活上的便利性服務"
+    />
+    <meta name="twitter:title" content="特酷生活 | TAKO Life" />
+    <!-- meta end -->
+  </head>
+  <body>
+    hi
+    <span id="name"></span>
+    <p id="lineId"></p>
+    v1.2
+
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script>
+      const BASE_URL = "https://takolife.71box.app";
+      const API_PREFIX = "/liff";
+      const VUE_CLI_INDEX = `${BASE_URL}/takolifeLiff/index.html`;
+      const DOWNLOAD_APP_URL =
+        "https://line.takolife.app/tako_download_app/index.html";
+      const targetMapping = {
+        mapping: {
+          push: `${BASE_URL}/takolifeLiff/lineNotify.html`, //need login
+          news: `${VUE_CLI_INDEX}#/news/view`, //
+          wallet: `${VUE_CLI_INDEX}#/userWallet`, //need login
+        },
+        notNeedLogin: ["news"],
+        rk: "",
+        sk: "",
+      };
+      const apiInstance = {
+        postForm(url = "", form) {
+          return fetch(`${BASE_URL}${API_PREFIX}${url}`, {
+            body: form, // must match 'Content-Type' header
+            cache: "default", // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: "omit", // include, same-origin, *omit
+            method: "POST", // *GET, POST, PUT, DELETE, etc.
+            mode: "same-origin", // no-cors, cors, *same-origin
+            redirect: "follow", // manual, *follow, error
+            referrer: "client", // *client, no-referrer
+          }).then((response) => response.json());
+        },
+        postJson(url = "", body = {}, config = { Authorization: "" }) {
+          return fetch(`${BASE_URL}${API_PREFIX}${url}`, {
+            method: "POST",
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${config?.Authorization}`,
+            },
+            body: JSON.stringify(body),
+          }).then((response) => response.json());
+        },
+      };
+    </script>
+    <script>
+      class Liff {
+        async login(bUseRedirectUri = false) {
+          try {
+            // alert('start')
+            const liffId = "1656417265-OA9AbLdb";
+            //初始化
+            await liff.init({ liffId });
+
+            if (!liff.isLoggedIn()) {
+              (await bUseRedirectUri)
+                ? await liff.login({ redirectUri: location.href })
+                : await liff.login();
+              return;
+            } else {
+              // alert("你已經登入Line哦！");
+            }
+
+            const profile = await liff.getProfile();
+
+            const userData = {
+              liffId,
+              ...profile,
+            };
+
+            return { status: true, userData };
+          } catch (error) {
+            console.log(error);
+            return { status: false };
+          }
+        }
+      }
+    </script>
+    <script>
+      main();
+      // 1.取得query  2.liff  3.call API  4.jump
+      async function main() {
+        initQuery();
+        // 判斷跳轉如果不用登入直接放行
+        if (
+          targetMapping.rk &&
+          targetMapping.notNeedLogin.includes(targetMapping.rk)
+        ) {
+          const path = targetMapping.mapping?.[targetMapping.rk];
+          path ? jump(path) : alert("path error");
+          return;
+        }
+
+        const liffResponse = await new Liff().login();
+
+        if (liffResponse?.status === true) {
+          const data = liffResponse.userData;
+          const { userId, displayName } = data;
+          document.getElementById("name").textContent = displayName;
+          document.getElementById("lineId").textContent = "網頁處理中...";
+          localStorage.setItem("takoLineUserId", userId);
+          //call L1-1-1
+          try {
+            const apiResponse = await apiInstance.postJson(`/checkUser`, {
+              lineUserId: userId,
+            });
+            if (apiResponse?.result !== true) {
+              const msg = apiResponse?.msg || " other error";
+              // Toast(msg);
+              const code = apiResponse?.code || "";
+              const accessToken = apiResponse.userToken || "";
+              localStorage.setItem("takoAccessToken", accessToken);
+              localStorage.setItem("TAKO_LOGIN", "0");
+
+              switch (code) {
+                case "001":
+                  console.log("001");
+                  // jump(`${DOWNLOAD_APP_URL}?t=${makeId(6)}`);
+                  localStorage.setItem(
+                    "takoLiffRegisterStore",
+                    JSON.stringify({
+                      isLiff: 1,
+                      code: "001",
+                      name: displayName,
+                    })
+                  );
+                  jump(`${VUE_CLI_INDEX}`);
+                  break;
+                case "002":
+                  console.log("002");
+                  localStorage.setItem(
+                    "takoLiffRegisterStore",
+                    JSON.stringify({
+                      isLiff: 1,
+                      code: "002",
+                      name: displayName,
+                    })
+                  );
+                  jump(`${VUE_CLI_INDEX}`);
+                  break;
+              }
+              return;
+            }
+
+            localStorage.setItem("TAKO_LOGIN", "1");
+            //   goto
+            // 判斷跳轉位置
+            if (targetMapping.rk && targetMapping.mapping?.[targetMapping.rk]) {
+              jump(targetMapping.mapping?.[targetMapping.rk]);
+            } else {
+              jump(`${VUE_CLI_INDEX}`);
+            }
+          } catch (error) {
+            const msg = error?.message;
+            Toast(`msg:${msg}`);
+          }
+        }
+      }
+      function jump(url) {
+        localStorage.setItem(
+          "takoTargetMapping",
+          JSON.stringify(targetMapping)
+        );
+        setTimeout(function () {
+          // window.location.href = url;
+          // 這邊要特別注意 網址最後不能是"/"後端轉port會出錯
+          window.location.replace(url);
+        }, 25);
+      }
+      function makeId(val = 5) {
+        const genNumber = () => Math.floor(Math.random() * 10);
+        let ans = "";
+        for (let i = 0; i < val; i++) {
+          ans += genNumber();
+        }
+        return ans;
+      }
+      function Toast(message = "") {
+        alert(message);
+      }
+
+      function initQuery() {
+        try {
+          const webAddress = new URL(window.location.href);
+          //解析 query
+          let params = webAddress.searchParams;
+          for (let pair of params.entries()) {
+            const [key, value] = pair;
+            if (key === "rk") {
+              if (value && value !== "null") {
+                targetMapping.rk = value;
+              }
+            } else if (key === "sk") {
+              if (value && value !== "null") {
+                targetMapping.sk = value;
+              }
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    </script>
+  </body>
+</html>

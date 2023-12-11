@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Line通知</title>
+    <style>
+      [v-cloak] {
+        display: none;
+      }
+    </style>
+    <!-- CSS -->
+    <link
+      rel="stylesheet"
+      href="
+    https://wt.tako.life/game/lottery/vendor/bootstrap/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="./lineNotify/layout.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        }
+      }
+    </script>
+  </head>
+  <body class="vsc-initialized">
+    <div id="app">
+      <!-- 表頭 -->
+      <header class="c-header">
+        <nav class="navbar ui-navbar">
+          <ul class="navbar-nav"></ul>
+          <h1 class="navbar-brand">推播通知</h1>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link"></a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <!-- 內容 -->
+      <section
+        class="c-main"
+        style="padding-top: 50.5938px; padding-bottom: 0px"
+      >
+        <div class="minHeight-container" style="min-height: 845.406px">
+          <div class="push-container">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-link">
+                  <img
+                    src="./lineNotify/icon_notice_white.png"
+                    class="card-img"
+                  />
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-link">
+                  <div class="card-title">使用推播通知</div>
+                  <div class="card-btn">
+                    <div class="form-check form-switch">
+                      <!-- <input
+                        type="checkbox"
+                        class="form-check-input"
+                        id="cardshare"
+                        checked=""
+                      /> -->
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        v-model="isCheck"
+                        id="cardshare"
+                        @change="handleToggleChange"
+                      />
+                      <label class="form-check-label" for="cardshare"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- <span v-cloak>{{ isCheck }}</span> -->
+            <hr />
+            <span v-cloak>解除綁定的時間: {{ liffTokenCreateTime }}</span>
+            <br />
+            <span>說明: 時間未到無法解除!!</span>
+          </div>
+        </div>
+      </section>
+      <!-- <div class="container">
+        <span>Line通知</span>
+        <label class="switch">
+          <input
+            type="checkbox"
+            v-model="isCheck"
+            @change="handleToggleChange"
+          />
+          <span class="slider round"></span>
+        </label>
+        <span v-cloak>{{ isCheck }}</span>
+        <hr />
+        <span v-cloak>解除綁定的時間: {{ liffTokenCreateTime }}</span>
+        <br />
+        <span>說明: 時間未到無法解除!!</span>
+      </div> -->
+    </div>
+    <script type="module">
+      import { createApp } from "vue";
+      import { ref, onMounted, onBeforeMount } from "vue";
+      //   api
+      const BASE_URL = "https://takolife.71box.app";
+      const API_PREFIX = "/liff";
+      const apiInstance = {
+        post(url = "", body = {}, config = { Authorization: "" }) {
+          return fetch(`${BASE_URL}${API_PREFIX}${url}`, {
+            method: "POST",
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${config?.Authorization}`,
+            },
+            body: JSON.stringify(body),
+          }).then((response) => response.json());
+        },
+        put(url = "", body = {}, config = { Authorization: "" }) {
+          return fetch(`${BASE_URL}${API_PREFIX}${url}`, {
+            method: "PUT",
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${config?.Authorization}`,
+            },
+            body: JSON.stringify(body),
+          }).then((response) => response.json());
+        },
+        get(url = "", config = { Authorization: "" }) {
+          return fetch(`${BASE_URL}${API_PREFIX}${url}`, {
+            method: "GET",
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${config?.Authorization}`,
+            },
+          }).then((response) => response.json());
+        },
+      };
+      // 定義 vue3 的物件
+      const vue3Composition = {
+        setup() {
+          const isCheck = ref(false);
+          const liffTokenCreateTime = ref("");
+
+          const getAccessToken = () => localStorage.getItem("takoAccessToken");
+          const getLoginStatus = () => localStorage.getItem("TAKO_LOGIN");
+          const getLineId = () => localStorage.getItem("takoLineUserId");
+
+          const apiGet = () => {
+            return apiInstance.get("/fNotifyStatus", {
+              Authorization: getAccessToken(),
+            });
+          };
+          const apiPost = (body = { notify_code: "" }) => {
+            return apiInstance.post("/fUpdateToken", body, {
+              Authorization: getAccessToken(),
+            });
+          };
+          const apiPut = () => {
+            return apiInstance.put(
+              "/fRemoveNotify",
+              {},
+              { Authorization: getAccessToken() }
+            );
+          };
+
+          const handleToggleChange = async () => {
+            // 啟用
+            if (isCheck.value === true) {
+              const confirmResponse = window.confirm("是否確認綁定?");
+              if (confirmResponse === true) {
+                // liff 跳轉
+                // Line Notify
+                //
+                const client_id = "2AR6alf0DFQW2HGekHhttn";
+                const state = String(new Date().getTime());
+                const redirect_uri = `${BASE_URL}/takolifeLiff/lineNotify.html`;
+                window.location.href = `https://notify-bot.line.me/oauth/authorize?response_type=code&scope=notify&client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}`;
+              } else {
+                isCheck.value = false;
+              }
+              return;
+            }
+
+            // 停用
+            if (isCheck.value === false) {
+              const confirmResponse = window.confirm("是否確認停止綁定?");
+              if (confirmResponse === true) {
+                // api
+                try {
+                  const response = await apiPut();
+                  if (response?.result === true) {
+                    alert("成功");
+                    isCheck.value = false;
+                  } else {
+                    const msg = response?.msg || "error put";
+                    alert(msg);
+                    isCheck.value = true;
+                  }
+                } catch (error) {
+                  console.log(error);
+                }
+              } else {
+                isCheck.value = true;
+              }
+              //   return;
+            }
+          };
+          function initQuery() {
+            try {
+              const ans = {};
+              const webAddress = new URL(window.location.href);
+              //解析 query
+              let params = webAddress.searchParams;
+              for (let pair of params.entries()) {
+                if (params.has("code")) {
+                  const targetValue = pair[1];
+                  if (targetValue && targetValue !== "null") {
+                    ans["code"] = targetValue;
+                  }
+                  break;
+                }
+              }
+
+              return ans;
+            } catch (error) {
+              console.log(error);
+            }
+          }
+
+          onBeforeMount(() => {
+            // 檢查登入狀態
+            if (!getAccessToken()) {
+              alert("沒有takoToken");
+              window.location.href = `${BASE_URL}/takolifeLiff/middleware.html`;
+              return;
+            }
+            if (!getLineId()) {
+              alert("沒有lineId");
+              window.location.href = `${BASE_URL}/takolifeLiff/middleware.html`;
+              return;
+            }
+          });
+          onMounted(async () => {
+            // query check
+            const query = initQuery();
+            if (query?.code) {
+              // post data
+              try {
+                const body = {
+                  notify_code: query.code,
+                };
+                const response = await apiPost(body);
+                if (response?.result === true) {
+                  const msg = response?.msg;
+                  alert(msg);
+                  // UI
+                  isCheck.value = true;
+                } else {
+                  const msg = response?.msg || "err post";
+                  alert(msg);
+                }
+              } catch (error) {
+                console.log(error);
+              }
+            }
+
+            // get data
+            try {
+              const getResponse = await apiGet();
+              if (getResponse?.result === true) {
+                //
+                liffTokenCreateTime.value =
+                  getResponse?.data?.liffTokenCreateTime;
+                isCheck.value = true;
+              } else {
+                const msg = response?.msg || "err get";
+                alert(msg);
+              }
+            } catch (error) {
+              console.log(error);
+            }
+          });
+
+          // const handleShareTest = () => {
+          //   if (navigator.share) {
+          //     navigator
+          //       .share({
+          //         title: "標題",
+          //         text: "文字描述",
+          //         url: " https://wt.tako.life/tako_download_app/index.html",
+          //       })
+          //       .then(() => alert("成功！"))
+          //       .catch((error) => {
+          //         const msg = JSON.stringify(error);
+          //         alert(msg);
+          //       });
+          //   } else {
+          //     window.location.href =
+          //       "https://takolife.71box.app/takolifeLiff/lineShare.html";
+          //   }
+          // };
+          return {
+            isCheck,
+            liffTokenCreateTime,
+            handleToggleChange,
+          };
+        },
+      };
+      // 掛載vue
+      const vm = createApp(vue3Composition).mount("#app");
+    </script>
+  </body>
+</html>

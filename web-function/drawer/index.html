@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+        canvas{
+        border:1px dotted;
+        cursor: crosshair;
+        }
+        .fixed{
+        background:#fffad9;
+            position:fixed;
+            top:-30px;
+            left:-120px;
+        transition: 0.3s;
+        @media only screen and (min-width: 768px) {
+            width:auto;
+        }
+        input#Line {
+            width: 25px;
+        }
+        }
+        .fixed.active{
+        top:0;
+        left:0; 
+        }
+        .finishArea{
+        background-color:#ffeac6;
+        }
+    </style>
+  </head>
+  <body>
+    <canvas id="pCanvas">
+    </canvas>
+    </hr>
+    
+    <div class="fixed active">
+        <span>線寬：</span>
+        <input type="text" id="Line" name="Line" class="drawControl" value="2">
+           <input type="color" name="colorpicker" id="colorpicker" class="drawControl" value="#0000FF">
+        <br>
+     <a href="" class="btn btn-default downloadImg" download="MyPicture">儲存</a>
+
+        <button id="clearCanvas"  class="btn btn-default">清空</button>
+        <button id="fullscreen"  class="btn btn-default">滿版</button>
+         <button id="undo" class="btn btn-default">復原</button>
+         <button id="toggle" style="text-align:right" class="btn btn-primary">收合</button>
+
+    </div>
+    <div>
+    用戶簽名
+    </div>
+    <div class="finishArea">
+        <a href="" class="downloadImg" download="MyImage">
+    <img src="" alt="" id="NewImg" />
+  </a>
+    </div>
+    <script>
+      var paintpoints = new Array();
+      var paintpoints_content = new Array();
+      var canvas;
+      var context;
+      var paint = false;
+      var lindwidth = 3;
+      var color = "#0000FF";
+
+      //載入繪圖版元件
+      function init() {
+        canvas = document.getElementById("pCanvas");
+        context = canvas.getContext("2d");
+        setFullscreen();
+        canvas.addEventListener("touchstart", function (e) {
+          e.preventDefault();
+          var point = getTouchPoint(e);
+
+          drawstart(point.x, point.y);
+        });
+
+        canvas.addEventListener("mousedown", function (e) {
+          var x = e.clientX;
+          var y = e.clientY;
+          drawstart(x, y);
+        });
+
+        canvas.addEventListener("touchmove", function (e) {
+          e.preventDefault();
+          var x = getTouchPoint(e).x;
+          var y = getTouchPoint(e).y;
+          drawmove(x, y);
+        });
+        canvas.addEventListener("mousemove", function (e) {
+          var x = e.clientX;
+          var y = e.clientY;
+          drawmove(x, y);
+        });
+
+        //停止繪圖
+        addListenerMulti(canvas, "mouseup touchend", function (e) {
+          push(); //跑進計算步數的 function 後面會提到
+          paint = false;
+        });
+
+        //先跑一次記錄空白畫布的狀態
+        push();
+      }
+
+      //更改線條粗細
+      $(".drawControl").on("change", function () {
+        lindwidth = $("#Line").val();
+        color = $("#colorpicker").val();
+      });
+
+      // 回上一步，參考這邊
+      // https://medium.com/@zehung860486/hero-of-underground-%E5%9C%B0%E4%B8%8B%E5%9F%8E-7f-canvas-%E7%95%AB%E6%9D%BF-fca0a17ae652
+
+      let step = -1;
+      let userhistory = [];
+      //紀錄繪圖次數
+      function push() {
+        step++;
+        if (step < userhistory.length - 1) {
+          userhistory.length = step + 1;
+        }
+        userhistory.push(canvas.toDataURL()); //當前影像存成 Base64 編碼的字串並放入陣列
+      }
+      //上一步的function
+      function undo() {
+        if (step > 0) {
+          step--;
+
+          let canvaspic = new Image(); //建立新的 Image
+          canvaspic.src = userhistory[step]; //載入剛剛存放的影像
+          canvaspic.onload = function () {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(canvaspic, 0, 0); //匯出影像並從座標 x:0 y:0 開始
+          };
+        }
+
+        //最後這邊是讓上一步下一步可以在不能使用時顯示灰色及更改鼠標，可以不加
+        if (step < userhistory.length && step > 0) {
+          $(".next-step").removeClass("disable-btn");
+        }
+      }
+
+      //取得觸控起點
+      function getTouchPoint(e) {
+        var pageX = e.targetTouches[0].pageX;
+        var pageY = e.targetTouches[0].pageY;
+
+        return {
+          x: pageX - e.target.offsetLeft,
+          y: pageY - e.target.offsetTop,
+        };
+      }
+      //繪圖開始
+      function drawstart(x, y) {
+        context.beginPath();
+        context.lineWidth = lindwidth;
+        context.moveTo(x, y);
+        paint = true;
+      }
+      //繪圖移動中
+      function drawmove(x, y) {
+        if (paint) {
+          context.lineTo(x, y);
+          context.strokeStyle = color;
+          context.stroke();
+        }
+      }
+      // 收闔或開啟面板
+      $("#toggle").click(function () {
+        $(".fixed").toggleClass("active");
+      });
+      //回上一步
+      $("#undo").click(function () {
+        undo();
+      });
+      //清空
+      $("#clearCanvas").click(function () {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+      });
+      $("#fullscreen").click(function () {
+        setFullscreen();
+      });
+
+      //canvas轉圖片
+      function CreateImg() {
+        document.getElementById("NewImg").src = canvas.toDataURL(
+          "image/png",
+          0.5
+        );
+
+        $([document.documentElement, document.body]).animate(
+          {
+            scrollTop: $("#NewImg").offset().top,
+          },
+          200
+        );
+      }
+      //改成直接下載用不到了
+      function MoveToTop() {
+        $([document.documentElement, document.body]).animate(
+          {
+            scrollTop: 0,
+          },
+          200
+        );
+      }
+
+      //點圖片下載
+      $(".downloadImg").click(function () {
+        download(this);
+      });
+      //儲存畫布的function
+      function download(position) {
+        const dataURL = canvas.toDataURL("image/png"); //把影像轉成指定格式的 URL 字串
+
+        position.download = "MyPicture" + Date.now();
+        position.href = dataURL;
+      }
+
+      /* Add one or more listeners to an element
+       ** @param {DOMElement} element - DOM element to add listeners to
+       ** @param {string} eventNames - space separated list of event names, e.g. 'click change'
+       ** @param {Function} listener - function to attach for each event as a listener
+       */
+      function addListenerMulti(element, eventNames, listener) {
+        var events = eventNames.split(" ");
+        for (var i = 0, iLen = events.length; i < iLen; i++) {
+          element.addEventListener(events[i], listener, false);
+        }
+      }
+
+      init();
+
+      function setFullscreen() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+    </script>
+  </body>
+</html>
