@@ -34,7 +34,7 @@
       const API_PREFIX = "/liff";
       const VUE_CLI_INDEX = `${BASE_URL}/takolifeLiff/index.html`;
       const DOWNLOAD_APP_URL =
-        "https://line.takolife.app/tako_download_app/index.html";
+        "https://wt.tako.life/tako_download_app/index.html";
       const targetMapping = {
         mapping: {
           push: `${BASE_URL}/takolifeLiff/lineNotify.html`, //need login
@@ -131,12 +131,13 @@
             const apiResponse = await apiInstance.postJson(`/checkUser`, {
               lineUserId: userId,
             });
+            const accessToken = apiResponse.userToken || "";
+            localStorage.setItem("takoAccessToken", accessToken);
+            
             if (apiResponse?.result !== true) {
               const msg = apiResponse?.msg || " other error";
               // Toast(msg);
               const code = apiResponse?.code || "";
-              const accessToken = apiResponse.userToken || "";
-              localStorage.setItem("takoAccessToken", accessToken);
               localStorage.setItem("TAKO_LOGIN", "0");
 
               switch (code) {

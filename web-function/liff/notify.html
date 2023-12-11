@@ -59,12 +59,6 @@
                   <div class="card-title">使用推播通知</div>
                   <div class="card-btn">
                     <div class="form-check form-switch">
-                      <!-- <input
-                        type="checkbox"
-                        class="form-check-input"
-                        id="cardshare"
-                        checked=""
-                      /> -->
                       <input
                         type="checkbox"
                         class="form-check-input"
@@ -79,7 +73,6 @@
               </div>
             </div>
 
-            <!-- <span v-cloak>{{ isCheck }}</span> -->
             <hr />
             <span v-cloak>解除綁定的時間: {{ liffTokenCreateTime }}</span>
             <br />
@@ -87,22 +80,6 @@
           </div>
         </div>
       </section>
-      <!-- <div class="container">
-        <span>Line通知</span>
-        <label class="switch">
-          <input
-            type="checkbox"
-            v-model="isCheck"
-            @change="handleToggleChange"
-          />
-          <span class="slider round"></span>
-        </label>
-        <span v-cloak>{{ isCheck }}</span>
-        <hr />
-        <span v-cloak>解除綁定的時間: {{ liffTokenCreateTime }}</span>
-        <br />
-        <span>說明: 時間未到無法解除!!</span>
-      </div> -->
     </div>
     <script type="module">
       import { createApp } from "vue";
@@ -148,7 +125,7 @@
       const vue3Composition = {
         setup() {
           const isCheck = ref(false);
-          const liffTokenCreateTime = ref("");
+          const liffTokenCreateTime = ref("-");
 
           const getAccessToken = () => localStorage.getItem("takoAccessToken");
           const getLoginStatus = () => localStorage.getItem("TAKO_LOGIN");
@@ -258,14 +235,16 @@
                 const body = {
                   notify_code: query.code,
                 };
-                const response = await apiPost(body);
-                if (response?.result === true) {
-                  const msg = response?.msg;
+                const postResponse = await apiPost(body);
+                if (postResponse?.result === true) {
+                  const msg = postResponse?.msg;
                   alert(msg);
                   // UI
                   isCheck.value = true;
+                  // 做重新整理防止query被重複使用
+                  window.location.replace(window.location.href.split("?")[0]);
                 } else {
-                  const msg = response?.msg || "err post";
+                  const msg = postResponse?.msg || "err post";
                   alert(msg);
                 }
               } catch (error) {
@@ -281,33 +260,12 @@
                 liffTokenCreateTime.value =
                   getResponse?.data?.liffTokenCreateTime;
                 isCheck.value = true;
-              } else {
-                const msg = response?.msg || "err get";
-                alert(msg);
               }
             } catch (error) {
               console.log(error);
             }
           });
 
-          // const handleShareTest = () => {
-          //   if (navigator.share) {
-          //     navigator
-          //       .share({
-          //         title: "標題",
-          //         text: "文字描述",
-          //         url: " https://wt.tako.life/tako_download_app/index.html",
-          //       })
-          //       .then(() => alert("成功！"))
-          //       .catch((error) => {
-          //         const msg = JSON.stringify(error);
-          //         alert(msg);
-          //       });
-          //   } else {
-          //     window.location.href =
-          //       "https://takolife.71box.app/takolifeLiff/lineShare.html";
-          //   }
-          // };
           return {
             isCheck,
             liffTokenCreateTime,
