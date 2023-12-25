@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- meta start-->
+    <title>大學學生科技想像力問卷</title>
+    <meta property="og:locale" content="zh_TW" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="大學學生科技想像力問卷" />
+    <meta property="og:description" content="填問卷，就送200元禮卷!!!" />
+    <meta property="og:site_name" content="大學學生科技想像力問卷" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:description" content="填問卷，就送200元禮卷!!!" />
+    <meta name="twitter:title" content="大學學生科技想像力問卷" />
+    <!-- meta end -->
+  </head>
+  <body>
+    <p id="lineId"></p>
+    <span style="color: #9d9d9d">v1.2</span>
+
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script>
+      const BASE_URL = "https://testing.71box.app";
+      const currentUrl = window.location.href;
+      const VUE_CLI_INDEX = currentUrl.includes("dist")
+        ? `${BASE_URL}/dist-tech/index.html`
+        : `${BASE_URL}/tech/index.html`;
+
+      const targetMapping = {
+        mapping: {},
+        rk: "",
+      };
+    </script>
+    <script>
+      class Liff {
+        async login(bUseRedirectUri = false) {
+          try {
+            const liffId = "2002344154-4M6QoqmW";
+            //初始化
+            await liff.init({ liffId });
+
+            if (!liff.isLoggedIn()) {
+              (await bUseRedirectUri)
+                ? await liff.login({ redirectUri: location.href })
+                : await liff.login();
+              return;
+            }
+            // 要login才有辦法取得否則會 LiffId Not find
+            const profile = await liff.getProfile();
+            const userData = {
+              liffId,
+              ...profile,
+            };
+
+            return { status: true, userData };
+          } catch (error) {
+            console.log(error);
+            return { status: false };
+          }
+        }
+        liffOpenWindow(downloadUrl = "") {
+          liff.openWindow({
+            url: downloadUrl, // URL for another LIFF app
+            external: true,
+          });
+        }
+      }
+    </script>
+    <script>
+      main();
+
+      async function main() {
+        initQuery();
+        document.getElementById("lineId").textContent = "網頁處理中..";
+        const LiffInstance = new Liff();
+        const liffResponse = await LiffInstance.login();
+        setTimeout(() => {
+          let LineId = "";
+          if (liffResponse?.status === true) {
+            const data = liffResponse.userData;
+            const { userId = "", displayName = "" } = data;
+            document.getElementById("lineId").textContent = "網頁處理中....";
+            localStorage.setItem("takoLineUserId", userId);
+            LineId = userId;
+          }
+          //   jump
+          jump(`${VUE_CLI_INDEX}?lineId=${LineId}&t=${makeId(5)}`);
+        }, 500);
+      }
+      function jump(url) {
+        setTimeout(function () {
+          // window.location.href = url;
+          // 這邊要特別注意 網址最後不能是"/"後端轉port會出錯
+          window.location.replace(url);
+        }, 25);
+      }
+      function makeId(val = 5) {
+        const genNumber = () => Math.floor(Math.random() * 10);
+        let ans = "";
+        for (let i = 0; i < val; i++) {
+          ans += genNumber();
+        }
+        return ans;
+      }
+      function Toast(message = "") {
+        alert(message);
+      }
+
+      function initQuery() {
+        try {
+          const webAddress = new URL(window.location.href);
+          //解析 query
+          let params = webAddress.searchParams;
+          for (let pair of params.entries()) {
+            const [key, value] = pair;
+            if (key === "rk") {
+              if (value && value !== "null") {
+                targetMapping.rk = value;
+              }
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -9,20 +9,17 @@
         display: none;
       }
     </style>
-    <!-- CSS -->
     <link
       rel="stylesheet"
-      href="
-    https://wt.tako.life/game/lottery/vendor/bootstrap/bootstrap.min.css"
+      href="https://wt.tako.life/game/lottery/vendor/bootstrap/bootstrap.min.css"
     />
     <link rel="stylesheet" href="./lineNotify/layout.css" />
-    <script type="importmap">
-      {
-        "imports": {
-          "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
-        }
-      }
-    </script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.all.min.js"></script>
   </head>
   <body class="vsc-initialized">
     <div id="app">
@@ -58,13 +55,13 @@
                 <div class="card-link">
                   <div class="card-title">使用推播通知</div>
                   <div class="card-btn">
-                    <div class="form-check form-switch">
+                    <div class="form-check">
                       <input
+                        @click="handleToggleChange"
                         type="checkbox"
                         class="form-check-input"
                         v-model="isCheck"
                         id="cardshare"
-                        @change="handleToggleChange"
                       />
                       <label class="form-check-label" for="cardshare"></label>
                     </div>
@@ -74,18 +71,18 @@
             </div>
 
             <hr />
-            <span v-cloak>解除綁定的時間: {{ liffTokenCreateTime }}</span>
+            <span>解除綁定的時間:</span
+            ><span v-cloak>{{ liffTokenCreateTime }}</span>
             <br />
             <span>說明: 時間未到無法解除!!</span>
+            <div>n.1.9</div>
           </div>
         </div>
       </section>
     </div>
-    <script type="module">
-      import { createApp } from "vue";
-      import { ref, onMounted, onBeforeMount } from "vue";
-      //   api
-      const BASE_URL = "https://takolife.71box.app";
+
+    <script>
+      const BASE_URL = "https://wt.tako.life"; //${C}
       const API_PREFIX = "/liff";
       const apiInstance = {
         post(url = "", body = {}, config = { Authorization: "" }) {
@@ -121,8 +118,8 @@
           }).then((response) => response.json());
         },
       };
-      // 定義 vue3 的物件
-      const vue3Composition = {
+      const { ref, createApp, onMounted, onBeforeMount } = Vue;
+      createApp({
         setup() {
           const isCheck = ref(false);
           const liffTokenCreateTime = ref("-");
@@ -150,45 +147,62 @@
           };
 
           const handleToggleChange = async () => {
-            // 啟用
+            // =>停用
             if (isCheck.value === true) {
-              const confirmResponse = window.confirm("是否確認綁定?");
-              if (confirmResponse === true) {
-                // liff 跳轉
-                // Line Notify
-                //
-                const client_id = "2AR6alf0DFQW2HGekHhttn";
-                const state = String(new Date().getTime());
-                const redirect_uri = `${BASE_URL}/takolifeLiff/lineNotify.html`;
-                window.location.href = `https://notify-bot.line.me/oauth/authorize?response_type=code&scope=notify&client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}`;
-              } else {
-                isCheck.value = false;
-              }
+              Swal.fire({
+                title: "是否確認停止綁定?",
+                showCancelButton: false,
+                showCancelButton: true,
+                confirmButtonText: `確定`,
+                cancelButtonText: `取消`,
+                denyButtonText: `取消`,
+                confirmButtonColor: "#0d7abf",
+              }).then(async (result) => {
+                if (result.isConfirmed) {
+                  // api
+                  try {
+                    const response = await apiPut();
+                    if (response?.result === true) {
+                      Swal.fire("成功");
+                      isCheck.value = false;
+                    } else {
+                      const msg = response?.msg || "error put";
+                      Swal.fire(msg);
+                      isCheck.value = true;
+                    }
+                  } catch (error) {
+                    console.log(error);
+                  }
+                } else {
+                  isCheck.value = true;
+                }
+              });
               return;
             }
 
-            // 停用
+            // =>啟用
             if (isCheck.value === false) {
-              const confirmResponse = window.confirm("是否確認停止綁定?");
-              if (confirmResponse === true) {
-                // api
-                try {
-                  const response = await apiPut();
-                  if (response?.result === true) {
-                    alert("成功");
-                    isCheck.value = false;
-                  } else {
-                    const msg = response?.msg || "error put";
-                    alert(msg);
-                    isCheck.value = true;
-                  }
-                } catch (error) {
-                  console.log(error);
+              Swal.fire({
+                title: "是否確認綁定?",
+                showDenyButton: true,
+                showCancelButton: false,
+                cancelButtonText: `取消`,
+                confirmButtonText: `確定`,
+                denyButtonText: `取消`,
+                confirmButtonColor: "#0d7abf",
+              }).then(async (result) => {
+                if (result.isConfirmed) {
+                  // Line Notify
+                  const client_id = "2AR6alf0DFQW2HGekHhttn"; //${C}
+                  const state = String(new Date().getTime());
+                  const redirect_uri = `${BASE_URL}/takolifeLiff/lineNotify.html`;
+                  const myUrl = `https://notify-bot.line.me/oauth/authorize?response_type=code&scope=notify&client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}`;
+                  window.location.replace(myUrl);
+                } else {
+                  isCheck.value = false;
                 }
-              } else {
-                isCheck.value = true;
-              }
-              //   return;
+              });
+              return;
             }
           };
           function initQuery() {
@@ -216,12 +230,12 @@
           onBeforeMount(() => {
             // 檢查登入狀態
             if (!getAccessToken()) {
-              alert("沒有takoToken");
+              Swal.fire("沒有takoToken");
               window.location.href = `${BASE_URL}/takolifeLiff/middleware.html`;
               return;
             }
             if (!getLineId()) {
-              alert("沒有lineId");
+              Swal.fire("沒有lineId");
               window.location.href = `${BASE_URL}/takolifeLiff/middleware.html`;
               return;
             }
@@ -238,14 +252,14 @@
                 const postResponse = await apiPost(body);
                 if (postResponse?.result === true) {
                   const msg = postResponse?.msg;
-                  alert(msg);
+                  Swal.fire(msg);
                   // UI
                   isCheck.value = true;
                   // 做重新整理防止query被重複使用
                   window.location.replace(window.location.href.split("?")[0]);
                 } else {
                   const msg = postResponse?.msg || "err post";
-                  alert(msg);
+                  Swal.fire(msg);
                 }
               } catch (error) {
                 console.log(error);
@@ -272,9 +286,7 @@
             handleToggleChange,
           };
         },
-      };
-      // 掛載vue
-      const vm = createApp(vue3Composition).mount("#app");
+      }).mount("#app");
     </script>
   </body>
 </html>
