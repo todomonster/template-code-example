@@ -26,20 +26,21 @@
     hi
     <span id="name"></span>
     <p id="lineId"></p>
-    v1.2
+    v1.3
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script>
-      const BASE_URL = "https://takolife.71box.app";
+      const BASE_URL = "https://wt.tako.life"; //${C}
       const API_PREFIX = "/liff";
       const VUE_CLI_INDEX = `${BASE_URL}/takolifeLiff/index.html`;
       const DOWNLOAD_APP_URL =
         "https://wt.tako.life/tako_download_app/index.html";
       const targetMapping = {
         mapping: {
-          push: `${BASE_URL}/takolifeLiff/lineNotify.html`, //need login
-          news: `${VUE_CLI_INDEX}#/news/view`, //
-          wallet: `${VUE_CLI_INDEX}#/userWallet`, //need login
+          push: `${BASE_URL}/takolifeLiff/lineNotify.html`,
+          news: `${VUE_CLI_INDEX}#/news/view`,
+          wallet: `${VUE_CLI_INDEX}#/userWallet`,
+          lotteryWinner: `${VUE_CLI_INDEX}#/lottery/winner`,
         },
         notNeedLogin: ["news"],
         rk: "",
@@ -75,7 +76,7 @@
         async login(bUseRedirectUri = false) {
           try {
             // alert('start')
-            const liffId = "1656417265-OA9AbLdb";
+            const liffId = "1656417265-OA9AbLdb";//${C}
             //初始化
             await liff.init({ liffId });
 
@@ -133,7 +134,7 @@
             });
             const accessToken = apiResponse.userToken || "";
             localStorage.setItem("takoAccessToken", accessToken);
-            
+
             if (apiResponse?.result !== true) {
               const msg = apiResponse?.msg || " other error";
               // Toast(msg);
