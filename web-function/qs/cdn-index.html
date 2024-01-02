@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>qsExample excel</title>
+  </head>
+  <body>
+    <h2>index.html?groups=1,2</h2>
+    <span id="currentVersion">v1.5</span>
+    <div id="link-rapper"></div>
+
+    <script>
+      var time = new Date().getTime();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/qs/dist/qs.min.js"></script>
+    <script>
+      function main() {
+        const currentParams = getQueryParams();
+        const groups = currentParams?.groups?.split(",") || [];
+
+        createLinks(groups);
+
+        function getQueryParams() {
+          const qs = Qs;
+          const queryString = window.location.search.substring(1);
+          const queryParams = qs.parse(queryString);
+
+          return queryParams;
+        }
+        function createLinks(groupNumbers) {
+          const linkWrapper = document.getElementById("link-rapper");
+
+          groupNumbers.forEach((groupNumber) => {
+            const h2 = document.createElement("h2");
+            h2.textContent = `群組${groupNumber}`;
+
+            const a = document.createElement("a");
+            a.href = `https://example/api/fExportExcel?group=${groupNumber}&t=${time}`;
+            a.textContent = "下載 最新 問卷調查 excel";
+
+            linkWrapper.appendChild(h2);
+            linkWrapper.appendChild(a);
+          });
+        }
+      }
+      main();
+    </script>
+  </body>
+</html>
