@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>滿版圖片</title>
+    <style>
+      /* 只有針對手機切版 */
+      .wrapper .card {
+        padding: 100px;
+        color: white;
+        background-color: rgb(0, 0, 0);
+        opacity: 0.75;
+        border-radius: 5px;
+        border: 1px solid white;
+        margin: 10px;
+        text-align: center;
+        border-radius: 10px;
+        font-size: x-large;
+      }
+      .background {
+        /* https://www.astralweb.com.tw/full-screen-backround-image/ */
+        min-height: 100%;
+        background: white
+          url("https://th.bing.com/th/id/R.5b2b65c390263761e8089fe42c617512?rik=Krk%2bsJW%2baIUIWw&riu=http%3a%2f%2fimages5.fanpop.com%2fimage%2fphotos%2f28000000%2frandomised-random-28065165-1024-819.jpg&ehk=5EwtKjhNaCpv2WoxrGQ6hQfUGbEnlkAb3g5OZSIKIhc%3d&risl=&pid=ImgRaw&r=0")
+          center bottom;
+        background-attachment: fixed;
+        background-size: cover;
+        background-repeat: no-repeat;
+        margin: 0;
+      }
+      .wrapper {
+        min-height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      .mark-pen-blue {
+        background-image: linear-gradient(
+          transparent 50%,
+          rgba(55, 0, 255, 0.5) 50%
+        );
+      }
+      .mark-pen-red {
+        background-image: linear-gradient(
+          transparent 50%,
+          rgba(255, 0, 0, 0.5) 50%
+        );
+      }
+    </style>
+  </head>
+  <body class="background">
+    <div class="wrapper">
+      <div id="purple" class="card">
+        我是<span class="mark-pen-blue">雇主</span>
+      </div>
+      <div id="pink" class="card">
+        我是<span class="mark-pen-red">看護</span>
+      </div>
+      <div class="container"></div>
+    </div>
+  </body>
+</html>
