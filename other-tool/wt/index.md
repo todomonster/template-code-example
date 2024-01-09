@@ -459,6 +459,170 @@ genBtn("隱藏", hideIndex, { top: "6%", right: "2%" });
   </body>
 </html>
 ```
+### 新Bingo網站外掛
+```js
+// ==UserScript==
+// @name         新bingo外掛
+// @namespace    http://tampermonkey.net/
+// @version      2024-01-08
+// @description  try to take over the world!
+// @author       You
+// @match        https://www.taiwanlottery.com/lotto/result/bingo_bingo
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=taiwanlottery.com
+// @grant        none
+// ==/UserScript==
+
+(function () {
+  "use strict";
+
+  //
+  var myTableBody = "";
+  var okJson = {};
+
+  setTimeout(() => {
+    var input = `<textarea rows="8" cols="60" id="apiText">
+        https://api.taiwanlottery.com/TLCAPIWeB/Lottery/BingoResult?openDate=${getToday()}&pageNum=1&pageSize=999
+      </textarea>
+      <button id="APIBTN">[外掛]查看中獎紀錄</button>`;
+
+    insertUI(".search-area", input);
+
+    APIBTN.onclick = (e) => {
+      main();
+    };
+  }, 1000);
+
+  async function main() {
+    var parent = document.querySelector(".result-area");
+    if (!parent) {
+      alert("請先點查詢");
+      return;
+    }
+    await getApi();
+    var customEl = createTableStr(myTableBody);
+    insertUI(".result-area", customEl);
+  }
+
+  function createTableStr(tbody) {
+    return `<div data-v-7aaf2b1e="" class="result-item">
+      <div data-v-7aaf2b1e="" class="result-item-simple-area-container">
+        <div data-v-7aaf2b1e="" class="result-item-simple-area">
+          <div data-v-7aaf2b1e="" class="">
+            <div data-v-7aaf2b1e="" class="">
+                <textarea rows="50" cols="50">${JSON.stringify(
+                  okJson
+                )}</textarea>
+            </div>
+          </div>
+          <div
+            data-v-7aaf2b1e=""
+            class="result-item-simple-area-order-container"
+          >
+
+<table style="border-collapse: collapse; border: 1px solid black;">
+    <thead style="border: 1px solid black;">
+        <tr>
+        <th>期別</th>
+        <th>獎號</th>
+        </tr>
+    </thead>
+    <tbody style="border: 1px solid black;">
+
+        ${tbody}
+    </tbody>
+</table>
+
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function insertUI(query, customEl) {
+    console.log("insertUI start");
+    var parent = document.querySelector(query);
+    if (parent) {
+      var firstChild = parent.firstChild;
+      var range = document.createRange();
+
+      var fragment = range.createContextualFragment(customEl);
+      parent.insertBefore(fragment, firstChild);
+    } else {
+      alert("找不到元素");
+    }
+    console.log("insertUI end");
+  }
+
+  function getApi() {
+    return new Promise((resolve, reject) => {
+      console.log("getApi start");
+      const url = document.getElementById("apiText")?.value;
+      if (!url) {
+        alert("找不到apiText");
+        return;
+      }
+
+      fetch(url)
+        .then((response) => {
+          if (!response.ok) {
+            reject(response);
+            console.log("getApi end");
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+
+        .then((data) => {
+          const tbodyArr = [];
+          okJson = parser(data);
+          if (okJson?.length > 0) {
+            okJson.forEach((element) => {
+              const 期別 = element.期別;
+              const 獎號 = element.獎號;
+              const basicTr = `<tr style="border: 1px solid black;"><td>${期別}</td><td style="border: 1px solid black;">${獎號.join(
+                " "
+              )}</td><td></td><td></td><td></td></tr>`;
+              tbodyArr.push(basicTr);
+            });
+          }
+
+          myTableBody = tbodyArr.join("");
+          resolve({});
+          console.log("getApi end");
+        })
+        .catch((error) => {
+          console.log("getApi end");
+          reject(error);
+        });
+    });
+  }
+
+  function parser(data, isReverse = true) {
+    var arr = data?.content?.bingoQueryResult;
+    const strArrToNumArr = (arr) => arr.map((str) => Number(str));
+    if (arr) {
+      const data = arr?.map((item) => {
+        return {
+          期別: String(item?.drawTerm),
+          獎號: strArrToNumArr(item?.openShowOrder),
+        };
+      });
+      return isReverse ? data.reverse() : data;
+    }
+    return [];
+  }
+
+  function getToday() {
+    const todayTW = new Date(
+      new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" })
+    )
+      .toISOString()
+      .split("T")[0];
+    return todayTW;
+  }
+  //
+})();
+```
 
 ### twllm 外掛
 
