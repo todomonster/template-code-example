@@ -2,7 +2,7 @@
 <!-- https://vuetifyjs.com/en/components/data-tables/#usage -->
 <html>
   <head>
-    <link
+    <!-- <link
       href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
       rel="stylesheet"
     />
@@ -13,9 +13,9 @@
     <link
       href="https://fonts.googleapis.com/css?family=Material+Icons"
       rel="stylesheet"
-    />
+    /> -->
     <link
-      href="https://unpkg.com/@vuetify/nightly@3.2.0-master-20230214.0/dist/vuetify.css"
+      href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css"
       rel="stylesheet"
     />
 
@@ -28,30 +28,69 @@
   <body>
     <script type="text/x-template" id="app-template">
       <v-app>
-        <div>
-          <v-alert
-            density="compact"
-            type="info"
-          >
-            I'm a compact alert with a <strong>type</strong> of info
-          </v-alert>
-        </div>
+        <v-container fluid>
+          <h1>特酷 Bingo 中獎計算器</h1>
+
+          <v-row>
+            <v-col cols="12" md="4">
+              <v-text-field v-model="winnerAmount" :counter="10" label="輸入中獎者數量"></v-text-field>
+            </v-col>
+            <v-col cols="12" md="4">
+              <v-textarea v-model="betUsersJson" label="輸入[投注者]JSON"></v-textarea>
+            </v-col>
+            <v-col cols="12" md="4">
+              <v-textarea v-model="bingoNumbersJson" label="輸入[開獎號碼]JSON"></v-textarea>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col cols="12" md="4">
+              <v-btn
+                class="text-none ms-4 text-white"
+                color="blue-darken-4"
+                rounded="0"
+                variant="flat"
+              >
+                執行模擬
+              </v-btn>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col cols="12" md="4">
+              <v-textarea v-model="computedResult" label="結果"></v-textarea>
+            </v-col>
+          </v-row>
+
+        </v-container>
       </v-app>
     </script>
 
     <div id="app"></div>
 
-    <script src="https://unpkg.com/vue@next/dist/vue.global.prod.js"></script>
-    <!-- <script src="https://unpkg.com/vue@next/dist/vue.global.js"></script> -->
-    <script src="https://unpkg.com/@vuetify/nightly@3.2.0-master-20230214.0/dist/vuetify.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.4.15/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
     <script>
-      const { createApp } = Vue;
+      const { createApp, ref } = Vue;
       const { createVuetify } = Vuetify;
 
       const vuetify = createVuetify();
 
       const app = createApp({
         template: "#app-template",
+        setup() {
+          const winnerAmount = ref(10);
+          const betUsersJson = ref("");
+          const bingoNumbersJson = ref("");
+          const computedResult = ref("");
+
+          return {
+            winnerAmount,
+            betUsersJson,
+            bingoNumbersJson,
+            computedResult
+          };
+        },
       })
         .use(vuetify)
         .mount("#app");
