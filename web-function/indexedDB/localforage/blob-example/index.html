@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>indexedDB localforage 測試</title>
+  </head>
+  <body>
+    <div>
+      <input
+        id="myInput"
+        type="text"
+        placeholder="請輸入圖片網址"
+        value="https://fakeimg.pl/150x130/?text=123&font=noto"
+      />
+      <button id="btn1">儲存圖片網址</button>
+    </div>
+    <div>
+      <button id="btn2">從indexedDB取出圖片</button>
+    </div>
+    <script src="./localForage.js"></script>
+    <script>
+      console.info("localforage is: ", localforage);
+
+      // 调用 main2 函数
+      main2();
+
+      async function main2() {
+        if (!window.indexedDB) {
+          window.alert(
+            "Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available."
+          );
+        }
+        btn1.onclick = async (e) => {
+          console.log(e);
+          await setImg();
+        };
+        btn2.onclick = async (e) => {
+          console.log(e);
+          await getImageFromLocalForage();
+        };
+      }
+
+      async function setImg() {
+        try {
+          // 创建一个图像对象
+          var img = new Image();
+          img.crossOrigin = "Anonymous"; // 添加跨域属性
+          img.src = myInput?.value;
+
+          // 创建一个 Canvas 元素用于处理图像
+          var canvas = document.createElement("canvas");
+          var ctx = canvas.getContext("2d");
+
+          // 当图像加载完成时
+          img.onload = function () {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+
+            // 将 Canvas 转换为 Blob 对象
+            canvas.toBlob(function (blob) {
+              // 使用 localforage 保存 Blob 对象
+              localforage
+                .setItem("imageData", blob)
+                .then(function () {
+                  console.log("Image saved to localforage.");
+                })
+                .catch(function (err) {
+                  console.error("Error saving image to localforage:", err);
+                });
+            });
+          };
+        } catch (error) {
+          console.error("Error setting image:", error);
+        }
+      }
+
+      async function getImageFromLocalForage() {
+        try {
+          // 从 localforage 中获取保存的图像数据
+          const imageData = await localforage.getItem("imageData");
+
+          if (imageData) {
+            // 创建一个新的图像元素
+            var imgElement = new Image();
+
+            // 当图像加载完成时
+            imgElement.onload = function () {
+              // 将图像添加到页面中
+              document.body.appendChild(imgElement);
+              // 清除对象 URL
+              revokeObjectURL(imgElement.src);
+            };
+
+            // 设置图像的 src 属性为 Blob URL
+            imgElement.style.margin = "10px";
+            imgElement.src = URL.createObjectURL(imageData);
+          } else {
+            console.error("No image data found in localforage.");
+          }
+        } catch (error) {
+          console.error("Error getting image from localforage:", error);
+        }
+      }
+
+      function revokeObjectURL(url) {
+        URL.revokeObjectURL(url);
+        console.log("Object URL revoked:", url);
+      }
+    </script>
+  </body>
+</html>
