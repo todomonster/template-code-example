@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>網頁監聽使用者逾時1分鐘後自動登出功能</title>
+</head>
+<body>
+    Hi 這個是逾時測試網頁
+  <script>
+    // 設定使用者最後活動時間
+    var lastActivityTime = Date.now();
+    var isLogin = 1;
+    var 逾時X分 = 1;
+
+    // 定時檢查使用者是否逾時
+    setInterval(function() {
+      console.log('check');
+      // 計算使用者逾時時間
+      var elapsedTime = Date.now() - lastActivityTime;
+
+      // 如果使用者逾時，則自動登出
+      if (elapsedTime >= 逾時X分 * 60 * 1000 && isLogin === 1) {
+        // 執行自動登出程式碼
+        alert(`您已逾時${逾時X分}分鐘，請重新登入。`);
+        isLogin = 0;
+      }
+    }, 10 * 1000);
+
+    function setActive(){
+        lastActivityTime = Date.now();
+        console.log('ok');
+    }
+
+    // 更新使用者最後活動時間
+    document.addEventListener("mousemove", function() {
+        setActive();
+    });
+
+    document.addEventListener("keydown", function() {
+        setActive();
+    });
+  </script>
+</body>
+</html>
