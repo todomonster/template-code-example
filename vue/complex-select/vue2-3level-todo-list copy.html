@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+  </head>
+
+  <body>
+    <div id="app">
+      <div>
+        <button @click="addTodoItem">新增TodoList Item</button>
+        <div v-for="(todoItem, index) in todoList" :key="index">
+          <div>
+            <select
+              v-model="todoItem.selectedIssueType"
+              @change="selectIssueType(todoItem, $event.target.value)"
+            >
+              <option value="">請選擇問題類型</option>
+              <option
+                v-for="issueType in topLevelIssueTypes"
+                :key="issueType.IssueTypeId"
+                :value="issueType.IssueTypeId"
+              >
+                {{ issueType.IssueName }}
+              </option>
+            </select>
+
+            <select
+              v-model="todoItem.selectedSubIssueType"
+              v-if="todoItem.selectedIssueType"
+              @change="selectSubIssueType(todoItem, $event.target.value)"
+            >
+              <option value="">請選擇子問題類型</option>
+              <option
+                v-for="subIssueType in subIssueTypes(todoItem)"
+                :key="subIssueType.IssueTypeId"
+                :value="subIssueType.IssueTypeId"
+              >
+                {{ subIssueType.IssueName }}
+              </option>
+            </select>
+
+            <select
+              v-model="todoItem.selectedSubSubIssueType"
+              v-if="todoItem.selectedSubIssueType"
+              @change="selectSubSubIssueType(todoItem, $event.target.value)"
+            >
+              <option value="">請選擇子子問題類型</option>
+              <option
+                v-for="subSubIssueType in subSubIssueTypes(todoItem)"
+                :key="subSubIssueType.IssueTypeId"
+                :value="subSubIssueType.IssueTypeId"
+              >
+                {{ subSubIssueType.IssueName }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      {{todoList}}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script>
+      new Vue({
+        el: "#app",
+        data: () => ({
+          select: [
+            {
+              IssueTypeId: "3",
+              IssueName: "功能升級",
+              Description: null,
+              IssueTypeParentId: null,
+              SortingId: 3,
+              IsOffline: false,
+              Disable: false,
+              UpdateTime: "2024-01-25 14:54:35",
+            },
+            {
+              IssueTypeId: "TW202312120008",
+              IssueName: "軟體升級",
+              Description: null,
+              IssueTypeParentId: "3",
+              SortingId: null,
+              IsOffline: false,
+              Disable: false,
+              UpdateTime: "2024-01-25 14:54:54",
+            },
+            {
+              IssueTypeId: "TW202401250003",
+              IssueName: "硬體升級",
+              Description: null,
+              IssueTypeParentId: "3",
+              SortingId: null,
+              IsOffline: false,
+              Disable: false,
+              UpdateTime: "2024-01-25 14:55:04",
+            },
+            {
+              IssueTypeId: "TW202401250004",
+              IssueName: "修復BUG異常",
+              Description: null,
+              IssueTypeParentId: "TW202312120008",
+              SortingId: null,
+              IsOffline: false,
+              Disable: false,
+              UpdateTime: "2024-01-25 14:58:21",
+            },
+            {
+              IssueTypeId: "TW202401250006",
+              IssueName: "修復異常",
+              Description: null,
+              IssueTypeParentId: "TW202401250003",
+              SortingId: null,
+              IsOffline: false,
+              Disable: false,
+              UpdateTime: "2024-01-25 15:03:12",
+            },
+          ],
+          todoList: [],
+        }),
+
+        computed: {
+          topLevelIssueTypes() {
+            return this.select.filter(
+              issueType => issueType.IssueTypeParentId === null
+            );
+          },
+        },
+        methods: {
+          addTodoItem() {
+            this.todoList.push({
+              selectedIssueType: "",
+              selectedSubIssueType: "",
+              selectedSubSubIssueType: "",
+            });
+          },
+          subIssueTypes(todoItem) {
+            return this.select.filter(
+              issueType =>
+                issueType.IssueTypeParentId === todoItem.selectedIssueType
+            );
+          },
+          subSubIssueTypes(todoItem) {
+            return this.select.filter(
+              issueType =>
+                issueType.IssueTypeParentId === todoItem.selectedSubIssueType
+            );
+          },
+          selectIssueType(todoItem, issueTypeId) {
+            todoItem.selectedIssueType = issueTypeId;
+            todoItem.selectedSubIssueType = "";
+            todoItem.selectedSubSubIssueType = "";
+          },
+          selectSubIssueType(todoItem, issueTypeId) {
+            todoItem.selectedSubIssueType = issueTypeId;
+            todoItem.selectedSubSubIssueType = "";
+          },
+          selectSubSubIssueType(todoItem, issueTypeId) {
+            todoItem.selectedSubSubIssueType = issueTypeId;
+          },
+        },
+      }).$mount("#app");
+      // new Vue()
+    </script>
+  </body>
+</html>
