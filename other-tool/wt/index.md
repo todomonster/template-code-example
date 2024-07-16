@@ -143,16 +143,14 @@
     </script>
     <script>
       class Liff {
-        async login(bUseRedirectUri = false) {
+        async login() {
           try {
             const liffId = "2002344154-4M6QoqmW";
             //初始化
             await liff.init({ liffId });
 
             if (!liff.isLoggedIn()) {
-              (await bUseRedirectUri)
-                ? await liff.login({ redirectUri: location.href })
-                : await liff.login();
+              await liff.login({ redirectUri: location.href })
               return;
             }
             // 要login才有辦法取得否則會 LiffId Not find
