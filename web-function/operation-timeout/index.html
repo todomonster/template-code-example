@@ -36,7 +36,12 @@
     document.addEventListener("mousemove", function() {
         setActive();
     });
-
+    document.addEventListener("touchstart", function() {
+        setActive();
+    });
+    document.addEventListener("click", function() {
+        setActive();
+    });
     document.addEventListener("keydown", function() {
         setActive();
     });
