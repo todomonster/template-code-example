@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    />
+    <title>vue3-cdn-component-example</title>
+  </head>
+
+  <body>
+    <!-- 內容 -->
+    <section class="c-main" id="app">
+      <button @click="toggleComponent">切換</button>
+      <component :is="currentComponent"></component>
+    </section>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Importing the components -->
+    <script src="./component.js"></script>
+    <script>
+      const { ref, createApp, onMounted, computed, onBeforeMount } = Vue;
+      const app = createApp({
+        setup() {
+          const currentComponent = ref("chooseM");
+          const toggleComponent = () => {
+            currentComponent.value =
+              currentComponent.value === "chooseM" ? "filmYoutube" : "chooseM";
+          };
+          return { currentComponent, toggleComponent };
+        },
+      });
+      // Register the components
+      app.component("chooseM", chooseM);
+      app.component("filmYoutube", filmYoutube);
+
+      app.mount("#app");
+    </script>
+  </body>
+</html>
