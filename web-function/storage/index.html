@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>session cookie localStorage 比較</title>
+</head>
+<body>
+    <button onclick="sessionSetting()">sessionStorage</button>
+    <button onclick="localStorageSetting()">localStorage</button>
+    <button onclick="cookieSetting()">cookie</button>
+    <script>
+        // 關閉分頁 銷毀
+        function sessionSetting(){
+            // sessionStorage 重新整理還會在 關閉分頁就消失
+            // 適合表單快取
+            sessionStorage.setItem("sessionStorage", "value1");
+        }
+        function localStorageSetting(){
+            // 永遠存在本裝置
+            localStorage.setItem("localStorage", "value2");
+        }
+        //打叉叉 關閉瀏覽器  銷毀
+        function cookieSetting(){
+            // 自動callAPI附加上去
+            // 跨裝置 X
+            document.cookie = "username2=John Doe2";
+            document.cookie = "username=John Doe; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/";
+            // https://ithelp.ithome.com.tw/articles/10227602
+            // Session Cookies
+            // 指的是沒有指定 Expires 或 Max-Age 的 Cookies，當瀏覽器關閉時，這些 Cookies 也會跟著消失，故得名。
+        }
+    </script>
+</body>
+</html>
