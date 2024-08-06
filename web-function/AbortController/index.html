@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interruptible Function</title>
+  </head>
+  <body>
+    <button id="startButton">Start Action</button>
+    <script>
+      let currentAction = null;
+
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      async function lonTimeAction() {
+        console.log("開始");
+        if (currentAction) {
+          currentAction.abort();
+        }
+
+        const controller = new AbortController();
+        const signal = controller.signal;
+        currentAction = controller;
+
+        try {
+          console.log("開始 1000");
+          await sleep(1000);
+          if (signal.aborted) throw new Error("Aborted");
+          console.log("開始 2000");
+          await sleep(2000);
+          if (signal.aborted) throw new Error("Aborted");
+          console.log("end");
+        } catch (error) {
+          if (error.message === "Aborted") {
+            console.log("Action aborted");
+          } else {
+            console.error(error);
+          }
+        } finally {
+          if (currentAction === controller) {
+            console.log("清空");
+            currentAction = null;
+          }
+        }
+      }
+
+      document
+        .getElementById("startButton")
+        .addEventListener("click", lonTimeAction);
+    </script>
+  </body>
+</html>
