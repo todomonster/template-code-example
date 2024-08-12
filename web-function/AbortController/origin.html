@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Interruptible Function</title>
+      </head>
+      <body>
+        <button id="startButton">Start Action</button>
+        <script>
+          let currentAction = null;
+
+          function sleep(ms) {
+            return new Promise((resolve) => setTimeout(resolve, ms));
+          }
+
+          async function lonTimeAction() {
+            console.log("開始");
+            if (currentAction) {
+              currentAction.abort();
+            }
+
+            try {
+              console.log("開始 1000");
+              await sleep(1000);
+
+              console.log("開始 2000");
+              await sleep(2000);
+
+              console.warn("end");
+            } catch (error) {
+              console.error(error);
+            }
+          }
+
+          document
+            .getElementById("startButton")
+            .addEventListener("click", lonTimeAction);
+        </script>
+      </body>
+    </html>
+  </body>
+</html>
