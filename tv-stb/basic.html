@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TV</title>
+    <style>
+      .focusable-button {
+        padding: 70px;
+        margin: 15px;
+        background-color: #333;
+        color: #fff;
+        border: 2px solid transparent;
+        font-size: 10rem;
+        border: 10px solid #ffffff;
+      }
+
+      .focusable-button.focused {
+        border: 10px solid #f00;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="focusable-button" onclick="alert(1)">1</button>
+    <button class="focusable-button" onclick="alert(2)">2</button>
+    <button class="focusable-button" onclick="alert(3)">3</button>
+    <br />
+    <button class="focusable-button" onclick="alert(4)">4</button>
+    <button class="focusable-button" onclick="alert(5)">5</button>
+    <button class="focusable-button" onclick="alert(6)">6</button>
+
+    <script>
+      let currentFocusIndex = 0;
+      const buttons = document.querySelectorAll(".focusable-button");
+      main();
+
+      function main() {
+        document.addEventListener("keydown", function (event) {
+          switch (event.key) {
+            case "ArrowUp":
+              // 處理上方向鍵的邏輯
+              moveFocus("up");
+              break;
+            case "ArrowDown":
+              // 處理下方向鍵的邏輯
+              moveFocus("down");
+              break;
+            case "ArrowLeft":
+              // 處理左方向鍵的邏輯
+              moveFocus("left");
+              break;
+            case "ArrowRight":
+              // 處理右方向鍵的邏輯
+              moveFocus("right");
+              break;
+            case "Enter":
+              // 處理確認鍵邏輯 (選中當前焦點元素)
+              activateButton();
+              break;
+          }
+        });
+      }
+
+      function moveFocus(direction) {
+        buttons[currentFocusIndex].classList.remove("focused");
+
+        switch (direction) {
+          case "up":
+            if (currentFocusIndex >= 3 && currentFocusIndex <= 5) {
+              currentFocusIndex -= 3;
+            }
+            break;
+          case "down":
+            if (currentFocusIndex <= 2 && currentFocusIndex >= 0) {
+              currentFocusIndex += 3;
+            }
+            break;
+          case "left":
+            currentFocusIndex = Math.max(currentFocusIndex - 1, 0);
+            break;
+          case "right":
+            currentFocusIndex = Math.min(
+              currentFocusIndex + 1,
+              buttons.length - 1
+            );
+            break;
+        }
+
+        buttons[currentFocusIndex].classList.add("focused");
+      }
+
+      function activateButton() {
+        buttons[currentFocusIndex].click();
+      }
+    </script>
+  </body>
+</html>
