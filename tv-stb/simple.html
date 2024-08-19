@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      *,
+      *:focus,
+      *:hover {
+        outline: none;
+      }
+
+      .focusable-button {
+        padding: 70px;
+        margin: 15px;
+        background-color: #333;
+        color: #fff;
+        border: 2px solid transparent;
+        font-size: 10rem;
+        border: 10px solid #ffffff;
+      }
+
+      button:focus {
+        border: 10px solid rgb(255, 153, 0);
+      }
+    </style>
+    <h2>範例2</h2>
+    <pre>
+        機上盒作業系統很特別
+        在執行網頁時會對所有元素加上操作框線 
+        透過遙控上下鍵可以控制 tab(focuse)，確定就是enter
+        
+        比較麻煩的是按下會觸法 scroll 剛好碰到數字input會卡死
+    </pre>
+    <button class="focusable-button" onclick="alert(1)">1</button>
+    <button class="focusable-button" onclick="alert(2)">2</button>
+    <button class="focusable-button" onclick="alert(3)">3</button>
+    <br />
+    <button class="focusable-button" onclick="alert(4)">4</button>
+    <button class="focusable-button" onclick="alert(5)">5</button>
+    <button class="focusable-button" onclick="alert(6)">6</button>
+  </head>
+  <body></body>
+</html>
