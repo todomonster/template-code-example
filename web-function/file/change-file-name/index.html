@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>檔案名稱在前端做修改</title>
+  </head>
+  <body>
+    <input type="file" id="fileInput" accept=".txt,.pdf,.doc,.docx" />
+    <!-- 可以選擇的檔案類型 -->
+    <p id="fileNameDisplay"></p>
+    <!-- 顯示檔案名稱的地方 -->
+
+    <script>
+      const fileInput = document.getElementById("fileInput");
+      const fileNameDisplay = document.getElementById("fileNameDisplay");
+
+      fileInput.addEventListener("change", function () {
+        const file = fileInput.files[0]; // 取得選擇的檔案
+        const timestamp = Date.now();
+        file.name = `${file.name}_${timestamp}`;
+        console.log(file); //File 無法修改名稱 因為屬性是 readonly
+        const { lastModified, lastModifiedDate } = file;
+
+        const newFile = new File([file], `${timestamp}_${file.name}`, {
+          type: file.type,
+          lastModified,
+          lastModifiedDate
+        });
+        console.log(newFile); //newFile 可改名但時間跑掉  lastModified lastModifiedDate
+
+        if (file) {
+          const fileName = `${file.name}_${timestamp}`; // 加上 timestamp 的檔案名稱
+          fileNameDisplay.textContent = `選擇的檔案： ${fileName}`;
+        } else {
+          fileNameDisplay.textContent = "沒有選擇檔案";
+        }
+      });
+    </script>
+  </body>
+</html>
