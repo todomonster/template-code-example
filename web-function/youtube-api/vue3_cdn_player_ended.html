@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Autoplay with Vue 3</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+<body>
+    <div id="app">
+        <div id="player" class="film"></div>
+    </div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    player: null,
+                    videoId: 'yspWm_Y1NUM' // 在此替換成你要播放的影片ID
+                }
+            },
+            methods: {
+                onYouTubeIframeAPIReady() {
+                    this.player = new YT.Player("player", {
+                        height: "360",
+                        width: "640",
+                        videoId: this.videoId,
+                        playerVars: {
+                            autoplay: 1,
+                            controls: 1,
+                            rel: 0,
+                            fs: 0
+                        },
+                        events: {
+                            onStateChange: this.onPlayerStateChange
+                        }
+                    });
+                },
+                onPlayerStateChange(event) {
+                    if (event.data === YT.PlayerState.ENDED) {
+                        alert("播放完畢");
+                    }
+                }
+            },
+            mounted() {
+                // 確保 YouTube API 已加載
+                if (window.YT && window.YT.Player) {
+                    this.onYouTubeIframeAPIReady();
+                } else {
+                    window.onYouTubeIframeAPIReady = this.onYouTubeIframeAPIReady;
+                }
+            }
+        });
+
+        app.mount('#app');
+    </script>
+</body>
+</html>
