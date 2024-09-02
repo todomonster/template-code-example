@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>正向雷達圖範例</title>
+  </head>
+  <body>
+    <!-- chart.jsv4.4 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div class="chart" style="height: 500px; width: 500px">
+      <canvas id="chart"></canvas>
+    </div>
+    <div style="position: fixed; top: 0">
+      ⚔️:50<br />
+      ❤️:80<br />
+      🏃 :60<br />
+      🛡️ :50<br />
+    </div>
+
+    <script>
+      window.onload = () => {
+        const ctx = document.getElementById("chart");
+        const blue = "#ADD8E6";
+        const color = Chart.helpers.color;
+        const lightBlue = color(blue).alpha(0.2).rgbString();
+        const config = {
+          type: "radar",
+          data: {
+            labels: [
+              ["⚔️", "attack"],
+              ["❤️", "vital"],
+              ["🏃", "speed"],
+              ["🛡️", "defend"],
+            ],
+            datasets: [
+              {
+                label: "",
+                backgroundColor: lightBlue,
+                borderColor: lightBlue,
+                pointBackgroundColor: blue,
+                data: [ 50,  80,  60,  50], // 要反向同 callback
+              },
+            ],
+          },
+          options: {
+            // 自動稱滿寬度
+            maintainAspectRatio: false,
+            // 隱藏 "legend" 或 "圖例"
+            plugins: {
+              legend: {
+                display: false,
+              }
+            },
+            scales: {
+              r: {
+                grid: {
+                  circular: true, // 雷達圖外框=圓形
+                },
+                beginAtZero: true, // 最外圈從0開始
+                min: 0, //外框數字最小=0
+                max: 100, //內框數字最大=100
+                // 每圈的間隔
+                ticks: {
+                  min: 0,
+                  max: 100,
+                  stepSize: 25
+                },
+              },
+            },
+          },
+        };
+        new Chart(ctx, config);
+      };
+    </script>
+  </body>
+</html>
