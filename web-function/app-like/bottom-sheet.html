@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bottom Sheet</title>
+    <style>
+      body,
+      html {
+        height: 100%;
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+      .top,
+      .bottom {
+        overflow: auto;
+      }
+      .top {
+        background-color: #f0f0f0;
+        flex: 1;
+      }
+      .bottom {
+        background-color: #e0e0e0;
+        flex: 1;
+      }
+      .divider {
+        height: 10px;
+        background-color: #ccc;
+        cursor: row-resize;
+      }
+      .controls {
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        min-height: 5px;
+      }
+      button {
+        padding: 5px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="top">
+        <h2>我叫做 Bottom Sheet</h2>
+        <h2>是手機很常見的設計</h2>
+        <p>請用手機嘗試拖曳中間的線。</p>
+      </div>
+      <div class="divider"></div>
+      <div class="bottom">
+        <button id="helfBtn">按鈕</button>
+        <p>請用手機嘗試拖曳中間的線。</p>
+        <p>當我100%時只能透過按鈕控制</p>
+        <p>當我50%時可以自由拖曳</p>
+        <p>當我30%時只能往上</p>
+      </div>
+    </div>
+
+    <script>
+      const container = document.querySelector(".container");
+      const divider = document.querySelector(".divider");
+      const topPane = document.querySelector(".top");
+      const bottomPane = document.querySelector(".bottom");
+      let isDragging = false;
+
+      divider.addEventListener("mousedown", (e) => {
+        e.stopPropagation();
+        isDragging = true;
+        e.preventDefault();
+      });
+
+      document.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+        const containerRect = container.getBoundingClientRect();
+        const y = e.clientY - containerRect.top;
+        adjustRatio(y / containerRect.height);
+      });
+
+      document.addEventListener("mouseup", () => {
+        isDragging = false;
+      });
+
+      function adjustRatio(ratio) {
+        ratio = Math.max(0.001, Math.min(0.99, ratio)); // 限制比例在 10% 到 90% 之间
+        const containerHeight = container.offsetHeight;
+        const topHeight = containerHeight * ratio;
+        const bottomHeight = containerHeight - topHeight - divider.offsetHeight;
+
+        topPane.style.flex = `0 0 ${topHeight}px`;
+        bottomPane.style.flex = `0 0 ${bottomHeight}px`;
+      }
+
+      // 移动设备触摸支持
+      divider.addEventListener("touchstart", (e) => {
+        e.stopPropagation();
+        isDragging = true;
+        // e.preventDefault();
+      });
+
+      let ratio = 0.5;
+      document.addEventListener("touchmove", (e) => {
+        e.stopPropagation();
+        if (!isDragging) return;
+        if (ratio === 0) {
+          return;
+        }
+        const containerRect = container.getBoundingClientRect();
+        // console.log("containerRect", containerRect);
+        const touch = e.touches[0];
+        console.log("touches", e.touches, touch);
+        const y = touch.clientY - containerRect.top;
+
+        ratio = y / containerRect.height;
+        console.log("ratio", ratio);
+        if (ratio >= 0.7) {
+          return;
+        }
+        adjustRatio(ratio);
+      });
+
+      document.addEventListener("touchend", () => {
+        if (ratio >= 0.66) {
+          adjustRatio(0.7); //下面 30%
+          ratio = 0.7;
+        } else if (ratio >= 0.4 && ratio < 0.66) {
+          adjustRatio(0.5); //下面 50%
+          ratio = 0.5;
+        } else {
+          adjustRatio(0); //下面 100%
+          ratio = 0;
+        }
+        isDragging = false;
+      });
+      helfBtn.onclick = () => {
+        if (ratio === 0) {
+          adjustRatio(0.5);
+          ratio = 0.5;
+        } else {
+          adjustRatio(0);
+          ratio = 0;
+        }
+      };
+    </script>
+  </body>
+</html>
