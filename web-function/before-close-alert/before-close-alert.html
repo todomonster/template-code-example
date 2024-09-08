@@ -30,10 +30,45 @@
     </ol>
 
     <script>
-      // 實驗結果:要先在網頁點過一次 才會綁上去
-      window.addEventListener("beforeunload", (event) => {
-        event.returnValue = `Are you sure you want to leave?`; //以前可以改文字
+      //2-2
+      window.addEventListener("load", function (event) {
+        console.log("All resources finished loading!", Date.now());
       });
+
+      //1-2
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("DOM Ready!", Date.now());
+      });
+
+      document.addEventListener("readystatechange", (e) => {
+        switch (document.readyState) {
+          case "interactive":
+            // 1-1
+            console.log("文件已經完成讀取。可以使用 DOM 元素。", Date.now());
+            break;
+          case "complete":
+            // 2-1
+            console.log("頁面已經完成讀取。", Date.now());
+            break;
+        }
+      });
+
+      //3
+      window.addEventListener("beforeunload", (event) => {
+        //不會觸發
+        alert("886");
+        event.returnValue = `Are you sure you want to leave?`; //以前可以改文字，現在不行了
+      });
+
+      //4
+      window.addEventListener("unload", (event) => {
+        const closeWebTimes = localStorage.getItem("已關閉網頁次數") || 0;
+        const newValue = Number(closeWebTimes) + 1;
+        localStorage.setItem("已關閉網頁次數", newValue);
+      });
+
+      //0
+      console.log(document.readyState, Date.now());
     </script>
   </body>
 </html>
