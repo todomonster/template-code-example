@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AES-256-CBC 加密解密</title>
+  </head>
+  <body>
+    <h1>AES-256-CBC 加密解密範例</h1>
+
+    <label for="plaintext">輸入你要加密的明文:</label>
+    <input type="text" id="plaintext" placeholder="輸入文字" />
+    <button onclick="encrypt()">加密</button>
+
+    <p>加密結果:</p>
+    <textarea id="encryptedText" rows="3" readonly></textarea>
+
+    <p>解密結果:</p>
+    <textarea id="decryptedText" rows="3" readonly></textarea>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script>
+      console.log(CryptoJS.mode.CBC);
+      console.log(CryptoJS.pad.Pkcs7);
+      // 密鑰
+      const key = CryptoJS.enc.Hex.parse(
+        "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+      ); // 256-bit key
+      //   偏移量
+      const iv = CryptoJS.enc.Hex.parse("abcdef9876543210abcdef9876543210"); // 128-bit IV
+
+      function encrypt() {
+        const plaintext = document.getElementById("plaintext").value;
+        const encrypted = CryptoJS.AES.encrypt(plaintext, key, {
+          iv: iv,
+          mode: CryptoJS.mode.CBC,
+          padding: CryptoJS.pad.Pkcs7,
+        });
+        document.getElementById("encryptedText").value = encrypted.toString();
+
+        // 自動解密來驗證
+        decrypt(encrypted);
+      }
+
+      function decrypt(encrypted) {
+        const decrypted = CryptoJS.AES.decrypt(encrypted, key, {
+          iv: iv,
+          mode: CryptoJS.mode.CBC,
+          padding: CryptoJS.pad.Pkcs7,
+        });
+        document.getElementById("decryptedText").value = decrypted.toString(
+          CryptoJS.enc.Utf8
+        );
+      }
+    </script>
+  </body>
+</html>
