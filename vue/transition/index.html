@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vue3</title>
+    <!-- https://blog.csdn.net/qq_45163122/article/details/122333766 -->
+    <style>
+      [v-cloak] {
+        display: none;
+      }
+      .slide-enter-active,
+      .slide-leave-active {
+        transition: transform 1s ease;
+      }
+      .slide-enter-from,
+      .slide-leave-to {
+        transform: translateY(-100%);
+      }
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 50%;
+        background-color: #f0f0f0;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+    </style>
+  </head>
+  <body class="vsc-initialized">
+    <div id="app">
+      <!-- start -->
+      <transition name="slide">
+        <div v-show="isShowModal" class="modal">我是model</div>
+      </transition>
+      <!-- end -->
+       <br><br><br><br><br><br><br><br><br><br>
+      <button @click="切換">切換</button>
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+      const { ref, createApp } = Vue;
+      createApp({
+        setup() {
+          const isShowModal = ref(true);
+
+          const 切換 = () => {
+            isShowModal.value = !isShowModal.value;
+          };
+
+          return {
+            isShowModal,
+            切換,
+          };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
