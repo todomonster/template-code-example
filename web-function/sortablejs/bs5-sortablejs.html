@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bootstrap 5 Sortable List</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <!-- Sortable.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+  </head>
+  <body>
+    <div class="container mt-4">
+      <!-- List with handle -->
+      <div id="listWithHandle" class="list-group">
+        <div
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <div>
+            <i class="bi bi-arrows-move me-2" style="cursor: move"></i>
+            Drag me by the handle
+          </div>
+          <span class="badge bg-primary rounded-pill">14</span>
+        </div>
+        <div
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <div>
+            <i class="bi bi-arrows-move me-2" style="cursor: move"></i>
+            You can also select text
+          </div>
+          <span class="badge bg-primary rounded-pill">2</span>
+        </div>
+        <div
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <div>
+            <i class="bi bi-arrows-move me-2" style="cursor: move"></i>
+            Best of both worlds!
+          </div>
+          <span class="badge bg-primary rounded-pill">1</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // List with handle
+      Sortable.create(listWithHandle, {
+        handle: ".bi-arrows-move",
+        animation: 150,
+      });
+    </script>
+  </body>
+</html>
