@@ -2,22 +2,25 @@
 // npm i cheerio
 const cheerio = require("cheerio");
 
-const includeClass = "緊急救護,火災"; // ex: "緊急救護,火災,其他";
 const 每隔x分鐘爬蟲 = 1;
 const 開啟Log = false;
 const 服務啟動或重啟時提醒 = true;
+// ex: "緊急救護,火災,其他";
+const includeClass = "緊急救護,火災"; 
+// ex: "${notify_token_1},${notify_token_2}";
+const tokenString =
+"KC93ubtFGfWnLLmopdvZ8tvDIhAp4gCjbX99pIKeLGO,qCaQ3Y563geUOHIEGOLAzuXy5ifstACKNq21xbW5kq5";
+
 let oldData = [];
-// 給予多組token 3組
+// 給予多組 token 3組
 
 const main = async () => {
   const url =
     "https://www.fire.taichung.gov.tw/caselist/index.asp?Parser=99,8,226";
   const func1 = (body) => {
     const $ = cheerio.load(body);
-    logWithColor("====== 爬蟲 start ======");
-
     const dataList = [];
-    const listItems = $(".rwd-table > li:not(.list_head)");
+
     const response = {
       result: true,
       message: "ok",
@@ -25,6 +28,9 @@ const main = async () => {
     };
 
     try {
+      // logWithColor(`====== 爬蟲 start ${new Date()}======`);
+      const listItems = $(".rwd-table > li:not(.list_head)");
+
       listItems.each((index, element) => {
         const fields = $(element).find("span");
         const getAddress = (dom) => {
@@ -45,8 +51,9 @@ const main = async () => {
         if (!filterClassRules.includes(data.案類)) {
           return;
         }
-        // 超過5筆
-        if (dataList.length >= 5) {
+        // 超過x筆
+        const maxItemAmount = 5;
+        if (dataList.length >= maxItemAmount) {
           return;
         }
         dataList.push(data);
@@ -57,11 +64,14 @@ const main = async () => {
         response.message = "無資料";
       }
       response.data = dataList;
+      logWithColor(`====== 爬蟲 end ${new Date()}======`);
     } catch (error) {
       response.result = false;
       response.message = error.message;
+
+      console.log(`====== 爬蟲 fail ${new Date()}======`);
     }
-    logWithColor("====== 爬蟲 end ======");
+
     return response;
   };
   const json = await fetchUrl(url, func1);
@@ -80,7 +90,7 @@ const main = async () => {
   }
 };
 
-console.log(new Date());
+console.log(`${new Date()}`);
 const triggerTime = Math.max(每隔x分鐘爬蟲, 1) || 1;
 setInterval(() => {
   main();
@@ -97,7 +107,8 @@ function genNotifyText(notifyData) {
       ? `https://www.google.com/maps/search/${item.發生地點}`
       : "-";
 
-    ans += `受理時間: ${item?.受理時間 || "-"}
+    ans += `
+受理時間: ${item?.受理時間 || "-"}
 案類: ${item?.案類 || "-"}
 案別: ${item?.案別 || "-"}
 發生地點: ${item?.發生地點 || "-"}
@@ -132,34 +143,44 @@ function logWithColor(str) {
   console.log("\x1b[36m%s\x1b[0m", `${str}`);
 }
 
-async function sendLineNotify(message) {
+function sendLineNotify(message) {
   const url = "https://notify-api.line.me/api/notify";
-  const token = "KC93ubtFGfWnLLmopdvZ8tvDIhAp4gCjbX99pIKeLGO"; // 替換成你的 LINE Notify 權杖
+  // 替換成你的 LINE Notify 權杖
+  const tokenArr = tokenString.split(",");
 
-  const headers = {
-    "Content-Type": "application/x-www-form-urlencoded",
-    Authorization: `Bearer ${token}`, // 使用 Bearer Token 驗證
+  const callApi = (token) => {
+    const headers = {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: `Bearer ${token}`, // 使用 Bearer Token 驗證
+    };
+
+    const body = new URLSearchParams();
+    body.append("message", message); // 將 message 加入到請求體中
+
+    fetch(url, {
+      method: "POST",
+      headers: headers,
+      body: body,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 200) {
+          console.log("通知成功！");
+        } else {
+          console.log("通知失敗:", data);
+        }
+      })
+      .catch((error) => {
+        console.error("發生錯誤:", error);
+      });
   };
 
-  const body = new URLSearchParams();
-  body.append("message", message); // 將 message 加入到請求體中
-
-  await fetch(url, {
-    method: "POST",
-    headers: headers,
-    body: body,
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.status === 200) {
-        console.log("通知成功！");
-      } else {
-        console.log("通知失敗:", data);
-      }
-    })
-    .catch((error) => {
-      console.error("發生錯誤:", error);
+  if (tokenArr?.length > 0) {
+    // 併發
+    tokenArr.forEach((token) => {
+      callApi(token);
     });
+  }
 }
 
 //=======
@@ -184,7 +205,7 @@ function compareAndNotify(response) {
       // 找不到=是新資料
       if (!match) {
         // new
-        console.log("通知：新資料", newItem);
+        console.log("通知：新資料");
         needNotify.push(newItem);
       }
     });
@@ -192,7 +213,6 @@ function compareAndNotify(response) {
     // 如果沒有上一筆資料，直接通知
     console.log("直接通知所有資料");
     newData.forEach((newItem) => {
-      console.log("通知：新資料", newItem);
       needNotify.push(newItem);
     });
   }
