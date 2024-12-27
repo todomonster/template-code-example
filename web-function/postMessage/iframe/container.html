@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>爸爸-容器</title>
+    <style>
+      .container {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      iframe {
+        width: 100%;
+        height: 80dvh;
+        border: 1px solid #ccc;
+      }
+
+      button {
+        padding: 8px 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        /*  */
+        position: absolute;
+        bottom: 10%;
+        left: 45%;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <pre>
+      參考:
+      https://ithelp.ithome.com.tw/articles/10335698
+    </pre>
+    <div class="container">
+      <iframe id="contentFrame" src="content.html"></iframe>
+      <button onclick="scrollToBottom()">滾動到底部</button>
+    </div>
+
+    <script>
+      window.addEventListener("message", function (event) {
+        console.log("爸爸收到:", event);
+        // 檢查消息
+        if (event.data === "scrollToBottomOk") {
+          // 滾動到底部
+          alert("已經到底");
+        }
+      });
+
+      function scrollToBottom() {
+        const contentWindow =
+          document.getElementById("contentFrame").contentWindow;
+        // 發送消息給 iframe 內的頁面
+        contentWindow.postMessage("pleaseScrollToBottom", "*");
+      }
+    </script>
+  </body>
+</html>
