@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SVG Icon Example</title>
+    <style>
+      .icon {
+        width: 100px; /* 調整圖示大小 */
+        height: 100px;
+      }
+
+      /* 無效 */
+      .icon.red {
+        color: red;
+      }
+      /* 修改圖示顏色為紅色 */
+      .icon.red {
+        filter: invert(32%) sepia(94%) saturate(7425%) hue-rotate(0deg)
+          brightness(95%) contrast(129%);
+      }
+    </style>
+  </head>
+  <body>
+    <h2>透過css修改圖片顏色 給遮罩</h2>
+    <pre>
+        目前查到唯一方式是透過 filter 語法
+
+        請到<a href="https://angel-rs.github.io/css-color-filter-generator/" target="_blank">這個網站</a>
+        給色碼=>轉成對應顏色的語法
+        
+    </pre>
+    <h3>Demo</h3>
+    <!-- 使用 img 標籤引入 SVG 圖示 -->
+    <img
+      src="https://www.svgrepo.com/show/533826/shop.svg"
+      alt="Icon"
+      class="icon"
+    />
+
+    <!-- 透過 class 變更圖示顏色 -->
+    <img
+      src="https://www.svgrepo.com/show/533826/shop.svg"
+      alt="Red Icon"
+      class="icon red"
+    />
+  </body>
+</html>
