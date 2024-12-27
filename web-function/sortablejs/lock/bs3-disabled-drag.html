@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Sortable List Demo</title>
+    <!-- Latest compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/3.3.1/css/bootstrap.min.css"
+    />
+    <style>
+      .locked {
+        background-color: #f8f9fa;
+        cursor: not-allowed;
+      }
+      .locked .my-handle {
+        color: #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-4">
+      <!-- List with handle -->
+      <ul id="listWithHandle" class="list-group">
+        <li class="list-group-item locked">
+          <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+          Item 1 L
+        </li>
+        <li class="list-group-item">
+          <span
+            class="glyphicon glyphicon-move my-handle"
+            aria-hidden="true"
+          ></span>
+          Item 2
+        </li>
+        <li class="list-group-item">
+          <span
+            class="glyphicon glyphicon-move my-handle"
+            aria-hidden="true"
+          ></span>
+          Item 3
+        </li>
+        <li class="list-group-item">
+          <span
+            class="glyphicon glyphicon-move my-handle"
+            aria-hidden="true"
+          ></span>
+          Item 4
+        </li>
+        <li class="list-group-item">
+          <span
+            class="glyphicon glyphicon-move my-handle"
+            aria-hidden="true"
+          ></span>
+          Item 5
+        </li>
+      </ul>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script>
+      // List with handle
+      Sortable.create(listWithHandle, {
+        handle: ".my-handle",
+        animation: 150,
+        filter: ".locked", // 指定要過濾的元素
+        onMove: function (evt) {
+          // 有 locked return false 否則 true
+          return !evt.related.classList.contains("locked"); // 防止拖動到鎖定項目的位置
+        },
+      });
+    </script>
+  </body>
+</html>
