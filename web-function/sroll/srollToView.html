@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      .container {
+        height: 3000px;
+        background: linear-gradient(180deg, #fd746c, #2c3e50);
+        padding: 20px;
+      }
+
+      .section {
+        margin: 400px 40px;
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .control-panel {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        max-width: 300px;
+      }
+
+      button {
+        display: block;
+        width: 100%;
+        margin: 8px 0;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        background: #2c3e50;
+        color: white;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      button:hover {
+        background: #34495e;
+      }
+
+      .coordinates {
+        font-size: 14px;
+        color: #333;
+        margin-top: 10px;
+      }
+
+      hr {
+        margin: 15px 0;
+        border: none;
+        border-top: 1px solid #ddd;
+      }
+    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="section" id="section1">
+        <h2>Section 1</h2>
+        <p>This demonstrates basic scrollIntoView()</p>
+        <code>element.scrollIntoView()</code>
+      </div>
+
+      <div class="section" id="section2">
+        <h2>Section 2</h2>
+        <p>This demonstrates scrollIntoView(true)</p>
+        <code>element.scrollIntoView(true)</code>
+      </div>
+
+      <div class="section" id="section3">
+        <h2>Section 3</h2>
+        <p>This demonstrates scrollIntoView(false)</p>
+        <code>element.scrollIntoView(false)</code>
+      </div>
+
+      <div class="section" id="section4">
+        <h2>Section 4</h2>
+        <p>This demonstrates scrollIntoView() with options</p>
+        <code
+          >element.scrollIntoView({behavior: 'smooth', block: 'center'})</code
+        >
+      </div>
+    </div>
+
+    <div class="control-panel">
+      <h3>scrollIntoView() Demo</h3>
+
+      <!-- Basic method -->
+      <button onclick="document.getElementById('section1').scrollIntoView()">
+        [section1] Basic scrollIntoView()
+      </button>
+
+      <!-- Boolean parameter - true -->
+      <button
+        onclick="document.getElementById('section2').scrollIntoView(true)"
+      >
+        [section2] scrollIntoView(true)
+      </button>
+
+      <!-- Boolean parameter - false -->
+      <button
+        onclick="document.getElementById('section2').scrollIntoView(false)"
+      >
+        [section2] scrollIntoView(false)
+      </button>
+
+      <hr />
+
+      <!-- Options object - different combinations -->
+      <button
+        onclick="document.getElementById('section4').scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    })"
+      >
+        Smooth Scroll to [section4] Center
+      </button>
+
+      <button
+        onclick="document.getElementById('section4').scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    })"
+      >
+        Smooth Scroll to [section4] Start
+      </button>
+
+      <button
+        onclick="document.getElementById('section4').scrollIntoView({
+      behavior: 'smooth',
+      block: 'end'
+    })"
+      >
+        Smooth Scroll to [section4] End
+      </button>
+
+      <div class="coordinates" id="scrollPos">Current Position: Y: 0px</div>
+    </div>
+
+    <script>
+      window.addEventListener("scroll", function () {
+        document.getElementById(
+          "scrollPos"
+        ).textContent = `Current Position: Y: ${window.scrollY}px`;
+      });
+    </script>
+  </body>
+</html>

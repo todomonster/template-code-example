@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      .container {
+        height: 2000px;
+        background: linear-gradient(180deg, #ff6b6b, #4ecdc4);
+        padding: 20px;
+        color: white;
+        font-family: Arial, sans-serif;
+      }
+
+      .control-panel {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      button {
+        display: block;
+        margin: 10px 0;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        background: #4ecdc4;
+        color: white;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      button:hover {
+        background: #45b7af;
+      }
+
+      .coordinates {
+        font-size: 14px;
+        color: #333;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>window.scrollBy() Demo</h1>
+      <p>Scroll position will be shown in the control panel.</p>
+    </div>
+
+    <div class="control-panel">
+      <h3>Scroll Controls</h3>
+
+      <!-- Basic x,y coordinates method -->
+      <button onclick="useScrollBy(0, 100)">Scroll Down 100px</button>
+
+      <button onclick="useScrollBy(0, -100)">Scroll Up 100px</button>
+
+      <!-- Options object method -->
+      <button
+        onclick="useScrollByOption({
+        top:200,
+        left:0,
+        behavior: 'smooth',
+      })"
+      >
+        Smooth Scroll Down 200px
+      </button>
+
+      <button
+        onclick="useScrollByOption({
+        top:-200,
+        left:0,
+        behavior: 'smooth',
+      })"
+      >
+        Smooth Scroll Up 200px
+      </button>
+
+      <div class="coordinates" id="scrollPos">Scroll Position: Y: 0px</div>
+    </div>
+
+    <script>
+      function useScrollBy(top = 0, left = 0) {
+        window.scrollBy(top, left);
+      }
+      function useScrollByOption(option) {
+        window.scrollBy(option);
+      }
+      // Update scroll position display
+      window.addEventListener("scroll", function () {
+        document.getElementById(
+          "scrollPos"
+        ).textContent = `Scroll Position: Y: ${window.scrollY}px`;
+      });
+    </script>
+  </body>
+</html>
