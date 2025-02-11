@@ -27,12 +27,12 @@
     <script src="https://unpkg.com/vue-i18n@9"></script>
     <!-- <script src="https://unpkg.com/vue-i18n@next"></script> -->
     <script>
-      const { createApp } = Vue;
+      const { createApp, ref, watch } = Vue;
       const { createI18n } = VueI18n;
 
       const i18n = createI18n({
         legacy: false,
-        locale: 'en', // 設置初始語言
+        locale: "en", // 設置初始語言
         messages: {
           en: {
             hello: "hello world",
@@ -46,16 +46,19 @@
       const app = createApp({
         setup() {
           const { t, locale } = i18n.global;
-          
-          const currentLanguage = Vue.ref(i18n.global.locale.value);
-          
-          Vue.watch(currentLanguage, (newValue) => {
-            locale.value = newValue;
-          });
+
+          const currentLanguage = ref(locale.value);
+
+          watch(
+            () => currentLanguage.value,
+            (newValue) => {
+              locale.value = newValue;
+            }
+          );
 
           return {
             t,
-            currentLanguage
+            currentLanguage,
           };
         },
       });
