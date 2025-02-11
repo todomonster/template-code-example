@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vue3 i18n Demo</title>
+    <style>
+      [v-cloak] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body class="vsc-initialized">
+    <div id="app" v-cloak>
+      <header>
+        <select v-model="currentLanguage">
+          <option value="en">English</option>
+          <option value="ja">日本語</option>
+        </select>
+      </header>
+      <main>
+        <h1>{{ t("hello") }}</h1>
+        {{currentLanguage}}
+      </main>
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.com/vue-i18n@9"></script>
+    <!-- <script src="https://unpkg.com/vue-i18n@next"></script> -->
+    <script>
+      const { createApp } = Vue;
+      const { createI18n } = VueI18n;
+
+      const i18n = createI18n({
+        legacy: false,
+        locale: 'en', // 設置初始語言
+        messages: {
+          en: {
+            hello: "hello world",
+          },
+          ja: {
+            hello: "こんにちは、世界",
+          },
+        },
+      });
+
+      const app = createApp({
+        setup() {
+          const { t, locale } = i18n.global;
+          
+          const currentLanguage = Vue.ref(i18n.global.locale.value);
+          
+          Vue.watch(currentLanguage, (newValue) => {
+            locale.value = newValue;
+          });
+
+          return {
+            t,
+            currentLanguage
+          };
+        },
+      });
+
+      app.use(i18n);
+      app.mount("#app");
+    </script>
+  </body>
+</html>
